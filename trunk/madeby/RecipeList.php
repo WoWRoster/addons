@@ -16,13 +16,18 @@
  *
  ******************************/
 
+if ( !defined('ROSTER_INSTALLED') )
+{
+    exit('Detected invalid access to this file!');
+}
+
 require_once(ROSTER_LIB.'recipes.php');
 
 
 $server_name_escape = $wowdb->escape($roster_conf['server_name']);
 
 
-$qry_prof  = "select distinct( skill_name) proff from ".ROSTER_RECIPESTABLE." where skill_name != '".$wordings[$roster_conf['roster_lang']]['First Aid']."' and skill_name != '".$wordings[$roster_conf['roster_lang']]['poisons']."' and skill_name != '".$wordings[$roster_conf['roster_lang']]['Mining']."' order by skill_name";
+$qry_prof  = "select distinct( skill_name) proff from ".ROSTER_RECIPESTABLE." where skill_name != '".$wordings[$roster_conf['roster_lang']]['First Aid']."' and skill_name != '".$wordings[$roster_conf['roster_lang']]['Poisons']."' and skill_name != '".$wordings[$roster_conf['roster_lang']]['Mining']."' order by skill_name";
 
 $result_prof = $wowdb->query($qry_prof) or die_quietly($wowdb->error(),'Database Error',basename(__FILE__),__LINE__,$qry_prof);
 if ($roster_conf['sqldebug'])
@@ -33,7 +38,7 @@ if ($roster_conf['sqldebug'])
 
 
 $choiceForm = '<form action="addon.php" method="GET" name="myform">
-	<input type="hidden" name="roster_addon_name" value="recipe">
+	<input type="hidden" name="roster_addon_name" value="madeby">
 	<table>
 		<tr>
 		<th class="copy">'.$wordings[$roster_conf['roster_lang']]['professionfilter'].'</th>
@@ -312,6 +317,3 @@ if (isset($_REQUEST["proffilter"]))
 	}
 
 }
-
-
-?>

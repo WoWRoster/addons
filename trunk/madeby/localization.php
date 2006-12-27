@@ -44,5 +44,3 @@ $wordings['frFR']['itemdescription'] = 'Description de l\'objet:';
 $wordings['frFR']['whocanmakeit'] = 'Artisants';
 $wordings['frFR']['dnotpopulatelist'] = 'Liste vide';
 $wordings['frFR']['applybutton']= 'Appliquer';
-
-?>
