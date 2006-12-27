@@ -27,5 +27,3 @@
 	$display_recipe_reagents = 1;		//Recipe Reagents column display ( 1 on | 0 off)
 	$display_recipe_makers = 1;			//Recipe Who can make what column display ( 1 on | 0 off)
 	$display_recipe_makers_count = 3;	//Number of makers per row in makers column (3 is default)
-
-?>
