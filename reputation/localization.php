@@ -16,7 +16,7 @@
  *
  ******************************/
 
-$wordings['addoncredits']['Reputation'] = array(
+$wordings['addoncredits']['Reputation v1.7.2'] = array(
 	array(	"name"=>	"Cybrey",
 			"info"=>	"Lists faction reputation stats"),
 );
