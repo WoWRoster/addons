@@ -48,4 +48,3 @@ $wordings['frFR']['rep_faction'] = 'Faction';
 $wordings['frFR']['rep_status'] = 'Réputation';
 $wordings['frFR']['rep_value'] = 'Valeur';
 $wordings['frFR']['rep_max'] = 'Max';
-?>

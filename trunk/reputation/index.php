@@ -27,4 +27,5 @@ $header_title = $wordings[$roster_conf['roster_lang']]['menustats'];
 require_once ($addonDir.'membersRep.php');
 
 echo $content;
+
 ?>

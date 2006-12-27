@@ -111,5 +111,3 @@ if( isset($_REQUEST['factionfilter']) )
 	$content .=($tableFooter);
 	$content .= $borderBottom;
 }
-
-?>
