@@ -16,7 +16,7 @@
  *
  ******************************/
 
-$wordings['addoncredits']['Made By'] = array(
+$wordings['addoncredits']['Made By v1.7.2'] = array(
 	array(	"name"=>	"Cybrey",
 			"info"=>	"Lists who can make what in roster"),
 	array(	"name"=>	"Thorus",
