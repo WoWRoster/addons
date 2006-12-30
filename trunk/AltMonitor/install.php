@@ -10,6 +10,10 @@
  *
  * Full license information
  *  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
+ * -----------------------------
+ *
+ * $Id$
+ *
  ******************************/
 
 if ( !defined('ROSTER_INSTALLED') )
@@ -40,17 +44,17 @@ foreach ($install_sql as $version => $sql)
 				if ( $roster_conf['sqldebug'] ) echo "<!--$query-->\n";
 
 				$result = $wowdb->query( $query ) or die_quietly('Failed to install AltMonitor. MySQL said: <br />'.$wowdb->error(),'AltMonitor Installer',__FILE__,__LINE__,$query );
-				
+
 				$wowdb->free_result($result);
 			}
 		}
-		
+
 		$wowdb->reset_values();
-		
+
 		$wowdb->add_value( 'config_value', $version );
-		
+
 		$query = "UPDATE `".ROSTER_ALT_CONFIG_TABLE."` SET ".$wowdb->assignstr." WHERE `config_name` = 'version'";
-		
+
 		if ( $roster_conf['sqldebug'] ) echo "<!--$query-->\n";
 
 		$result = $wowdb->query( $query ) or die_quietly('Failed to install AltMonitor. MySQL said: <br />'.$wowdb->error(),'AltMonitor Installer',__FILE__,__LINE__,$query );
@@ -63,7 +67,7 @@ foreach ($install_sql as $version => $sql)
 // Write the file version to the database, just in case the most recent update/fix didn't include a DB update.
 
 $wowdb->reset_values();
-		
+
 $wowdb->add_value( 'config_value', $fileversion );
 
 $query = "UPDATE `".ROSTER_ALT_CONFIG_TABLE."` SET ".$wowdb->assignstr." WHERE `config_name` = 'version'";

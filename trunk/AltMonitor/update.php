@@ -10,6 +10,10 @@
  *
  * Full license information
  *  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
+ * -----------------------------
+ *
+ * $Id$
+ *
  ******************************/
 
 if ( !defined('ROSTER_INSTALLED') )
@@ -84,19 +88,19 @@ if($main_name == $addon_conf['AltMonitor']['getmain_main'])
 if ( $main_name == $member_name ) {
 	$messages .= "<p style='color:green;'>$member_name is a main</p>\n";
 	$main_id = $member_id;
-	
+
 	// --[ Look up if there are alts for this main ]--
 	$query =
 		"SELECT COUNT(member_id) ".
 		" FROM `".ROSTER_ALT_TABLE."` as `alts`".
 		" WHERE `alts`.`main_id`=".$member_id;
-	
+
 	$result = $wowdb->query( $query );
-	
+
 	if ( !$result ) { return("$member_name not updated, failed at line ".__LINE__); }
 
 	$row = mysql_fetch_array( $result );
-	
+
 	if ($row[0] == 1) {
 		$alt_type = ALTMONITOR_MAIN_NO_ALTS;
 		$messages .= "<p style='color:green;'>$member_name has no alts</p>\n";
@@ -118,17 +122,17 @@ else {
 		"SELECT `members`.`member_id`, `members`.`name`".
 		" FROM `".ROSTER_MEMBERSTABLE."` as `members`".
 		" WHERE `members`.`name`='".$main_name."'";
-	
+
 	if ( $roster_conf['sqldebug'] ) echo "<!--$query-->\n";
 
 	$result = $wowdb->query( $query );
-	
+
 	if ( !$result ) { return("$member_name not updated, failed at line ".__LINE__); }
 
 	if ( $row = $wowdb->fetch_array( $result )) {
 		$main_id = $row['member_id'];
 		$wowdb->free_result( $result );
-		
+
 		// --[ Alt of alt check ]--
 		if ( $addon_conf['AltMonitor']['altofalt'] == 'leave' ) {
 			$alt_type = ALTMONITOR_ALT_WITH_MAIN;	// Don't check if we're allowing alt of alt in the database
@@ -143,7 +147,7 @@ else {
 			if ( $roster_conf['sqldebug'] ) echo "<!--$query-->\n";
 
 			$result = $wowdb->query( $query );
-			
+
 			if ( !$result ) { return("$member_name not updated, failed at line ".__LINE__); }
 
 			if ( $row = $wowdb->fetch_array( $result )) {
@@ -154,7 +158,7 @@ else {
 				elseif ( $addon_conf['AltMonitor']['altofalt'] == 'main' ) {
 					// The main is an alt so the member is being made a main
 					$main_id = $member_id;
-					
+
 					// --[ Look up if there are alts for this main ]--
 					$query =
 						"SELECT COUNT(member_id) ".
@@ -162,7 +166,7 @@ else {
 						" WHERE `alts`.`main_id`=".$member_id;
 
 					$result = $wowdb->query( $query );
-					
+
 					if ( !$result ) { return("$member_name not updated, failed at line ".__LINE__); }
 
 					$row = $wowdb->fetch_array( $result );
@@ -225,7 +229,7 @@ else {
 			$main_id = 0;			// Invalid regex result; assume the character is mainless alt
 			$alt_type = ALTMONITOR_ALT_NO_MAIN;
 		}
-	
+
 		$wowdb->free_result( $result );
 	}
 }
