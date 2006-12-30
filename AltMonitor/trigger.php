@@ -10,6 +10,10 @@
  *
  * Full license information
  *  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
+ * -----------------------------
+ *
+ * $Id$
+ *
  ******************************/
 
 if ( !defined('ROSTER_INSTALLED') )
@@ -39,9 +43,9 @@ if ( !defined('ROSTER_INSTALLED') )
 if( $mode == 'guild' )
 {
 	$retval = include($addonDir.'update.php');
-	
+
 	if ($retval != 1) $messages .= "AltMonitor error: ".$retval."<br/>\n";
-	
+
 	// echo messages for roster's update.php
 	echo $messages;
 }

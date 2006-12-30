@@ -10,10 +10,14 @@
  *
  * Full license information
  *  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
+ * -----------------------------
+ *
+ * $Id$
+ *
  ******************************/
 
 // -[ enUS Localization ]-
- 
+
 // Installer
 $wordings['enUS']['AltMonitor_install_page']= 'AltMonitor Installer';
 $wordings['enUS']['AltMonitor_install']     = 'The AltMonitor tables haven\'t been installed yet. Click Install to start the installation';
@@ -151,7 +155,7 @@ $wordings['deDE']['admin']['mainlessbottom']= 'Position der Mainlosen Twinks|Geb
 // Ãœ = Ü
 // ÃŸ = ß
 // Â´ = ´
-// Â„ = "  
+// Â„ = "
 
 
 ?>

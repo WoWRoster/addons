@@ -24,6 +24,8 @@ isn't entered into the database if the corresponding main isn't in yet.
 Unfortunately I don't get to pick the update order.
 
 VERSION LOG:
+-- SVN-versioned all files
+-- Removed the guild info pull since that's pulled in Settings.php now
 -- Removed the honour progress bar
 -- Fixed the tooltips for mains/alts
 -- Fixed a quoting error in the main/alt list

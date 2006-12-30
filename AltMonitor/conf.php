@@ -10,6 +10,10 @@
  *
  * Full license information
  *  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
+ * -----------------------------
+ *
+ * $Id$
+ *
  ******************************/
 
 if ( !defined('ROSTER_INSTALLED') )
