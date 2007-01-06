@@ -30,7 +30,7 @@
  * @package SigGen
  * @filesource
  *
- * $Id:$
+ * $Id$
  */
 
 // Language translations for Character/Background image selection in SigGen.php
@@ -209,11 +209,6 @@ $siggen_locale['enUS']['import_mustbe_right'] = 'The file must be [<span class="
 $siggen_locale['enUS']['import_upload_success'] = 'SigGen import successful';
 $siggen_locale['enUS']['import_upload_failed'] = 'SigGen import failed';
 $siggen_locale['enUS']['import_upload_failed_ver'] = 'SigGen import failed<br />Import file version does not match current version<br /><div align="right">This version [<span class="green">%1$s</span>]<br />File version [<span class="red">%1$s</span>]';
-$siggen_locale[''][''] = '';
-$siggen_locale[''][''] = '';
-$siggen_locale[''][''] = '';
-$siggen_locale[''][''] = '';
-$siggen_locale[''][''] = '';
 
 // ----[ End US English (enUS) ]----------------------------
 
@@ -276,6 +271,12 @@ $siggen_locale['deDE']['cannot_find_file'] = 'Cannot find file [%1$s]';
 $siggen_locale['deDE']['reset_checkbox'] = 'To reset, make sure you check the &quot;Check to confirm reset&quot; checkbox';
 $siggen_locale['deDE']['install_success'] = '%1$s was successfull...<br />Click <a href="%2$s">HERE</a> to continue<br />';
 
+$siggen_locale['deDE']['select_import_file'] = 'Please select a siggen_saved file to upload';
+$siggen_locale['deDE']['import_mustbe_right'] = 'The file must be [<span class="green">%1$s</span>]';
+$siggen_locale['deDE']['import_upload_success'] = 'SigGen import successful';
+$siggen_locale['deDE']['import_upload_failed'] = 'SigGen import failed';
+$siggen_locale['deDE']['import_upload_failed_ver'] = 'SigGen import failed<br />Import file version does not match current version<br /><div align="right">This version [<span class="green">%1$s</span>]<br />File version [<span class="red">%1$s</span>]';
+
 // ----[ End German (deDE) ]--------------------------------
 
 // ----[ Begin French (frFR) ]------------------------------
@@ -336,5 +337,11 @@ $siggen_locale['frFR']['settings_reset'] = 'Settings have been restored to defau
 $siggen_locale['frFR']['cannot_find_file'] = 'Cannot find file [%1$s]';
 $siggen_locale['frFR']['reset_checkbox'] = 'To reset, make sure you check the &quot;Check to confirm reset&quot; checkbox';
 $siggen_locale['frFR']['install_success'] = '%1$s was successfull...<br />Click <a href="%2$s">HERE</a> to continue<br />';
+
+$siggen_locale['frFR']['select_import_file'] = 'Please select a siggen_saved file to upload';
+$siggen_locale['frFR']['import_mustbe_right'] = 'The file must be [<span class="green">%1$s</span>]';
+$siggen_locale['frFR']['import_upload_success'] = 'SigGen import successful';
+$siggen_locale['frFR']['import_upload_failed'] = 'SigGen import failed';
+$siggen_locale['frFR']['import_upload_failed_ver'] = 'SigGen import failed<br />Import file version does not match current version<br /><div align="right">This version [<span class="green">%1$s</span>]<br />File version [<span class="red">%1$s</span>]';
 
 // ----[ End French (frFR) ]--------------------------------
