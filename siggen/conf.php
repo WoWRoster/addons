@@ -1,11 +1,41 @@
 <?php
-/*******************************
- * $Id$
- *******************************/
+/**
+ * Project: SigGen - Signature and Avatar Generator for WoWRoster
+ * File: /config.php
+ *
+ * Licensed under the Creative Commons
+ * "Attribution-NonCommercial-ShareAlike 2.5" license
+ *
+ * Short summary:
+ *  http://creativecommons.org/licenses/by-nc-sa/2.5/
+ *
+ * Legal Information:
+ *  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
+ *
+ * Full License:
+ *  license.txt (Included within this library)
+ *
+ * You should have recieved a FULL copy of this license in license.txt
+ * along with this library, if you did not and you are unable to find
+ * and agree to the license you may not use this library.
+ *
+ * For questions, comments, information and documentation please visit
+ * the official website at cpframework.org
+ *
+ * @link http://www.wowroster.net
+ * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
+ * @author Joshua Clark
+ * @version 0.2.0
+ * @copyright 2005-2007 Joshua Clark
+ * @package SigGen
+ * @filesource
+ *
+ * $Id:$
+ */
 
-if( eregi(basename(__FILE__),$_SERVER['PHP_SELF']) )
+if ( !defined('ROSTER_INSTALLED') )
 {
-	die("You can't access this file directly!");
+    exit('Detected invalid access to this file!');
 }
 
 
@@ -16,17 +46,11 @@ if( eregi(basename(__FILE__),$_SERVER['PHP_SELF']) )
 
 
 
-// ----[ Name Not Found Text ]------------------------------
-// Text to output when name is not found in the member list
-$sig_no_data = 'SigGen Works';
-
-
-
 
 // ----[ SigGen directory ]---------------------------------
 // This should be the path to the siggen addon directory
 // Starting from where siggen config is accessed
-$sigconfig_dir = dirname(__FILE__).DIR_SEP;
+define('SIGGEN_DIR', dirname(__FILE__).DIR_SEP);
 
 
 
@@ -55,12 +79,10 @@ if( !defined('ROSTER_SIGCONFIGTABLE') )
 
 
 // ----[ Database version DO NOT CHANGE!! ]-----------------
-$sc_db_ver = '1.1';
+$sc_db_ver = '1.2';
+$sc_file_ver = '0.2.0';
 
 
 
 
 define('SIGCONFIG_CONF',true);
-
-
-?>

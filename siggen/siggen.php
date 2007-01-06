@@ -1,15 +1,46 @@
 <?php
-/*******************************
- * $Id$
- *******************************/
+/**
+ * Project: SigGen - Signature and Avatar Generator for WoWRoster
+ * File: /siggen.php
+ *
+ * Licensed under the Creative Commons
+ * "Attribution-NonCommercial-ShareAlike 2.5" license
+ *
+ * Short summary:
+ *  http://creativecommons.org/licenses/by-nc-sa/2.5/
+ *
+ * Legal Information:
+ *  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
+ *
+ * Full License:
+ *  license.txt (Included within this library)
+ *
+ * You should have recieved a FULL copy of this license in license.txt
+ * along with this library, if you did not and you are unable to find
+ * and agree to the license you may not use this library.
+ *
+ * For questions, comments, information and documentation please visit
+ * the official website at cpframework.org
+ *
+ * @link http://www.wowroster.net
+ * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
+ * @author Joshua Clark
+ * @version 0.2.0
+ * @copyright 2005-2007 Joshua Clark
+ * @package SigGen
+ * @filesource
+ *
+ * $Id:$
+ */
+
+// Disable generation of headers from settings.php
+$no_roster_headers = true;
 
 require('../../settings.php');			// "settings.php" from WoWRoster
 
-error_reporting(E_ALL);
-
 require( ROSTER_BASE.'addons/siggen/conf.php' );				// Require the siggen config
 
-require( $sigconfig_dir.'localization.php' );		// Translation file
+require( SIGGEN_DIR.'localization.php' );		// Translation file
 
 
 // Set track errors on
@@ -25,7 +56,7 @@ if( isset($_GET['name']) )
 {
 	$char_name = utf8_encode(urldecode($_GET['name']));
 }
-else // Try pulling from a "path_info" request
+elseif( isset($_SERVER['PATH_INFO']) ) // Try pulling from a "path_info" request
 {
 	$char_name = utf8_encode(urldecode(substr( $_SERVER['PATH_INFO'],1,-4 )));
 }
@@ -44,7 +75,7 @@ else
 {
 	if( eregi(basename(__FILE__),$_SERVER['PHP_SELF']) )
 	{
-		exit("You cannot access this file directly without a 'mode' option");
+		debugMode('?',"You cannot access this file directly without a 'mode' option");
 	}
 }
 
@@ -88,35 +119,25 @@ if( isset($_GET['etag']) )
 	}
 	else
 	{
-		debugMode('DB',"Could not find config_id[$config_name] in table[".ROSTER_SIGCONFIGTABLE."]<br />\nQuery: ".$config_str,__FILE__,0,'MySQL said: '.$wowdb->error());
+		debugMode('DB',"Could not find config_id [$config_name] in table [".ROSTER_SIGCONFIGTABLE."]",(__FILE__),0,'MySQL said: '.$wowdb->error());
 	}
 	$wowdb->free_result($config_sql);
 
 
 	if( $sc_db_ver != $configData['db_ver'] )
 	{
-		debugMode('DB','The database has been changed/upgraded<br />You need to run SigGen Config before using the signatures','',0,'');
+		debugMode('DB','The database has been changed/upgraded','',0,'You need to run SigGen Config before using the signatures');
 	}
 
 
 	// Read guild data from Database
-	$guild_str = 'SELECT * FROM `'.ROSTER_GUILDTABLE."` WHERE `guild_name` = '".$wowdb->escape($roster_conf['guild_name'])."' AND `server` = '".$wowdb->escape($roster_conf['server_name'])."';";
-	$guild_sql = $wowdb->query($guild_str);
-	if( $guild_sql && $wowdb->num_rows($guild_sql) != 0 )
-	{
-		$guildData = $wowdb->fetch_array($guild_sql);
-		$guildid = $guildData['guild_id'];
-	}
-	else
-	{
-		debugMode('DB','Could not get Guild Data','',0,"Query: $guild_str<br />\nMySQL said: ".$wowdb->error());
-	}
-	$wowdb->free_result($guild_sql);
+	// This is so easy now that Roster gets this :D
+	$guildData = $guild_info;
 
 
 
 	// Read member list from Database
-	$members_str = 'SELECT * FROM `'.ROSTER_MEMBERSTABLE."` WHERE `name` LIKE '$char_name' AND `guild_id` = $guildid;";
+	$members_str = 'SELECT * FROM `'.ROSTER_MEMBERSTABLE."` WHERE `name` LIKE '$char_name' AND `guild_id` = ".$guild_info['guild_id'].";";
 	$members_sql = $wowdb->query($members_str);
 	if( $members_sql )
 	{
@@ -125,13 +146,13 @@ if( isset($_GET['etag']) )
 	}
 	else
 	{
-		debugMode('DB','Could not get Members Data','',0,"Query: $members_str<br />\nMySQL said: ".$wowdb->error());
+		debugMode('DB','Could not get Members Data','',0,"MySQL said: ".$wowdb->error());
 	}
 
 	// If the member is not found, write message to name
 	if( $wowdb->num_rows($members_sql) == 0 )
 	{
-		$membersData['name'] = $sig_no_data;
+		$membersData['name'] = $configData['default_message'];
 	}
 	$wowdb->free_result($members_sql);
 
@@ -145,7 +166,7 @@ if( isset($_GET['etag']) )
 	}
 	else
 	{
-		debugMode('DB','Could not get Character Data','',0,"Query: $players_str<br />\nMySQL said: ".$wowdb->error());
+		debugMode('DB','Could not get Character Data','',0,"MySQL said: ".$wowdb->error());
 	}
 	$wowdb->free_result($players_sql);
 
@@ -182,14 +203,14 @@ if( isset($_GET['etag']) )
 #--[ FIX SOME STUFF ]------------------------------------------------------
 
 	// Replace slashes in directories with system slashes
-		$configData['image_dir'] = str_replace( '/',DIR_SEP,$sigconfig_dir.$configData['image_dir'] );
+		$configData['image_dir'] = str_replace( '/',DIR_SEP,SIGGEN_DIR.$configData['image_dir'] );
 		$configData['backg_dir'] = str_replace( '/',DIR_SEP,$configData['backg_dir'] );
 		$configData['user_dir'] = str_replace( '/',DIR_SEP,$configData['user_dir'] );
 		$configData['char_dir'] = str_replace( '/',DIR_SEP,$configData['char_dir'] );
 		$configData['class_dir'] = str_replace( '/',DIR_SEP,$configData['class_dir'] );
 		$configData['pvplogo_dir'] = str_replace( '/',DIR_SEP,$configData['pvplogo_dir'] );
 		$configData['font_dir'] = str_replace( '/',DIR_SEP,ROSTER_BASE.$configData['font_dir'] );
-		$configData['save_images_dir'] = str_replace( '/',DIR_SEP,$sigconfig_dir.$configData['save_images_dir'] );
+		$configData['save_images_dir'] = str_replace( '/',DIR_SEP,SIGGEN_DIR.$configData['save_images_dir'] );
 
 
 	// Variable references to DB for quick changing
@@ -215,10 +236,26 @@ if( isset($_GET['etag']) )
 
 		// Remove crap from pvprankicon
 		$remove_arr = array('Interface','\\','PvPRankBadges');
-		$sig_pvp_icon = str_replace($remove_arr,'',$playersData['RankIcon']);
+		if( file_exists($configData['image_dir'].$configData['pvplogo_dir'].'ext.inc') && is_readable($configData['image_dir'].$configData['pvplogo_dir'].'ext.inc') )
+		{
+			include( $configData['image_dir'].$configData['pvplogo_dir'].'ext.inc' );
+		}
+		else
+		{
+			$pvp_ext = 'png';
+		}
+		$sig_pvp_icon = str_replace($remove_arr,'',$playersData['RankIcon']).'.'.$pvp_ext;
 
 	// Translate Class Images
-		$sig_class_img = strtolower(getEnglishValue($sig_class,$sig_char_locale));
+		if( file_exists($configData['image_dir'].$configData['class_dir'].'ext.inc') && is_readable($configData['image_dir'].$configData['class_dir'].'ext.inc') )
+		{
+			include( $configData['image_dir'].$configData['class_dir'].'ext.inc' );
+		}
+		else
+		{
+			$class_ext = 'png';
+		}
+		$sig_class_img = strtolower(getEnglishValue($sig_class,$sig_char_locale)).'.'.$class_ext;
 
 
 	// Check to remove 'http://'
@@ -281,22 +318,74 @@ if( isset($_GET['etag']) )
 		if( is_numeric($line) )
 			$line -= 1;
 
-		if( !empty($file) )
+		$error_text = 'Error!';
+		$line_text  = 'Line: '.$line;
+		$file  = ( !empty($file) ? 'File: '.$file : '' );
+		$config = ( $config ? 'Check the config file' : '' );
+		$message2 = ( !empty($message2) ? $message2 : '' );
+
+		$lines = array();
+		$lines[] = array( 's' => $error_text, 'f' => 5, 'c' => 'red' );
+		$lines[] = array( 's' => $line_text,  'f' => 3, 'c' => 'blue' );
+		$lines[] = array( 's' => $file,       'f' => 2, 'c' => 'green' );
+		$lines[] = array( 's' => $message,    'f' => 2, 'c' => 'black' );
+		$lines[] = array( 's' => $config,     'f' => 2, 'c' => 'black' );
+		$lines[] = array( 's' => $message2,   'f' => 2, 'c' => 'black' );
+
+		$height = $width = 0;
+		foreach( $lines as $line )
 		{
-			$file = "[<span style=\"color:green\">$file</span>]";
+			if( strlen($line['s']) > 0 )
+			{
+				$line_width = ImageFontWidth($line['f']) * strlen($line['s']);
+				$width = ( ($width < $line_width) ? $line_width : $width );
+				$height += ImageFontHeight($line['f']);
+			}
 		}
-		$string = "<strong><span style=\"color:red\">Error</span></strong>";
-		$string .= " - [<a href=\"../../gd_info.php\">GD Info</a>]<br /><br />\n";
-		$string .= "<span style=\"color:blue\">Line $line:</span> $message $file\n<br /><br />\n";
-		if( $config )
+
+		$im = @imagecreate($width+1,$height);
+		if( $im )
 		{
-			$string .= "Check the config file\n<br />\n";
+			$white = imagecolorallocate( $im, 255, 255, 255 );
+			$red = imagecolorallocate( $im, 255, 0, 0 );
+			$green = imagecolorallocate( $im, 0, 255, 0 );
+			$blue = imagecolorallocate( $im, 0, 0, 255 );
+			$black = imagecolorallocate( $im, 0, 0, 0 );
+
+			$linestep = 0;
+			foreach( $lines as $line )
+			{
+				if( strlen($line['s']) > 0 )
+				{
+					imagestring( $im, $line['f'], 1, $linestep, utf8_to_nce($line['s']), $$line['c'] );
+					$linestep += ImageFontHeight($line['f']);
+				}
+			}
+
+			header( 'Content-type: image/gif' );
+			imagegif( $im );
+			imageDestroy( $im );
 		}
-		if( !empty($message2) )
+		else
 		{
-			$string .= "$message2\n";
+			if( !empty($file) )
+			{
+				$file = "[<span style=\"color:green\">$file</span>]";
+			}
+			$string = "<strong><span style=\"color:red\">Error!</span></strong>";
+			$string .= "<span style=\"color:blue\">Line $line:</span> $message $file\n<br /><br />\n";
+			if( $config )
+			{
+				$string .= "$config\n<br />\n";
+			}
+			if( !empty($message2) )
+			{
+				$string .= "$message2\n";
+			}
+			print $string;
 		}
-		exit($string);
+
+		exit();
 	}
 
 	// Get and format eXp
@@ -331,7 +420,7 @@ if( isset($_GET['etag']) )
 	}
 
 	// Function to set color of text
-	function setColor( $color,$image,$trans=0 )
+	function setColor( $image,$color,$trans=0 )
 	{
 		$red = 100;
 		$green = 100;
@@ -353,17 +442,11 @@ if( isset($_GET['etag']) )
 		}
 		else // Get a regular color
 		{
+			// Damn, we cannot supress this function...
 			$color_index = imageColorAllocate( $image,$red,$green,$blue );
 		}
 
 		return $color_index;
-	}
-
-	// Get color function
-	function getColor( $color )
-	{
-		global $configData;
-		return $configData[$color];
 	}
 
 	// Align text Function
@@ -391,16 +474,16 @@ if( isset($_GET['etag']) )
 	}
 
 	// Shadow Text
-	function shadowText( $im,$fontsize,$xpos,$ypos,$font,$text,$color )
+	function shadowText( $image,$fontsize,$xpos,$ypos,$font,$text,$color )
 	{
-		$color = setColor( getColor($color),$im );
+		$color = setColor( $image,$color );
 
 		$_x = array(-1,-1,-1, 0, 0, 1, 1, 1 );
 		$_y = array(-1, 0, 1,-1, 1,-1, 0, 1 );
 
 		for( $n=0; $n<=7; $n++ )
 		{
-			@imageTTFText( $im,$fontsize,0,$xpos+$_x[$n],$ypos+$_y[$n],$color,$font,$text )
+			@imageTTFText( $image,$fontsize,0,$xpos+$_x[$n],$ypos+$_y[$n],$color,$font,$text )
 				or debugMode((__LINE__),$php_errormsg);
 		}
 	}
@@ -408,10 +491,9 @@ if( isset($_GET['etag']) )
 	// Function to convert strings to a compatable format
 	// This function was copied from http://de3.php.net/manual/de/function.imagettftext.php
 	// Under post made by limalopex.eisfux.de
-	define('EMPTY_STRING', '');
-	function utf8_to_nce( $utf = EMPTY_STRING )
+	function utf8_to_nce( $utf = '' )
 	{
-		if($utf == EMPTY_STRING)
+		if($utf == '')
 		{
 			return($utf);
 		}
@@ -419,7 +501,7 @@ if( isset($_GET['etag']) )
 		$max_count = 5;		// flag-bits in $max_mark ( 1111 1000 == 5 times 1)
 		$max_mark = 248;	// marker for a (theoretical ;-)) 5-byte-char and mask for a 4-byte-char;
 
-		$html = EMPTY_STRING;
+		$html = '';
 		for($str_pos = 0; $str_pos < strlen($utf); $str_pos++)
 		{
 			$old_val = ord( $utf{$str_pos} );
@@ -482,12 +564,12 @@ if( isset($_GET['etag']) )
 	}
 
 	// Write Text
-	function writeText( $im,$fontsize,$xpos,$ypos,$color,$font,$text,$align,$shadow_color )
+	function writeText( $image,$fontsize,$xpos,$ypos,$color,$font,$text,$align,$shadow_color )
 	{
 		// Get the font
 		$font = getFont( $font );
 		// Get the color
-		$color = setColor( getColor($color),$im );
+		$color = setColor( $image,$color );
 		// Convert text for display
 		$text = utf8_to_nce($text);
 
@@ -500,11 +582,11 @@ if( isset($_GET['etag']) )
 		// Create the pseudo-shadow
 		if( !empty($shadow_color) )
 		{
-			shadowText( $im,$fontsize,$xpos,$ypos,$font,$text,$shadow_color );
+			shadowText( $image,$fontsize,$xpos,$ypos,$font,$text,$shadow_color );
 		}
 
 		// Write the text
-		@imageTTFText( $im,$fontsize,0,$xpos,$ypos,$color,$font,$text )
+		@imageTTFText( $image,$fontsize,0,$xpos,$ypos,$color,$font,$text )
 			or debugMode((__LINE__),$php_errormsg);
 	}
 
@@ -513,7 +595,7 @@ if( isset($_GET['etag']) )
 	{
 		global $configData;
 
-		$font_file = $configData['font_dir'].$configData[$font];
+		$font_file = $configData['font_dir'].$font;
 
 		// Check to see if SigGen can see the font
 		if( file_exists($font_file) )
@@ -527,7 +609,7 @@ if( isset($_GET['etag']) )
 	}
 
 	// GIF image creator
-	function makeImageGif( $im,$w,$h,$dither,$save_image = '' )
+	function makeImageGif( $image,$w,$h,$dither,$save_image = '' )
 	{
 		// Check dither mode
 		if( $dither )
@@ -544,7 +626,7 @@ if( isset($_GET['etag']) )
 			or debugMode((__LINE__),$php_errormsg);
 
 		// Copy the original image into the new one
-		@imagecopy( $im_gif,$im,0,0,0,0,$w,$h )
+		@imagecopy( $im_gif,$image,0,0,0,0,$w,$h )
 			or debugMode((__LINE__),$php_errormsg);
 
 		// Convert the new image to palette mode
@@ -569,20 +651,37 @@ if( isset($_GET['etag']) )
 	}
 
 	// Funtion to merge images with the main image
-	function combineImage( $filename,$line,$x_loc,$y_loc )
+	function combineImage( $image,$filename,$line,$x_loc,$y_loc )
 	{
-		global $im;
+		$info = getimagesize($filename);
 
-		// Create a new temp image from file
-		$im_temp = @imagecreatefrompng( $filename )
-			or debugMode( $line,$php_errormsg );
+		switch( $info['mime'] )
+		{
+			case 'image/jpeg' :
+				$im_temp = @imagecreatefromjpeg($filename)
+					or debugMode( $line,$php_errormsg );
+				break;
+
+			case 'image/png' :
+				$im_temp = @imagecreatefrompng($filename)
+					or debugMode( $line,$php_errormsg );
+				break;
+
+			case 'image/gif' :
+				$im_temp = @imagecreatefromgif($filename)
+					or debugMode( $line,$php_errormsg );
+				break;
+
+			default:
+				debugMode( $line,'Unhandled image type: '.$info['mime'] );
+		}
 
 		// Get the image dimentions
 		$im_temp_width = imageSX( $im_temp );
 		$im_temp_height = imageSY( $im_temp );
 
 		// Copy created image into main image
-		@imagecopy( $im,$im_temp,$x_loc,$y_loc,0,0,$im_temp_width,$im_temp_height )
+		@imagecopy( $image,$im_temp,$x_loc,$y_loc,0,0,$im_temp_width,$im_temp_height )
 			or debugMode( $line,$php_errormsg );
 
 		// Destroy the temp image
@@ -606,13 +705,15 @@ if( isset($_GET['etag']) )
 		{
 			return $siggen_translate[$locale][$keyword];
 		}
-		elseif( array_key_exists($keyword,$siggen_translate['enUS']) )
-		{
-			return $siggen_translate['enUS'][$keyword];
-		}
 		else
 		{
-			return false;
+			foreach( $roster_conf['multilanguages'] as $lang )
+			{
+				if( array_key_exists($keyword,$siggen_translate[$lang]) )
+				{
+					return $siggen_translate[$lang][$keyword];
+				}
+			}
 		}
 	}
 
@@ -624,39 +725,52 @@ if( isset($_GET['etag']) )
 	if( $configData['charlogo_disp'] )
 	{
 		// Check for custom/uploaded image
-		$custom_user_img = $configData['image_dir'].$configData['user_dir'].$sig_name.'.png';
+		$custom_user_img = $configData['image_dir'].$configData['user_dir'].$sig_name;
 
 		// Set custom character image, based on name in DB
-		if( file_exists($custom_user_img) )
+		if( file_exists($custom_user_img.'.png') )
 		{
-			$im_user_file = $custom_user_img;
+			$im_user_file = $custom_user_img.'.png';
 		}
-		// If custom image is not found, check for race and gender
-		elseif( !empty($sig_race) )
+		elseif( file_exists($custom_user_img.'.gif') )
 		{
-			// Set race-gender based image
-			if( !empty($sig_gender) )
+			$im_user_file = $custom_user_img.'.gif';
+		}
+		elseif( file_exists($custom_user_img.'.jpg') )
+		{
+			$im_user_file = $custom_user_img.'.jpg';
+		}
+		elseif( file_exists($custom_user_img.'.jpeg') )
+		{
+			$im_user_file = $custom_user_img.'.jpeg';
+		}
+		// If custom image is not found, check for image pack settings
+		elseif( file_exists($configData['image_dir'].$configData['char_dir'].'char.inc') )
+		{
+			include( $configData['image_dir'].$configData['char_dir'].'char.inc' );
+		}
+		else // Old legacy code if the char image pack doesnt have a char.inc file
+		{
+			$char_ext = '.png';
+			if( !empty($sig_race) )
 			{
-				// Set race-gender-class based image
-				if( !empty($sig_class) )
+				// Set race-gender based image
+				if( !empty($sig_gender) )
 				{
-					$im_user_file = $configData['image_dir'].$configData['char_dir'].$sig_race.'-'.$sig_gender.'-'.strtolower(getEnglishValue($sig_class,$sig_char_locale)).'.png';
+					// Set race-gender based image
+					$im_user_file = $configData['image_dir'].$configData['char_dir'].$sig_race.'-'.$sig_gender.$char_ext;
 				}
+				// Set race only image
 				else
 				{
-					$im_user_file = $configData['image_dir'].$configData['char_dir'].$sig_race.'-'.$sig_gender.'.png';
+					$im_user_file = $configData['image_dir'].$configData['char_dir'].$sig_race.$char_ext;
 				}
-			}
-			// Set race only image
+
+			}	// Set default character image
 			else
 			{
-				$im_user_file = $configData['image_dir'].$configData['char_dir'].$sig_race.'.png';
+				$im_user_file = $configData['image_dir'].$configData['char_dir'].$configData['charlogo_default_image'];
 			}
-
-		}	// Set default character image
-		else
-		{
-			$im_user_file = $configData['image_dir'].$configData['charlogo_default_image'].'.png';
 		}
 	}
 
@@ -695,21 +809,33 @@ if( isset($_GET['etag']) )
 	if( $configData['backg_disp'] )
 	{
 		// Set the default background image first
-		$im_back_file = $configData['image_dir'].$configData['backg_dir'].$configData['backg_default_image'].'.png';
+		$im_back_file = $configData['image_dir'].$configData['backg_dir'].$configData['backg_default_image'];
 
 		// Check if the default background is forced
 		if( !$configData['backg_force_default'] )
 		{
 			// Check for custom/uploaded image
-			$custom_back_img = $configData['image_dir'].$configData['user_dir'].'bk-'.$sig_name.'.png';
-			if( file_exists($custom_back_img) )
+			$custom_back_img = $configData['image_dir'].$configData['user_dir'].'bk-'.$sig_name;
+			if( file_exists($custom_back_img.'.png') )
 			{
-				$im_back_file = $custom_back_img;
+				$im_back_file = $custom_back_img.'.png';
+			}
+			elseif( file_exists($custom_back_img.'.gif') )
+			{
+				$im_back_file = $custom_back_img.'.gif';
+			}
+			elseif( file_exists($custom_back_img.'.jpg') )
+			{
+				$im_back_file = $custom_back_img.'.jpg';
+			}
+			elseif( file_exists($custom_back_img.'.jpeg') )
+			{
+				$im_back_file = $custom_back_img.'.jpeg';
 			}
 			// Try setting background from config
-			elseif( !empty($backg['getdatafrom']) )
+			elseif( !empty($backg['getdatafrom']) && !empty($backg[$backg['getdatafrom']]) )
 			{
-				$selected_back_img = $configData['image_dir'].$configData['backg_dir'].$backg[$backg['getdatafrom']].'.png';
+				$selected_back_img = $configData['image_dir'].$configData['backg_dir'].$backg[$backg['getdatafrom']];
 				if( file_exists($selected_back_img) )
 				{
 					$im_back_file = $selected_back_img;
@@ -718,43 +844,62 @@ if( isset($_GET['etag']) )
 		}
 	}
 
+	// Create a new, truecolor image
+	$im = @imagecreatetruecolor( $configData['main_image_size_w'], $configData['main_image_size_h'] )
+		or debugMode( (__LINE__),'Cannot Initialize new GD image stream','',0,'Make sure you have the latest version of GD2 installed' );
 
 	// Color fill the background?
 	if( $configData['backg_fill'] )
 	{
-		// Create a new, truecolor image
-		$im = @imagecreatetruecolor( $configData['main_image_size_w'], $configData['main_image_size_h'] )
-			or debugMode( (__LINE__),'Cannot Initialize new GD image stream.','',0,'Make sure you have the latest version of GD2 installed' );
-
-		@imagefilledrectangle($im,0,0,$configData['main_image_size_w'],$configData['main_image_size_h'],setColor(getColor($configData['backg_fill_color']),$im))
+		@imagefill($im,0,0,setColor( $im,$configData['backg_fill_color'] ) )
 			or debugMode( (__LINE__),$php_errormsg );
+	}
 
-		if( $configData['backg_disp'] && file_exists($im_back_file) )
+	// Merge the background into the main image, with this hande, dandy merging script
+
+	// Generate background first
+	if( $configData['backg_disp'] && file_exists($im_back_file) )
+	{
+		// Create a new temp image from file
+		$info = getimagesize($im_back_file);
+
+		switch( $info['mime'] )
 		{
-			@imagecopyresampled( $im,$im_temp,0,0,0,0,$configData['main_image_size_w'],$configData['main_image_size_h'],$im_temp_width,$im_temp_height )
-				or debugMode( (__LINE__),$php_errormsg );
+			case 'image/jpeg' :
+			case 'image/jpg' :
+				$src = @imagecreatefromjpeg($im_back_file)
+					or debugMode( (__LINE__),$php_errormsg );
+				break;
+
+			case 'image/png' :
+				$src = @imagecreatefrompng($im_back_file)
+					or debugMode( (__LINE__),$php_errormsg );
+				break;
+
+			default:
+				debugMode( (__LINE__),'Unhandled image type: '.$info['mime'] );
 		}
-	}
-	elseif( $configData['backg_disp'] && file_exists($im_back_file) )
-	{
-		// Create a new image from file
-		$im = @imagecreatefrompng( $im_back_file )
-			or debugMode( (__LINE__),$php_errormsg );
 
-		//imagealphablending($im, false);
+		// Get the image dimentions
+		$src_width = imageSX( $src );
+		$src_height = imageSY( $src );
+
+		imagealphablending($im, false);
+
+		for ($i = 0; $i < $src_height; $i++) //this loop traverses each row in the image
+		{
+			for ($j = 0; $j < $src_width; $j++) //this loop traverses each pixel of each row
+			{
+				// get the color & alpha info of the current pixel
+				$retrieved_color = imagecolorat($src, $j, $i);
+					imagesetpixel($im, $j, $i, $retrieved_color);
+
+				imagesetpixel($im, $j, $i, $retrieved_color);
+
+			}
+		}
 		imagesavealpha($im, true);
-
-		$im_temp_width = imageSX( $im );
-		$im_temp_height = imageSY( $im );
-	}
-
-
-
-	// Pre-Allocate the colors, hopefully helps with
-	// the yellow font errors on servers using TTF libs
-	for( $n=1;$n<=10;$n++ )
-	{
-		setColor( $configData['color'.$n],$im );
+		imagealphablending($im, true);
 	}
 
 
@@ -768,56 +913,56 @@ if( isset($_GET['etag']) )
 		// Place the character image
 		if( $o == 'char' && $configData['charlogo_disp'] && file_exists($im_user_file) )
 		{
-			combineImage( $im_user_file,(__LINE__),$configData['charlogo_loc_x'],$configData['charlogo_loc_y'] );
+			combineImage( $im,$im_user_file,(__LINE__),$configData['charlogo_loc_x'],$configData['charlogo_loc_y'] );
 		}
 
 		// Place the colored frames
 		if( $o == 'frames' && !empty($configData['frames_image']) )
 		{
-			$im_frame_file = $configData['image_dir'].$configData['frames_image'].'.png';
+			$im_frame_file = $configData['image_dir'].$configData['frame_dir'].$configData['frames_image'];
 			if( file_exists($im_frame_file) )
 			{
-				combineImage( $im_frame_file,(__LINE__),0,0 );
+				combineImage( $im,$im_frame_file,(__LINE__),0,0 );
 			}
 		}
 
 		// Place the outside border
 		if( $o == 'border' && !empty($configData['outside_border_image']) )
 		{
-			$im_bdr_file = $configData['image_dir'].$configData['outside_border_image'].'.png';
+			$im_bdr_file = $configData['image_dir'].$configData['border_dir'].$configData['outside_border_image'];
 			if( file_exists($im_bdr_file) )
 			{
-				combineImage( $im_bdr_file,(__LINE__),0,0 );
+				combineImage( $im,$im_bdr_file,(__LINE__),0,0 );
 			}
 		}
 
 		// Place HonorRank logo
 		if( $o == 'pvp' && $configData['pvplogo_disp'] && !empty($sig_pvp_icon) )
 		{
-			$im_pvp_file = $configData['image_dir'].$configData['pvplogo_dir'].$sig_pvp_icon.'.png';
+			$im_pvp_file = $configData['image_dir'].$configData['pvplogo_dir'].$sig_pvp_icon;
 			if( file_exists($im_pvp_file) )
 			{
-				combineImage( $im_pvp_file,(__LINE__),$configData['pvplogo_loc_x'],$configData['pvplogo_loc_y'] );
+				combineImage( $im,$im_pvp_file,(__LINE__),$configData['pvplogo_loc_x'],$configData['pvplogo_loc_y'] );
 			}
 		}
 
 		// Place Class image
 		if( $o == 'class' && $configData['class_img_disp'] && !empty($sig_class_img) )
 		{
-			$im_class_file = $configData['image_dir'].$configData['class_dir'].$sig_class_img.'.png';
+			$im_class_file = $configData['image_dir'].$configData['class_dir'].$sig_class_img;
 			if( file_exists($im_class_file) )
 			{
-				combineImage( $im_class_file,(__LINE__),$configData['class_img_loc_x'],$configData['class_img_loc_y'] );
+				combineImage( $im,$im_class_file,(__LINE__),$configData['class_img_loc_x'],$configData['class_img_loc_y'] );
 			}
 		}
 
 		// Place the level bubble
 		if( $o == 'lvl' && $configData['lvl_disp'] )
 		{
-			$im_lvl_file = $configData['image_dir'].$configData['lvl_image'].'.png';
-			if( file_exists($im_lvl_file) )
+			$im_lvl_file = $configData['image_dir'].$configData['level_dir'].$configData['lvl_image'];
+			if( !empty($configData['lvl_image']) && file_exists($im_lvl_file) )
 			{
-				combineImage( $im_lvl_file,(__LINE__),$configData['lvl_loc_x'],$configData['lvl_loc_y'] );
+				combineImage( $im,$im_lvl_file,(__LINE__),$configData['lvl_loc_x'],$configData['lvl_loc_y'] );
 			}
 
 			// Get the text locations based on the image location
@@ -858,19 +1003,19 @@ if( isset($_GET['etag']) )
 			// The eXP bar (outside border)
 			if( $configData['expbar_disp_bdr'] )
 			{
-				@imageRectangle( $im,$configData['expbar_loc_x']-1,$configData['expbar_loc_y']-1,$x_end+1,$y_end+1,setColor( getColor($configData['expbar_color_border']),$im,$configData['expbar_trans_border'] ) )
+				@imageRectangle( $im,$configData['expbar_loc_x']-1,$configData['expbar_loc_y']-1,$x_end+1,$y_end+1,setColor( $im,$configData['expbar_color_border'],$configData['expbar_trans_border'] ) )
 					or debugMode( (__LINE__),$php_errormsg );
 			}
 
 			// The eXP bar (inside box)
 			if( $configData['expbar_disp_inside'] )
 			{
-				@imageFilledRectangle( $im,$configData['expbar_loc_x'],$configData['expbar_loc_y'],$x_end,$y_end,setColor( getColor($configData['expbar_color_inside']),$im,$configData['expbar_trans_inside'] ) )
+				@imageFilledRectangle( $im,$configData['expbar_loc_x'],$configData['expbar_loc_y'],$x_end,$y_end,setColor( $im,$configData['expbar_color_inside'],$configData['expbar_trans_inside'] ) )
 					or debugMode( (__LINE__),$php_errormsg );
 			}
 
 			// The progress bar
-			@imageFilledRectangle( $im,$configData['expbar_loc_x'],$configData['expbar_loc_y'],$x_end,$y_end,setColor( getColor($configData['expbar_color_maxbar']),$im,$configData['expbar_trans_maxbar'] ) )
+			@imageFilledRectangle( $im,$configData['expbar_loc_x'],$configData['expbar_loc_y'],$x_end,$y_end,setColor( $im,$configData['expbar_color_maxbar'],$configData['expbar_trans_maxbar'] ) )
 				or debugMode( (__LINE__),$php_errormsg );
 
 			// eXpbar text
@@ -903,19 +1048,19 @@ if( isset($_GET['etag']) )
 			// The eXP bar (outside border)
 			if( $configData['expbar_disp_bdr'] )
 			{
-				@imageRectangle( $im,$configData['expbar_loc_x']-1,$configData['expbar_loc_y']-1,$x_end+1,$y_end+1,setColor( getColor($configData['expbar_color_border']),$im,$configData['expbar_trans_border'] ) )
+				@imageRectangle( $im,$configData['expbar_loc_x']-1,$configData['expbar_loc_y']-1,$x_end+1,$y_end+1,setColor( $im,$configData['expbar_color_border'],$configData['expbar_trans_border'] ) )
 					or debugMode( (__LINE__),$php_errormsg );
 			}
 
 			// The eXP bar (inside box)
 			if( $configData['expbar_disp_inside'] )
 			{
-				@imageFilledRectangle( $im,$configData['expbar_loc_x'],$configData['expbar_loc_y'],$x_end,$y_end,setColor( getColor($configData['expbar_color_inside']),$im,$configData['expbar_trans_inside'] ) )
+				@imageFilledRectangle( $im,$configData['expbar_loc_x'],$configData['expbar_loc_y'],$x_end,$y_end,setColor( $im,$configData['expbar_color_inside'],$configData['expbar_trans_inside'] ) )
 					or debugMode( (__LINE__),$php_errormsg );
 			}
 
 			// The progress bar
-			@imageFilledRectangle( $im,$configData['expbar_loc_x'],$configData['expbar_loc_y'],$outperc,$y_end,setColor( getColor($configData['expbar_color_bar']),$im,$configData['expbar_trans_bar'] ) )
+			@imageFilledRectangle( $im,$configData['expbar_loc_x'],$configData['expbar_loc_y'],$outperc,$y_end,setColor( $im,$configData['expbar_color_bar'],$configData['expbar_trans_bar'] ) )
 				or debugMode( (__LINE__),$php_errormsg );
 
 			// eXpbar text
@@ -1124,7 +1269,7 @@ if( isset($_GET['etag']) )
 
 
 	// Save the image to the server?
-	if( $configData['save_images'] && $sig_no_data != $sig_name )
+	if( $configData['save_images'] && $configData['default_message'] != $sig_name )
 	{
 		$save_dir = $configData['save_images_dir'];
 		$saved_image = $save_dir.$configData['save_prefix'].$sig_name.$configData['save_suffix'].'.'.$configData['save_images_format'];

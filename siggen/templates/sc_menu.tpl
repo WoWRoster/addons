@@ -1,7 +1,42 @@
 <?php
-/*******************************
+/**
+ * Project: SigGen - Signature and Avatar Generator for WoWRoster
+ * File: /templates/sc_menu.tpl
+ *
+ * Licensed under the Creative Commons
+ * "Attribution-NonCommercial-ShareAlike 2.5" license
+ *
+ * Short summary:
+ *  http://creativecommons.org/licenses/by-nc-sa/2.5/
+ *
+ * Legal Information:
+ *  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
+ *
+ * Full License:
+ *  license.txt (Included within this library)
+ *
+ * You should have recieved a FULL copy of this license in license.txt
+ * along with this library, if you did not and you are unable to find
+ * and agree to the license you may not use this library.
+ *
+ * For questions, comments, information and documentation please visit
+ * the official website at cpframework.org
+ *
+ * @link http://www.wowroster.net
+ * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
+ * @author Joshua Clark
+ * @version 0.2.0
+ * @copyright 2005-2007 Joshua Clark
+ * @package SigGen
+ * @filesource
+ *
  * $Id$
- *******************************/
+ */
+
+if ( !defined('ROSTER_INSTALLED') )
+{
+    exit('Detected invalid access to this file!');
+}
 ?>
 
 <!-- Begin SigConfig Menu -->
@@ -10,7 +45,6 @@
   <ul id="siggen_menu" class="tab_menu">
     <li class="selected"><a href="#" rel="t1">Main Settings</a></li>
     <li><a href="#" rel="t2">Backgrounds</a></li>
-    <li><a href="#" rel="t3">Fonts and Colors</a></li>
     <li><a href="#" rel="t4">eXp Bar</a></li>
     <li><a href="#" rel="t5">Level Bubble</a></li>
     <li><a href="#" rel="t6">Skills Display</a></li>
