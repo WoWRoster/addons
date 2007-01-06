@@ -1,30 +1,59 @@
 <?php
-/*******************************
- * $Id$
- *******************************/
+/**
+ * Project: SigGen - Signature and Avatar Generator for WoWRoster
+ * File: /trigger.php
+ *
+ * Licensed under the Creative Commons
+ * "Attribution-NonCommercial-ShareAlike 2.5" license
+ *
+ * Short summary:
+ *  http://creativecommons.org/licenses/by-nc-sa/2.5/
+ *
+ * Legal Information:
+ *  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
+ *
+ * Full License:
+ *  license.txt (Included within this library)
+ *
+ * You should have recieved a FULL copy of this license in license.txt
+ * along with this library, if you did not and you are unable to find
+ * and agree to the license you may not use this library.
+ *
+ * For questions, comments, information and documentation please visit
+ * the official website at cpframework.org
+ *
+ * @link http://www.wowroster.net
+ * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
+ * @author Joshua Clark
+ * @version 0.2.0
+ * @copyright 2005-2007 Joshua Clark
+ * @package SigGen
+ * @filesource
+ *
+ * $Id:$
+ */
 
-if( eregi(basename(__FILE__),$_SERVER['PHP_SELF']) )
+if ( !defined('ROSTER_INSTALLED') )
 {
-    die("You can't access this file directly!");
+    exit('Detected invalid access to this file!');
 }
 
-/*
-	Start the following scripts when "update.php" is called
-
-	Available variables
-		- $wowdb       = roster's db layer
-		- $member_id   = character id from the database ( ex. 24 )
-		- $member_name = character's name ( ex. 'Jonny Grey' )
-		- $roster_conf = The entire roster config array
-		- $mode        = when you want to run the trigger
-			= 'char'  - during a character update
-			= 'guild' - during a guild update
-
-	You may need to do some fancy coding if you need more variables
-
-	You can just print any needed output
-
-*/
+/**
+ * Start the following scripts when "update.php" is called
+ *
+ * Available variables
+ *   - $wowdb       = roster's db layer
+ *   - $member_id   = character id from the database ( ex. 24 )
+ *   - $member_name = character's name ( ex. 'Jonny Grey' )
+ *   - $roster_conf = The entire roster config array
+ *   - $mode        = when you want to run the trigger
+ *      = 'char'  - during a character update
+ *      = 'guild' - during a guild update
+ *
+ * You may need to do some fancy coding if you need more variables
+ *
+ * You can just print any needed output
+ */
 //----------[ INSERT UPDATE TRIGGER BELOW ]-----------------------
 
 
@@ -85,4 +114,3 @@ if( $mode == 'guild' )
 	}
 }
 unset($SigGenConfig);
-?>

@@ -1,11 +1,47 @@
 <?php
-/*******************************
- * $Id$
- *******************************/
+/**
+ * Project: SigGen - Signature and Avatar Generator for WoWRoster
+ * File: /inc/functions.inc
+ *
+ * Licensed under the Creative Commons
+ * "Attribution-NonCommercial-ShareAlike 2.5" license
+ *
+ * Short summary:
+ *  http://creativecommons.org/licenses/by-nc-sa/2.5/
+ *
+ * Legal Information:
+ *  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
+ *
+ * Full License:
+ *  license.txt (Included within this library)
+ *
+ * You should have recieved a FULL copy of this license in license.txt
+ * along with this library, if you did not and you are unable to find
+ * and agree to the license you may not use this library.
+ *
+ * For questions, comments, information and documentation please visit
+ * the official website at cpframework.org
+ *
+ * @link http://www.wowroster.net
+ * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
+ * @author Joshua Clark
+ * @version 0.2.0
+ * @copyright 2005-2007 Joshua Clark
+ * @package SigGen
+ * @filesource
+ *
+ * $Id:$
+ */
 
-/*
-Common SigConfig Functions Class
-*/
+if ( !defined('ROSTER_INSTALLED') )
+{
+    exit('Detected invalid access to this file!');
+}
+
+/**
+ * Common SigConfig Functions Class
+ * @package SigGen
+ */
 class SigConfigClass
 {
 	var $message;
@@ -31,16 +67,27 @@ class SigConfigClass
 				{
 					if( $chmod )
 					{
-						if( chmod( $dir,0777 ) )
-							return TRUE;
+						$chmod_check = @chmod( $dir,0777 );
+						if( $chmod_check )
+						{
+							return true;
+						}
 						else
-							return FALSE;
+						{
+							return false;
+						}
 					}
 					else
-						return FALSE;
+					{
+						return false;
+					}
 				}
 			}
-			return TRUE;
+			return true;
+		}
+		else
+		{
+			return false;
 		}
 	}
 
@@ -53,7 +100,8 @@ class SigConfigClass
 	 */
 	function makeDir( $dir )
 	{
-		if( mkdir($dir) )
+		$mkdir_check = @mkdir($dir);
+		if( $mkdir_check )
 		{
 			return TRUE;
 		}
@@ -71,7 +119,7 @@ class SigConfigClass
 	 */
 	function setMessage( $message )
 	{
-		$this->message .= "$message\n";
+		$this->message .= $message.'[|]';
 	}
 
 
@@ -82,17 +130,16 @@ class SigConfigClass
 	 */
 	function getMessage()
 	{
+		global $roster_conf, $siggen_locale;
+
 		$message = $this->message;
 
 		if( !empty($message) )
 		{
-			// Replace newline feeds with <br />, then newline
-			$messageArr = explode("\n",$message);
+			// Replace newline feeds with <br />
+			$messageArr = explode("[|]",$message);
 
-			$output = '
-<!-- Begin Message Box -->
-'.border('syellow','start','SigGen Messages').'
-<table class="sc_table" cellspacing="0" cellpadding="2">';
+			$output = '<table class="sc_table" cellspacing="0" cellpadding="2" width="100%">';
 			$row=0;
 			foreach( $messageArr as $line )
 			{
@@ -105,9 +152,9 @@ class SigConfigClass
 				}
 			}
 
-$output .= "\n</table>\n<!-- End Message Box -->\n".border('syellow','end');
+$output .= "\n</table>";
 
-			return $output;
+			return messagebox($output,$siggen_locale[$roster_conf['roster_lang']]['sql_messages'],'syellow');
 		}
 		else
 		{
@@ -134,7 +181,7 @@ $output .= "\n</table>\n<!-- End Message Box -->\n".border('syellow','end');
 	 */
 	function getSqlDebug()
 	{
-		global $db_prefix, $roster_conf;
+		global $roster_conf, $siggen_locale;
 
 		$message = $this->sql_debug;
 
@@ -147,22 +194,7 @@ $output .= "\n</table>\n<!-- End Message Box -->\n".border('syellow','end');
 			// Replace '<!-- ' with color tag
 			$message = nl2br($message);
 
-			$message = '
-<!-- Begin SQL Debug Box -->
-<div id="sqlDebugCol" style="display:inline">
-'.border('sgray','start',"<div style=\"cursor:pointer;width:400px;\" onclick=\"swapShow('sqlDebugCol','sqlDebug')\"><img src=\"".$roster_conf['img_url']."plus.gif\" style=\"float:right;\" alt=\"+\" />SigGen SQL Queries</div>").'
-'.border('sgray','end').'
-</div>
-<div id="sqlDebug" style="display:none">
-'.border('sgreen','start',"<div style=\"cursor:pointer;width:100%;\" onclick=\"swapShow('sqlDebugCol','sqlDebug')\"><img src=\"".$roster_conf['img_url']."minus.gif\" style=\"float:right;\" alt=\"-\" />SigGen SQL Queries</div>").'
-  <table width="100%" class="sc_table" cellspacing="1" cellpadding="2">
-    <tr class="sc_row1">
-      <td>'.$message.'</td>
-    </tr>
-  </table>
-'.border('sgreen','end').'
-</div>
-<!-- End SQL Debug Box -->';
+			$message = scrollboxtoggle($message,$siggen_locale[$roster_conf['roster_lang']]['sql_queries'],'sgray',false,'450px','200px');
 
 			return $message;
 		}
@@ -174,26 +206,66 @@ $output .= "\n</table>\n<!-- End Message Box -->\n".border('syellow','end');
 
 
 	/**
-	 * Create an HTML option list (value-name)
+	 * Create an HTML option list
 	 *
-	 * @param array $values | array with $values
-	 * @param string $selected | what will be selected
-	 * @param string $id | what to match selected with
-	 * @return string | an html option list
+	 * @param array $values    array ($name => $value)
+	 * @param string $selected what will be selected
+	 * @param string $id       what to match selected with
+	 * @param string $type     how to arrange the value/label
+	 *                         0- name value (LIST)
+	 *                         1- value name (LISTREV)
+	 *                         2- name name (NAME)
+	 *                         3- value value (VALUE)
+	 * @param string $param    additional crap for <select> field
+	 * @return string          an html option list
 	 */
-	function createOptionList( $values , $selected , $id )
+	function createOptionList( $values , $selected , $id , $type='' , $param='' )
 	{
 		if( !empty($selected) )
-			$select_one = 1;
-
-		$option_list = "\n  <select class=\"sc_select\" name=\"{$id}\">\n    <option value=\"\">--None--</option>\n";
-
-		foreach( $values as $name => $value )
 		{
+			$select_one = true;
+		}
+
+		$option_list = "\n  <select class=\"sc_select\" name=\"{$id}\" $param>\n    <option value=\"\">--None--</option>\n";
+
+		foreach( $values as $Aname => $Avalue )
+		{
+			switch ($type)
+			{
+				case 0: // name value
+				case 'list':
+					$value = $Avalue;
+					$name = $Aname;
+					break;
+
+				case 1: // value name
+				case 'rev':
+					$value = $Aname;
+					$name = $Avalue;
+					break;
+
+				case 2: // name name
+				case 'name':
+					$value = $Aname;
+					$name = $Aname;
+					break;
+
+				case 3: // value value
+				case 'value':
+					$value = $Avalue;
+					$name = $Avalue;
+					break;
+
+				default:
+					$value = $Avalue;
+					$name = $Aname;
+					break;
+			}
+
 			if( $selected == $value && $select_one )
 			{
 				$option_list .= "    <option value=\"{$value}\" selected=\"selected\">{$name}</option>\n";
-				$select_one = 0;
+				$select_one = false;
 			}
 			else
 			{
@@ -207,109 +279,10 @@ $output .= "\n</table>\n<!-- End Message Box -->\n".border('syellow','end');
 
 
 	/**
-	 * Create an HTML option list (name-value)
-	 *
-	 * @param array $values | array with $values
-	 * @param string $selected | what will be selected
-	 * @param string $id | what to match selected with
-	 * @return string | an html option list
-	 */
-	function createOptionListRev( $values , $selected , $id )
-	{
-		if( !empty($selected) )
-			$select_one = 1;
-
-		$option_list = "\n  <select class=\"sc_select\" name=\"{$id}\">\n    <option value=\"\">--None--</option>\n";
-
-		foreach( $values as $name => $value )
-		{
-			if( $selected == $name && $select_one )
-			{
-				$option_list .= "    <option value=\"{$name}\" selected=\"selected\">{$value}</option>\n";
-				$select_one = 0;
-			}
-			else
-			{
-				$option_list .= "    <option value=\"{$name}\">{$value}</option>\n";
-			}
-		}
-		$option_list .= "  </select>";
-
-		return $option_list;
-	}
-
-
-	/**
-	 * Create an HTML option list (name-name)
-	 *
-	 * @param array $values | array with $values
-	 * @param string $selected | what will be selected
-	 * @param string $id | what to match selected with
-	 * @return string | an html option list
-	 */
-	function createOptionListName( $values , $selected , $id )
-	{
-		if( !empty($selected) )
-			$select_one = 1;
-
-		$option_list = "\n  <select class=\"sc_select\" name=\"{$id}\">\n    <option value=\"\">--None--</option>\n";
-
-		foreach( $values as $name => $value )
-		{
-			if( $selected == $name && $select_one )
-			{
-				$option_list .= "    <option value=\"{$name}\" selected=\"selected\">{$name}</option>\n";
-				$select_one = 0;
-			}
-			else
-			{
-				$option_list .= "    <option value=\"{$name}\">{$name}</option>\n";
-			}
-		}
-		$option_list .= "  </select>";
-
-		return $option_list;
-	}
-
-
-	/**
-	 * Create an HTML option list (value-value)
-	 *
-	 * @param array $values | array with $values
-	 * @param string $selected | what will be selected
-	 * @param string $id | what to match selected with
-	 * @return string | an html option list
-	 */
-	function createOptionListValue( $values , $selected , $id )
-	{
-		if( !empty($selected) )
-			$select_one = 1;
-
-		$option_list = "\n  <select class=\"sc_select\" name=\"{$id}\">\n    <option value=\"\">--None--</option>\n";
-
-		foreach( $values as $name => $value )
-		{
-			if( $selected == $value && $select_one )
-			{
-				$option_list .= "    <option value=\"{$value}\" selected=\"selected\">{$value}</option>\n";
-				$select_one = 0;
-			}
-			else
-			{
-				$option_list .= "    <option value=\"{$value}\">{$value}</option>\n";
-			}
-		}
-		$option_list .= "  </select>";
-
-		return $option_list;
-	}
-
-
-	/**
 	 * Get a list of files from a directory
 	 *
 	 * @param string $dir | directory to get list of files
-	 * @param string $ext | get files with this extention
+	 * @param mixed $ext | get files with this extention can be an array
 	 * @return array | $file => $name
 	 */
 	function listFiles( $dir , $ext )
@@ -326,10 +299,54 @@ $output .= "\n</table>\n<!-- End Message Box -->\n".border('syellow','end');
 			{
 				$pfad_info = pathinfo($file);
 
-				if( strtolower($pfad_info['extension']) == strtolower($ext) )
+				if( is_array($ext) )
 				{
-					$name = str_replace('.'.$pfad_info['extension'],'',$file);
-					$arrFiles += array($name => $file);
+					if( in_array(strtolower($pfad_info['extension']),$ext))
+					{
+						$name = str_replace('.'.$pfad_info['extension'],'',$file);
+						$arrFiles += array($file => $name);
+					}
+				}
+				else
+				{
+					if( strtolower($pfad_info['extension']) == strtolower($ext) )
+					{
+						$name = str_replace('.'.$pfad_info['extension'],'',$file);
+						$arrFiles += array($file => $name);
+					}
+				}
+			}
+			// close the directory
+			closedir($tmp_dir);
+
+			//sort the list
+			asort($arrFiles);
+		}
+		return $arrFiles;
+	}
+
+
+	/**
+	 * Get a list of directories from a directory
+	 *
+	 * @param string $dir | directory to get list of directories
+	 * @return array | $file => $name
+	 */
+	function listDir( $dir )
+	{
+		$arrFiles = array();
+
+		// Open the directory
+		$tmp_dir = @opendir( $dir );
+
+		if( !empty($tmp_dir) )
+		{
+			// Read the files
+			while( $file = readdir($tmp_dir) )
+			{
+				if( is_dir($dir.$file) && $file != '.' && $file != '..' )
+				{
+					$arrFiles += array($file => $file);
 				}
 			}
 			// close the directory
@@ -480,27 +497,34 @@ $output .= "\n</table>\n<!-- End Message Box -->\n".border('syellow','end');
 	 */
 	function uploadImage( $dir , $filename )
 	{
-		$userfile_name = ( isset($_FILES['userfile']['name']) ? $filename.'.png' : '' );
+		global $roster_conf, $siggen_locale;
+
+		$accepted_files = array('png','gif','jpg','jpeg');
+
+		$uploaded_filename = $_FILES['userfile']['name'];
+		$uploaded_fileext = strtolower(ltrim(strrchr($uploaded_filename,'.'),'.'));
+
+		$userfile_name = ( isset($_FILES['userfile']['name']) ? $filename.'.'.$uploaded_fileext : '' );
 
 		if( isset($_FILES['userfile']) )
 		{
 			if( empty($_FILES['userfile']['name']) )
 			{
-				$this->setMessage('Please select an image to upload');
+				$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['select_image_upload']);
 				return FALSE;
 			}
 			elseif( empty( $filename ) )
 			{
-				$this->setMessage('Please select a name before uploading an image');
+				$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['select_name_upload']);
 				return FALSE;
 			}
 			else
 			{
 				$userfile_name = $_POST['image_type'].$userfile_name;
 
-				if( strcasecmp( substr($_FILES['userfile']['name'],-4),'.png' ) )
+				if( !in_array( $uploaded_fileext,$accepted_files ) )
 				{
-					$this->setMessage('The image must be .png, 24-bit color');
+					$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['image_mustbe_right']);
 					return FALSE;
 				}
 
@@ -508,19 +532,19 @@ $output .= "\n</table>\n<!-- End Message Box -->\n".border('syellow','end');
 				{
 					if( md5_file($dir.$userfile_name) == md5_file($_FILES['userfile']['tmp_name']) )
 					{
-						$this->setMessage('You are uploading an exact copy of an existing image');
+						$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['image_a_copy']);
 						return FALSE;
 					}
 				}
 
 				if( !move_uploaded_file( $_FILES['userfile']['tmp_name'],$dir.$userfile_name ) || !chmod( $dir.$userfile_name,0777 ) )
 				{
-					$this->setMessage("Upload of [<span class=\"purple\">$userfile_name</span>] failed<br />You might not have write access to [<span class=\"green\">".str_replace( '\\','/',$dir ).'</span>]');
+					$this->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['image_upload_failed'],$userfile_name,str_replace( '\\','/',$dir )));
 					return FALSE;
 				}
 				else
 				{
-					$this->setMessage("Upload of [<span class=\"purple\">$userfile_name</span>] to [<span class=\"green\">".str_replace( '\\','/',$dir ).'</span>] successful');
+					$this->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['image_upload_success'],$userfile_name,str_replace( '\\','/',$dir )));
 					return TRUE;
 				}
 			}
@@ -541,9 +565,11 @@ $output .= "\n</table>\n<!-- End Message Box -->\n".border('syellow','end');
 	 */
 	function deleteImage( $dir , $filename )
 	{
+		global $roster_conf, $siggen_locale;
+
 		if( empty($filename) )
 		{
-			$this->setMessage( 'Please select an image to delete' );
+			$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['select_image_delete']);
 			return FALSE;
 		}
 		else
@@ -552,12 +578,12 @@ $output .= "\n</table>\n<!-- End Message Box -->\n".border('syellow','end');
 			{
 				if( unlink($dir.$filename) )
 				{
-					$this->setMessage( '<span class="green">'.str_replace( '\\','/',$dir ).$filename.'</span>: <span class="red">Deleted</span>' );
+					$this->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['image_deleted'],str_replace( '\\','/',$dir ).$filename));
 					return TRUE;
 				}
 				else
 				{
-					$this->setMessage( str_replace( '\\','/',$dir ).$filename.': Could not be deleted. I don&acute;t know why' );
+					$this->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['image_delete_failed'],str_replace( '\\','/',$dir ).$filename));
 					return FALSE;
 				}
 			}
@@ -573,18 +599,57 @@ $output .= "\n</table>\n<!-- End Message Box -->\n".border('syellow','end');
 	 */
 	function processData( $post , $config_name, $data )
 	{
-		global $wowdb;
+		global $wowdb, $roster_conf, $siggen_locale;
 
 		$configData = $data;
 
 		$wowdb->reset_values();
 
+		// Array for color fixing
+		$color_fix = array(
+			'backg_fill_color',
+			'expbar_color_border',
+			'expbar_color_inside',
+			'expbar_color_bar',
+			'expbar_color_maxbar',
+			'expbar_font_color',
+			'expbar_text_shadow',
+			'lvl_font_color',
+			'lvl_text_shadow',
+			'skills_font_color',
+			'skills_shadow',
+			'text_name_font_color',
+			'text_name_shadow',
+			'text_class_font_color',
+			'text_class_shadow',
+			'text_honor_font_color',
+			'text_honor_shadow',
+			'text_guildname_font_color',
+			'text_guildname_shadow',
+			'text_guildtitle_font_color',
+			'text_guildtitle_shadow',
+			'text_servername_font_color',
+			'text_servername_shadow',
+			'text_sitename_font_color',
+			'text_sitename_shadow',
+			'text_custom_font_color',
+			'text_custom_shadow',
+		);
 		// Update only the changed fields
 		foreach( $post as $settingName => $settingValue )
 		{
 			// Fix colors
-			if( substr($settingName, 0, 5) == 'color' && substr($settingValue, 0, 1) != '#' )
-				$settingValue = '#'.$settingValue;
+			if( in_array($settingName,$color_fix) && $settingValue != '' )
+			{
+				if( substr($settingValue, 0, 1) != '#' )
+				{
+					$settingValue = '#'.strtoupper($settingValue);
+				}
+				else
+				{
+					$settingValue = strtoupper($settingValue);
+				}
+			}
 
 			// Fix directories
 			if( substr($settingName, -4, 4) == '_dir' )
@@ -612,9 +677,9 @@ $output .= "\n</table>\n<!-- End Message Box -->\n".border('syellow','end');
 			$this->setSqlDebug("processData: $update_sql");
 
 			$wowdb->query($update_sql)
-				or exit( 'processData: '.$wowdb->error() );
+				or errorMode( 'processData: '.$wowdb->error() );
 
-			$this->setMessage( 'Settings have been changed' );
+			$this->setMessage( $siggen_locale[$roster_conf['roster_lang']]['settings_changed'] );
 		}
 	}
 
@@ -627,9 +692,9 @@ $output .= "\n</table>\n<!-- End Message Box -->\n".border('syellow','end');
 	 */
 	function resetDefaults( $confirm , $config_id )
 	{
-		global $wowdb, $sigconfig_dir;
+		global $wowdb, $roster_conf, $siggen_locale;
 
-		$sql_file = $sigconfig_dir.'inc/sql.inc';
+		$sql_file = SIGGEN_DIR.'inc/sql.inc';
 
 		if( $confirm )
 		{
@@ -642,19 +707,125 @@ $output .= "\n</table>\n<!-- End Message Box -->\n".border('syellow','end');
 				$this->setSqlDebug("resetDefaults: $sql");
 
 				$wowdb->query($sql)
-					or exit( 'resetDefaults: '.$wowdb->error() );
+					or errorMode( 'resetDefaults: '.$wowdb->error() );
 
-				$this->setMessage('Settings have been restored to defaults');
+				$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['settings_reset']);
 			}
 			else
 			{
-				$this->setMessage("Cannot find reset file [$reset_file]");
+				$this->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['cannot_find_file'],$reset_file));
 			}
 		}
 		else
 		{
-			$this->setMessage('To reset, make sure you check the &quot;Check to confirm reset&quot; checkbox');
+			$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['reset_checkbox']);
 		}
+	}
+
+
+
+	/**
+	 * Grabs settings from a file, exported from SigGen
+	 *
+	 * @param string  Config ID to import
+	 * @return bool   Success or not
+	 */
+	function importSettings( $checkData , $config_id )
+	{
+		global $roster_conf, $siggen_locale, $sc_db_ver;
+
+		$accepted_file = "siggen_$config_id.txt";
+
+		$uploaded_filename = $_FILES['userfile']['name'];
+		$temp_file = $_FILES['userfile']['tmp_name'];
+
+		$ignore = array('config_id','db_ver');
+
+		if( isset($_FILES['userfile']) )
+		{
+			if( empty($_FILES['userfile']['name']) )
+			{
+				$this->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['select_import_file'],$accepted_file));
+				return FALSE;
+			}
+			else
+			{
+				if( $uploaded_fileext != $accepted_files )
+				{
+					$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['import_mustbe_right']);
+					return false;
+				}
+
+				if( file_exists($temp_file) && is_readable($temp_file) )
+				{
+					$file_as_array = file($temp_file);
+
+					$firstline = true;
+					$settingsArray = array();
+					foreach( $file_as_array as $file_line )
+					{
+						$file_line = trim($file_line);
+						list($value,$setting) = explode('|',$file_line);
+
+						if( $firstline )
+						{
+							if( $sc_db_ver != $value )
+							{
+								$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['import_upload_failed_ver'],$value,$sc_db_ver);
+								return false;
+							}
+							$firstline = false;
+						}
+						elseif( !in_array($value,$ignore) )
+						{
+							$settingsArray[$value] = $setting;
+						}
+					}
+					$this->processData($settingsArray,$config_id,$checkData);
+
+					$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['import_upload_success']);
+
+					return true;
+				}
+				else
+				{
+					$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['import_upload_failed']);
+					return false;
+				}
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+
+
+	/**
+	 * Grabs settings from SigGen, exports them to a file
+	 *
+	 * @param array  $checkData    SigGen Data
+	 * @param string $config_id    Current config
+	 */
+	function exportSettings( $checkData , $config_id )
+	{
+		global $sc_db_ver;
+
+		$file = "$sc_db_ver|$config_id\n";
+
+		foreach( $checkData as $name => $value )
+		{
+			$file .= "$name|$value\n";
+		}
+
+		header('Content-Type: text/x-delimtext; name="siggen_'.$config_id.'.txt"');
+		header('Content-disposition: attachment; filename="siggen_'.$config_id.'.txt"');
+
+		// We need to stripslashes no matter what the setting of magic_quotes_gpc is
+		echo stripslashes($file);
+
+		exit;
 	}
 
 
@@ -667,29 +838,35 @@ $output .= "\n</table>\n<!-- End Message Box -->\n".border('syellow','end');
 	 */
 	function installDb( $mode )
 	{
-		global $wowdb, $sigconfig_dir, $sc_db_ver;
+		global $wowdb, $sc_db_ver, $roster_conf, $siggen_locale, $script_filename;
 
-		$sql_file = $sigconfig_dir.'inc/sql.inc';
+		$sql_file = SIGGEN_DIR.'inc/sql.inc';
 
 		if( file_exists($sql_file) )
 		{
+			$sql = array();
 			switch( $mode )
 			{
 				case 'upgrade':
 					include_once( $sql_file );
 
-					$reset = $_REQUEST['reset'];
+					$reset = $_GET['reset'];
+					$ver = $_GET['ver'];
 
-					$sql[0] = $create_sql['upgrade'];
-
-					if( $reset == 'reset' )
+					if( is_array($create_sql['upgrade_'.$ver]) )
 					{
-						$sql[1] = $create_sql['reset']['avatar'];
-						$sql[2] = $create_sql['reset']['signature'];
+						foreach( $create_sql['upgrade_'.$ver] as $upg_sql )
+							$sql[] = $upg_sql;
 					}
 					else
 					{
-						$sql[1] = $create_sql['upgrade_dbver'];
+						$sql[] = $create_sql['upgrade_'.$ver];
+					}
+
+					if( $reset == '1' )
+					{
+						$sql[] = $create_sql['reset']['avatar'];
+						$sql[] = $create_sql['reset']['signature'];
 					}
 
 					break;
@@ -697,9 +874,11 @@ $output .= "\n</table>\n<!-- End Message Box -->\n".border('syellow','end');
 				case 'install':
 					include_once( $sql_file );
 
-					$sql[0] = $create_sql['install'];
-					$sql[1] = $create_sql['insert']['avatar'];
-					$sql[2] = $create_sql['insert']['signature'];
+					foreach( $create_sql['install'] as $inst_sql )
+						$sql[] = $inst_sql;
+
+					$sql[] = $create_sql['insert']['avatar'];
+					$sql[] = $create_sql['insert']['signature'];
 
 					break;
 			}
@@ -709,13 +888,13 @@ $output .= "\n</table>\n<!-- End Message Box -->\n".border('syellow','end');
 				$this->setSqlDebug("installDb[$mode]: $sql_load");
 
 				$wowdb->query($sql_load)
-					or exit( 'installDb: '.$wowdb->error() );
+					or errorMode( 'installDb: '.$wowdb->error() );
 			}
-			return ucwords($mode)." was successfull...\nClick <a href=\"addon.php?roster_addon_name=siggen\">HERE</a> to continue\n";
+			return sprintf($siggen_locale[$roster_conf['roster_lang']]['install_success'],ucwords($mode),$script_filename);
 		}
 		else
 		{
-			return "Cannot find sql file [$sql_file]";
+			return sprintf($siggen_locale[$roster_conf['roster_lang']]['cannot_find_file'],$sql_file);
 		}
 	}
 
@@ -770,5 +949,59 @@ $output .= "\n</table>\n<!-- End Message Box -->\n".border('syellow','end');
 		return $tip;
 	}
 
+
+	/**
+	 * Creates a table for viewing image packs
+	 *
+	 * @param string $dir
+	 */
+	function imagePreview($dir)
+	{
+		global $roster_config;
+
+		$return = '<table cellpadding="0" cellspacing="0" style="font-size:10px;">';
+
+		$dirname = '.';
+		$pattern = "(\.png$)"; // valid image extensions
+		$columns = 2;
+		$drawIndex = 0;
+
+		if($handle = opendir($dirname))
+		{
+			while(false !== ($file = readdir($handle)))
+			{
+				if(eregi($pattern, $file)) //if this file is a valid image
+				{
+					if($drawIndex == 0)
+					{
+						$return .= '<tr>';
+					}
+
+					$return .= '<td align="center"><img src="'.$roster_config['roster_dir'].'siggen/img/'.'/'.$file.'" style="border:0;"><br />'.$file.'</td>';
+					$drawIndex++;
+
+					if($drawIndex == $columns)
+					{
+						$return .= '</tr>';
+						$drawIndex = 0;
+					}
+				}
+			}
+
+			if($drawIndex !== 0)
+			{
+				$finishDraw = $columns - $drawIndex;
+				while($finishDraw !== 0)
+				{
+					$return .= '<td>&nbsp;</td>';
+					$finishDraw--;
+				}
+				$return .= '</tr>';
+			}
+		}
+		closedir($handle);
+
+		$return .= '</table>';
+	}
 
 }

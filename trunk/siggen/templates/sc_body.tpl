@@ -1,7 +1,42 @@
 <?php
-/*******************************
- * $Id$
- *******************************/
+/**
+ * Project: SigGen - Signature and Avatar Generator for WoWRoster
+ * File: /templates/sc_body.tpl
+ *
+ * Licensed under the Creative Commons
+ * "Attribution-NonCommercial-ShareAlike 2.5" license
+ *
+ * Short summary:
+ *  http://creativecommons.org/licenses/by-nc-sa/2.5/
+ *
+ * Legal Information:
+ *  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
+ *
+ * Full License:
+ *  license.txt (Included within this library)
+ *
+ * You should have recieved a FULL copy of this license in license.txt
+ * along with this library, if you did not and you are unable to find
+ * and agree to the license you may not use this library.
+ *
+ * For questions, comments, information and documentation please visit
+ * the official website at cpframework.org
+ *
+ * @link http://www.wowroster.net
+ * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
+ * @author Joshua Clark
+ * @version 0.2.0
+ * @copyright 2005-2007 Joshua Clark
+ * @package SigGen
+ * @filesource
+ *
+ * $Id:$
+ */
+
+if ( !defined('ROSTER_INSTALLED') )
+{
+    exit('Detected invalid access to this file!');
+}
 
 	// Get the current settings
 	$configData = $checkData;
@@ -10,35 +45,49 @@
 	$member_list = $functions->getDbList( (ROSTER_MEMBERSTABLE),'`name`',"`guild_id` = '$guild_id'" );
 
 	// Get the background files
-	$backgFilesArr = $functions->listFiles( $sigconfig_dir.$configData['image_dir'].$configData['backg_dir'],'png' );
+	$backgFilesArr = $functions->listFiles( SIGGEN_DIR.$configData['image_dir'].$configData['backg_dir'],array('png','jpeg','jpg') );
 
 	// Get the font files
 	$fontFilesArr = $functions->listFiles( ROSTER_BASE.$configData['font_dir'],'ttf' );
 
 	// Get regular image files
-	$imageFilesArr = $functions->listFiles( $sigconfig_dir.$configData['image_dir'],'png' );
+	$frameFilesArr = $functions->listFiles( SIGGEN_DIR.$configData['image_dir'].$configData['frame_dir'],array('png','gif','jpeg','jpg') );
+	$levelFilesArr = $functions->listFiles( SIGGEN_DIR.$configData['image_dir'].$configData['level_dir'],array('png','gif','jpeg','jpg') );
+	$borderFilesArr = $functions->listFiles( SIGGEN_DIR.$configData['image_dir'].$configData['border_dir'],array('png','gif','jpeg','jpg') );
+
+	// Get the img folders
+	$backImgDirScan  = $functions->listDir( SIGGEN_DIR.$configData['image_dir'].'background'.DIR_SEP );
+	$charImgDirScan  = $functions->listDir( SIGGEN_DIR.$configData['image_dir'].'character'.DIR_SEP );
+	$classImgDirScan = $functions->listDir( SIGGEN_DIR.$configData['image_dir'].'class'.DIR_SEP );
+	$pvpImgDirScan   = $functions->listDir( SIGGEN_DIR.$configData['image_dir'].'pvp'.DIR_SEP );
+
+	$charDirList = $functions->listFiles( SIGGEN_DIR.$configData['image_dir'].$configData['char_dir'],array('png','gif','jpeg','jpg') );
+
+	$backImgDirList = $charImgDirList = $classImgDirList = $pvpImgDirList = array();
+
+	foreach( $backImgDirScan as $dir_check )
+	{
+		$backImgDirList += array( $dir_check => 'background/'.$dir_check.'/' );
+	}
+
+	foreach( $charImgDirScan as $dir_check )
+	{
+		$charImgDirList += array( $dir_check => 'character/'.$dir_check.'/' );
+	}
+
+	foreach( $classImgDirScan as $dir_check )
+	{
+		$classImgDirList += array( $dir_check => 'class/'.$dir_check.'/' );
+	}
+
+	foreach( $pvpImgDirScan as $dir_check )
+	{
+		$pvpImgDirList += array( $dir_check => 'pvp/'.$dir_check.'/' );
+	}
 
 	// Get list of columns for background selection
 	$table_name = ( $configData['backg_data_table'] == 'members' ? (ROSTER_MEMBERSTABLE) : (ROSTER_PLAYERSTABLE) );
 	$backgColumsArr = $functions->getDbColumns( $table_name );
-
-	// Get a list of colors
-	$colorArr = array();
-	for($n=1;$n<=10;$n++)
-	{
-		$name = "[$n] ".$configData['color'.$n];
-		$value = 'color'.$n;
-		$colorArr += array( $name => $value );
-	}
-
-	// Get a list of fonts
-	$fontArr = array();
-	for($n=1;$n<=8;$n++)
-	{
-		$name = "[$n] ".$configData['font'.$n];
-		$value = 'font'.$n;
-		$fontArr += array( $name => $value );
-	}
 
 	// Make alignment array
 	$alignArr = array('Left' => 'left','Center' => 'center','Right' => 'right');
@@ -48,7 +97,7 @@
 ?>
 
 <!-- Begin Main Body -->
-<form action="<?php print $script_filename; ?>" method="post" enctype="multipart/form-data" id="config" onsubmit="submitonce(this)">
+<form action="<?php print $script_filename; ?>" method="post" enctype="multipart/form-data" id="config" name="config" onsubmit="submitonce(this)">
 	<input type="hidden" name="sc_op" value="process" />
   <input type="submit" value="Save Settings" />
   <input type="reset" name="Reset" value="Reset" />
@@ -65,37 +114,53 @@
         Height: <input name="main_image_size_h" type="text" value="<?php print $configData['main_image_size_h']; ?>" size="5" maxlength="5" /></td>
     </tr>
     <tr>
-      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Must be a directory in &quot;'.$sigconfig_dir.'&quot;','Images directory' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="image_dir" type="text" value="<?php print $configData['image_dir']; ?>" size="20" maxlength="20" /></td>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Must be a directory in &quot;'.str_replace('\\','/',SIGGEN_DIR).'&quot;','Images directory' ); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="image_dir" type="text" value="<?php print $configData['image_dir']; ?>" size="20" maxlength="64" /></td>
     </tr>
     <tr>
-      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Sub directory of main image directory','Character images directory' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="char_dir" type="text" value="<?php print $configData['char_dir']; ?>" size="20" maxlength="20" /></td>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Select an image pack<br /><span style=&quot;color:red;&quot;>You MUST re-select the default character image again when changing this!</span>','Character image pack' ); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionList($charImgDirList,$configData['char_dir'],'char_dir',0,'onchange="document.config.submit();"' ); ?></td>
     </tr>
     <tr>
-      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Sub directory of main image directory','Class images directory' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="class_dir" type="text" value="<?php print $configData['class_dir']; ?>" size="20" maxlength="20" /></td>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Select an image pack','Class image pack' ); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionList($classImgDirList,$configData['class_dir'],'class_dir',0,'onchange="document.config.submit();"' ); ?></td>
     </tr>
     <tr>
-      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Sub directory of main image directory','Background images directory' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="backg_dir" type="text" value="<?php print $configData['backg_dir']; ?>" size="20" maxlength="20" /></td>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Select an image pack<br /><span style=&quot;color:red;&quot;>You MUST re-select the default background image and all of the images<br />in the background image config again when changing this!</span>','Background image pack' ); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionList($backImgDirList,$configData['backg_dir'],'backg_dir',0,'onchange="document.config.submit();"' ); ?></td>
     </tr>
     <tr>
-      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Sub directory of main image directory','Member images directory' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="user_dir" type="text" value="<?php print $configData['user_dir']; ?>" size="20" maxlength="20" /></td>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Sub directory of main image directory','Custom Member images directory' ); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="user_dir" type="text" value="<?php print $configData['user_dir']; ?>" size="20" maxlength="64" /></td>
     </tr>
     <tr>
-      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Sub directory of main image directory','PvP logo images directory' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="pvplogo_dir" type="text" value="<?php print $configData['pvplogo_dir']; ?>" size="20" maxlength="20" /></td>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Select an image pack','PvP logo image pack' ); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionList($pvpImgDirList,$configData['pvplogo_dir'],'pvplogo_dir',0,'onchange="document.config.submit();"' ); ?></td>
+    </tr>
+    <tr>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Sub directory of main image directory','Color Frames directory' ); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="frame_dir" type="text" value="<?php print $configData['frame_dir']; ?>" size="20" maxlength="64" /></td>
+    </tr>
+    <tr>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Sub directory of main image directory','Level Bubble Image directory' ); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="level_dir" type="text" value="<?php print $configData['level_dir']; ?>" size="20" maxlength="64" /></td>
+    </tr>
+    <tr>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Sub directory of main image directory','Bordering Images directory' ); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="border_dir" type="text" value="<?php print $configData['border_dir']; ?>" size="20" maxlength="64" /></td>
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Realative to the &quot;/roster/&quot; directory','Fonts directory' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="font_dir" type="text" value="<?php print $configData['font_dir']; ?>" size="20" maxlength="20" /></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="font_dir" type="text" value="<?php print $configData['font_dir']; ?>" size="20" maxlength="64" /></td>
     </tr>
     <tr>
-      <td class="sc_row_right<?php echo (((++$row)%2)+1); ?>" align="left" colspan="2"><?php print $functions->createTip( 'These <u><strong>MUST</strong></u> be separated with a ( : )<br />Choices { back | frames | char | border | pvp | lvl | class }','Image layer order' ); ?>
+      <td class="sc_row_right<?php echo (((++$row)%2)+1); ?>" align="left" colspan="2"><?php print $functions->createTip( 'These <u><strong>MUST</strong></u> be separated with a ( : )<br />Choices { frames | char | border | pvp | lvl | class }','Image layer order' ); ?>
         <input name="image_order" type="text" value="<?php print $configData['image_order']; ?>" size="50" maxlength="128" />
       </td>
+    </tr>
+    <tr>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Text to output when name is not found in the member list','&quot;Name Not Found&quot; Text' ); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="default_message" type="text" value="<?php print $configData['default_message']; ?>" size="20" maxlength="64" /></td>
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Allows a web-browser to cache the image<br />May not work for all browsers or web servers','eTag Cacheing' ); ?></td>
@@ -150,8 +215,8 @@ if( $allow_save )
         No</label></td>
     </tr>
     <tr>
-      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Specify a directory to save generated images to<br />Realative to &quot;'.$sigconfig_dir.'&quot;','Saved images directory' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="save_images_dir" type="text" value="<?php print $configData['save_images_dir']; ?>" size="20" maxlength="20" /></td>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Specify a directory to save generated images to<br />Realative to &quot;'.SIGGEN_DIR.'&quot;','Saved images directory' ); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="save_images_dir" type="text" value="<?php print $configData['save_images_dir']; ?>" size="20" maxlength="64" /></td>
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Image format of saved images','Saved images format' ); ?></td>
@@ -159,8 +224,8 @@ if( $allow_save )
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Text to place before/after the saved image file','Saved Images Prefix/Suffix' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right">Prefix: <input name="save_prefix" type="text" value="<?php print $configData['save_prefix']; ?>" size="8" maxlength="8" /><br />
-        Suffix: <input name="save_suffix" type="text" value="<?php print $configData['save_suffix']; ?>" size="8" maxlength="8" /></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right">Prefix: <input name="save_prefix" type="text" value="<?php print $configData['save_prefix']; ?>" size="20" maxlength="32" /><br />
+        Suffix: <input name="save_suffix" type="text" value="<?php print $configData['save_suffix']; ?>" size="20" maxlength="32" /></td>
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'This will generate an image and save it to the server disk for<br />each character when update.php is ran','Auto-save image on character update' ); ?></td>
@@ -233,20 +298,19 @@ else
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Select a color to fill the background with<br />Setting is for &quot;Color fill background&quot;','Background fill color' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionList($colorArr,$configData['backg_fill_color'],'backg_fill_color' ); ?> :
-      	<?php print $functions->createColorTip($configData['backg_fill_color'],$configData); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input type="text" maxlength="7" style="background-color:<?php print $configData['backg_fill_color']; ?>;" value="<?php print $configData['backg_fill_color']; ?>" name="backg_fill_color" id="backg_fill_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('backg_fill_color'))" alt="" /></td>
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Image to use for the outside border<br />Set to &quot;--None--&quot; to disable','Outside border image name' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionListName($imageFilesArr,$configData['outside_border_image'],'outside_border_image' ); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionList($borderFilesArr,$configData['outside_border_image'],'outside_border_image',2 ); ?></td>
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Image to use for the colored frames<br />Set to &quot;--None--&quot; to disable','Colored frames image name' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionListName($imageFilesArr,$configData['frames_image'],'frames_image' ); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionList($frameFilesArr,$configData['frames_image'],'frames_image',2 ); ?></td>
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Image to use when the &quot;Background Selection Configuration&quot;<br />cannot select an image','Default Background Image' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionListName($backgFilesArr,$configData['backg_default_image'],'backg_default_image' ); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionList($backgFilesArr,$configData['backg_default_image'],'backg_default_image',2 ); ?></td>
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Makes everyone&acute;s background the default<br /><br />Settings this to &quot;Yes&quot; will disable the &quot;Background Selection Configuration&quot; window','Default Background Override' ); ?></td>
@@ -273,14 +337,14 @@ if( !$configData['backg_force_default'] )
     <tr>
       <td class="sc_row<?php echo ((($row=0)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Select what table/field to use when selecting backgrounds','Search Config' ); ?></td>
       <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right">Table:
-        <select class="sc_select" name="backg_data_table">
+        <select class="sc_select" name="backg_data_table" onchange="document.config.submit();">
           <option value="members" <?php print ( $configData['backg_data_table'] == 'members' ? 'selected="selected"' : '' ); ?>>Members Table</option>
           <option value="players" <?php print ( $configData['backg_data_table'] == 'players' ? 'selected="selected"' : '' ); ?>>Players Table</option>
         </select><br />
-        Field: <?php print $functions->createOptionListValue($backgColumsArr,$configData['backg_data'],'backg_data' ); ?></td>
+        Field: <?php print $functions->createOptionList($backgColumsArr,$configData['backg_data'],'backg_data',3 ); ?></td>
     </tr>
     <tr>
-      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'This uses &quot;'.str_replace('\\','/',$sigconfig_dir).'localization.php&quot; to translate<br /> the localized name to the english name','Translate &quot;Search Name&quot;' ); ?></td>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'This uses &quot;'.str_replace('\\','/',SIGGEN_DIR).'localization.php&quot; to translate<br /> the localized name to the english name<br /><br />Only race and class names are in the locale file by default','Translate &quot;Search Name&quot;' ); ?></td>
       <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><label>
         <input type="radio" class="checkBox" name="backg_translate" value="1" <?php print ( $configData['backg_translate'] ? 'checked="checked"' : '' ); ?> />
         Yes</label> <label>
@@ -294,8 +358,8 @@ for($c=1;$c<=12;$c++)
 	print '
     <tr>
       <td class="sc_row'.(((++$row)%2)+1).'" align="left">Background '.$c.'</td>
-      <td class="sc_row_right'.((($row)%2)+1).'" align="right">Search: <input name="backg_search_'.$c.'" type="text" value="'.$configData['backg_search_'.$c].'" size="25" maxlength="25" /><br />
-        Image Name: '.$functions->createOptionListName($backgFilesArr,$configData['backg_file_'.$c],'backg_file_'.$c ).'</td>
+      <td class="sc_row_right'.((($row)%2)+1).'" align="right">Search: <input name="backg_search_'.$c.'" type="text" value="'.$configData['backg_search_'.$c].'" size="25" maxlength="64" /><br />
+        Image Name: '.$functions->createOptionList($backgFilesArr,$configData['backg_file_'.$c],'backg_file_'.$c,2 ).'</td>
     </tr>';
 }
 ?>
@@ -310,55 +374,6 @@ else
 	print border('sred','end');
 }
 ?>
-</div>
-
-<!-- ===[ Begin Menu 3 : Font Settings ]=============================================== -->
-<div id="t3" style="display:none" >
-<table>
-  <tr>
-    <td valign="top"><?php print border('sgray','start','Fonts'); ?>
-      <table width="170" class="sc_table" cellspacing="0" cellpadding="2">
-        <tr>
-          <th class="sc_header_right" align="center" colspan="2"><?php print $functions->createTip( 'Changes here will not be shown elsewhere<br />until the [Save Settings] button is pressed','Change SigGen Fonts' ); ?></th>
-        </tr>
-<?php
-$row=1;
-for($c=1;$c<=8;$c++)
-{
-	print '
-        <tr>
-          <td class="sc_row'.(((++$row)%2)+1).'" align="left">Font '.$c.'</td>
-          <td class="sc_row_right'.((($row)%2)+1).'" align="right">'.$functions->createOptionList($fontFilesArr,$configData['font'.$c],'font'.$c ).'</td>
-        </tr>';
-}
-
-?>
-
-      </table><?php print border('sgray','end'); ?></td>
-
-    <td valign="top"><?php print border('sgray','start','Colors'); ?>
-      <table class="sc_table" cellspacing="0" cellpadding="2">
-        <tr>
-          <th class="sc_header_right" align="center" colspan="2"><?php print $functions->createTip( 'Colors are in hex format<br />( ex. black = 000000 : white = FFFFFF )<br /><br />You can also click <img src=&quot;	'.$roster_conf['roster_dir'].'/addons/siggen/inc/color/images/select_arrow.gif&quot; /> to pick a color<br /><br />Changes here will not be shown elsewhere<br />until the [Save Settings] button is pressed','Change SigGen Colors' ); ?></th>
-        </tr>
-<?php
-$row=1;
-for($c=1;$c<=10;$c++)
-{
-	print '
-        <tr>
-          <td class="sc_row'.(((++$row)%2)+1).'" align="left">Color '.$c.'</td>
-          <td class="sc_row_right'.((($row)%2)+1).'" align="right">
-            <input type="text" maxlength="7" style="background-color:'.$configData['color'.$c].';" value="'.$configData['color'.$c].'" name="color'.$c.'" id="color'.$c.'" size="10"><img src="'.$roster_conf['roster_dir'].'/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById(\'color'.$c.'\'))" alt="" /></td>
-        </tr>
-';
-}
-
-?>
-      </table><?php print border('sgray','end'); ?></td>
-  </tr>
-
-</table>
 </div>
 
 <!-- ===[ Begin Menu 4 : eXp Bar Config ]============================================== -->
@@ -426,15 +441,15 @@ for($c=1;$c<=10;$c++)
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Choose what to write before the eXp Level text','Text before eXp level display' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="expbar_string_before" type="text" value="<?php print $configData['expbar_string_before']; ?>" size="30" maxlength="30" /></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="expbar_string_before" type="text" value="<?php print $configData['expbar_string_before']; ?>" size="30" maxlength="64" /></td>
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Choose what to write after the eXp Level text','Text after eXp level display' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="expbar_string_after" type="text" value="<?php print $configData['expbar_string_after']; ?>" size="30" maxlength="30" /></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="expbar_string_after" type="text" value="<?php print $configData['expbar_string_after']; ?>" size="30" maxlength="64" /></td>
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Choose what to write on the eXp bar when &quot;Display Max Level Bar&quot; is turned on','Text on the Max eXp bar' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="expbar_max_string" type="text" value="<?php print $configData['expbar_max_string']; ?>" size="30" maxlength="30" /></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="expbar_max_string" type="text" value="<?php print $configData['expbar_max_string']; ?>" size="30" maxlength="64" /></td>
     </tr>
   </table>
 <?php print border('sgray','end'); ?>
@@ -448,14 +463,10 @@ for($c=1;$c<=10;$c++)
       <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="left">Max eXp bar color</td>
     </tr>
     <tr>
-      <td class="sc_row<?php echo (((++$row)%2)+1); ?>"><?php print $functions->createOptionList($colorArr,$configData['expbar_color_border'],'expbar_color_border' ); ?> :
-        <?php print $functions->createColorTip($configData['expbar_color_border'],$configData); ?></td>
-      <td class="sc_row<?php echo ((($row)%2)+1); ?>"><?php print $functions->createOptionList($colorArr,$configData['expbar_color_inside'],'expbar_color_inside' ); ?> :
-        <?php print $functions->createColorTip($configData['expbar_color_inside'],$configData); ?></td>
-      <td class="sc_row<?php echo ((($row)%2)+1); ?>"><?php print $functions->createOptionList($colorArr,$configData['expbar_color_bar'],'expbar_color_bar' ); ?> :
-        <?php print $functions->createColorTip($configData['expbar_color_bar'],$configData); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>"><?php print $functions->createOptionList($colorArr,$configData['expbar_color_maxbar'],'expbar_color_maxbar' ); ?> :
-        <?php print $functions->createColorTip($configData['expbar_color_maxbar'],$configData); ?></td>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>"><input type="text" maxlength="7" style="background-color:<?php print $configData['expbar_color_border']; ?>;" value="<?php print $configData['expbar_color_border']; ?>" name="expbar_color_border" id="expbar_color_border" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_color_border'))" alt="" /></td>
+      <td class="sc_row<?php echo ((($row)%2)+1); ?>"><input type="text" maxlength="7" style="background-color:<?php print $configData['expbar_color_inside']; ?>;" value="<?php print $configData['expbar_color_inside']; ?>" name="expbar_color_inside" id="expbar_color_inside" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_color_inside'))" alt="" /></td>
+      <td class="sc_row<?php echo ((($row)%2)+1); ?>"><input type="text" maxlength="7" style="background-color:<?php print $configData['expbar_color_bar']; ?>;" value="<?php print $configData['expbar_color_bar']; ?>" name="expbar_color_bar" id="expbar_color_bar" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_color_bar'))" alt="" /></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>"><input type="text" maxlength="7" style="background-color:<?php print $configData['expbar_color_maxbar']; ?>;" value="<?php print $configData['expbar_color_maxbar']; ?>" name="expbar_color_maxbar" id="expbar_color_maxbar" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_color_maxbar'))" alt="" /></td>
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Make the border transparent/translucent<br /><br />Accepted values are 0-127<br />0 = Opaque | 127 = Transparent','Transparency Value' ); ?>
@@ -478,15 +489,13 @@ for($c=1;$c<=10;$c++)
       <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="left">Font size</td>
     </tr>
     <tr>
-      <td class="sc_row<?php echo (((++$row)%2)+1); ?>"><?php print $functions->createOptionList($fontArr,$configData['expbar_font_name'],'expbar_font_name' ); ?></td>
-      <td class="sc_row<?php echo ((($row)%2)+1); ?>"><?php print $functions->createOptionList($colorArr,$configData['expbar_font_color'],'expbar_font_color' ); ?> :
-        <?php print $functions->createColorTip($configData['expbar_font_color'],$configData); ?></td>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>"><?php print $functions->createOptionList($fontFilesArr,$configData['expbar_font_name'],'expbar_font_name',1 ); ?></td>
+      <td class="sc_row<?php echo ((($row)%2)+1); ?>"><input type="text" maxlength="7" style="background-color:<?php print $configData['expbar_font_color']; ?>;" value="<?php print $configData['expbar_font_color']; ?>" name="expbar_font_color" id="expbar_font_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_font_color'))" alt="" /></td>
       <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="expbar_font_size" type="text" value="<?php print $configData['expbar_font_size']; ?>" size="3" maxlength="3" /></td>
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right" colspan="2"><?php print $functions->createOptionList($colorArr,$configData['expbar_text_shadow'],'expbar_text_shadow' ); ?> :
-      	<?php print $functions->createColorTip($configData['expbar_text_shadow'],$configData); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right" colspan="2"><input type="text" maxlength="7" style="background-color:<?php print $configData['expbar_text_shadow']; ?>;" value="<?php print $configData['expbar_text_shadow']; ?>" name="expbar_text_shadow" id="expbar_text_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_text_shadow'))" alt="" /></td>
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left">Text alignment<br />
@@ -512,7 +521,7 @@ for($c=1;$c<=10;$c++)
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Image to use for the Level Bubble<br />You can select &quot;--None--&quot; to just display text','Level Bubble image name' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionListName($imageFilesArr,$configData['lvl_image'],'lvl_image' ); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionList($levelFilesArr,$configData['lvl_image'],'lvl_image',2 ); ?></td>
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Where to place the Level Bubble','Level Bubble image placement' ); ?></td>
@@ -535,15 +544,13 @@ for($c=1;$c<=10;$c++)
       <td class="sc_row<?php echo ((($row)%2)+1); ?>" align="left">Font size</td>
     </tr>
     <tr>
-      <td class="sc_row<?php echo (((++$row)%2)+1); ?>"><?php print $functions->createOptionList($fontArr,$configData['lvl_font_name'],'lvl_font_name' ); ?></td>
-      <td class="sc_row<?php echo ((($row)%2)+1); ?>"><?php print $functions->createOptionList($colorArr,$configData['lvl_font_color'],'lvl_font_color' ); ?> :
-        <?php print $functions->createColorTip($configData['lvl_font_color'],$configData); ?></td>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>"><?php print $functions->createOptionList($fontFilesArr,$configData['lvl_font_name'],'lvl_font_name',1 ); ?></td>
+      <td class="sc_row<?php echo ((($row)%2)+1); ?>"><input type="text" maxlength="7" style="background-color:<?php print $configData['lvl_font_color']; ?>;" value="<?php print $configData['lvl_font_color']; ?>" name="lvl_font_color" id="lvl_font_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('lvl_font_color'))" alt="" /></td>
       <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="lvl_font_size" type="text" value="<?php print $configData['lvl_font_size']; ?>" size="3" maxlength="3" /></td>
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right" colspan="2"><?php print $functions->createOptionList($colorArr,$configData['lvl_text_shadow'],'lvl_text_shadow' ); ?> :
-      	<?php print $functions->createColorTip($configData['lvl_text_shadow'],$configData); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right" colspan="2"><input type="text" maxlength="7" style="background-color:<?php print $configData['lvl_text_shadow']; ?>;" value="<?php print $configData['lvl_text_shadow']; ?>" name="lvl_text_shadow" id="lvl_text_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('lvl_text_shadow'))" alt="" /></td>
     </tr>
   </table>
 <?php print border('syellow','end'); ?>
@@ -643,15 +650,13 @@ for($c=1;$c<=10;$c++)
       <td class="sc_row<?php echo ((($row)%2)+1); ?>" align="left">Font size</td>
     </tr>
     <tr>
-      <td class="sc_row<?php echo (((++$row)%2)+1); ?>"><?php print $functions->createOptionList($fontArr,$configData['skills_font_name'],'skills_font_name' ); ?></td>
-      <td class="sc_row<?php echo ((($row)%2)+1); ?>"><?php print $functions->createOptionList($colorArr,$configData['skills_font_color'],'skills_font_color' ); ?> :
-        <?php print $functions->createColorTip($configData['skills_font_color'],$configData); ?></td>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>"><?php print $functions->createOptionList($fontFilesArr,$configData['skills_font_name'],'skills_font_name',1 ); ?></td>
+      <td class="sc_row<?php echo ((($row)%2)+1); ?>"><input type="text" maxlength="7" style="background-color:<?php print $configData['skills_font_color']; ?>;" value="<?php print $configData['skills_font_color']; ?>" name="skills_font_color" id="skills_font_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('skills_font_color'))" alt="" /></td>
       <td class="sc_row<?php echo ((($row)%2)+1); ?>" align="right"><input name="skills_font_size" type="text" value="<?php print $configData['skills_font_size']; ?>" size="3" maxlength="3" /></td>
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right" colspan="2"><?php print $functions->createOptionList($colorArr,$configData['skills_shadow'],'skills_shadow' ); ?> :
-      	<?php print $functions->createColorTip($configData['skills_shadow'],$configData); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right" colspan="2"><input type="text" maxlength="7" style="background-color:<?php print $configData['skills_shadow']; ?>;" value="<?php print $configData['skills_shadow']; ?>" name="skills_shadow" id="skills_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('skills_shadow'))" alt="" /></td>
     </tr>
   </table>
 <?php print border('syellow','end'); ?>
@@ -671,7 +676,7 @@ for($c=1;$c<=10;$c++)
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Choose an image to use as the default character image','Default character image' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionListName($imageFilesArr,$configData['charlogo_default_image'],'charlogo_default_image' ); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionList($charDirList,$configData['charlogo_default_image'],'charlogo_default_image',2 ); ?></td>
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Where to place the character image','Character image placement' ); ?></td>
@@ -748,19 +753,17 @@ for($c=1;$c<=10;$c++)
                 </tr>
                 <tr>
                   <td class="sc_row1" align="left">Font name:<br />
-                  	<?php print $functions->createOptionList($fontArr,$configData['text_name_font_name'],'text_name_font_name' ); ?></td>
+                  	<?php print $functions->createOptionList($fontFilesArr,$configData['text_name_font_name'],'text_name_font_name',1 ); ?></td>
                   <td class="sc_row_right1" align="right">Font size:<br />
                   	<input name="text_name_font_size" type="text" value="<?php print $configData['text_name_font_size']; ?>" size="3" maxlength="3" /></td>
                 </tr>
                 <tr align="left">
                   <td class="sc_row_right2" colspan="2">Font color:<br />
-                  	<?php print $functions->createOptionList($colorArr,$configData['text_name_font_color'],'text_name_font_color' ); ?> :
-                    <?php print $functions->createColorTip($configData['text_name_font_color'],$configData); ?></td>
+                  	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_name_font_color']; ?>;" value="<?php print $configData['text_name_font_color']; ?>" name="text_name_font_color" id="text_name_font_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_name_font_color'))" alt="" /></td>
                 </tr>
                 <tr align="left">
                   <td class="sc_row_right1" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?>
-                    <?php print $functions->createOptionList($colorArr,$configData['text_name_shadow'],'text_name_shadow' ); ?> :
-                    <?php print $functions->createColorTip($configData['text_name_shadow'],$configData); ?></td>
+                    <input type="text" maxlength="7" style="background-color:<?php print $configData['text_name_shadow']; ?>;" value="<?php print $configData['text_name_shadow']; ?>" name="text_name_shadow" id="text_name_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_name_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
           </tr>
@@ -801,19 +804,17 @@ for($c=1;$c<=10;$c++)
                 </tr>
                 <tr>
                   <td class="sc_row1" align="left">Font name:<br />
-                  	<?php print $functions->createOptionList($fontArr,$configData['text_class_font_name'],'text_class_font_name' ); ?></td>
+                  	<?php print $functions->createOptionList($fontFilesArr,$configData['text_class_font_name'],'text_class_font_name',1 ); ?></td>
                   <td class="sc_row_right1" align="right">Font size:<br />
                   	<input name="text_class_font_size" type="text" value="<?php print $configData['text_class_font_size']; ?>" size="3" maxlength="3" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right2" align="left" colspan="2">Font color:<br />
-                  	<?php print $functions->createOptionList($colorArr,$configData['text_class_font_color'],'text_class_font_color' ); ?> :
-                    <?php print $functions->createColorTip($configData['text_class_font_color'],$configData); ?></td>
+                  	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_class_font_color']; ?>;" value="<?php print $configData['text_class_font_color']; ?>" name="text_class_font_color" id="text_class_font_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_class_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?>
-                    <?php print $functions->createOptionList($colorArr,$configData['text_class_shadow'],'text_class_shadow' ); ?> :
-                    <?php print $functions->createColorTip($configData['text_class_shadow'],$configData); ?></td>
+                    <input type="text" maxlength="7" style="background-color:<?php print $configData['text_class_shadow']; ?>;" value="<?php print $configData['text_class_shadow']; ?>" name="text_class_shadow" id="text_class_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_class_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
           </tr>
@@ -857,19 +858,17 @@ for($c=1;$c<=10;$c++)
                 </tr>
                 <tr>
                   <td class="sc_row1" align="left">Font name:<br />
-                  	<?php print $functions->createOptionList($fontArr,$configData['text_honor_font_name'],'text_honor_font_name' ); ?></td>
+                  	<?php print $functions->createOptionList($fontFilesArr,$configData['text_honor_font_name'],'text_honor_font_name',1 ); ?></td>
                   <td class="sc_row_right1" align="right">Font size:<br />
                   	<input name="text_honor_font_size" type="text" value="<?php print $configData['text_honor_font_size']; ?>" size="3" maxlength="3" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right2" align="left" colspan="2">Font color:<br />
-                  	<?php print $functions->createOptionList($colorArr,$configData['text_honor_font_color'],'text_honor_font_color' ); ?> :
-                    <?php print $functions->createColorTip($configData['text_honor_font_color'],$configData); ?></td>
+                  	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_honor_font_color']; ?>;" value="<?php print $configData['text_honor_font_color']; ?>" name="text_honor_font_color" id="text_honor_font_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_honor_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?>
-                    <?php print $functions->createOptionList($colorArr,$configData['text_honor_shadow'],'text_honor_shadow' ); ?> :
-                    <?php print $functions->createColorTip($configData['text_honor_shadow'],$configData); ?></td>
+                    <input type="text" maxlength="7" style="background-color:<?php print $configData['text_honor_shadow']; ?>;" value="<?php print $configData['text_honor_shadow']; ?>" name="text_honor_shadow" id="text_honor_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_honor_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
           </tr>
@@ -910,19 +909,17 @@ for($c=1;$c<=10;$c++)
                 </tr>
                 <tr>
                   <td class="sc_row1" align="left">Font name:<br />
-                  	<?php print $functions->createOptionList($fontArr,$configData['text_guildname_font_name'],'text_guildname_font_name' ); ?></td>
+                  	<?php print $functions->createOptionList($fontFilesArr,$configData['text_guildname_font_name'],'text_guildname_font_name',1 ); ?></td>
                   <td class="sc_row_right1" align="right">Font size:<br />
                   	<input name="text_guildname_font_size" type="text" value="<?php print $configData['text_guildname_font_size']; ?>" size="3" maxlength="3" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right2" align="left" colspan="2">Font color:<br />
-                  	<?php print $functions->createOptionList($colorArr,$configData['text_guildname_font_color'],'text_guildname_font_color' ); ?> :
-                    <?php print $functions->createColorTip($configData['text_guildname_font_color'],$configData); ?></td>
+                  	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_guildname_font_color']; ?>;" value="<?php print $configData['text_guildname_font_color']; ?>" name="text_guildname_font_color" id="text_guildname_font_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_guildname_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?>
-                    <?php print $functions->createOptionList($colorArr,$configData['text_guildname_shadow'],'text_guildname_shadow' ); ?> :
-                    <?php print $functions->createColorTip($configData['text_guildname_shadow'],$configData); ?></td>
+                    <input type="text" maxlength="7" style="background-color:<?php print $configData['text_guildname_shadow']; ?>;" value="<?php print $configData['text_guildname_shadow']; ?>" name="text_guildname_shadow" id="text_guildname_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_guildname_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
           </tr>
@@ -966,19 +963,17 @@ for($c=1;$c<=10;$c++)
                 </tr>
                 <tr>
                   <td class="sc_row1" align="left">Font name:<br />
-                  	<?php print $functions->createOptionList($fontArr,$configData['text_guildtitle_font_name'],'text_guildtitle_font_name' ); ?></td>
+                  	<?php print $functions->createOptionList($fontFilesArr,$configData['text_guildtitle_font_name'],'text_guildtitle_font_name',1 ); ?></td>
                   <td class="sc_row_right1" align="right">Font size:<br />
                   	<input name="text_guildtitle_font_size" type="text" value="<?php print $configData['text_guildtitle_font_size']; ?>" size="3" maxlength="3" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right2" align="left" colspan="2">Font color:<br />
-                  	<?php print $functions->createOptionList($colorArr,$configData['text_guildtitle_font_color'],'text_guildtitle_font_color' ); ?> :
-                    <?php print $functions->createColorTip($configData['text_guildtitle_font_color'],$configData); ?></td>
+                  	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_guildtitle_font_color']; ?>;" value="<?php print $configData['text_guildtitle_font_color']; ?>" name="text_guildtitle_font_color" id="text_guildtitle_font_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_guildtitle_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?>
-                    <?php print $functions->createOptionList($colorArr,$configData['text_guildtitle_shadow'],'text_guildtitle_shadow' ); ?> :
-                    <?php print $functions->createColorTip($configData['text_guildtitle_shadow'],$configData); ?></td>
+                    <input type="text" maxlength="7" style="background-color:<?php print $configData['text_guildtitle_shadow']; ?>;" value="<?php print $configData['text_guildtitle_shadow']; ?>" name="text_guildtitle_shadow" id="text_guildtitle_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_guildtitle_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
           </tr>
@@ -1019,19 +1014,17 @@ for($c=1;$c<=10;$c++)
                 </tr>
                 <tr>
                   <td class="sc_row1" align="left">Font name:<br />
-                  	<?php print $functions->createOptionList($fontArr,$configData['text_servername_font_name'],'text_servername_font_name' ); ?></td>
+                  	<?php print $functions->createOptionList($fontFilesArr,$configData['text_servername_font_name'],'text_servername_font_name',1 ); ?></td>
                   <td class="sc_row_right1" align="right">Font size:<br />
                   	<input name="text_servername_font_size" type="text" value="<?php print $configData['text_servername_font_size']; ?>" size="3" maxlength="3" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right2" align="left" colspan="2">Font color:<br />
-                  	<?php print $functions->createOptionList($colorArr,$configData['text_servername_font_color'],'text_servername_font_color' ); ?> :
-                    <?php print $functions->createColorTip($configData['text_servername_font_color'],$configData); ?></td>
+                  	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_servername_font_color']; ?>;" value="<?php print $configData['text_servername_font_color']; ?>" name="text_servername_font_color" id="text_servername_font_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_servername_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?>
-                    <?php print $functions->createOptionList($colorArr,$configData['text_servername_shadow'],'text_servername_shadow' ); ?> :
-                    <?php print $functions->createColorTip($configData['text_servername_shadow'],$configData); ?></td>
+                    <input type="text" maxlength="7" style="background-color:<?php print $configData['text_servername_shadow']; ?>;" value="<?php print $configData['text_servername_shadow']; ?>" name="text_servername_shadow" id="text_servername_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_servername_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
           </tr>
@@ -1084,19 +1077,17 @@ for($c=1;$c<=10;$c++)
                 </tr>
                 <tr>
                   <td class="sc_row1" align="left">Font name:<br />
-                  	<?php print $functions->createOptionList($fontArr,$configData['text_sitename_font_name'],'text_sitename_font_name' ); ?></td>
+                  	<?php print $functions->createOptionList($fontFilesArr,$configData['text_sitename_font_name'],'text_sitename_font_name',1 ); ?></td>
                   <td class="sc_row_right1" align="right">Font size:<br />
                   	<input name="text_sitename_font_size" type="text" value="<?php print $configData['text_sitename_font_size']; ?>" size="3" maxlength="3" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right2" align="left" colspan="2">Font color:<br />
-                  	<?php print $functions->createOptionList($colorArr,$configData['text_sitename_font_color'],'text_sitename_font_color' ); ?> :
-                    <?php print $functions->createColorTip($configData['text_sitename_font_color'],$configData); ?></td>
+                  	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_sitename_font_color']; ?>;" value="<?php print $configData['text_sitename_font_color']; ?>" name="text_sitename_font_color" id="text_sitename_font_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_sitename_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?>
-                    <?php print $functions->createOptionList($colorArr,$configData['text_sitename_shadow'],'text_sitename_shadow' ); ?> :
-                    <?php print $functions->createColorTip($configData['text_sitename_shadow'],$configData); ?></td>
+                    <input type="text" maxlength="7" style="background-color:<?php print $configData['text_sitename_shadow']; ?>;" value="<?php print $configData['text_sitename_shadow']; ?>" name="text_sitename_shadow" id="text_sitename_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_sitename_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
           </tr>
@@ -1127,7 +1118,7 @@ for($c=1;$c<=10;$c++)
           </tr>
           <tr>
             <td class="sc_row_right<?php echo (((++$row)%2)+1); ?>" align="left" colspan="2">Custom Text:<br />
-              <input name="text_custom_text" type="text" value="<?php print $configData['text_custom_text']; ?>" size="35" maxlength="50" /></td>
+              <input name="text_custom_text" type="text" value="<?php print $configData['text_custom_text']; ?>" size="35" maxlength="128" /></td>
           </tr>
           <tr>
             <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left">Custom Text alignment</td>
@@ -1141,19 +1132,17 @@ for($c=1;$c<=10;$c++)
                 </tr>
                 <tr>
                   <td class="sc_row1" align="left">Font name:<br />
-                  	<?php print $functions->createOptionList($fontArr,$configData['text_custom_font_name'],'text_custom_font_name' ); ?></td>
+                  	<?php print $functions->createOptionList($fontFilesArr,$configData['text_custom_font_name'],'text_custom_font_name',1 ); ?></td>
                   <td class="sc_row_right1" align="right">Font size:<br />
                   	<input name="text_custom_font_size" type="text" value="<?php print $configData['text_custom_font_size']; ?>" size="3" maxlength="3" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right2" align="left" colspan="2">Font color:<br />
-                  	<?php print $functions->createOptionList($colorArr,$configData['text_custom_font_color'],'text_custom_font_color' ); ?> :
-                    <?php print $functions->createColorTip($configData['text_custom_font_color'],$configData); ?></td>
+                  	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_custom_font_color']; ?>;" value="<?php print $configData['text_custom_font_color']; ?>" name="text_custom_font_color" id="text_custom_font_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_custom_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?>
-                    <?php print $functions->createOptionList($colorArr,$configData['text_custom_shadow'],'text_custom_shadow' ); ?> :
-                    <?php print $functions->createColorTip($configData['text_custom_shadow'],$configData); ?></td>
+                    <input type="text" maxlength="7" style="background-color:<?php print $configData['text_custom_shadow']; ?>;" value="<?php print $configData['text_custom_shadow']; ?>" name="text_custom_shadow" id="text_custom_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_custom_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
           </tr>
