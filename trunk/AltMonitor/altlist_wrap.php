@@ -71,22 +71,13 @@ $FIELD[] = array (
 	),
 );
 
-if ( $addon_conf['AltMonitor']['showmain'] || ($action == 'debug'))
+if ( $addon_conf['AltMonitor']['showmain'] )
 {
 	$FIELD[] = array (
 		'main_name' => array (
 			'lang_field' => 'main_name',
 			'order' => array( '`mains`.`name` ASC, isalt ' ),
 			'order_d' => array( '`mains`.`name` DESC, isalt' ),
-		),
-	);
-}
-
-if ($action == 'debug')
-{
-	$FIELD[] = array (
-		'alt_type' => array (
-			'lang_field' => 'alt_type',
 		),
 	);
 }

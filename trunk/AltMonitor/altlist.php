@@ -497,14 +497,6 @@ if( $roster_conf['index_update_inst'] )
 
 echo "<center><small>AltMonitor ".$addon_conf['AltMonitor']['version']."</small></center>";
 
-if ($_GET['action'] == 'debug')
-{
-	echo '<pre>';
-	print_r($addon_conf['AltMonitor']);
-	echo '</pre>';
-}
-
-
 /*********************************************************************
  function(s) to return a value from a row with some logic applied.
 *********************************************************************/

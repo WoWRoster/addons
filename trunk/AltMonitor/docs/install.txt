@@ -24,6 +24,10 @@ isn't entered into the database if the corresponding main isn't in yet.
 Unfortunately I don't get to pick the update order.
 
 VERSION LOG:
+1.5.0
+-- Added confirm dialogs to the config screen
+-- Changed the debug mode. This now shows only the fields actually relevant if
+   I need to debug something
 -- SVN-versioned all files
 -- Removed the guild info pull since that's pulled in Settings.php now
 -- Removed the honour progress bar
