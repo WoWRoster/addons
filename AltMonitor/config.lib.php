@@ -27,9 +27,9 @@ class config
 	var $conf_arrays;
 	var $tablename;
 
-	var $form_start = "<form action=\"\" method=\"post\" enctype=\"multipart/form-data\" id=\"config\" onsubmit=\"submitonce(this)\">\n";
-	var $submit_button = "<input type=\"submit\" value=\"Save Settings\" />\n<input type=\"reset\" name=\"Reset\" value=\"Reset\" />\n<input type=\"hidden\" name=\"process\" value=\"process\" />\n<br /><br />\n";
-	var $form_end = "</form>\n";
+	var $form_start;
+	var $submit_button;
+	var $form_end;
 
 
 	/**
@@ -37,6 +37,12 @@ class config
 	 */
 	function config( $tablename)
 	{
+		global $wordings, $roster_conf;
+		
+		$this->form_start = "<form action=\"\" method=\"post\" enctype=\"multipart/form-data\" id=\"config\"  onsubmit=\"return confirm('".$wordings[$roster_conf['roster_lang']]['confirm_config_submit']."') && submitonce(this)\">\n";
+		$this->submit_button = "<input type=\"submit\" value=\"Save Settings\" />\n<input type=\"reset\" name=\"Reset\" value=\"Reset\" onClick=\"return confirm('".$wordings[$roster_conf['roster_lang']]['confirm_config_reset']."')\"/>\n<input type=\"hidden\" name=\"process\" value=\"process\" />\n<br /><br />\n";
+		$this->form_end = "</form>\n";
+	
 		$this->tablename = $tablename;
 	}
 

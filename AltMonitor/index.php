@@ -73,8 +73,7 @@ case 'altlist':
 	include($addonDir.'/altlist_wrap.php');
 	break;
 case 'debug':
-	include($addonDir.'/altlist_wrap.php');
-	print_r($addon_conf);
+	include($addonDir.'/debug_wrap.php');
 	break;
 case 'install_message':
 	die_quietly($wordings[$roster_conf['roster_lang']]['AltMonitor_install']."<br />\n".
