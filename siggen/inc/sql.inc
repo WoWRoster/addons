@@ -61,6 +61,7 @@ CREATE TABLE `".ROSTER_SIGCONFIGTABLE."` (
   `default_message` varchar(64) NOT NULL,
   `save_images` tinyint(1) NOT NULL default '0',
   `save_only_mode` tinyint(1) NOT NULL default '0',
+  `uniup_compat` tinyint(1) NOT NULL default '0',
   `save_prefix` varchar(32) NOT NULL default '',
   `save_suffix` varchar(32) NOT NULL default '',
   `save_images_dir` varchar(64) NOT NULL default '',
@@ -250,6 +251,9 @@ $create_sql['reset']['avatar']    = "REPLACE INTO `".ROSTER_SIGCONFIGTABLE."` VA
 $create_sql['reset']['signature'] = "REPLACE INTO `".ROSTER_SIGCONFIGTABLE."` VALUES ('signature', '1.2', 0, 0, 400, 85, 'img/', 'character/default/', 'class/rounded/', 'background/defaultsig/', 'members/', 'pvp/default/', 'frame/', 'level/', 'border/', 'fonts/', 'char:frames:border:lvl:pvp:class', 'SigGen Works', 0, 0, '', '', 'sig/', 'png', 1, 'png', 85, 1, 1, 0, '#000000', 'default.png', 0, 'players', 'race', 1, 'Night Elf', 'Human', 'Gnome', 'Dwarf', 'Orc', 'Troll', 'Tauren', 'Undead', '', '', '', '', 'darnassus.png', 'stormwind.png', 'ironforge.png', 'ironforge.png', 'orgrimmar.png', 'orgrimmar.png', 'thunderbluff.png', 'undercity.png', '', '', '', '', 1, 'sig-black.png', 'default.png', 1, 'default-alliance.png', 0, 0, 1, 90, 3, 0, 98, 38, 1, 'GREY.TTF', '#FFCC66', 9, '', 2, 60, 11, 15, 'yellow.png', 1, 0, 1, 1, 60, 1, 1, '[', ']', 'Max XP', 25, 73, 100, 7, '#000000', '#0B9BFF', '#FFFFFF', '#0B9BFF', 0, 20, 80, 0, 'VERANDA.TTF', '#000000', 6, '', 'center', 'center', 1, 1, 1, 1, 1, 0, 285, 12, 393, 12, 14, 22, 'left', 'right', 8, 8, 2, '#000000', 'VERANDA.TTF', '#FF9900', 7, 1, 204, 42, 'center', '#000000', 'GREY.TTF', '#0066FF', 22, 0, 126, 68, 'right', '#000000', 'GREY.TTF', '#99FF33', 8, 1, 124, 38, 'right', '#000000', 'GREY.TTF', '#99FF33', 8, 1, 204, 67, 'center', '#000000', 'GREY.TTF', '#FFFF66', 16, 1, 128, 18, 'left', '#000000', 'GREY.TTF', '#FF9900', 9, 1, 204, 79, 'center', '#000000', 'GREY.TTF', '#99FF33', 9, 1, 1, 394, 79, 'right', '#000000', 'VERANDA.TTF', '#FFFF66', 6, 0, 5, 15, 'Custom Text Message', 'left', '#000000', 'VERANDA.TTF', '#FFFFFF', 10);";
 
 
+/**
+ * Upgrade from 1.1 to 1.2
+ */
 $create_sql['upgrade_1.1'][] = "
 ALTER TABLE `".ROSTER_SIGCONFIGTABLE."`
   DROP `font1`,
@@ -332,3 +336,20 @@ ALTER TABLE `".ROSTER_SIGCONFIGTABLE."`
   ADD `border_dir` VARCHAR( 64 ) NOT NULL DEFAULT '' AFTER `level_dir` ;";
 
 $create_sql['upgrade_1.1'][] = "UPDATE `".ROSTER_SIGCONFIGTABLE."` SET `db_ver` = '1.2';";
+
+
+/**
+ * Upgrade from 1.2 to 1.3
+ */
+$create_sql['upgrade_1.2'][] = "
+ALTER TABLE `".ROSTER_SIGCONFIGTABLE."`
+  ADD `uniup_compat` TINYINT( 1 ) NOT NULL DEFAULT '0' AFTER `save_only_mode`;";
+
+$create_sql['upgrade_1.2'][] = "UPDATE `".ROSTER_SIGCONFIGTABLE."` SET
+  `expbar_max_level` = '70',
+  `backg_search_9` = 'Draenei',
+  `backg_file_9` = 'exodar.png',
+  `backg_search_10` = 'Blood Elf',
+  `backg_file_10` = 'silvermoon.png';";
+
+$create_sql['upgrade_1.2'][] = "UPDATE `".ROSTER_SIGCONFIGTABLE."` SET `db_ver` = '1.3', `uniup_compat` = '0';";
