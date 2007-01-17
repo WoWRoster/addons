@@ -25,12 +25,11 @@
  * @link http://www.wowroster.net
  * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
  * @author Joshua Clark
- * @version 0.2.0
+ * @version $Id:$
  * @copyright 2005-2007 Joshua Clark
  * @package SigGen
  * @filesource
  *
- * $Id:$
  */
 
 $config_name = 'signature'; // Signature config name

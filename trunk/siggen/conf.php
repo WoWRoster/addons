@@ -25,12 +25,11 @@
  * @link http://www.wowroster.net
  * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
  * @author Joshua Clark
- * @version 0.2.0
+ * @version $Id:$
  * @copyright 2005-2007 Joshua Clark
  * @package SigGen
  * @filesource
  *
- * $Id:$
  */
 
 if ( !defined('ROSTER_INSTALLED') )
@@ -79,8 +78,8 @@ if( !defined('ROSTER_SIGCONFIGTABLE') )
 
 
 // ----[ Database version DO NOT CHANGE!! ]-----------------
-$sc_db_ver = '1.2';
-$sc_file_ver = '0.2.0';
+$sc_db_ver = '1.3';
+$sc_file_ver = '0.2.1';
 
 
 

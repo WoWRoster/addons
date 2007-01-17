@@ -25,12 +25,11 @@
  * @link http://www.wowroster.net
  * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
  * @author Joshua Clark
- * @version 0.2.0
+ * @version $Id:$
  * @copyright 2005-2007 Joshua Clark
  * @package SigGen
  * @filesource
  *
- * $Id$
  */
 
 // Language translations for Character/Background image selection in SigGen.php
@@ -63,7 +62,7 @@ $siggen_translate['enUS']['Warrior']  = 'Warrior';
 
 // Race, Gender Translation
 $siggen_translate['enUS']['Blood Elf'] = 'Blood Elf';
-$siggen_translate['enUS']['Dranei']    = 'Dranei';
+$siggen_translate['enUS']['Draenei']   = 'Draenei';
 $siggen_translate['enUS']['Night Elf'] = 'Night Elf';
 $siggen_translate['enUS']['Dwarf']     = 'Dwarf';
 $siggen_translate['enUS']['Gnome']     = 'Gnome';
@@ -92,8 +91,8 @@ $siggen_translate['deDE']['Hexenmeister'] = 'Warlock';
 $siggen_translate['deDE']['Krieger']      = 'Warrior';
 
 // Race, Gender Translation
-$siggen_translate['deDE']['Blutelf']    = 'Blood Elf';
-$siggen_translate['deDE']['Dranei']       = 'Dranei';
+$siggen_translate['deDE']['Blutelf']      = 'Blood Elf';
+$siggen_translate['deDE']['Draenei']      = 'Draenei';
 $siggen_translate['deDE']['Nachtelf']     = 'Night Elf';
 $siggen_translate['deDE']['Zwerg']        = 'Dwarf';
 $siggen_translate['deDE']['Gnom']         = 'Gnome';
@@ -121,8 +120,8 @@ $siggen_translate['frFR']['Démoniste']   = 'Warlock';
 $siggen_translate['frFR']['Guerrier']     = 'Warrior';
 
 // Race, Gender Translation
-$siggen_translate['frFR']['Blood Elf']    = 'Blood Elf';
-$siggen_translate['frFR']['Dranei']       = 'Dranei';
+$siggen_translate['frFR']['Elfe de sang']  = 'Blood Elf';
+$siggen_translate['frFR']['Draeneï']      = 'Draenei';
 $siggen_translate['frFR']['Elfe de la nuit'] = 'Night Elf';
 $siggen_translate['frFR']['Nain']         = 'Dwarf';
 $siggen_translate['frFR']['Gnome']        = 'Gnome';
