@@ -30,7 +30,7 @@
  * @package SigGen
  * @filesource
  *
- * $Id:$
+ * $Id$
  */
 
 if ( !defined('ROSTER_INSTALLED') )
@@ -243,6 +243,14 @@ if( $allow_save )
         <input type="radio" class="checkBox" name="guild_trigger" value="0" <?php print ( !$configData['guild_trigger'] ? 'checked="checked"' : '' ); ?> />
         No</label></td>
     </tr>
+    <tr>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Enable UniUploader save images workaround<br /><span class=&quot;red&quot;>Requires &quot;allow_url_fopen&quot; to be enabled on your server!</span>','UniUploader Fix' ); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><label>
+        <input type="radio" class="checkBox" name="uniup_compat" value="1" <?php print ( $configData['uniup_compat'] ? 'checked="checked"' : '' ); ?> />
+        Yes</label> <label>
+        <input type="radio" class="checkBox" name="uniup_compat" value="0" <?php print ( !$configData['uniup_compat'] ? 'checked="checked"' : '' ); ?> />
+        No</label></td>
+    </tr>
   </table>
 <?php print border('syellow','end');
 
@@ -267,7 +275,8 @@ else
         <input name="save_prefix" type="hidden" value="<?php print $configData['save_prefix']; ?>" />
         <input name="save_suffix" type="hidden" value="<?php print $configData['save_suffix']; ?>" />
         <input name="trigger" type="hidden" value="0" />
-        <input name="guild_trigger" type="hidden" value="0" /></th>
+        <input name="guild_trigger" type="hidden" value="0" />
+        <input name="uniup_compat" type="hidden" value="<?php print $configData['uniup_compat']; ?>" /></th>
     </tr>
   </table>
 <?php print border('sred','end');

@@ -62,6 +62,8 @@ $siggen_translate['enUS']['Warlock']  = 'Warlock';
 $siggen_translate['enUS']['Warrior']  = 'Warrior';
 
 // Race, Gender Translation
+$siggen_translate['enUS']['Blood Elf'] = 'Blood Elf';
+$siggen_translate['enUS']['Dranei']    = 'Dranei';
 $siggen_translate['enUS']['Night Elf'] = 'Night Elf';
 $siggen_translate['enUS']['Dwarf']     = 'Dwarf';
 $siggen_translate['enUS']['Gnome']     = 'Gnome';
@@ -90,6 +92,8 @@ $siggen_translate['deDE']['Hexenmeister'] = 'Warlock';
 $siggen_translate['deDE']['Krieger']      = 'Warrior';
 
 // Race, Gender Translation
+$siggen_translate['deDE']['Blutelf']    = 'Blood Elf';
+$siggen_translate['deDE']['Dranei']       = 'Dranei';
 $siggen_translate['deDE']['Nachtelf']     = 'Night Elf';
 $siggen_translate['deDE']['Zwerg']        = 'Dwarf';
 $siggen_translate['deDE']['Gnom']         = 'Gnome';
@@ -117,6 +121,8 @@ $siggen_translate['frFR']['Démoniste']   = 'Warlock';
 $siggen_translate['frFR']['Guerrier']     = 'Warrior';
 
 // Race, Gender Translation
+$siggen_translate['frFR']['Blood Elf']    = 'Blood Elf';
+$siggen_translate['frFR']['Dranei']       = 'Dranei';
 $siggen_translate['frFR']['Elfe de la nuit'] = 'Night Elf';
 $siggen_translate['frFR']['Nain']         = 'Dwarf';
 $siggen_translate['frFR']['Gnome']        = 'Gnome';
