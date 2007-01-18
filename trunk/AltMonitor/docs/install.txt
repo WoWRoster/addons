@@ -24,6 +24,9 @@ isn't entered into the database if the corresponding main isn't in yet.
 Unfortunately I don't get to pick the update order.
 
 VERSION LOG:
+1.5.1
+-- Fixed for L70
+
 1.5.0
 -- Added confirm dialogs to the config screen
 -- Changed the debug mode. This now shows only the fields actually relevant if
