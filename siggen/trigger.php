@@ -94,7 +94,7 @@ if( !empty($siggen_set) )
 
 foreach( $SigGenConfig as $single_config )
 {
-	if( $single_config['trigger'] && ( $mode == 'char' || $mode == 'guild' ) )
+	if( ($mode == 'char' && $single_config['trigger']) || ($mode == 'guild' && $single_config['guild_trigger']) )
 	{
 		if( $htmlout == 1 )
 		{
