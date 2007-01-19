@@ -234,16 +234,29 @@ if( isset($_GET['etag']) )
 		$sig_gender = strtolower( getEnglishValue($playersData['sex'],$sig_char_locale) );
 
 		// Remove crap from pvprankicon
-		$remove_arr = array('Interface','\\','PvPRankBadges');
-		if( file_exists($configData['image_dir'].$configData['pvplogo_dir'].'ext.inc') && is_readable($configData['image_dir'].$configData['pvplogo_dir'].'ext.inc') )
+		if( $playersData['lifetimeHighestRank'] > 0 )
 		{
-			include( $configData['image_dir'].$configData['pvplogo_dir'].'ext.inc' );
+			if( file_exists($configData['image_dir'].$configData['pvplogo_dir'].'ext.inc') && is_readable($configData['image_dir'].$configData['pvplogo_dir'].'ext.inc') )
+			{
+				include( $configData['image_dir'].$configData['pvplogo_dir'].'ext.inc' );
+			}
+			else
+			{
+				$pvp_ext = 'png';
+			}
+			if( $playersData['lifetimeHighestRank'] < 10 )
+			{
+				$sig_pvp_icon = 'PvPRank0'.$playersData['lifetimeHighestRank'].'.'.$pvp_ext;
+			}
+			else
+			{
+				$sig_pvp_icon = 'PvPRank'.$playersData['lifetimeHighestRank'].'.'.$pvp_ext;
+			}
 		}
 		else
 		{
-			$pvp_ext = 'png';
+			$sig_pvp_icon = '';
 		}
-		$sig_pvp_icon = str_replace($remove_arr,'',$playersData['RankIcon']).'.'.$pvp_ext;
 
 	// Translate Class Images
 		if( file_exists($configData['image_dir'].$configData['class_dir'].'ext.inc') && is_readable($configData['image_dir'].$configData['class_dir'].'ext.inc') )
@@ -267,7 +280,7 @@ if( isset($_GET['etag']) )
 
 	// Check for PvP rank
 	// Stored as none for some chars in database for no rank, so check for that and set to blank
-		$sig_pvp_rank = ( $playersData['RankName'] == $wordings[$sig_char_locale]['PvPRankNone'] ? '' : $playersData['RankName'] );
+		$sig_pvp_rank = ( $playersData['lifetimeHighestRank'] == '0' ? '' : $playersData['lifetimeRankName'] );
 
 
 	// Check for etag mode
