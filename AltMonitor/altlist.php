@@ -158,7 +158,7 @@ foreach ($FIELD as $field )
  * This is what everything will be sorted by after the first sort specified in the arrays
  * DO NOT leave this blank, at least one sort must be here
 ************************/
-$always_sort = '`mains`.`name` ASC, isalt, `members`.`name` ASC';
+$always_sort = '`mains`.`level` DESC, `mains`.`name` ASC, isalt, `members`.`level` DESC, `members`.`name` ASC';
 
 
 
