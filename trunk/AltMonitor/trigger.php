@@ -44,10 +44,10 @@ if( $mode == 'guild' )
 {
 	$retval = include($addonDir.'update.php');
 
-	if ($retval != 1) $messages .= "AltMonitor error: ".$retval."<br/>\n";
+	if ($retval != 1) $messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
 
 	// echo messages for roster's update.php
-	echo $messages;
+	echo 'AltMonitor'.$messages;
 }
 
 ?>

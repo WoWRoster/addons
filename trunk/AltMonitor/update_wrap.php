@@ -34,6 +34,7 @@ while ($row = $wowdb->fetch_array($memberresult))
 {
 	$member_name = $row['name'];
 	$member_id = $row['member_id'];
+	$messages .= $member_name;
 	include($addonDir.'update.php');
 	$messages .= "<br />\n";
 }
