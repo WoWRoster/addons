@@ -25,7 +25,7 @@
  * @link http://www.wowroster.net
  * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
  * @author Joshua Clark
- * @version $Id:$
+ * @version $Id$
  * @copyright 2005-2007 Joshua Clark
  * @package SigGen
  * @filesource
@@ -75,7 +75,7 @@ if( !empty($siggen_set) )
 	// Read SigGen Config data from Database
 	$config_str = "SELECT `config_id`,`trigger`,`guild_trigger`,`uniup_compat`,`main_image_size_w`,`main_image_size_h` FROM `".ROSTER_SIGCONFIGTABLE."`;";
 	$config_sql = $wowdb->query($config_str);
-	if( $config_sql && $wowdb->num_rows($config_sql) != 0 )
+	if( $config_sql )
 	{
 		while( $siggen_row = $wowdb->fetch_assoc($config_sql) )
 		{
@@ -86,11 +86,12 @@ if( !empty($siggen_set) )
 			$SigGenConfig[$siggen_row['config_id']]['w'] = ($siggen_row['main_image_size_w']*0.2);
 			$SigGenConfig[$siggen_row['config_id']]['h'] = ($siggen_row['main_image_size_h']*0.2);
 		}
+		$wowdb->free_result($config_sql);
 	}
-	$wowdb->free_result($config_sql);
 	unset($siggen_row,$config_str,$config_sql,$siggen_sql_str,$siggen_result);
 }
 
+if( !isset($SigGenConfig) || empty($SigGenConfig) ) { return; }
 
 foreach( $SigGenConfig as $single_config )
 {
