@@ -24,6 +24,7 @@ isn't entered into the database if the corresponding main isn't in yet.
 Unfortunately I don't get to pick the update order.
 
 VERSION LOG:
+-- Updated to use message_die rather than die_quietly for install/upgrade messages
 -- Shortened update log output (only 1 line per character now)
 -- Changed default sort to level then name
 
