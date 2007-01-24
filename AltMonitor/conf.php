@@ -21,7 +21,7 @@ if ( !defined('ROSTER_INSTALLED') )
     exit('Detected invalid access to this file!');
 }
 
-$fileversion='1.4.1';
+$fileversion='1.5.1';
 
 /*
 DATABASE: the altmonitor table should have an entry for every member.
