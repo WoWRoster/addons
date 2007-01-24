@@ -76,20 +76,20 @@ case 'debug':
 	include($addonDir.'/debug_wrap.php');
 	break;
 case 'install_message':
-	die_quietly($wordings[$roster_conf['roster_lang']]['AltMonitor_install']."<br />\n".
+	message_die($wordings[$roster_conf['roster_lang']]['AltMonitor_install']."<br />\n".
 	'<div style="text-align:center;"><span style="border:1px outset white; padding:2px 6px 2px 6px;"><a href="?roster_addon_name='.$_GET['roster_addon_name'].'&amp;action=install">Install</a></span></div>',
-	$wordings[$roster_conf['roster_language']]['AltMonitor_install_page']);
+	$wordings[$roster_conf['roster_lang']]['AltMonitor_install_page']);
 	break;
 case 'upgrade_message':
-	die_quietly($wordings[$roster_conf['roster_lang']]['AltMonitor_upgrade']."<br />\n".
+	message_die($wordings[$roster_conf['roster_lang']]['AltMonitor_upgrade']."<br />\n".
 	'<table><tr><td align="center"><div style="text-align:center; border:1px outset white; padding:2px 6px 2px 6px;"><a href="?roster_addon_name='.$_GET['roster_addon_name'].'&amp;action=upgrade">Update</a></div>'.
 	'<td align="center"><div style="text-align:center; border:1px outset white; padding:2px 6px 2px 6px;"><a href="?roster_addon_name='.$_GET['roster_addon_name'].'&amp;action=install">Install</a></div></table>',
-	$wordings[$roster_conf['roster_language']]['AltMonitor_install_page']);
+	$wordings[$roster_conf['roster_lang']]['AltMonitor_install_page']);
 	break;
 case 'cant_upgrade_message':
-	die_quietly($wordings[$roster_conf['roster_lang']]['AltMonitor_no_upgrade']."<br />\n".
+	message_die($wordings[$roster_conf['roster_lang']]['AltMonitor_no_upgrade']."<br />\n".
 	'<div style="text-align:center;"><span style="border:1px outset white; padding:2px 6px 2px 6px;"><a href="?roster_addon_name='.$_GET['roster_addon_name'].'&amp;action=install">Reinstall</a></span></div>',
-	$wordings[$roster_conf['roster_language']]['AltMonitor_install_page']);
+	$wordings[$roster_conf['roster_lang']]['AltMonitor_install_page']);
 	break;
 default:
 	die_quietly($wordings[$roster_conf['roster_lang']]['AltMonitor_NoAction'],'AltMonitor');
