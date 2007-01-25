@@ -184,9 +184,9 @@ $query =
 
 // Fields to get from the players table
 	'`players`.`race`, '.
-	'`players`.`RankName`, '.
-	'`players`.`RankInfo`, '.
-	"IF( `players`.`RankInfo` IS NULL OR `players`.`RankInfo` = '0', 1, 0 ) AS 'risnull', ".
+	'`players`.`lifetimeRankName`, '.
+	'`players`.`lifetimeHighestRank`, '.
+	"IF( `players`.`lifetimeHighestRank` IS NULL OR `players`.`lifetimeHighestRank` = '0', 1, 0 ) AS 'risnull', ".
 	'`players`.`exp`, '.
 	'`players`.`server`, '.
 	'`players`.`clientLocale`, '.
@@ -201,7 +201,7 @@ $query =
 	"IF( `mains`.`note` IS NULL OR `mains`.`note` = '', 1, 0 ) AS 'mnisnull', ".
 
 // Fields to get from the main player table
-	"IF( `main_players`.`RankInfo` IS NULL OR `main_players`.`RankInfo` = '0', 1, 0 ) AS 'mrisnull' ";
+	"IF( `main_players`.`lifetimeHighestRank` IS NULL OR `main_players`.`lifetimeHighestRank` = '0', 1, 0 ) AS 'mrisnull' ";
 
 
 
@@ -514,11 +514,6 @@ function name_value ( $row )
 
 	if( $roster_conf['index_member_tooltip'] )
 	{
-		if ( $row['RankInfo'] > 0 )
-		{
-			$rankname = $row['RankName'].' ';
-		}
-
 		$tooltip_h = $row['name'].' : '.$row['guild_title'];
 
 		$tooltip .= 'Level '.$row['level'].' '.$row['class']."\n";
@@ -538,9 +533,6 @@ function name_value ( $row )
 				$tooltip .= 'Mainless Alt'."\n";
 				break;
 		}
-
-		if( isset($rankname) )
-			$tooltip .= $rankname.' of the '.$guildFaction."\n";
 
 		$tooltip .= $wordings[$roster_conf['roster_lang']]['lastonline'].': '.$row['last_online'].' in '.$row['zone'];
 		$tooltip .= ($row['nisnull'] ? '' : "\n".$wordings[$roster_conf['roster_lang']]['note'].': '.$row['note']);
@@ -581,19 +573,27 @@ function honor_value ( $row )
 {
 	global $roster_conf, $wordings;
 
-	if ( $roster_conf['index_honoricon'] )
+	if ( $row['lifetimeHighestRank'] > 0 )
 	{
-		$rankicon = $roster_conf['interface_url'].$row['RankIcon'].'.'.$roster_conf['alt_img_suffix'];
-		$rankicon = "<img class=\"membersRowimg\" width=\"".$roster_conf['index_iconsize']."\" height=\"".$roster_conf['index_iconsize']."\" src=\"".$rankicon."\" alt=\"\" />";
-	}
-	else
-	{
-		$rankicon = '';
-	}
+		if ( $roster_conf['index_honoricon'] )
+		{
+			if( $playersData['lifetimeHighestRank'] < 10 )
+			{
+				$rankicon = 'Interface/PvPRankBadges/PvPRank0'.$row['lifetimeHighestRank'].'.'.$roster_conf['alt_img_suffix'];
+			}
+			else
+			{
+				$rankicon = 'Interface/PvPRankBadges/PvPRank'.$row['lifetimeHighestRank'].'.'.$roster_conf['alt_img_suffix'];
+			}
+			$rankicon = $roster_conf['interface_url'].$rankicon;
+			$rankicon = "<img class=\"membersRowimg\" width=\"".$roster_conf['index_iconsize']."\" height=\"".$roster_conf['index_iconsize']."\" src=\"".$rankicon."\" alt=\"\" />";
+		}
+		else
+		{
+			$rankicon = '';
+		}
 
-	if ( $row['RankInfo'] > 0 )
-	{
-		$cell_value = $rankicon.' '.$row['RankName'];
+		$cell_value = $rankicon.' '.$row['lifetimeRankName'];
 
 		return $cell_value;
 	}
@@ -734,13 +734,22 @@ function tradeskill_icons ( $row )
 			$toolTip = str_replace(':','/',$r_prof['skill_level']);
 			$toolTiph = $r_prof['skill_name'];
 
-			$skill_image = 'Interface/Icons/'.$wordings[$row['clientLocale']]['ts_iconArray'][$r_prof['skill_name']];
-
-			if($r_prof['skill_name'] == "Riding")
+			if( $r_prof['skill_name'] == $wordings[$lang]['riding'] )
 			{
-				$skill_image = 'Interface/Icons/'.$wordings[$row['clientLocale']]['ts_ridingIcon'][$row['race']];
+				if( $row['class']==$wordings[$lang]['Paladin'] || $row['class']==$wordings[$lang]['Warlock'] )
+				{
+					$skill_image = 'Interface/Icons/'.$wordings[$lang]['ts_ridingIcon'][$row['class']];
+				}
+				else
+				{
+					$skill_image = 'Interface/Icons/'.$wordings[$lang]['ts_ridingIcon'][$row['race']];
+				}
 			}
-
+			else
+			{
+				$skill_image = 'Interface/Icons/'.$wordings[$lang]['ts_iconArray'][$r_prof['skill_name']];
+			}
+			
 			$cell_value .= "<img class=\"membersRowimg\" width=\"".$roster_conf['index_iconsize']."\" height=\"".$roster_conf['index_iconsize']."\" src=\"".$roster_conf['interface_url'].$skill_image.'.'.$roster_conf['img_suffix']."\" alt=\"\" ".makeOverlib($toolTip,$toolTiph,'',2,'',',RIGHT,WRAP')." />\n";
 		}
 	}
@@ -774,7 +783,7 @@ function level_value ( $row )
 		$togo = $max - $current;
 		$togo .= ' XP until level '.($row['level']+1);
 
-		$percent_exp =  round(($current/$max)*100);
+		$percent_exp = ($max > 0 ? round(($current/$max)*100) : 0);
 
 		$tooltip = '<div style="white-space:nowrap;" class="levelbarParent" style="width:200px;"><div class="levelbarChild">XP '.$current.'/'.$max.$rested.'</div></div>';
 		$tooltip .= '<table class="expOutline" border="0" cellpadding="0" cellspacing="0" width="200">';
