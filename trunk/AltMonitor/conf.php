@@ -21,7 +21,7 @@ if ( !defined('ROSTER_INSTALLED') )
     exit('Detected invalid access to this file!');
 }
 
-$fileversion='1.5.1';
+$fileversion='1.6.0';
 
 /*
 DATABASE: the altmonitor table should have an entry for every member.
@@ -46,7 +46,7 @@ define('ALTMONITOR_ALT_NO_MAIN',3);
 define('ALTMONITOR_MAIN_MANUAL_WITH_ALTS',4);
 define('ALTMONITOR_MAIN_MANUAL_NO_ALTS',5);
 define('ALTMONITOR_ALT_MANUAL_WITH_MAIN',6);
-define('ALTMONITOR_ALT_MANUAL_NO_ALTS',7);
+define('ALTMONITOR_ALT_MANUAL_NO_MAIN',7);
 
 /*
 $manual = $alt_type & 0x4
@@ -80,6 +80,7 @@ if ( $row = $wowdb->fetch_assoc($result) )
 else
 {
 	$dbversion = '0.0.0'; // we need to install
+	$addon_conf['AltMonitor']['update_type'] = 0; // for the trigger file
 }
 
 ?>

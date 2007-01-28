@@ -39,15 +39,71 @@ if ( !defined('ROSTER_INSTALLED') )
 
 */
 
-// We're only updating on guild updates.
-if( $mode == 'guild' )
-{
-	$retval = include($addonDir.'update.php');
+include_once($addonDir.'update.php');
 
-	if ($retval != 1) $messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
+$AltMonitorUpdate = $GLOBALS['AltMonitorUpdate'];
+$AltMonitorUpdate->messages = '';
+
+// We're only updating on guild updates.
+if( $mode == 'guild_pre' )
+{
+	if( $addon_conf['AltMonitor']['update_type'] & 1 == 0 ) { return; }
+	$retval = $AltMonitorUpdate->guild_pre();
+
+	if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
 
 	// echo messages for roster's update.php
-	echo 'AltMonitor'.$messages;
+	if (!empty($AltMonitorUpdate->messages)) echo 'AltMonitor'.$AltMonitorUpdate->messages."<br/>\n";
+}
+if( $mode == 'guild' )
+{
+	if( $addon_conf['AltMonitor']['update_type'] & 1 == 0 ) { return; }
+	$retval = $AltMonitorUpdate->guild($member_id, $member_name);
+
+	if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
+
+	// echo messages for roster's update.php
+	if (!empty($AltMonitorUpdate->messages)) echo 'AltMonitor'.$AltMonitorUpdate->messages;
+}
+elseif( $mode == 'guild_post' )
+{
+	if( $addon_conf['AltMonitor']['update_type'] & 1 == 0 ) { return; }
+	$retval = $AltMonitorUpdate->guild_post();
+
+	if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
+
+	// echo messages for roster's update.php
+	if (!empty($AltMonitorUpdate->messages)) echo 'AltMonitor'.$AltMonitorUpdate->messages."<br/>\n";
+}
+elseif( $mode == 'char_pre' )
+{
+	if( $addon_conf['AltMonitor']['update_type'] & 2 == 0 ) { return; }
+	$retval = $AltMonitorUpdate->char_pre();
+
+	if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
+
+	// echo messages for roster's update.php
+	if (!empty($AltMonitorUpdate->messages)) echo 'AltMonitor'.$AltMonitorUpdate->messages."<br/>\n";
+}
+elseif( $mode == 'char' )
+{
+	if( $addon_conf['AltMonitor']['update_type'] & 2 == 0 ) { return; }
+	$retval = $AltMonitorUpdate->char($member_id, $member_name);
+
+	if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
+
+	// echo messages for roster's update.php
+	if (!empty($AltMonitorUpdate->messages)) echo 'AltMonitor'.$AltMonitorUpdate->messages;
+}
+elseif( $mode == 'char_post' )
+{
+	if( $addon_conf['AltMonitor']['update_type'] & 2 == 0 ) { return; }
+	$retval = $AltMonitorUpdate->char_post();
+	
+	if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
+
+	// echo messages for roster's update.php
+	if (!empty($AltMonitorUpdate->messages)) echo 'AltMonitor'.$AltMonitorUpdate->messages."<br/>\n";
 }
 
 ?>

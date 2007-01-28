@@ -28,20 +28,34 @@ if ( $roster_conf['sqldebug'] )
 	echo "<!--$query-->\n";
 }
 
-$messages = '';
+include_once($addonDir.'update.php');
 
+$AltMonitorUpdate = $GLOBALS['AltMonitorUpdate'];
+$AltMonitorUpdate->messages = '';
+
+// Guild pre hook. Unused, but just in case I add something there in the future and forget it here.
+$retval = $AltMonitorUpdate->guild_pre();
+if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
+
+// Loop over all members
 while ($row = $wowdb->fetch_array($memberresult))
 {
 	$member_name = $row['name'];
 	$member_id = $row['member_id'];
-	$messages .= $member_name;
-	include($addonDir.'update.php');
-	$messages .= "<br />\n";
+	$AltMonitorUpdate->messages .= $member_name;
+	$retval = $AltMonitorUpdate->guild($member_id, $member_name);
+	if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
+	$AltMonitorUpdate->messages .= "<br />\n";
 }
+
+// Guild post hook. Deletes old entries.
+$retval = $AltMonitorUpdate->guild_post();
+if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
+
 
 $wowdb->free_result($memberresult);
 
-$sqlstringout = $wowdb->getSQLStrings();
+$messages = $AltMonitorUpdate->messages;
 $errorstringout = $wowdb->getErrors();
 
 // print the error messages
@@ -84,29 +98,3 @@ print '<input type="hidden" name="send_file" value="update" />'."\n";
 print '<input type="submit" name="download" value="Save Update Log" />'."\n";
 print '</form>';
 print "<br />\n";
-
-if( $roster_conf['sqldebug'] )
-{
-	print
-	'<div id="sqlDebugCol" style="display:inline;">
-		'.border('sgray','start',"<div style=\"cursor:pointer;width:550px;\" onclick=\"swapShow('sqlDebugCol','sqlDebug')\"><img src=\"".$roster_conf['img_url']."plus.gif\" style=\"float:right;\" />SQL Queries</div>").'
-		'.border('sgray','end').'
-	</div>
-	<div id="sqlDebug" style="display:none">
-	'.border('sgreen','start',"<div style=\"cursor:pointer;width:550px;\" onclick=\"swapShow('sqlDebugCol','sqlDebug')\"><img src=\"".$roster_conf['img_url']."minus.gif\" style=\"float:right;\" />SQL Queries</div>").'
-	<div style="font-size:10px;background-color:#1F1E1D;text-align:left;height:300px;width:560px;overflow:auto;">'.
-		nl2br(sql_highlight($wowdb->getSQLStrings())).
-	'</div>
-	'.border('sgreen','end').
-	'</div>';
-
-
-	// Print the downloadable sql separately so we can generate a download
-	print "<br />\n";
-	print '<form method="post" action="'.$roster_conf['roster_dir'].'/admin/update.php" name="post">'."\n";
-	print '<input type="hidden" name="data" value="'.htmlspecialchars($wowdb->getSQLStrings()).'" />'."\n";
-	print '<input type="hidden" name="send_file" value="sql" />'."\n";
-	print '<input type="submit" name="download" value="Save SQL Log" />'."\n";
-	print '</form>';
-}
-?>

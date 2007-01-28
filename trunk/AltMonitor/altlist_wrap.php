@@ -26,8 +26,6 @@ $roster_show_menu = false;
 
 // Based on index.php
 $additional_sql = array(
-	'`players`.`RankIcon`, ',
-	'`players`.`Rankexp`, ',
 	'`players`.`hearth`, ',
 	"IF( `players`.`hearth` IS NULL OR `players`.`hearth` = '', 1, 0 ) AS 'hisnull', ",
 	"IF( `main_players`.`hearth` IS NULL OR `main_players`.`hearth` = '', 1, 0 ) AS 'mhisnull', ",

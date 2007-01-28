@@ -36,8 +36,9 @@ $menu = border('sgray','start','Config Menu').'
 <div style="width:145px;">
   <ul id="config_tabs" class="tab_menu">'."\n".
   $config->buildConfigMenu()."\n".
-'   <li><a href="http://www.wowroster.net/wiki/index.php/Roster:Addon:AltMonitor" target="_new">Documentation</a></li>
+'   <li><a href="http://www.wowroster.net/wiki/index.php/Roster:Addon:AltMonitor" target="_new">'.$wordings[$roster_conf['roster_lang']]['documentation'].'</a></li>
     <li><a href="?roster_addon_name='.$_GET['roster_addon_name'].'&amp;action=update" target="_new">'.$wordings[$roster_conf['roster_lang']]['updMainAlt'].'</a>
+    <li><a href="?roster_addon_name='.$_GET['roster_addon_name'].'&amp;action=uninstall_message">'.$wordings[$roster_conf['roster_lang']]['uninstall'].'</a>
   </ul>
 </div>
 '.border('sgray','end');

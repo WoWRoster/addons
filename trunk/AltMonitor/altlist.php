@@ -443,12 +443,12 @@ while ( $row = $wowdb->fetch_assoc( $result ) )
 				}
 				else
 				{
-					echo '    <td class="'.$stripe_class.'" colspan="2" style="padding-left: 20px">'.$cell_value.'</td>'."\n";
+					echo '    <td class="'.$stripe_class.'"><td class="'.$stripe_class.'">'.$cell_value.'</td>'."\n";
 				}
 			}
 			else
 			{	// this is an alt
-				echo '	  <td class="'.$stripe_class.'"><td class="'.$stripe_class.'">'.$cell_value.'</td>'."\n";
+				echo '	  <td class="'.$stripe_class.'"><td class="'.$stripe_class.'" style="padding-left: 20px">'.$cell_value.'</td>'."\n";
 			}
 		}
 		elseif ( $current_col == $cols ) // last col
@@ -726,6 +726,8 @@ function tradeskill_icons ( $row )
 
 	if( $row['clientLocale'] != '' )
 	{
+		$lang = $row['clientLocale'];
+
 		$SQL_prof = $wowdb->query( "SELECT * FROM `".ROSTER_SKILLSTABLE."` WHERE `member_id` = '".$row['member_id']."' AND (`skill_type` = '".$wordings[$row['clientLocale']]['professions']."' OR `skill_type` = '".$wordings[$row['clientLocale']]['secondary']."') ORDER BY `skill_order` ASC" );
 
 		$cell_value = '';

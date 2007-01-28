@@ -39,13 +39,11 @@ foreach ($install_sql as $version => $sql)
 
 		foreach ($install_queries as $query)
 		{
-			if ( !empty($query) )
+			if ( trim($query) != '' )
 			{
 				if ( $roster_conf['sqldebug'] ) echo "<!--$query-->\n";
 
 				$result = $wowdb->query( $query ) or die_quietly('Failed to install AltMonitor. MySQL said: <br />'.$wowdb->error(),'AltMonitor Installer',__FILE__,__LINE__,$query );
-
-				$wowdb->free_result($result);
 			}
 		}
 
@@ -57,10 +55,7 @@ foreach ($install_sql as $version => $sql)
 
 		if ( $roster_conf['sqldebug'] ) echo "<!--$query-->\n";
 
-		$result = $wowdb->query( $query ) or die_quietly('Failed to install AltMonitor. MySQL said: <br />'.$wowdb->error(),'AltMonitor Installer',__FILE__,__LINE__,$query );
-
-		$wowdb->free_result($result);
-
+		$wowdb->query( $query ) or die_quietly('Failed to install AltMonitor. MySQL said: <br />'.$wowdb->error(),'AltMonitor Installer',__FILE__,__LINE__,$query );
 	}
 }
 

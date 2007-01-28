@@ -53,7 +53,7 @@ else
 	$action = $_GET['action'];
 }
 
-if (($action == 'install') || ($action == 'upgrade') || ($action == 'update') || ($action == 'config'))
+if (($action == 'install') || ($action == 'update') || ($action == 'config'))
 {
 	include($addonDir.'/login.php');
 }
@@ -62,6 +62,9 @@ if (($action == 'install') || ($action == 'upgrade') || ($action == 'update') ||
 switch ($action) {
 case 'install':
 	include($addonDir.'/install.php');
+	break;
+case 'uninstall':
+	include($addonDir.'/uninstall.php');
 	break;
 case 'update':
 	include($addonDir.'/update_wrap.php');
@@ -89,6 +92,11 @@ case 'upgrade_message':
 case 'cant_upgrade_message':
 	message_die($wordings[$roster_conf['roster_lang']]['AltMonitor_no_upgrade']."<br />\n".
 	'<div style="text-align:center;"><span style="border:1px outset white; padding:2px 6px 2px 6px;"><a href="?roster_addon_name='.$_GET['roster_addon_name'].'&amp;action=install">Reinstall</a></span></div>',
+	$wordings[$roster_conf['roster_lang']]['AltMonitor_install_page']);
+	break;
+case 'uninstall_message':
+	message_die($wordings[$roster_conf['roster_lang']]['AltMonitor_uninstall']."<br />\n".
+	'<div style="text-align:center;"><span style="border:1px outset white; padding:2px 6px 2px 6px;"><a href="?roster_addon_name='.$_GET['roster_addon_name'].'&amp;action=uninstall">Uninstall</a></span></div>',
 	$wordings[$roster_conf['roster_lang']]['AltMonitor_install_page']);
 	break;
 default:
