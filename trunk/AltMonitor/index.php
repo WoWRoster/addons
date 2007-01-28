@@ -53,7 +53,7 @@ else
 	$action = $_GET['action'];
 }
 
-if (($action == 'install') || ($action == 'update') || ($action == 'config'))
+if (($action == 'install') || ($action == 'update') || ($action == 'config') || ($action == 'uninstall_message') || ($action == 'uninstall'))
 {
 	include($addonDir.'/login.php');
 }

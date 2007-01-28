@@ -1,8 +1,9 @@
 $Id$
 
 NOTES:
--- Only updates on guild update, since char updates don't supply any data for
-   this.
+-- Parses main/alt information from the public/officer note on guild updates
+-- Determines a main and assigns all uploaded chars as alts of that character
+   on character updates.
 -- Also updates from existing guild member table when the appropriate 
    passworded button is pushed on the main/alt list page.
 
@@ -10,11 +11,31 @@ NOTES:
 INSTALL:
 1) Extract the AltMonitor archive to the roster/addons/ directory on your site.
 
-2) Click the Alts/Mains link in the top of the site, and enter your roster password.
+2) Click the Alts/Mains link in the top of the site, and enter your roster
+   password.
 
 3) The addon installs automatically. 
 
 4) Click the link to go to the AltMonitor configuration panel.
+
+CONFIGURE:
+1) Go to the AltMonitor configuration panel using the link at the bottom of the
+   main/alt list.
+
+2) Change any options you want. Use the buttons on the left side to see more
+   options.
+
+3) Use the reset button at the top of the config page to reset to the settings
+   as they were when you loaded the page.
+
+4) Use the save button at the top of the config page to save the changes.
+
+UNINSTALL:
+1) Click the uninstall link in the config page.
+
+2) Click OK to confirm the uninstall.
+
+3) Delete the AltMonitor folder from your webserver.
 
 USE:
 To generate the data just upload the guild member info with the 'run update
@@ -24,10 +45,11 @@ isn't entered into the database if the corresponding main isn't in yet.
 Unfortunately I don't get to pick the update order.
 
 VERSION LOG:
--- Fiddled around with the indentation a bit
--- Cleaned up localization. It's in 1 file per language now, since organizing it
-   like that makes it easier to keep the wordings in sync.
--- AltMonitor triggers no longer even attempt to run if the tables aren't there.
+-- Fiddled around with the altlist indentation a bit
+-- Cleaned up localization. It's in 1 file per language now, since organizing
+   it like that makes it easier to keep the wordings in sync.
+-- AltMonitor triggers no longer even attempt to run if its own tables
+   aren't there.
 -- Added an uninstaller. Basically it drops the tables.
 -- Added a small change to the installer so it's possible to close the last
    statement with a ; now.
@@ -37,7 +59,8 @@ VERSION LOG:
    This won't work before wow roster 1.7.3 because it uses the extra update
    hookpoints
 -- Added some fixes from the main memberslist to altlist.php
--- Updated to use message_die rather than die_quietly for install/upgrade messages
+-- Updated to use message_die rather than die_quietly for install/upgrade
+   messages
 -- Shortened update log output (only 1 line per character now)
 -- Changed default sort to level then name
 
@@ -85,16 +108,17 @@ VERSION LOG:
 
 1.2.0
 -- Fixed the occasional blue line in the update log.
--- The ugly box-button under the config page menu for updating relations is now a
-   nice link in the rest of the list. Cheers to Zanix and Silencer-ch for helping
-   me with the jscript involved.
+-- The ugly box-button under the config page menu for updating relations is now
+   a nice link in the rest of the list. Cheers to Zanix and Silencer-ch for
+   helping me with the jscript involved.
 -- Finally really fixed the initial regex setting. Appearantly I needed to
    accomodate 3 different spots (2 before entereing into the database, 1 after)
    where the backslashes got removed.
 -- Some abstractizing of config.php to ease future introduction of it in a
    skeleton mod to be used as a base for other addon authors.
--- Fixed missing +/- problem. This occurred because there wasn't a main has alts
-   check if a character was assigned main status because of an invalid main name.
+-- Fixed missing +/- problem. This occurred because there wasn't a main has
+   alts check if a character was assigned main status because of an invalid
+   main name.
 
 1.1.3
 -- Fixed error on SQL updates.
@@ -112,14 +136,14 @@ VERSION LOG:
    page
 -- Changed the config page to use the addon framework.
 -- Added a SQL update system. This will ask for a Roster password to update the
-   AltMonitor database after each file update, to write the new version nr to DB
-   and add/edit/change any other options that were changed in that update
--- Added debug switch to the alt list. Call up the addon list, then edit the url
-   by appending &debug=true. It's meant for troubleshooting.
+   AltMonitor database after each file update, to write the new version nr to
+   DB and add/edit/change any other options that were changed in that update
+-- Added debug switch to the alt list. Call up the addon list, then edit the
+   url by appending &debug=true. It's meant for troubleshooting.
 -- Added 2 buttons to open or close all alt rollouts. Anyone who knows a way to
    do this in JS is welcome.
--- Fixed the default regex. Forgot to escape the \ in the SQL. If you are updating
-   you will have to change this value manually.
+-- Fixed the default regex. Forgot to escape the \ in the SQL. If you are
+   updating you will have to change this value manually.
 
 1.0.3
 -- How'd that dot get there?
@@ -251,21 +275,30 @@ install.php
 	by PleegWat
 	Installs/upgrades the addon.
 localization.php
-	English by PleegWat
-	French by Harut and Antaros
-	German by Geschan and Sphinx
-	Localization file. Contains all AltMonitor-specific localization.
+	Translation wrapper. Includes all 'real' translation files
+localization.de.php
+	German localization by Geschan and Sphinx
+localization.en.php
+	English localization by PleegWat
+localization.es.php
+	Spanish localization by BarryZGZ
+localization.fr.php
+	French localization by Harut and Antaros
 login.php
-	Contains login code.
+	Contains login code. Calls roster's lib/login.php for functionality
 menu.php
 	by PleegWat.
-	Sets variable entries needed to show AltMonitor in the main Roster menu.
+	Sets variable entries needed to show AltMonitor in the main Roster
+	menu.
 trigger.php
 	by PleegWat.
-	Wrapper file. Calls update.php.
+	Wrapper file for the update class in update.php
+uninstall.php
+	by PleegWat
+	Uninstalls the addon.
 update.php
 	by PleegWat.
-	Updates the ROSTER_ALT_TABLE for a specific guild member.
+	Library file containing the update logic.
 update_wrap.php
 	by PleegWat
 	Calls update.php to update the ROSTER_ALT_TABLE for all members based
