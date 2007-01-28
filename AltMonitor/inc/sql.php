@@ -56,19 +56,27 @@ INSERT INTO `".ROSTER_ALT_CONFIG_TABLE."` VALUES (1060,'altofalt','alt','select{
 # Display options
 INSERT INTO `".ROSTER_ALT_CONFIG_TABLE."` VALUES (2000,'showmain','0','radio{Show^1|Hide^0','display');
 INSERT INTO `".ROSTER_ALT_CONFIG_TABLE."` VALUES (2010,'altopen','1','radio{Open^1|Closed^0','display');
-INSERT INTO `".ROSTER_ALT_CONFIG_TABLE."` VALUES (2020,'mainlessbottom','1','radio{Bottom^1|Top^0','display')
+INSERT INTO `".ROSTER_ALT_CONFIG_TABLE."` VALUES (2020,'mainlessbottom','1','radio{Bottom^1|Top^0','display');
 ";
 
 $install_sql['1.1.0'] = "
-UPDATE `".ROSTER_ALT_CONFIG_TABLE."` SET `form_type` = 'select{Member name^name|Guild Title^guild_title|Public note^note|Officer note^officer_note' WHERE `config_name` = 'getmain_field'
+UPDATE `".ROSTER_ALT_CONFIG_TABLE."` SET `form_type` = 'select{Member name^name|Guild Title^guild_title|Public note^note|Officer note^officer_note' WHERE `config_name` = 'getmain_field';
 ";
 
 $install_sql['1.2.0'] = "
-INSERT INTO `".ROSTER_ALT_CONFIG_TABLE."` VALUES (3,'startpage','1','display','master')
+INSERT INTO `".ROSTER_ALT_CONFIG_TABLE."` VALUES (3,'startpage','1','display','master');
 ";
 
 $install_sql['1.4.0'] = "
-UPDATE `".ROSTER_ALT_CONFIG_TABLE."` SET `config_value` = 'build' WHERE `config_name` = 'startpage'
+UPDATE `".ROSTER_ALT_CONFIG_TABLE."` SET `config_value` = 'build' WHERE `config_name` = 'startpage';
 ";
 
+$install_sql['1.6.0'] = "
+INSERT INTO `" .ROSTER_ALT_CONFIG_TABLE."` VALUES (1070,'update_type','3','select{None^0|Guild^1|Character^2|Both^3','build');
+";
+
+$uninstall_sql['1.0.0'] = "
+DROP TABLE IF EXISTS `".ROSTER_ALT_TABLE."`;
+DROP TABLE IF EXISTS `".ROSTER_ALT_CONFIG_TABLE."`;
+";
 ?>
