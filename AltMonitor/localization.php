@@ -16,7 +16,7 @@
  *
  ******************************/
 
-include($addonDir.'localization.en.php')
-include($addonDir.'localization.fr.php')
-include($addonDir.'localization.de.php')
-include($addonDir.'localization.es.php')
+include($addonDir.'localization.en.php');
+include($addonDir.'localization.fr.php');
+include($addonDir.'localization.de.php');
+include($addonDir.'localization.es.php');
