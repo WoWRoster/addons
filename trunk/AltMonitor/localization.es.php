@@ -16,7 +16,7 @@
  *
  ******************************/
 
-// -[ esES Localization by BarryZGZ]-
+// -[ esES Localization ]-
 
 // Installer
 $wordings['esES']['AltMonitor_install_page']= 'Instalador de AltMonitor';
@@ -62,3 +62,7 @@ $wordings['esES']['admin']['update_type']   = 'Tipo de actualizacion|Especificar
 $wordings['esES']['admin']['showmain']      = 'Mostrar el nombre del Main|Especifica si quieres que se muestre el nombre del Main en la lista de Alts.';
 $wordings['esES']['admin']['altopen']       = 'Campo de Alt|Especifica si quieres que por defecto esten abiertos o cerrados los campos de Alt.';
 $wordings['esES']['admin']['mainlessbottom']= 'Mostrar los Alts que no tiene Main.|Especifica si quieres que los Alts que no tienen Main se muetren al principio o al final de la lista.';
+
+// Translator:
+//
+// BarryZGZ

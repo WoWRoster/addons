@@ -16,7 +16,7 @@
  *
  ******************************/
 
-// -[ frFR Localization by Harut and Antaros]-
+// -[ frFR Localization ]-
 
 // Installer
 $wordings['frFR']['AltMonitor_install_page']= 'Installation d\'AltMonitor';
@@ -62,3 +62,8 @@ $wordings['frFR']['admin']['update_type']   = 'Type de mise Ã  jour | Indiquez l
 $wordings['frFR']['admin']['showmain']      = 'Montrer le nom du perso principal|Définir si vous voulez montrer ou masquer le nom du perso principal dans la liste des rerolls.';
 $wordings['frFR']['admin']['altopen']       = 'Arborescence des Rerolls|Définir si vous voulez l\'arborescence des rerolls ouverte ou fermée par défaut.';
 $wordings['frFR']['admin']['mainlessbottom']= 'Montrer les persos sans perso principal|Définir si vous voulez montrer les persos sans perso principal au début ou à la fin de la liste.';
+
+// Translators:
+//
+// Harut
+// Antaros
