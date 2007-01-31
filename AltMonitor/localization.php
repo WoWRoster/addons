@@ -20,3 +20,9 @@ include($addonDir.'localization.en.php');
 include($addonDir.'localization.fr.php');
 include($addonDir.'localization.de.php');
 include($addonDir.'localization.es.php');
+
+
+$wordings['addoncredits']['AltMonitor 1.6.0'] = array(
+	array(	"name"=>	"PleegWat",
+			"info"=>	"Main/Alt detection and display"),
+);
