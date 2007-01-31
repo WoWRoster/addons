@@ -16,14 +16,14 @@
  *
  ******************************/
 
-// -[ deDE localization by Geschan and Sphinx ]-
+// -[ deDE localization ]-
 
 // Installer
 $wordings['deDE']['AltMonitor_install_page']= 'AltMonitor Installationssystem';
 $wordings['deDE']['AltMonitor_install']     = 'Die AltMonitor Tabellen sind noch nicht installiert. Drücke Install um die benötigten Tabellen zu erzeugen.';
 $wordings['deDE']['AltMonitor_upgrade']     = 'Die AltMonitor Tabellen sind nicht auf dem neuesten Stand. Betätige Update um die Datenbank zu aktualisieren oder Install um die Tabellen zu löschen und neu zu erzeugen.';
 $wordings['deDE']['AltMonitor_no_upgrade']  = 'Die AltMonitor Tabellen sind schon auf dem neuesten Stand. Betätige Reinstall um die Tabellen nochmal zu installieren.';
-$wordings['enUS']['AltMonitor_uninstall']   = 'This will remove the AltMonitor configuration and main/alt relations. Click \'Uninstall\' to proceed';
+$wordings['enUS']['AltMonitor_uninstall']   = 'Dies wird die AltMonitor Konfiguration und Hauptleitung herausnehmen/alte Verhältnisse. Klicken Sie \'Deinstallation\', um fortzufahren. AltMonitor ist deinstalliert worden. Sie können jetzt das Addon von Ihrem Webserver löschen.';
 $wordings['deDE']['AltMonitor_installed']   = 'GlÃ¼ckwunsch, AltMonitor wurde erfolgreich installiert. Klicke auf den unten stehenden Link um es zu Konfigurieren.';
 $wordings['enUS']['AltMonitor_uninstalled'] = 'AltMonitor has been uninstalled. You may now delete the addon from your webserver.';
 
@@ -40,7 +40,7 @@ $wordings['deDE']['AltMonitor_config']      = '&Ouml;ffne die AltMonitor Konfigu
 $wordings['deDE']['AltMonitor_config_page'] = 'AltMonitor Konfiguration';
 $wordings['deDE']['documentation']          = 'Documentation';
 $wordings['deDE']['updMainAlt']             = 'Beziehungen Aktualisieren';
-$wordings['deDE']['uninstall']              = 'Uninstall';
+$wordings['deDE']['uninstall']              = 'Deinstallation';
 
 // Page names
 $wordings['deDE']['admin']['build']         = 'Main/Twink Beziehungen';
@@ -56,12 +56,19 @@ $wordings['deDE']['admin']['defmain']       = 'Kein Ergebnis|Gebe an, als was ei
 $wordings['deDE']['admin']['invmain']       = 'UngÃ¼ltiges Ergebnis|Gebe an, als was ein Charakter eingestuft werden soll, wenn Regex ein Ergebnis findet, dass keinem Gildenmitglied zugeordnet werden kann oder mit dem Main Identifikator identisch ist.';
 $wordings['deDE']['admin']['altofalt']      = 'Twink eines Twinks|Gebe an, als was ein Charakter eingestuft werden soll, wenn er als Twink ohne Main erkannt wurde.';
 
-$wordings['deDE']['admin']['update_type']   = 'Update type|Specify on which trigger types to update main/alt relations.';
+$wordings['deDE']['admin']['update_type']   = 'Update typ|Geben sie an welchen Trigger typ Sie zum Updaten vom Haupt/oderdem  altem Zustand benutzen wollen.';
 
 // Settings names on display page
 $wordings['deDE']['admin']['showmain']      = 'Zeige den Namen des Mains|Gebe an, ob du mÃ¶chtest, dass der Name des Mains in der Twink-Liste angezeigt werden soll oder nicht.';
 $wordings['deDE']['admin']['altopen']       = 'Aufgeklappte Twinks|Gebe an, ob du mÃ¶chtest, dass standardmÃ¤ÃŸig alle Twinks ausgeklappt sein sollen oder nicht.';
 $wordings['deDE']['admin']['mainlessbottom']= 'Position der Mainlosen Twinks|Gebe an ob die Mainlosen Twinks Ã¼ber oder unterhalb der Liste angezeigt werden sollen.';
+
+// Translators:
+//
+// Geschan
+// Sphinx
+// Demonforce
+
 
 // Notes from German translator:
 
