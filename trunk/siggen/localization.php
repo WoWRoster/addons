@@ -25,7 +25,7 @@
  * @link http://www.wowroster.net
  * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
  * @author Joshua Clark
- * @version $Id:$
+ * @version $Id$
  * @copyright 2005-2007 Joshua Clark
  * @package SigGen
  * @filesource
@@ -154,14 +154,14 @@ $siggen_translate['esES']['Elfo de Sangre'] = 'Blood Elf';
 $siggen_translate['esES']['Draenei']      = 'Draenei';
 $siggen_translate['esES']['Elfo de la noche'] = 'Night Elf';
 $siggen_translate['esES']['Enano']        = 'Dwarf';
-$siggen_translate['esES']['Nomo']         = 'Gnome';
+$siggen_translate['esES']['Gnomo']        = 'Gnome';
 $siggen_translate['esES']['Humano']       = 'Human';
 $siggen_translate['esES']['Orco']         = 'Orc';
 $siggen_translate['esES']['No-muerto']    = 'Undead';
 $siggen_translate['esES']['Trol']         = 'Troll';
 $siggen_translate['esES']['Tauren']       = 'Tauren';
-$siggen_translate['esES']['Hombre']       = 'Male';
-$siggen_translate['esES']['Mujer']        = 'Female';
+$siggen_translate['esES']['Masculino']    = 'Male';
+$siggen_translate['esES']['Femenino']     = 'Female';
 
 // ----[ End Spanish (esES) ]--------------------------------
 
