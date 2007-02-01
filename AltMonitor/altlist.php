@@ -303,7 +303,7 @@ foreach ( $FIELDS as $field => $DATA )
 
 	if ( $current_col == 1 )
 	{
-		$tableHeaderRow .= '    <thead><th colspan="2" class="membersHeader"><a href="?roster_addon_name='.$_GET['roster_addon_name'].'&amp;s='.$field.$desc.'&amp;action='.$action.'&amp;altopen='.$_GET['altopen'].'">'.$th_text."</a></th>\n";
+		$tableHeaderRow .= '    <thead><th class="membersHeader"><th class="membersHeader"><a href="?roster_addon_name='.$_GET['roster_addon_name'].'&amp;s='.$field.$desc.'&amp;action='.$action.'&amp;altopen='.$_GET['altopen'].'">'.$th_text."</a></th>\n";
 	}
 	elseif ( $current_col == $cols )
 	{
