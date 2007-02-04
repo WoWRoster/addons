@@ -25,7 +25,7 @@
  * @link http://www.wowroster.net
  * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
  * @author Joshua Clark
- * @version $Id:$
+ * @version $Id$
  * @copyright 2005-2007 Joshua Clark
  * @package SigGen
  * @filesource
@@ -44,7 +44,7 @@ if ( !defined('ROSTER_INSTALLED') )
 	$member_list = $functions->getDbList( (ROSTER_MEMBERSTABLE),'`name`',"`guild_id` = '$guild_id'" );
 
 	// Get the background files
-	$backgFilesArr = $functions->listFiles( SIGGEN_DIR.$configData['image_dir'].$configData['backg_dir'],array('png','jpeg','jpg') );
+	$backgFilesArr = $functions->listFiles( SIGGEN_DIR.$configData['image_dir'].$configData['backg_dir'],array('png','gif','jpeg','jpg') );
 
 	// Get the font files
 	$fontFilesArr = $functions->listFiles( ROSTER_BASE.$configData['font_dir'],'ttf' );
@@ -214,7 +214,7 @@ if( $allow_save )
         No</label></td>
     </tr>
     <tr>
-      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Specify a directory to save generated images to<br />Realative to &quot;'.SIGGEN_DIR.'&quot;','Saved images directory' ); ?></td>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Specify a directory to save generated images to<br />Realative to &quot;'.str_replace('\\','/',SIGGEN_DIR).'&quot;','Saved images directory' ); ?></td>
       <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="save_images_dir" type="text" value="<?php print $configData['save_images_dir']; ?>" size="20" maxlength="64" /></td>
     </tr>
     <tr>
@@ -502,7 +502,7 @@ else
       <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="expbar_font_size" type="text" value="<?php print $configData['expbar_font_size']; ?>" size="3" maxlength="3" /></td>
     </tr>
     <tr>
-      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?></td>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?></td>
       <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right" colspan="2"><input type="text" maxlength="7" style="background-color:<?php print $configData['expbar_text_shadow']; ?>;" value="<?php print $configData['expbar_text_shadow']; ?>" name="expbar_text_shadow" id="expbar_text_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_text_shadow'))" alt="" /></td>
     </tr>
     <tr>
@@ -557,7 +557,7 @@ else
       <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="lvl_font_size" type="text" value="<?php print $configData['lvl_font_size']; ?>" size="3" maxlength="3" /></td>
     </tr>
     <tr>
-      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?></td>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?></td>
       <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right" colspan="2"><input type="text" maxlength="7" style="background-color:<?php print $configData['lvl_text_shadow']; ?>;" value="<?php print $configData['lvl_text_shadow']; ?>" name="lvl_text_shadow" id="lvl_text_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('lvl_text_shadow'))" alt="" /></td>
     </tr>
   </table>
@@ -663,7 +663,7 @@ else
       <td class="sc_row<?php echo ((($row)%2)+1); ?>" align="right"><input name="skills_font_size" type="text" value="<?php print $configData['skills_font_size']; ?>" size="3" maxlength="3" /></td>
     </tr>
     <tr>
-      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?></td>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?></td>
       <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right" colspan="2"><input type="text" maxlength="7" style="background-color:<?php print $configData['skills_shadow']; ?>;" value="<?php print $configData['skills_shadow']; ?>" name="skills_shadow" id="skills_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('skills_shadow'))" alt="" /></td>
     </tr>
   </table>
@@ -770,7 +770,7 @@ else
                   	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_name_font_color']; ?>;" value="<?php print $configData['text_name_font_color']; ?>" name="text_name_font_color" id="text_name_font_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_name_font_color'))" alt="" /></td>
                 </tr>
                 <tr align="left">
-                  <td class="sc_row_right1" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?>
+                  <td class="sc_row_right1" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
                     <input type="text" maxlength="7" style="background-color:<?php print $configData['text_name_shadow']; ?>;" value="<?php print $configData['text_name_shadow']; ?>" name="text_name_shadow" id="text_name_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_name_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
@@ -821,7 +821,7 @@ else
                   	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_class_font_color']; ?>;" value="<?php print $configData['text_class_font_color']; ?>" name="text_class_font_color" id="text_class_font_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_class_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
-                  <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?>
+                  <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
                     <input type="text" maxlength="7" style="background-color:<?php print $configData['text_class_shadow']; ?>;" value="<?php print $configData['text_class_shadow']; ?>" name="text_class_shadow" id="text_class_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_class_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
@@ -875,7 +875,7 @@ else
                   	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_honor_font_color']; ?>;" value="<?php print $configData['text_honor_font_color']; ?>" name="text_honor_font_color" id="text_honor_font_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_honor_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
-                  <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?>
+                  <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
                     <input type="text" maxlength="7" style="background-color:<?php print $configData['text_honor_shadow']; ?>;" value="<?php print $configData['text_honor_shadow']; ?>" name="text_honor_shadow" id="text_honor_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_honor_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
@@ -926,7 +926,7 @@ else
                   	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_guildname_font_color']; ?>;" value="<?php print $configData['text_guildname_font_color']; ?>" name="text_guildname_font_color" id="text_guildname_font_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_guildname_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
-                  <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?>
+                  <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
                     <input type="text" maxlength="7" style="background-color:<?php print $configData['text_guildname_shadow']; ?>;" value="<?php print $configData['text_guildname_shadow']; ?>" name="text_guildname_shadow" id="text_guildname_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_guildname_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
@@ -980,7 +980,7 @@ else
                   	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_guildtitle_font_color']; ?>;" value="<?php print $configData['text_guildtitle_font_color']; ?>" name="text_guildtitle_font_color" id="text_guildtitle_font_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_guildtitle_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
-                  <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?>
+                  <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
                     <input type="text" maxlength="7" style="background-color:<?php print $configData['text_guildtitle_shadow']; ?>;" value="<?php print $configData['text_guildtitle_shadow']; ?>" name="text_guildtitle_shadow" id="text_guildtitle_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_guildtitle_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
@@ -1031,7 +1031,7 @@ else
                   	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_servername_font_color']; ?>;" value="<?php print $configData['text_servername_font_color']; ?>" name="text_servername_font_color" id="text_servername_font_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_servername_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
-                  <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?>
+                  <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
                     <input type="text" maxlength="7" style="background-color:<?php print $configData['text_servername_shadow']; ?>;" value="<?php print $configData['text_servername_shadow']; ?>" name="text_servername_shadow" id="text_servername_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_servername_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
@@ -1094,7 +1094,7 @@ else
                   	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_sitename_font_color']; ?>;" value="<?php print $configData['text_sitename_font_color']; ?>" name="text_sitename_font_color" id="text_sitename_font_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_sitename_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
-                  <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?>
+                  <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
                     <input type="text" maxlength="7" style="background-color:<?php print $configData['text_sitename_shadow']; ?>;" value="<?php print $configData['text_sitename_shadow']; ?>" name="text_sitename_shadow" id="text_sitename_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_sitename_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
@@ -1149,7 +1149,7 @@ else
                   	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_custom_font_color']; ?>;" value="<?php print $configData['text_custom_font_color']; ?>" name="text_custom_font_color" id="text_custom_font_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_custom_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
-                  <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Selecting &quot;--None--&quot; turns off the shadow','Shadow Text' ); ?>
+                  <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
                     <input type="text" maxlength="7" style="background-color:<?php print $configData['text_custom_shadow']; ?>;" value="<?php print $configData['text_custom_shadow']; ?>" name="text_custom_shadow" id="text_custom_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_custom_shadow'))" alt="" /></td>
                 </tr>
               </table></td>

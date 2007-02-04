@@ -25,7 +25,7 @@
  * @link http://www.wowroster.net
  * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
  * @author Joshua Clark
- * @version $Id:$
+ * @version $Id$
  * @copyright 2005-2007 Joshua Clark
  * @package SigGen
  * @filesource
@@ -39,7 +39,7 @@ if ( !defined('ROSTER_INSTALLED') )
 ?>
 
 <!-- Begin Settings Reset Box -->
-  <form method="post" action="<?php print $script_filename; ?>" enctype="multipart/form-data" name="reset_settings" onsubmit="submitonce(this)">
+  <form id="reset_settings" method="post" action="<?php print $script_filename; ?>" enctype="multipart/form-data" name="reset_settings" onsubmit="submitonce(this)">
   <div id="resetdbCol">
 <?php print border('sgray','start','<div style="cursor:pointer;width:187px;" onclick="swapShow(\'resetdbCol\',\'resetdb\')"><img src="'.$roster_conf['img_url'].'plus.gif" style="float:right;" alt="+" />Reset to Defaults</div>'); ?>
 <?php print border('sgray','end'); ?>
@@ -48,8 +48,8 @@ if ( !defined('ROSTER_INSTALLED') )
 <?php print border('sgray','start','<div style="cursor:pointer;width:187px;" onclick="swapShow(\'resetdbCol\',\'resetdb\')"><img src="'.$roster_conf['img_url'].'minus.gif" style="float:right;" alt="-" />Reset to Defaults</div>'); ?>
     <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
       <tr>
-        <td class="sc_row_right1" align="center">Check to confirm reset<br />
-          <input type="checkbox" class="checkBox" name="confirm_reset" value="1" /></td>
+        <td class="sc_row_right1" align="center">
+          <input type="checkbox" class="checkBox" id="confirm_reset" name="confirm_reset" value="1" /><label for="confirm_reset">Check to confirm reset</label></td>
       </tr>
       <tr>
         <td class="sc_row_right2" align="center">
