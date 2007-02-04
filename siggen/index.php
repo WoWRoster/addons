@@ -552,6 +552,9 @@ $messages.'
   </tr>
 </table><br />'.$sqldebug.$java;
 
+$all_body = ",'radioOn','radioOff','checkboxOn','checkboxOff'";
+$body_action = "onLoad=\"initARC('reset_settings'$all_body);initARC('images_upload'$all_body);\"";
+
 // ----[ Output to addon.php ]------------------------------
 
 

@@ -25,7 +25,7 @@
  * @link http://www.wowroster.net
  * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
  * @author Joshua Clark
- * @version $Id:$
+ * @version $Id$
  * @copyright 2005-2007 Joshua Clark
  * @package SigGen
  * @filesource
@@ -57,7 +57,8 @@ if( isset($_GET['name']) )
 }
 elseif( isset($_SERVER['PATH_INFO']) ) // Try pulling from a "path_info" request
 {
-	$char_name = utf8_encode(urldecode(substr( $_SERVER['PATH_INFO'],1,-4 )));
+	$path_info = utf8_encode(urldecode(substr($_SERVER['PATH_INFO'],1)));
+	list($char_name,$img_format) = explode('.',$path_info);
 }
 
 
@@ -103,6 +104,24 @@ if( isset($_GET['etag']) )
 	elseif( $_GET['etag'] == 0 )
 	{
 		$etag_override = 0;
+	}
+}
+
+
+// Web selectable output format
+if( isset($_GET['format']) )
+{
+	if( $_GET['format'] == 'png' )
+	{
+		$img_format = 'png';
+	}
+	elseif( $_GET['format'] == 'gif' )
+	{
+		$img_format = 'gif';
+	}
+	elseif( $_GET['format'] == 'jpg' || $_GET['format'] == 'jpeg' )
+	{
+		$img_format = 'jpg';
 	}
 }
 
@@ -729,6 +748,31 @@ if( isset($_GET['etag']) )
 		}
 	}
 
+	function blankpng()
+	{
+		$c  = "iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29m".
+			"dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAADqSURBVHjaYvz//z/DYAYAAcTEMMgBQAANegcCBNCg".
+			"dyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAAN".
+			"egcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQ".
+			"oHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAA".
+			"DXoHAgTQoHcgQAANegcCBNCgdyBAgAEAMpcDTTQWJVEAAAAASUVORK5CYII=";
+		return $c;
+	}
+
+    function imagecreatetruecolortrans($x,$y)
+    {
+        $i = @imagecreatetruecolor($x,$y)
+			or debugMode( (__LINE__),'Cannot Initialize new GD image stream','',0,'Make sure you have the latest version of GD2 installed' );
+
+        $b = imagecreatefromstring(base64_decode(blankpng()));
+
+        imagealphablending($i,false);
+        imagesavealpha($i,true);
+        imagecopyresized($i,$b,0,0,0,0,$x,$y,imagesx($b),imagesy($b));
+        imagealphablending($i,true);
+
+        return $i;
+    }
 
 
 #--[ IMAGE CREATION ]------------------------------------------------------
@@ -857,8 +901,7 @@ if( isset($_GET['etag']) )
 	}
 
 	// Create a new, truecolor image
-	$im = @imagecreatetruecolor( $configData['main_image_size_w'], $configData['main_image_size_h'] )
-		or debugMode( (__LINE__),'Cannot Initialize new GD image stream','',0,'Make sure you have the latest version of GD2 installed' );
+	$im = @imagecreatetruecolortrans( $configData['main_image_size_w'], $configData['main_image_size_h'] );
 
 	// Color fill the background?
 	if( $configData['backg_fill'] )
@@ -870,50 +913,10 @@ if( isset($_GET['etag']) )
 	// Merge the background into the main image, with this hande, dandy merging script
 
 	// Generate background first
-	if( $configData['backg_disp'] && file_exists($im_back_file) )
+	if( $configData['backg_disp'] && !is_dir($im_back_file) && file_exists($im_back_file) )
 	{
-		// Create a new temp image from file
-		$info = getimagesize($im_back_file);
-
-		switch( $info['mime'] )
-		{
-			case 'image/jpeg' :
-			case 'image/jpg' :
-				$src = @imagecreatefromjpeg($im_back_file)
-					or debugMode( (__LINE__),$php_errormsg );
-				break;
-
-			case 'image/png' :
-				$src = @imagecreatefrompng($im_back_file)
-					or debugMode( (__LINE__),$php_errormsg );
-				break;
-
-			default:
-				debugMode( (__LINE__),'Unhandled image type: '.$info['mime'] );
-		}
-
-		// Get the image dimentions
-		$src_width = imageSX( $src );
-		$src_height = imageSY( $src );
-
-		imagealphablending($im, false);
-
-		for ($i = 0; $i < $src_height; $i++) //this loop traverses each row in the image
-		{
-			for ($j = 0; $j < $src_width; $j++) //this loop traverses each pixel of each row
-			{
-				// get the color & alpha info of the current pixel
-				$retrieved_color = imagecolorat($src, $j, $i);
-					imagesetpixel($im, $j, $i, $retrieved_color);
-
-				imagesetpixel($im, $j, $i, $retrieved_color);
-
-			}
-		}
-		imagesavealpha($im, true);
-		imagealphablending($im, true);
+		combineImage( $im,$im_back_file,(__LINE__),0,0 );
 	}
-
 
 
 	// Get the image layer order
@@ -1329,9 +1332,11 @@ if( isset($_GET['etag']) )
 
 	if( $make_image )
 	{
+		// Catch the override
+		$configData['image_type'] = ( isset($img_format) ? $img_format : $configData['image_type'] );
+
 		// Set the header
 		header( 'Content-type: image/'.$configData['image_type'] );
-
 
 		switch ( $configData['image_type'] )
 		{
@@ -1339,6 +1344,7 @@ if( isset($_GET['etag']) )
 				makeImageGif( $im,$configData['main_image_size_w'],$configData['main_image_size_h'],$configData['gif_dither'] );
 				break;
 
+			case 'jpeg':
 			case 'jpg':
 				@imageJpeg( $im,'',$configData['image_quality'] )
 					or debugMode( (__LINE__),$php_errormsg );

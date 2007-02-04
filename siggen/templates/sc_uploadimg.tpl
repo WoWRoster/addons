@@ -25,7 +25,7 @@
  * @link http://www.wowroster.net
  * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
  * @author Joshua Clark
- * @version $Id:$
+ * @version $Id$
  * @copyright 2005-2007 Joshua Clark
  * @package SigGen
  * @filesource
@@ -43,7 +43,7 @@ if ( !defined('ROSTER_INSTALLED') )
 if( $allow_upload )
 {
 ?>
-  <form method="post" action="<?php print $script_filename; ?>" enctype="multipart/form-data" name="images_upload" onsubmit="submitonce(this)">
+  <form id="images_upload" method="post" action="<?php print $script_filename; ?>" enctype="multipart/form-data" name="images_upload" onsubmit="submitonce(this)">
 <?php print border('sgray','start','<div style="width:187px;"><img src="'.$roster_conf['img_url'].'blue-question-mark.gif" style="float:right;" alt="" />'.$functions->createTip( 'Images are currently located in:<br />\n&quot;'.str_replace('\\','/',SIGGEN_DIR.$configData['image_dir'].$configData['user_dir']).'&quot;','Upload User Images' ).'</div>'); ?>
     <table width="198" class="sc_table" cellspacing="0" cellpadding="2">
       <tr>
@@ -51,12 +51,10 @@ if( $allow_upload )
           <?php print $functions->createOptionList($member_list,$name_test,'image_name',3 ); ?></td>
       </tr>
       <tr>
-        <td class="sc_row_right2" align="left">Image Upload Type:<br /><label>
-        <input type="radio" class="checkBox" name="image_type" value="" checked="checked" />
-        Character Image</label><label>
+        <td class="sc_row_right2" align="left">Image Upload Type:<br />
+        <input type="radio" id="image_type_ch" name="image_type" value="" checked="checked" /><label for="image_type_ch">Character Image</label>
         <br />
-        <input type="radio" class="checkBox" name="image_type" value="bk-" />
-        Background</label></td>
+        <input type="radio" id="image_type_bk" name="image_type" value="bk-" /><label for="image_type_bk">Background</label></td>
       </tr>
       <tr>
         <td class="sc_row_right1" align="left">Image location:<br />
