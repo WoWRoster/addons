@@ -58,7 +58,7 @@ if( $allow_upload )
       </tr>
       <tr>
         <td class="sc_row_right1" align="left">Image location:<br />
-          <input class="inputbox" name="userfile" type="file" /></td>
+          <input name="userfile" type="file" /></td>
       </tr>
       <tr>
         <td class="sc_row_right2" align="center"><input type="hidden" name="sc_op" value="upload_image" />

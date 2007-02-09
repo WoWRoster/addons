@@ -45,7 +45,7 @@ if ( !defined('ROSTER_INSTALLED') )
         <td class="sc_row_right1" align="center"><form method="post" action="<?php print $script_filename; ?>" enctype="multipart/form-data" name="import_settings" onsubmit="submitonce(this)" style="display:inline;">
           <?php print $functions->createTip( '<span class=&quot;red&quot;>This WILL OVERWRITE ALL your settings in this config</span>','Import Settings' ); ?>
           <input type="hidden" name="sc_op" value="import" />
-          <input class="inputbox" name="userfile" type="file" /><br /><br />
+          <input name="userfile" type="file" /><br /><br />
           <input type="submit" value="Import" name="import" /></form></td>
       </tr>
       <tr>

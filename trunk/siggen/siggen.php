@@ -684,7 +684,8 @@ if( isset($_GET['format']) )
 	// Funtion to merge images with the main image
 	function combineImage( $image,$filename,$line,$x_loc,$y_loc )
 	{
-		$info = getimagesize($filename);
+		$info = getimagesize($filename)
+			or debugMode( $line,$php_errormsg );
 
 		switch( $info['mime'] )
 		{
