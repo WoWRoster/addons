@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<ROOT>
+	<ROW>
+		<userId>1</userId>
+		<userName>Olavo Alexandrino</userName>
+	</ROW>
+	<ROW>
+		<userId>2</userId>
+		<userName>Romário</userName>
+	</ROW>
+	<ROW>
+		<userId>3</userId>
+		<userName>Maradona</userName>
+	</ROW>
+	<ROW>
+		<userId>4</userId>
+		<userName>Ronaldinho Gaúcho</userName>
+	</ROW>
+	<ROW>
+		<userId>5</userId>
+		<userName>Édson Arantes do Nascimento (Pelé)</userName>
+	</ROW>
+	<ROW>
+		<userId>6</userId>
+		<userName>Rivaldo</userName>
+	</ROW>
+</ROOT>
