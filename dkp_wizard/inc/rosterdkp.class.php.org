@@ -1,0 +1,1621 @@
+<?php
+/******************************
+ * WoWRoster.net  Roster
+ * Copyright 2002-2006
+ * Licensed under the Creative Commons
+ * "Attribution-NonCommercial-ShareAlike 2.5" license
+ *
+ * Short summary
+ *  http://creativecommons.org/licenses/by-nc-sa/2.5/
+ *
+ * Full license information
+ *  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
+ * -----------------------------
+ *
+ * $Id: $
+ *
+ ******************************/
+
+class rosterdkp_raidform
+{
+	var $raid_id = 0;
+	var $raid_start = '';
+	var $raid_end = '';
+	var $raid_zone = 'Random Event';
+	var $raid_note = '';
+	var $raid_bosses = array();
+	var $raid_players = array();
+	var $raid_loot = array();
+	var $raid_form = '';
+	
+	// Constructor. Parameter is a raid_id in case of editing a raid. 
+	// If the raid_id is 0, a new raid and new events will be inserted.
+	function rosterdkp_raidform($raidid = 0)
+	{
+		$this->raid_id = $raidid;
+	}
+	
+	// Temporarily set the start-time of the raid.
+	// This will be altered later on by analysing the data.
+	function set_start($time)
+	{
+		$time = getdate(strtotime($time));
+		if ($time['minutes'] > 30)
+		{
+			$time['hours'] = $time['hours'] + 1;
+			$time['minutes'] = 0;
+		}
+		else
+		{
+			$time['minutes'] = 30;
+		}
+			
+		$time = $time['year'].'-'.$time['mon'].'-'.$time['mday'].' '.$time['hours'].':'.$time['minutes'];
+		$time = date("Y-m-d H:i", strtotime($time));
+		$this->raid_start = $time;
+	}
+
+	// Temporarily set the end-time of the raid.
+	// This will be altered later on by analysing the data.
+	function set_end($time)
+	{
+		$time = getdate(strtotime($time));
+		if ($time['minutes'] < 30)
+		{
+			$time['hours'] = $time['hours'] - 1;
+			$time['minutes'] = 0;
+		}
+		else
+		{
+			$time['minutes'] = 30;
+		}
+			
+		$time = $time['year'].'-'.$time['mon'].'-'.$time['mday'].' '.$time['hours'].':'.$time['minutes'];
+		$time = date("Y-m-d H:i", strtotime($time));
+		$this->raid_end = $time;
+	}
+	
+	// Set the Zone-Name of the raid.
+	function set_zone($zonename)
+	{
+		$this->raid_zone = $zonename;
+	}
+	
+	// Set the note of the raid.
+	function set_note($note)
+	{
+		$this->raid_note = $note;
+	}
+	
+	// Insert the killed bosses
+	function insert_bosses($bosses)
+	{
+		global $roster_conf, $wowdb;
+		
+		// Test if our boss values table exists
+		$query = "SHOW TABLES LIKE '".ROSTER_ADDON_ROSTER_DKP_BOSSVAL."'";
+		$result = $wowdb->query( $query ) or die_quietly($wowdb->error(),'roster_dkp',__FILE__,__LINE__, $query );
+		if ( $row = $wowdb->fetch_assoc($result) )
+		{
+			$wowdb->free_result($result);
+
+			// Get boss values and insert them into the array
+			$query = "SELECT * FROM `".ROSTER_ADDON_ROSTER_DKP_BOSSVAL."`";
+			$result = $wowdb->query( $query ) or die_quietly($wowdb->error(),'roster_dkp',__FILE__,__LINE__, $query );
+			while( $row = $wowdb->fetch_assoc($result) )
+			{
+				$bossvalues[$row['boss_name']] = $row['dkp_value'];
+			}
+		}
+		else
+		{
+			$bossvalues['default'] = 1.00;
+		}
+		$wowdb->free_result($result);
+		
+		// Insert all the bosses into the class, + their appropiate DKP value
+		$bossindex = 0;
+		foreach ($bosses as $boss)
+		{
+			$bossname_lower = strtolower($boss['name']);
+			$this->raid_bosses[$bossindex]['name'] = $boss['name'];
+			$this->raid_bosses[$bossindex]['killtime'] = $boss['time'];
+			$this->raid_bosses[$bossindex]['zonename'] = $boss['zone'];
+			if (isset($bossvalues[$bossname_lower]) && $bossvalues[$bossname_lower])
+			{
+				$this->raid_bosses[$bossindex]['dkp_value'] = $bossvalues[$bossname_lower];
+			}
+			else
+			{
+				$this->raid_bosses[$bossindex]['dkp_value'] = $bossvalues['default'];
+			}
+			$bossindex++;
+		}
+	}
+		
+
+	function insert_players($players)
+	{
+		global $roster_conf, $addon_conf, $wowdb;
+		$playerindex = 0;
+		foreach ($players as $player)
+		{
+			// Check if the player is a member of the guild
+			$name_escape = $wowdb->escape($player['name']);
+			$membersql = "SELECT `member_id`, `guild_id`, `class`, `level` FROM `".ROSTER_MEMBERSTABLE."` WHERE `name` = '".$name_escape."' LIMIT 1";
+			$result = $wowdb->query( $membersql ) or die_quietly($wowdb->error(),'roster_dkp',__FILE__,__LINE__, $query );
+
+			$this->raid_players[$playerindex]['name'] = $name_escape;
+			$this->raid_players[$playerindex]['race'] = $player['race'];
+			$this->raid_players[$playerindex]['join'] = $player['first_join'];
+			$this->raid_players[$playerindex]['leave'] = $player['last_leave'];
+			
+			if ($row = $wowdb->fetch_assoc($result))
+			{
+				$this->raid_players[$playerindex]['roster_id'] = $row['member_id'];
+				$this->raid_players[$playerindex]['guild_id'] = $row['guild_id'];
+				$this->raid_players[$playerindex]['class'] = $row['class'];
+				$this->raid_players[$playerindex]['level'] = $row['level'];
+			}
+			else
+			{
+				$this->raid_players[$playerindex]['roster_id'] = 0;
+				$this->raid_players[$playerindex]['guild_id'] = 0;
+				$this->raid_players[$playerindex]['class'] = ucfirst(strtolower($player['class']));
+				$this->raid_players[$playerindex]['level'] = $player['level'];
+			}
+			$wowdb->free_result($result);
+			
+			// Check if the player already is a member of Roster DKP
+			$membersql = "SELECT `member_id`, `name` FROM `".ROSTER_ADDON_ROSTER_DKP_MEMBERS."` WHERE `name` = '".$name_escape."' LIMIT 1";
+			$result = $wowdb->query( $membersql ) or die_quietly($wowdb->error(),'roster_dkp',__FILE__,__LINE__, $query );
+			if ($row = $wowdb->fetch_assoc($result))
+			{
+				$this->raid_players[$playerindex]['member_id'] = $row['member_id'];
+			}
+			else
+			{
+				$this->raid_players[$playerindex]['member_id'] = 0;
+			}
+			$wowdb->free_result($result);
+			
+			// Check if the player experienced any DKP valued events
+			$playereventindex = 0;
+
+			// Get UTime string for players attendence
+			$playerjoin = strtotime($player['first_join']);
+			$playerleave = strtotime($player['last_leave']);
+			
+			// Little prepare bit to get the real time and date of the raid start/end, later.
+			if($playerindex == 0 || (strtotime($this->raid_start) > $playerjoin))
+			{
+				$this->raid_start = $player['first_join'];
+			}
+			if(!$playerindex || (((strtotime($this->raid_end) < $playerleave) || ((strtotime($this->raid_end)-strtotime($this->raid_start)) > 28800))))
+			{
+				if (($playerleave-strtotime($this->raid_start)) < 28800)
+				{
+					$this->raid_end = $player['last_leave'];
+				}
+			}
+			
+			
+			// Raid attendence
+			if (floatval($addon_conf['roster_dkp']['rosterdkp_dkpattendence']) > 0)
+			{
+				if ($addon_conf['roster_dkp']['rosterdkp_dkpattpercentage'])
+				{
+					$dkpvaluepercentage = ($addon_conf['roster_dkp']['rosterdkp_dkpattendence']*$player['percentage'])/100;
+				}
+				else
+				{
+					$dkpvaluepercentage = $addon_conf['roster_dkp']['rosterdkp_dkpattendence'];
+				}
+				$this->raid_players[$playerindex]['events'][$playereventindex]['event_reference'] = $this->raid_id;
+				$this->raid_players[$playerindex]['events'][$playereventindex]['type'] = 'raidatt';
+				$this->raid_players[$playerindex]['events'][$playereventindex]['dkp_value'] = $dkpvaluepercentage;
+				$this->raid_players[$playerindex]['events'][$playereventindex]['start'] = $player['first_join'];
+				$this->raid_players[$playerindex]['events'][$playereventindex]['end'] = $player['last_leave'];
+				$this->raid_players[$playerindex]['events'][$playereventindex]['note'] = $player['percentage'];
+				$playereventindex++;
+			}
+			
+			// Boss kills
+			foreach ($this->raid_bosses as $key => $boss)
+			{
+            			if (floatval($boss['dkp_value']) > 0)
+            			{
+					$killtime = strtotime($boss['killtime']);
+					if ($killtime > $playerjoin && $killtime < $playerleave)
+					{
+						$this->raid_players[$playerindex]['events'][$playereventindex]['event_reference'] = $key;
+						$this->raid_players[$playerindex]['events'][$playereventindex]['type'] = 'bosskill';
+						$this->raid_players[$playerindex]['events'][$playereventindex]['dkp_value'] = $boss['dkp_value'];
+						$this->raid_players[$playerindex]['events'][$playereventindex]['start'] = date("Y-m-d H:i", $killtime);
+						$this->raid_players[$playerindex]['events'][$playereventindex]['end'] = date("Y-m-d H:i", $killtime);
+						$this->raid_players[$playerindex]['events'][$playereventindex]['note'] = $wowdb->escape($boss['name']);
+						$playereventindex++;
+					}
+				}	
+			}
+			
+			// Timed Bonus
+			if (floatval($addon_conf['roster_dkp']['rosterdkp_dkphourbonus']) > 0)
+			{
+				
+				$hoursjoined = floor($player['totaltime']/3600);
+				$this->raid_players[$playerindex]['events'][$playereventindex]['event_reference'] = $this->raid_id;
+				$this->raid_players[$playerindex]['events'][$playereventindex]['type'] = 'raidhours';
+				$this->raid_players[$playerindex]['events'][$playereventindex]['dkp_value'] = $addon_conf['roster_dkp']['rosterdkp_dkphourbonus']*$hoursjoined;
+				$this->raid_players[$playerindex]['events'][$playereventindex]['start'] = $player['first_join'];
+				$this->raid_players[$playerindex]['events'][$playereventindex]['end'] = $player['last_leave'];
+				$this->raid_players[$playerindex]['events'][$playereventindex]['note'] = $hoursjoined;
+				$playereventindex++;
+			}
+			
+			// On-Time Bonus
+			if (floatval($addon_conf['roster_dkp']['rosterdkp_dkpontimebonus']) > 0)
+			{
+				if ($player['was_ontime'])
+				{
+					$this->raid_players[$playerindex]['events'][$playereventindex]['event_reference'] = $this->raid_id;
+					$this->raid_players[$playerindex]['events'][$playereventindex]['type'] = 'raidontime';
+					$this->raid_players[$playerindex]['events'][$playereventindex]['dkp_value'] = $addon_conf['roster_dkp']['rosterdkp_dkpontimebonus'];
+					$this->raid_players[$playerindex]['events'][$playereventindex]['start'] = $player['first_join'];
+					$this->raid_players[$playerindex]['events'][$playereventindex]['end'] = $player['first_join'];
+					$this->raid_players[$playerindex]['events'][$playereventindex]['note'] = 'ontime';
+					$playereventindex++;
+				}
+			}
+			
+			// Till-The-End Bonus
+			if (floatval($addon_conf['roster_dkp']['rosterdkp_dkptillendbonus']) > 0)
+			{
+				if ($player['was_ontime'])
+				{
+					$this->raid_players[$playerindex]['events'][$playereventindex]['event_reference'] = $this->raid_id;
+					$this->raid_players[$playerindex]['events'][$playereventindex]['type'] = 'raidtillend';
+					$this->raid_players[$playerindex]['events'][$playereventindex]['dkp_value'] = $addon_conf['roster_dkp']['rosterdkp_dkptillendbonus'];
+					$this->raid_players[$playerindex]['events'][$playereventindex]['start'] = $player['last_leave'];
+					$this->raid_players[$playerindex]['events'][$playereventindex]['end'] = $player['last_leave'];
+					$this->raid_players[$playerindex]['events'][$playereventindex]['note'] = 'tillend';
+					$playereventindex++;
+				}
+			}
+			$playerindex++;
+		}
+	}
+				
+	function insert_loot($lootitems)
+	{
+		$this->raid_loot = $lootitems;
+	}
+
+	function calculate_realtime()
+	{	
+		$starttime_array = getdate(strtotime($this->raid_start));
+		if ($starttime_array['minutes'] > 30)
+		{
+			$starttime = mktime($starttime_array['hours'], 0 , 0, $starttime_array['mon'], $starttime_array['mday'], $starttime_array['year'])+3600;
+			$this->raid_start = date("Y-m-d H:i", $starttime);
+		}
+		else
+		{
+			$starttime = mktime($starttime_array['hours'], 0 , 0, $starttime_array['mon'], $starttime_array['mday'], $starttime_array['year']);
+			$this->raid_start = date("Y-m-d H:i", $starttime);
+		}
+		
+		$endtime_array = getdate(strtotime($this->raid_end));
+		if ($endtime_array['minutes'] < 30)
+		{
+			$endtime = mktime($endtime_array['hours'], 0 , 0, $endtime_array['mon'], $endtime_array['mday'], $endtime_array['year']);
+			$this->raid_end = date("Y-m-d H:i", $endtime);
+		}
+		else
+		{
+			$endtime = mktime($endtime_array['hours'], 30 , 0, $endtime_array['mon'], $endtime_array['mday'], $endtime_array['year']);
+			$this->raid_end = date("Y-m-d H:i", $endtime);
+		}
+	}
+
+	function build_form($formoptions = 0)
+	{
+		global $postfields, $script_filename, $roster_conf, $addon_conf, $wordings;
+		
+		// Tooltip Replace Patterns
+		$prg_find = array("/'/",'/"/','|\\>|','|\\<|',"/\\n/");
+		$prg_rep  = array("\'",'&quot;','&#8250;','&#8249;','<br />');
+		
+		// Arrays to hold valuable data
+		$bosses = array();
+		$lootitems = array();
+		$players = array();
+
+		// Start the HTML Form
+		$this->form = "<!-- Begin Input Form -->\n";
+		
+		// One BIG box around the whole form
+		$this->form .= border('sgray','start')."\n";
+		$this->form .= "<table bgcolor=\"black\">\n<tr>\n<td>\n";
+		
+		$this->form .= '<form action="'.$script_filename.'" method="post" enctype="multipart/form-data" onsubmit="submitonce(this)">'."\n";
+		
+		//Display the Raid Details
+		$this->form .= border('sred','start',$wordings[$roster_conf['roster_lang']]['rosterdkp_raiddetails'])."\n";
+		$this->form .= "<table width=\"800\" class=\"bodyline\" cellspacing=\"0\" cellpadding=\"0\">\n";
+		$this->form .= "<tr>\n";
+		$this->form .= "<td class=\"membersHeader\">".$wordings[$roster_conf['roster_lang']]['rosterdkp_raidzone']."</td>\n";
+		$this->form .= "<td class=\"membersHeader\">".$wordings[$roster_conf['roster_lang']]['rosterdkp_raidnote']."</td>\n";
+		$this->form .= "<td class=\"membersHeader\">".$wordings[$roster_conf['roster_lang']]['rosterdkp_raidstart']."</td>\n";
+		$this->form .= "<td class=\"membersHeader\">".$wordings[$roster_conf['roster_lang']]['rosterdkp_raidend']."</td>\n";
+		$this->form .= "</tr>\n<tr>\n";
+		$this->form .= "<td class=\"membersRowRight1\"><input name=\"raid_zone\" type=\"text\" size=\"15\" value=\"".stripslashes($this->raid_zone)."\" /></td>\n";
+		$this->form .= "<td class=\"membersRowRight1\"><input name=\"raid_note\" type=\"text\" size=\"40\" value=\"".stripslashes($this->raid_note)."\" />\n</td>\n";
+		$this->form .= "<td class=\"membersRowRight1\"><input name=\"raid_start\" type=\"text\" size \"15\" value=\"".$this->raid_start."\" /></td>\n";
+		$this->form .= "<td class=\"membersRowRight1\"><input name=\"raid_end\" type=\"text\" size \"15\" value=\"".$this->raid_end."\" /></td>\n";
+		$this->form .= "</tr>\n</table>\n";
+		$this->form .= "<input name=\"raid_zone\" type=\"hidden\" value=\"".$this->raid_zone."\" />\n";
+		$this->form .= "<input name=\"raid_id\" type=\"hidden\" value=\"".$this->raid_id."\" />\n";
+		$this->form .= border('sred','end')."<br>\n";
+
+		// Show the Different Event Details
+		$this->form .= border('sgreen','start',$wordings[$roster_conf['roster_lang']]['rosterdkp_eventdetails'])."\n";
+		$this->form .= "<table width=\"800\" class=\"bodyline\" cellspacing=\"0\" cellpadding=\"0\">\n";
+		$row = 1;
+		
+		// Header of Table
+		$this->form .= "<tr>\n";
+		$this->form .= "<td colspan=\"2\" class=\"membersHeader\">".$wordings[$roster_conf['roster_lang']]['rosterdkp_eventtype']."</td>\n";
+		$this->form .= "<td class=\"membersHeader\">".$wordings[$roster_conf['roster_lang']]['rosterdkp_eventref']."</td>\n";
+		$this->form .= "<td class=\"membersHeader\">".$wordings[$roster_conf['roster_lang']]['rosterdkp_eventstart']."</td>\n";
+		$this->form .= "<td class=\"membersHeader\">".$wordings[$roster_conf['roster_lang']]['rosterdkp_eventend']."</td>\n";
+		$this->form .= "<td class=\"membersHeader\">".$wordings[$roster_conf['roster_lang']]['rosterdkp_dkpvalue']."</td>\n";
+		$this->form .= "</tr>\n";
+		
+		// DKP Attendence Event
+		if (floatval($addon_conf['roster_dkp']['rosterdkp_dkpattendence']) > 0)
+		{
+			if ($addon_conf['roster_dkp']['rosterdkp_dkpattendence'])
+			{
+				$percentagemessage = ' (100%)';
+			}
+			else
+			{
+				$percentagemessage = '';
+			}
+			$this->form .= "<tr>\n";
+			$this->form .= "<td class=\"membersRowRight1\"><img class=\"membersRowimg\" width=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" height=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" src=\"addons/roster_dkp/img/event_attend.jpg\" /></td>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\">".$wordings[$roster_conf['roster_lang']]['rosterdkp_raidattended'].$percentagemessage."</td>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\">".stripslashes($this->raid_zone)."</td>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\">".$this->raid_start."</td>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\">".$this->raid_end."</td>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\">".$addon_conf['roster_dkp']['rosterdkp_dkpattendence']."</td>\n";
+			$this->form .= "</tr>\n";
+			
+			// Swap $row for the next
+			if ($row == 1)
+				$row = 2;
+			else
+				$row = 1;		
+
+		}
+		
+		// Raid On-Time Event
+		if (floatval($addon_conf['roster_dkp']['rosterdkp_dkpontimebonus']) > 0)
+		{
+			$this->form .= "<tr>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\"><img class=\"membersRowimg\" width=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" height=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" src=\"addons/roster_dkp/img/event_ontime.jpg\" /></td>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\">".$wordings[$roster_conf['roster_lang']]['rosterdkp_ontimebonus']."</td>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\">".stripslashes($this->raid_zone)."</td>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\">".$this->raid_start."</td>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\">"."</td>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\">".$addon_conf['roster_dkp']['rosterdkp_dkpontimebonus']."</td>\n";
+			$this->form .= "</tr>\n";
+		
+			// Swap $row for the next
+			if ($row == 1)
+				$row = 2;
+			else
+				$row = 1;
+		}
+		
+		// Raid Hour Event
+		if (floatval($addon_conf['roster_dkp']['rosterdkp_dkphourbonus']) > 0)
+		{
+			$this->form .= "<tr>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\"><img class=\"membersRowimg\" width=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" height=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" src=\"addons/roster_dkp/img/event_hour.jpg\" /></td>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\">".$wordings[$roster_conf['roster_lang']]['rosterdkp_hourbonus'].": ".$wordings[$roster_conf['roster_lang']]['rosterdkp_dkpperhour']."</td>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\">".stripslashes($this->raid_zone)."</td>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\">".$this->raid_start."</td>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\">".$this->raid_end."</td>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\">".$addon_conf['roster_dkp']['rosterdkp_dkphourbonus']."</td>\n";
+			$this->form .= "</tr>\n";
+		
+			// Swap $row for the next
+			if ($row == 1)
+				$row = 2;
+			else
+				$row = 1;
+		}
+		
+		// Raid Till-End Event
+		if (floatval($addon_conf['roster_dkp']['rosterdkp_dkptillendbonus']) > 0)
+		{
+			$this->form .= "<tr>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\"><img class=\"membersRowimg\" width=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" height=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" src=\"addons/roster_dkp/img/event_tillend.jpg\" /></td>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\">".$wordings[$roster_conf['roster_lang']]['rosterdkp_tillendbonus']."</td>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\">".stripslashes($this->raid_zone)."</td>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\">"."</td>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\">".$this->raid_end."</td>\n";
+			$this->form .= "<td class=\"membersRowRight".$row."\">".$addon_conf['roster_dkp']['rosterdkp_dkptillendbonus']."</td>\n";
+			$this->form .= "</tr>\n";
+		
+			// Swap $row for the next
+			if ($row == 1)
+				$row = 2;
+			else
+				$row = 1;
+		}
+		
+		// Boss Kill Event(s)
+		if (count($this->raid_bosses) > 0)
+		{
+			foreach ($this->raid_bosses as $bosskey => $bossval)
+			{
+				$bosses[$bosskey]['name'] = $bossval['name'];
+				$bosses[$bosskey]['time'] = $bossval['killtime'];
+				$bosses[$bosskey]['zone'] = $bossval['zonename'];
+				$bosses[$bosskey]['dkp_value'] = $bossval['dkp_value'];
+				$tooltip = "test tooltip jek\'klik\n";
+				//$tooltip = preg_replace($prg_find, $prg_rep, $tooltip);
+				$tooltip_h = 'test';
+				$this->form .= "<tr>\n";
+				$this->form .= "<td class=\"membersRowRight".$row."\"><img class=\"membersRowimg\" width=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" height=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" src=\"addons/roster_dkp/img/event_bosskill.jpg\" /></div></td>\n";
+				$this->form .= "<td class=\"membersRowRight".$row."\">".$wordings[$roster_conf['roster_lang']]['rosterdkp_killedboss'].": ".stripslashes($bosses[$bosskey]['name'])."</td>\n";
+				$this->form .= "<td class=\"membersRowRight".$row."\">".stripslashes($bosses[$bosskey]['zone'])."</td>\n";
+				$this->form .= "<td class=\"membersRowRight".$row."\">".$bosses[$bosskey]['time']."</td>\n";
+				$this->form .= "<td class=\"membersRowRight".$row."\">".$bosses[$bosskey]['time']."</td>\n";
+				$this->form .= "<td class=\"membersRowRight".$row."\">".$bosses[$bosskey]['dkp_value']."</td>\n";
+				$this->form .= "</tr>\n";
+		
+				$this->form .= "<input name=\"boss[".$bosskey."][name]\" type=\"hidden\" value=\"".$bosses[$bosskey]['name']."\" />\n";
+				$this->form .= "<input name=\"boss[".$bosskey."][time]\" type=\"hidden\" value=\"".$bosses[$bosskey]['time']."\" />\n";
+				$this->form .= "<input name=\"boss[".$bosskey."][zone]\" type=\"hidden\" value=\"".$bosses[$bosskey]['zone']."\" />\n";
+				$this->form .= "<input name=\"boss[".$bosskey."][dkp_value]\" type=\"hidden\" value=\"".$bosses[$bosskey]['dkp_value']."\" />\n";
+				
+				// Swap $row for the next
+				if ($row == 1)
+					$row = 2;
+				else
+					$row = 1;
+			}
+		}
+		
+		// End of the Event Box
+		$this->form .= "</table>\n";
+		$this->form .= border('sgreen','end')."<br>\n";
+		
+		// Begin of the Players Box
+		$this->form .= border('syellow','start',$wordings[$roster_conf['roster_lang']]['rosterdkp_playerdetails'])."\n";
+		$this->form .= "<table width=\"800\" class=\"bodyline\" cellspacing=\"0\" cellpadding=\"0\">\n";
+		$this->form .= "<tr>\n";
+		$this->form .= "<td class=\"membersHeader\">".$wordings[$roster_conf['roster_lang']]['name']."</td>\n";
+		$this->form .= "<td class=\"membersHeader\">".$wordings[$roster_conf['roster_lang']]['level']."</td>\n";
+		$this->form .= "<td class=\"membersHeader\">".$wordings[$roster_conf['roster_lang']]['class']."</td>\n";
+		$this->form .= "<td class=\"membersHeader\">".$wordings[$roster_conf['roster_lang']]['rosterdkp_event']."</td>\n";
+		$this->form .= "<td class=\"membersHeader\">".$wordings[$roster_conf['roster_lang']]['rosterdkp_raidstart']."</td>\n";
+		$this->form .= "<td class=\"membersHeader\">".$wordings[$roster_conf['roster_lang']]['rosterdkp_raidend']."</td>\n";
+		$this->form .= "<td class=\"membersHeader\">".$wordings[$roster_conf['roster_lang']]['rosterdkp_totaldkp']."</td>\n";
+		$this->form .= "</tr>\n";
+		$row = 1;
+		if (count($this->raid_players) > 0)
+		{
+			foreach ($this->raid_players as $playerkey => $playerval)
+			{
+    				// Put the member in the form as a hidden field
+    				$this->form .= "<input name=\"member[".$playerkey."][member_id]\" type=\"hidden\" value=\"".$playerval['member_id']."\" />\n";
+    				$this->form .= "<input name=\"member[".$playerkey."][roster_id]\" type=\"hidden\" value=\"".$playerval['roster_id']."\" />\n";
+    				$this->form .= "<input name=\"member[".$playerkey."][name]\" type=\"hidden\" value=\"".$playerval['name']."\" />\n";
+    				$this->form .= "<input name=\"member[".$playerkey."][level]\" type=\"hidden\" value=\"".$playerval['level']."\" />\n";    					$this->form .= "<input name=\"member[".$playerkey."][class]\" type=\"hidden\" value=\"".$playerval['class']."\" />\n";
+    				
+    				// Show the details in the table
+				$this->form .= "<tr>\n";
+				$this->form .= "<td class=\"membersRowRight".$row."\">".stripslashes($playerval['name'])."</td>\n";
+				$this->form .= "<td class=\"membersRowRight".$row."\">".stripslashes($playerval['level'])."</td>\n";
+				$this->form .= "<td class=\"membersRowRight".$row."\"><img class=\"membersRowimg\" width=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" height=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" src=\"addons/roster_dkp/img/class_".strtolower($playerval['class']).".jpg\" /> ".stripslashes($playerval['class'])."</td>\n";
+				
+				// Process all events and display the icons with tooltips
+				$this->form .= "<td class=\"membersRowRight".$row."\">";
+    				
+    				// some variables that we will use    				
+				$tooltip = '';
+				$dkptotal = number_format(0, 2, '.', '');
+				$bosstooltip = '';
+				$bossdkptotal = number_format(0, 2, '.', '');
+				
+					
+				foreach ($playerval['events'] as $eventkey => $eventval)
+				{
+					// Increase $dkptotal
+					$dkptotal += $eventval['dkp_value'];
+					
+					// Put the event in the form as a hidden field
+	    				$this->form .= "<input name=\"member[".$playerkey."][events][".$eventkey."][type]\" type=\"hidden\" value=\"".$eventval['type']."\" />\n";
+	    				$this->form .= "<input name=\"member[".$playerkey."][events][".$eventkey."][reference]\" type=\"hidden\" value=\"".$eventval['reference']."\" />\n";
+	    				$this->form .= "<input name=\"member[".$playerkey."][events][".$eventkey."][dkp_value]\" type=\"hidden\" value=\"".$eventval['dkp_value']."\" />\n";
+	    				$this->form .= "<input name=\"member[".$playerkey."][events][".$eventkey."][start]\" type=\"hidden\" value=\"".$eventval['start']."\" />\n";
+	    				$this->form .= "<input name=\"member[".$playerkey."][events][".$eventkey."][end]\" type=\"hidden\" value=\"".$eventval['end']."\" />\n";
+	    				$this->form .= "<input name=\"member[".$playerkey."][events][".$eventkey."][note]\" type=\"hidden\" value=\"".$eventval['note']."\" />\n";
+
+					$tooltip_h = $wordings[$roster_conf['roster_lang']]['rosterdkp_event']." - DKP: ".number_format($eventval['dkp_value'], 2, '.', '');
+					switch($eventval['type'])
+					{
+						case 'raidontime':
+							$this->form .= "<span style=\"cursor: help;\" onmouseover=\"overlib('".stripslashes($playerval['name'])." ".$wordings[$roster_conf['roster_lang']]['rosterdkp_wasontime']."',CAPTION,'".$tooltip_h."',WRAP);\" onmouseout=\"return nd();\"><img class=\"membersRowimg\" width=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" height=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" src=\"addons/roster_dkp/img/event_ontime.jpg\" /></span>&nbsp;";
+							break;
+						case 'raidatt':
+							$tooltip = stripslashes($playerval['name'])." ".$wordings[$roster_conf['roster_lang']]['rosterdkp_attended'].' '.$eventval['note'].'%';
+							$this->form .= "<span style=\"cursor: help;\" onmouseover=\"overlib('".$tooltip."',CAPTION,'".$tooltip_h."',WRAP);\" onmouseout=\"return nd();\"><img class=\"membersRowimg\" width=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" height=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" src=\"addons/roster_dkp/img/event_attend.jpg\" /></span>&nbsp;";
+							break;
+						case 'raidtillend':
+							$tooltip = stripslashes($playerval['name'])." ".$wordings[$roster_conf['roster_lang']]['rosterdkp_stayedtillend'];
+							$this->form .= "<span style=\"cursor: help;\" onmouseover=\"overlib('".$tooltip."',CAPTION,'".$tooltip_h."',WRAP);\" onmouseout=\"return nd();\"><img class=\"membersRowimg\" width=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" height=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" src=\"addons/roster_dkp/img/event_tillend.jpg\" /></span>&nbsp;";
+							break;
+						case 'raidhours':
+							$tooltip = stripslashes($playerval['name'])." ".$wordings[$roster_conf['roster_lang']]['rosterdkp_amounthours']." ".$eventval['note']." ".$wordings[$roster_conf['roster_lang']]['rosterdkp_hours'];
+							$this->form .= "<span style=\"cursor: help;\" onmouseover=\"overlib('".$tooltip."',CAPTION,'".$tooltip_h."',WRAP);\" onmouseout=\"return nd();\"><img class=\"membersRowimg\" width=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" height=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" src=\"addons/roster_dkp/img/event_hour.jpg\" /></span>&nbsp;";
+							break;
+						case 'bosskill':
+							if (floatval($bossdkptotal) > 0)
+							{
+								$bosstooltip .= '<br>';
+							}
+							$bosstooltip .= stripslashes($playerval['name'])." ".$wordings[$roster_conf['roster_lang']]['rosterdkp_killedboss'].' '.stripslashes($eventval['note'])."&nbsp;&nbsp;&nbsp;DKP: ".$eventval['dkp_value'];
+							$bossdkptotal += $eventval['dkp_value'];
+							break;
+					}
+				}
+				
+				if (floatval($bossdkptotal) > 0)
+				{
+					$this->form .= "<span style=\"cursor: help;\" onmouseover=\"overlib('".$bosstooltip."',CAPTION,'".$wordings[$roster_conf['roster_lang']]['rosterdkp_killedboss']." ".$wordings[$roster_conf['roster_lang']]['rosterdkp_totaldkp'].": ".number_format($bossdkptotal, 2, '.', '')."',WRAP);\" onmouseout=\"return nd();\"><img class=\"membersRowimg\" width=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" height=\"".$addon_conf['roster_dkp']['rosterdkp_iconsize']."px\" src=\"addons/roster_dkp/img/event_bosskill.jpg\" /></span>&nbsp;";
+				}
+
+				
+				$this->form .= "</td>";
+				$this->form .= "<td class=\"membersRowRight".$row."\">".$playerval['join']."</td>\n";
+				$this->form .= "<td class=\"membersRowRight".$row."\">".$playerval['leave']."</td>\n";
+				$this->form .= "<td class=\"membersRowRight".$row."\">".number_format($dkptotal, 2, '.', '')."</td>\n";
+				$this->form .= "</tr>";
+				// Swap $row for the next
+				if ($row == 1)
+					$row = 2;
+				else
+					$row = 1;
+			}
+		}
+		
+		$this->form .= "</table>\n";		
+		$this->form .= border('syellow','end')."\n";
+		
+		
+		// End the BIG box
+		$this->form .= "</td>\n</tr>\n</table>\n";
+		$this->form .= border('sgray','end')."\n";
+	}
+	
+	
+	function print_form()
+	{
+		print('');
+	}
+}
+
+class ct_raidtracker
+{
+	var $raid_start = '21:00';		// Either H:i or Y-m-d H:i:s
+	var $raid_end = '00:00';		// Either H:i or Y-m-d H:i:s
+
+	var $quality_threshold = 2;
+	var $items_forced = array();
+	var $items_ignored = array();
+	var $looters_ignored = array();
+
+	var $zone_name = '';			// Name of the zone.
+	var $raid_note = '';			// Raid note.
+
+	var $players = array();			// List of players and their attendance duration
+
+	var $players_ontime = array();		// Players who where on time
+	var $players_tillend = array();		// Players who where present end of raid
+	var $players_ontimethreshold = null;	// Date / Time of the ontime mark.
+	var $raid_endthreshold = null;		// Date / Time of the end of raid mark.
+
+	var $items = array();			// Loot array
+	var $bosses = array();			// Bosses array
+	var $zones = array();			// Zones array
+
+	var $log = '';				// Holds the log string.
+	var $error = '';			// Error
+
+	// Private use variables
+	private $start = null;
+	private $end = null;
+	private $boss_kills = null;
+	private $zone = null;
+	private $raidnote = null;
+	private $player_info = null;
+	private $loot = null;
+	private $joins = null;
+	private $leaves = null;
+
+	private function convert_date($string)
+	{
+		return preg_replace('|(\d+)/(\d+)/(\d+) (\d+):(\d+):(\d+)|', '20\3-\1-\2 \4:\5:\6', $string);
+	}
+
+	function ct_raidtracker($options = array() )
+	{
+
+		$this->xml = new xml_string();
+		if(isset($options['raid_start']))
+		{
+			$this->raid_start = $options['raid_start'];
+		}
+		if(isset($options['raid_end']))
+		{
+			$this->raid_end = $options['raid_end'];
+		}
+		if(isset($options['quality_threshold']))
+		{
+			$this->quality_threshold = $options['quality_threshold'];
+		}
+		if(isset($options['items_forced']))
+		{
+			foreach($options['items_forced'] as $v)
+			{
+				$this->items_forced[]=strtolower($v);
+			}
+		}
+		if(isset($options['items_ignored']))
+		{
+			foreach($options['items_ignored'] as $v)
+			{
+				$this->items_ignored[]=strtolower($v);
+			}
+		}
+		if(isset($options['looters_ignored'])) {
+			foreach($options['looters_ignored'] as $v) {
+				$this->looters_ignored[]=strtolower($v);
+			}
+		}
+	}
+
+	private function get_zone()
+	{
+		$zone = $this->xml->get('zone', $this->log);
+		if(is_object($zone))
+		{
+			$this->zone_name = $zone->get_content();
+		}
+	}
+
+	private function get_start()
+	{
+		$start = $this->xml->get('start', $this->log);
+		if(is_object($start))
+		{
+			$this->start = strtotime($this->convert_date($start->get_content()));
+			$this->start = date("Y-m-d", $this->start)." ".$this->raid_start;
+			print($this->start."\r\n");
+		}
+	}
+
+	private function get_end()
+	{
+		$end = $this->xml->get('end', $this->log);
+		if(is_object($end))
+		{
+			$this->end = strtotime($this->convert_date($end->get_content()));
+			$this->end = date("Y-m-d", $this->end)." ".$this->raid_end;
+			print($this->end."\r\n");
+		}
+	}
+
+	private function get_raidnote()
+	{
+		$raid_note = $this->xml->get('note', $this->log);
+		if(is_object($raid_note))
+		{
+			$this->raid_note = $raid_note->get_content();
+		}
+	}
+
+	private function get_bosskills()
+	{
+		$this->boss_kills = $this->xml->get('BossKills', $this->log);
+	}
+
+	private function get_loot()
+	{
+		$this->loot = $this->xml->get('Loot', $this->log);
+	}
+
+	private function get_joins()
+	{
+		$this->joins = $this->xml->get('Join', $this->log);
+	}
+
+	private function get_leaves()
+	{
+		$this->leaves = $this->xml->get('Leave', $this->log);
+	}
+
+	private function get_playerinfo()
+	{
+		$this->player_info = $this->xml->get('PlayerInfos', $this->log);
+	}
+
+	private function parse_bosses()
+	{
+		$tmpbosses = array();
+		if(is_array($this->boss_kills->children))
+		{
+			foreach($this->boss_kills->children as $child)
+			{
+				$boss = array();
+				foreach($child->children as $i)
+				{
+					switch($i->tagname)
+					{
+						case 'name':
+							$boss['name']=$i->get_content();
+							break;
+						case 'time':
+							$boss['time']=$this->convert_date($i->get_content());
+							break;
+					}
+				}
+				$tmpbosses[$boss['time']]=$boss;
+			}
+		}
+
+		ksort($tmpbosses);
+		foreach($tmpbosses as $boss)
+		{
+			$this->bosses[$boss['name']]=$boss;
+		}
+	}
+
+	private function parse_loot()
+	{
+		$tmpitems = array();
+		if(is_array($this->loot->children))
+		{
+			foreach($this->loot->children as $child)
+			{
+				$item = array();
+				foreach($child->children as $i)
+				{
+					switch($i->tagname)
+					{
+						case 'ItemName':
+							$item['name']=utf8_decode($i->get_content());
+							break;
+						case 'Color':
+							$item['quality']=$this->get_qualitybycolor($i->get_content());
+							break;
+						case 'Player':
+							$item['player']=ucfirst(strtolower(utf8_decode($i->get_content())));
+							break;
+						case 'Time':
+							$item['time']=$this->convert_date($i->get_content());
+							break;
+						case 'Zone':
+							$item['zone']=$i->get_content();
+							break;
+						case 'Boss':
+							$item['boss']=$i->get_content();
+							break;
+						case 'Note':
+							$item['note']=$i->get_content();
+							break;
+						case 'ItemID':
+							$item['itemid']=$i->get_content();
+							break;
+						case 'Icon':
+							$item['icon']=$i->get_content();
+							break;
+					}
+				}
+
+				if( ($item['quality'] >= $this->quality_threshold || in_array(strtolower($item['name']), $this->items_forced)) && !in_array(strtolower($item['name']), $this->items_ignored) && !in_array(strtolower($item['player']), $this->looters_ignored))
+				{
+					// Save zone if it's not known yet
+					if(strlen($item['zone']))
+					{
+						if(!isset($this->zones[$item['zone']])) $this->zones[$item['zone']]=array('name' => $item['zone']);
+					}
+
+					// Save boss zone if it's not known yet
+					if(strlen($item['boss']))
+					{
+						if(isset($this->bosses[$item['boss']])) $this->bosses[$item['boss']]['zone']=$item['zone'];
+					}
+
+					// Get item value if it's supplied.
+					if(preg_match('|[-] ([0-9.]+) DKP|i', $item['note'], $match))
+					{
+						$item['value'] = sprintf('%0.2f', $match[1]);
+					}
+					else
+					{
+						$item['value'] = null;
+					}
+					$tmpitems[$item['time']]=$item;
+				}
+			}
+		}
+		ksort($tmpitems);
+		$this->items=$tmpitems;
+	}
+
+	private function parse_players()
+	{
+		// Get player data
+		if(is_array($this->player_info->children))
+		{
+			foreach($this->player_info->children as $child)
+			{
+				$currentplayer = array();
+				foreach($child->children as $element)
+				{
+					switch(strtolower($element->tagname))
+					{
+						case 'name':
+							$currentplayer['name'] = ucfirst(strtolower(utf8_decode($element->get_content())));
+							break;
+						case 'class':
+							$currentplayer['class'] = $element->get_content();
+							break;
+						case 'race':
+							$currentplayer['race'] = $element->get_content();
+							break;
+						case 'level':
+							$currentplayer['level'] = $element->get_content();
+							break;
+					}
+				}
+				$this->players[$currentplayer['name']] = $currentplayer;
+			}
+		}
+
+		$joins = array();
+		$leaves = array();
+
+		// Get join data
+		if(is_array($this->joins->children))
+		{
+			foreach($this->joins->children as $child)
+			{
+				$currentplayer = array();
+				foreach($child->children as $element)
+				{
+
+					switch($element->tagname)
+					{
+						case 'player':
+							$currentplayer['name'] = ucfirst(strtolower(utf8_decode($element->get_content())));
+							break;
+						case 'time':
+							$currentplayer['time'] = $this->convert_date($element->get_content());
+							break;
+					}
+				}
+				$this->players[$currentplayer['name']]['joins'][]=$currentplayer['time'];
+			}
+		}
+
+		// Get leave data and find latest leave time
+		$last_leave = 0;
+		if(is_array($this->leaves->children))
+		{
+			foreach($this->leaves->children as $child)
+			{
+				$currentplayer = array();
+				foreach($child->children as $element)
+				{
+					switch($element->tagname)
+					{
+						case 'player':
+							$currentplayer['name'] =  ucfirst(strtolower(utf8_decode($element->get_content())));
+							break;
+						case 'time':
+							$currentplayer['time'] = $this->convert_date($element->get_content());
+							break;
+					}
+				}
+
+				$this->players[$currentplayer['name']]['leaves'][]=$currentplayer['time'];
+				if(strtotime($currentplayer['time']) > $last_leave) $last_leave = $currentplayer['time'];
+			}
+		}
+
+
+		// Set raid end time to latest leave time if none has been recorded.
+		if(is_null($this->end))
+		{
+			$this->end = date('Y-m-d H:i:s', $last_leave);
+		}
+
+		// Clean up joins and leaves.
+		$playerNames = array_keys($this->players);
+		foreach($playerNames as $player)
+		{
+			if(!is_array( $this->players[$player]['joins']))
+			{
+				$this->players[$player]['joins']=array();
+			}
+			if(!is_array( $this->players[$player]['leaves']))
+			{
+				$this->players[$player]['leaves']=array();
+			}
+		}
+
+		// Calculate on time threshold value
+		$players_ontimethreshold = strtotime(substr($this->start, 0, 10).' '.$this->raid_start);
+
+		// Calculate end of raid threshold value
+		$raid_endthreshold  = strtotime(substr($this->start, 0, 10).' '.$this->raid_end);
+		if($raid_endthreshold < $players_ontimethreshold)
+		{
+			$raid_endthreshold = mktime(date('H', $raid_endthreshold), date('i', $raid_endthreshold), date('s', $raid_endthreshold), date('m', $raid_endthreshold), (date('d', $raid_endthreshold) +1), date('Y', $raid_endthreshold));
+		}
+
+		$this->was_ontimeThreshold = date('Y-m-d H:i:s', $players_ontimethreshold);
+		$this->stay_tillendThreshold = date('Y-m-d H:i:s', $raid_endthreshold);
+
+		foreach($playerNames as $player)
+		{
+			// Get a reference to the data array.
+			$playerdata = &$this->players[$player];
+
+			$jp = array();
+			// Sort joins and parts and remove inconsistencies.
+			foreach($playerdata['joins'] as $j)
+			{
+				$time = strtotime($j);
+				$jp[$time]='join';
+			}
+
+			foreach($playerdata['leaves'] as $j)
+			{
+				$time = strtotime($j);
+				//if(isset($jp[$time]) && $jp[$time] != 'leave') $doubles[$time]='leave';
+				if(isset($jp[$time]))
+				{
+					$jp[$time+1]='leave';
+				}
+				else
+				{
+					$jp[$time]='leave';
+				}
+			}
+
+			// Remove multiples.
+			ksort($jp);
+			$count = 0;
+			$keys = array_keys($jp);
+			$joins = array();
+			$leaves = array();
+			$last = '';
+
+			foreach($keys as $k)
+			{
+				if($jp[$k] == $last)
+				{
+					unset($jp[$k]);
+				}
+				else
+				{
+					$last=$jp[$k];
+				}
+			}
+
+			ksort($jp);
+
+			// Last one should be a leave event.
+			if(end($jp) != 'leave')
+			{
+				$jp[strtotime($this->end)]='leave';
+			}
+
+			if(reset($jp) != 'join')
+			{
+				$jp[strtotime($this->start)]='join';
+			}
+
+			ksort($jp);
+
+			foreach($jp as $k=>$v)
+			{
+				if($v=='join')
+				{
+					$joins[]=date('Y-m-d H:i:s', $k);
+				}
+				if($v=='leave')
+				{
+					$leaves[]=date('Y-m-d H:i:s', $k);
+				}
+			}
+
+			$playerdata['oldjoins']=$playerdata['joins'];
+			$playerdata['oldleaves']=$playerdata['leaves'];
+
+			$playerdata['joins']=$joins;
+			$playerdata['leaves']=$leaves;
+
+			// Get first join and last leave timestamps
+			$first_join = strtotime(reset($playerdata['joins']));
+			$last_leave = strtotime(end($playerdata['leaves']));
+
+			$playerdata['first_join'] = date('Y-m-d H:i:s', $first_join);
+			$playerdata['last_leave'] = date('Y-m-d H:i:s', $last_leave);
+
+			// Was the player on time?
+			if($first_join < $players_ontimethreshold && $last_leave > $players_ontimethreshold)
+			{
+				$playerdata['was_ontime'] = true;
+			}
+			else
+			{
+				$playerdata['was_ontime'] = false;
+			}
+
+			// Check whether player was there at the end of the raid.
+			if($last_leave > $raid_endthreshold && $first_join < $raid_endthreshold)
+			{
+				$playerdata['stay_tillend'] = true;
+			}
+			else
+			{
+				$playerdata['stay_tillend'] = false;
+			}
+
+			$totaltime = $this->get_attendancetime($playerdata, $players_ontimethreshold, $raid_endthreshold);
+			$time = $players_ontimethreshold;
+
+			while($time < $last_leave)
+			{
+				$hourtime = $this->get_attendancetime($playerdata, $time, ($time+3600 > $last_leave ? $last_leave : $time+3600) );
+				$playerdata['time_perhour'][]=$hourtime;
+				$time += 3600;
+			}
+
+
+			$stringtime = $this->get_time($totaltime);
+			$playerdata['totaltime'] = $totaltime;
+			$playerdata['stringtime'] = $stringtime;
+			$playerdata['percentage']= round($totaltime / ($raid_endthreshold-$players_ontimethreshold) * 100);
+
+		}
+		ksort($this->players);
+	}
+
+	private function get_attendancetime(&$playerdata, $start, $end)
+	{
+		// Cap time at thresholds.
+		$totaltime = 0;
+
+		for($i=0; $i<count($playerdata['joins']); $i++)
+		{
+			$j = strtotime($playerdata['joins'][$i]);
+			$l = strtotime($playerdata['leaves'][$i]);
+			if($l >= $start && $j <= $end)
+			{
+				$totaltime += ($l > $end ? $end : $l) - ($j < $start ? $start : $j);
+			}
+		}
+
+		return $totaltime;
+	}
+
+	private function get_qualitybycolor($color)
+	{
+		$color = strtolower($color);
+		if($color == "ffff8000")
+		{
+			return 5;
+		}
+		elseif($color == "ffa335ee")
+		{
+			return 4;
+		}
+		elseif($color == "ff0070dd")
+		{
+			return 3;
+		}
+		elseif($color == "ff1eff00")
+		{
+			return 2;
+		}
+		elseif($color == "ffffffff")
+		{
+			return 1;
+		}
+		elseif($color == "ff9d9d9d")
+		{
+			return 0;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	private function get_time($seconds)
+	{
+		$minutes = floor($seconds / 60);
+		$seconds = $seconds - $minutes * 60;
+		$hours = floor($minutes / 60);
+		$minutes = $minutes - $hours * 60;
+		return sprintf("%01d:%02d:%02d", $hours, $minutes, $seconds);
+	}
+
+	public function process($log)
+	{
+		$this->log = trim(str_replace(array("\r", "\n"), '', $log));
+		if(!preg_match('|<raidinfo>.*</raidinfo>|i', $this->log))
+		{
+			$this->error = 'Invalid logdata';
+			return false;
+		}
+
+		// Convert to DOM tree
+		$this->log = $this->xml->getRootNode($this->log);
+
+		// Retrieve subtrees
+		$this->get_start();
+		$this->get_end();
+		$this->get_zone();
+		$this->get_raidnote();
+		$this->get_bosskills();
+		$this->get_loot();
+		$this->get_playerinfo();
+		$this->get_joins();
+		$this->get_leaves();
+
+		$this->parse_players();
+		$this->parse_bosses();
+		$this->parse_loot();
+
+		return true;
+	}
+}
+
+// XML String class
+class xml_string 
+{
+	var $xml;
+
+	function xml_string($xmldata = '') 
+	{
+	}
+
+	// Returns domxmlNode of rootnode in supplied xml string.
+	function getRootNode($xmldata) 
+	{
+		$xmlstring = utf8_encode(str_replace(array("\n", "\r"), '', $xmldata));
+		$p = new xmlParser();
+		if($p->parse($xmlstring)) 
+		{
+			return $p->rootnodes[0];
+		} 
+		else 
+		{
+			return false;
+		}
+	}
+
+	// Finds a tag or tags amongst the children of the node object or the rootnode of supplied xml string.
+	function get($tag, $data = null) 
+	{
+		$blocks = array();
+		if(is_string($data)) 
+		{
+			$data = $this->getRootNode($xmldata);
+		}
+
+		foreach($data->children as $k => $child) 
+		{
+			if($child->tagname == $tag) 
+			{
+				$blocks[] = $child;
+			}
+		}
+
+		if(count($blocks) > 1) 
+		{
+			return $blocks;
+		} 
+		elseif(count($blocks) == 1) 
+		{
+			return $blocks[0];
+		} 
+		else
+		{
+			return null;
+		}
+	}
+}
+
+// Simple xml parser class
+class xmlParser  
+{
+	var $parser;
+	var $stack;
+	var $rootnodes;
+
+	function xmlParser()
+	{
+		$this->parser = xml_parser_create();
+		xml_parser_set_option($this->parser, XML_OPTION_CASE_FOLDING, false);
+		xml_set_object($this->parser, $this);
+		xml_set_element_handler($this->parser, "tag_open", "tag_close");
+		xml_set_character_data_handler($this->parser, "cdata");
+	}
+
+	// Parse the supplied xml.
+	function parse($data)
+	{
+		$this->stack = array();
+		$this->rootnodes = array();
+		$result = xml_parse($this->parser, $data);
+		if(!$result) 
+		{
+			$this->errorCode = xml_get_error_code($this->parser);
+			$this->errorText = xml_error_string($this->parser);
+			$this->errorLine = xml_get_current_line_number($this->parser).', '.xml_get_current_line_number;
+
+		}
+		return result;
+	}
+
+	// Tag open function
+	function tag_open($parser, $tag, $attributes)
+	{
+		$node = new xmlNode();
+		$node->tagname=$tag;
+		$node->attributes = $attributes;
+		array_push($this->stack, $node);
+	}
+
+	// cdata function
+	function cdata($parser, $cdata)
+	{
+		$node = array_pop($this->stack);
+		$node->text.=$cdata;
+		array_push($this->stack, $node);
+	}
+
+	// Tag close function
+	function tag_close($parser, $tag)
+	{
+		$node = array_pop($this->stack);
+		if(count($this->stack)) 
+		{
+			$parent = array_pop($this->stack);
+			$parent->children[]=$node;
+			array_push($this->stack, $parent);
+		}
+		else
+		{
+			$this->rootnodes[] = $node;
+		}
+	}
+}
+
+// Dom like node class
+class xmlNode 
+{
+	var $tagname = '';
+	var $attributes = array();
+	var $text = '';
+	var $children = array();
+
+	function get_content() 
+	{
+		return $this->text;
+	}
+}
+
+// Get item details from the cache. If not cached, or dramaticly altered, update the cache appropiately.
+function getitemcache($itemid, $itemname, $itemquality = 0, $itemcolor = 0, $itemtexture = 0)
+{
+	global $roster_conf, $addon_conf, $wowdb;
+
+	$updatecache = FALSE;
+	$insertcache = FALSE;
+
+	$date_now = date("Y-m-d H:i");
+	$udate_now = date("U");	
+	
+	// Test if our itemcache table exists
+	$query = "SHOW TABLES LIKE '".ROSTER_ADDON_ROSTER_DKP_CACHE."'";
+	$result = $wowdb->query( $query ) or die_quietly($wowdb->error(),'roster_dkp',__FILE__,__LINE__, $query );
+	if ( $row = $wowdb->fetch_assoc($result) )
+	{
+		$wowdb->free_result($result);
+
+		// Get config values and insert them into the array
+		$query = "SELECT * FROM `".ROSTER_ADDON_ROSTER_DKP_CACHE."` WHERE `item_id` = '".$itemid."' LIMIT 1";
+		$result = $wowdb->query( $query ) or die_quietly($wowdb->error(),'roster_dkp',__FILE__,__LINE__, $query );
+		if ($row = $wowdb->fetch_assoc($result) )
+		{
+			$cache_item = $row;
+			$udate_item = strtotime($cache_item['storedate']);
+			
+			if (($udate_now - $udate_item) > 604800 || $udate_item > $udate_now)
+			{
+				// The Store Date of the item in the cache is too old (7 days) or in the future!!!
+				// Lets re-get the details and update the cache
+				$updatecache = TRUE;
+			}
+			if ($cache_item['item_quality'] != $itemquality && $itemquality)
+			{
+				// The Item Quality does not match with the cache, lets update the cache
+				$updatecache = TRUE;
+			}
+			if ($cache_item['item_color'] != $itemcolor && $itemcolor)
+			{
+				// The Item Color does not match with the cache, lets update the cache
+				$updatecache = TRUE;
+			}
+			if ($cache_item['item_texture'] != $itemtexture && $itemtexture)
+			{
+				// The Item Texture does not match with the cache, lets update the cache
+				$updatecache = TRUE;
+			}
+		}
+		else
+		{
+			// Item does not exist in cache yet, lets flag the item for caching.
+			$insertcache = TRUE;
+		}
+		$wowdb->free_result($result);
+		
+		if ($updatecache || $insertcache)
+		{
+			$itemid_split = explode(":", $itemid, 2);
+			$url = $addon_conf['roster_dkp']['rosterdkp_allakhazam'].$itemid_split[0].'&amp;locale='.$roster_conf['roster_lang'];
+			$item['item_tooltip'] = rosterdkp_gettooltip($url);
+			$item['item_tooltip_escape'] = $wowdb->escape($item['item_tooltip']);
+			$item['item_id'] = $itemid;
+			if (!$item['item_tooltip'] || eregi("tem not f", $item['item_tooltip']))
+			{
+				$item['item_tooltip'] = $itemname;
+				$item['item_tooltip_escape'] = $wowdb->escape($itemname);
+			}
+			if ($itemname)
+			{
+				$item['item_name'] = $wowdb->escape($itemname);
+			}
+			else
+			{
+				$item['item_name'] = $cache_item['item_name'];
+			}
+			if ($itemquality)
+			{
+				$item['item_quality'] = $itemquality;
+			}
+			else
+			{
+				$item['item_quality'] = $cache_item['item_quality'];
+			}
+			if ($itemcolor)
+			{
+				$item['item_color'] = $wowdb->escape($itemcolor);
+			}
+			else
+			{
+				$item['item_color'] = $cache_item['item_color'];
+			}
+			if ($itemtexture)
+			{
+				$item['item_texture'] = $wowdb->escape($itemtexture);
+			}
+			else
+			{
+				$item['item_texture'] = $cache_item['item_texture'];
+			}
+			if ($cache_item['dkp_value'])
+			{
+				$item['dkp_value'] = $cache_item['dkp_value'];
+			}
+			else
+			{
+				$item['dkp_value'] = 0.00;
+			}
+		}
+		else
+		{
+			$item = $cache_item;
+		}
+		
+		if ($insertcache)
+		{
+			$insertsql = "INSERT INTO `".ROSTER_ADDON_ROSTER_DKP_CACHE."` ( `cache_id` , `storedate` , `item_name` , `item_id` , `item_quality` , `item_tooltip` , `item_color` , `item_texture` , `dkp_value` ) VALUES ('', '".$date_now."', '".$item['item_name']."', '".$item['item_id']."', '".$item['item_quality']."', '".$item['item_tooltip_escape']."', '".$item['item_color']."', '".$item['item_texture']."', '".$item['dkp_value']."')";
+			$result = $wowdb->query( $insertsql ) or die_quietly($wowdb->error(),'roster_dkp',__FILE__,__LINE__, $query );
+			
+			// Re-Get the item from the cache now
+			$query = "SELECT * FROM `".ROSTER_ADDON_ROSTER_DKP_CACHE."` WHERE `item_id` = '".$itemid."' LIMIT 1";
+			$result = $wowdb->query( $query ) or die_quietly($wowdb->error(),'roster_dkp',__FILE__,__LINE__, $query );
+			if ($row = $wowdb->fetch_assoc($result) )
+			{
+				$item = $row;
+			}
+		}
+		elseif($updatecache)
+		{
+			$updatesql = "UPDATE `".ROSTER_ADDON_ROSTER_DKP_CACHE."` SET `storedate` = '".$date_now."', `item_name` = '".$item['item_name']."', `item_id` = '".$item['item_id']."', `item_quality` = '".$item['item_quality']."', `item_tooltip` = '".$item['item_tooltip_escape']."', `item_color` = '".$item['item_color']."', `item_texture` = '".$item['item_texture']."', `dkp_value` = '".$item['dkp_value']."' WHERE `cache_id` = ".$cache_item['cache_id']." LIMIT 1";
+			$result = $wowdb->query( $updatesql ) or die_quietly($wowdb->error(),'roster_dkp',__FILE__,__LINE__, $query );
+			
+			// Re-Get the item from the cache now
+			$query = "SELECT * FROM `".ROSTER_ADDON_ROSTER_DKP_CACHE."` WHERE `item_id` = '".$itemid."' LIMIT 1";
+			$result = $wowdb->query( $query ) or die_quietly($wowdb->error(),'roster_dkp',__FILE__,__LINE__, $query );
+			if ($row = $wowdb->fetch_assoc($result) )
+			{
+				$item = $row;
+			}
+		}
+		return $item;
+	}
+}
+
+// Function to grab the tooltip data (plain text) from allakhazam.
+function rosterdkp_gettooltip($url)
+{
+	$returnvalue = 0;
+	// Try cURL first. If that isn't available, check if we're allowed to
+	// use fopen on URLs.  If that doesn't work, return 0
+	
+	if (function_exists('curl_init'))
+	{
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+		$returnvalue = curl_exec($ch);
+		curl_close($ch);
+	}
+	else if (ini_get('allow_url_fopen') == 1)
+	{
+		$returnvalue = file_get_contents($url);
+	}
+	else
+	{
+		$returnvalue = 0;
+	}
+        
+	if ($returnvalue)
+	{
+		$returnvalue = striptooltip($returnvalue);
+	}
+	else
+	{
+		$returnvalue = 0;
+	}
+	
+	return $returnvalue;
+}
+
+// Function to strip the HTML data from Allakhazam's Item Details
+function striptooltip($tooltip)
+{
+	$search = array(
+		"/\r/",                                  // Non-legal carriage return
+		"/[\n\t]+/",                             // Newlines and tabs
+		'/<span class="wowrttxt"[^>]*>(.+?)<\/span>/', // Spot between Socket and Type (Replaced by Tab)
+		'/<script[^>]*>.*?<\/script>/i',         // <script>s -- which strip_tags supposedly has problems with
+		'/<h[123][^>]*>(.+?)<\/h[123]>/ie',      // H1 - H3
+		'/<h[456][^>]*>(.+?)<\/h[456]>/ie',      // H4 - H6
+		'/<p[^>]*>/i',                           // <P>
+		'/<br[^>]*>/i',                          // <br>
+		'/<b[^>]*>(.+?)<\/b>/ie',                // <b>
+		'/<i[^>]*>(.+?)<\/i>/i',                 // <i>
+		'/(<ul[^>]*>|<\/ul>)/i',                 // <ul> and </ul>
+		'/(<ol[^>]*>|<\/ol>)/i',                 // <ol> and </ol>
+		'/<li[^>]*>/i',                          // <li>
+		'/<a href="([^"]+)"[^>]*>(.+?)<\/a>/ie', // <a href="">
+		'/<hr[^>]*>/i',                          // <hr>
+		'/(<table[^>]*>|<\/table>)/i',           // <table> and </table>
+		'/(<tr[^>]*>|<\/tr>)/i',                 // <tr> and </tr>
+		'/<td[^>]*>(.+?)<\/td>/i',               // <td> and </td>
+		'/<th[^>]*>(.+?)<\/th>/i',               // <th> and </th>
+		'/&nbsp;/i',
+		'/&quot;/i',
+		'/&gt;/i',
+		'/&lt;/i',
+		'/&amp;/i',
+		'/&copy;/i',
+		'/&trade;/i',
+		'/&#8220;/',
+		'/&#8221;/',
+		'/&#8211;/',
+		'/&#8217;/',
+		'/&#38;/',
+		'/&#169;/',
+		'/&#8482;/',
+		'/&#151;/',
+		'/&#147;/',
+		'/&#148;/',
+		'/&#149;/',
+		'/&reg;/i',
+		'/&bull;/i',
+		'/&[&;]+;/i',
+		"/Source.*?wow.allakhazam.com/"
+	);
+
+	$replace = array(
+		'',                                     // Non-legal carriage return
+		' ',                                    // Newlines and tabs
+		"\t\\1",				// Spot between Socket and Type (Replaced by Tab)
+		'',                                     // <script>s -- which strip_tags supposedly has problems with
+		"strtoupper(\"\n\n\\1\n\n\")",          // H1 - H3
+		"ucwords(\"\n\n\\1\n\n\")",             // H4 - H6
+		"\n\n\t",                               // <P>
+		"\n",                                   // <br>
+		'strtoupper("\\1")',                    // <b>
+		'_\\1_',                                // <i>
+		"\n\n",                                 // <ul> and </ul>
+		"\n\n",                                 // <ol> and </ol>
+		"\t*",                                  // <li>
+		'', 					// <a href="">
+		"\n-------------------------\n",        // <hr>
+		"\n\n",                                 // <table> and </table>
+		"\n",                                   // <tr> and </tr>
+		"\t\t\\1\n",                            // <td> and </td>
+		"strtoupper(\"\t\t\\1\n\")",            // <th> and </th>
+		' ',
+		'"',
+		'>',
+		'<',
+		'&',
+		'(c)',
+		'(tm)',
+		'"',
+		'"',
+		'-',
+		"'",
+		'&',
+		'(c)',
+		'(tm)',
+		'--',
+		'"',
+		'"',
+		'*',
+		'(R)',
+		'*',
+		'',
+		''
+	);
+	// Get the body of the html
+	preg_match("/<body[^>]*>(.+)<\/body>/si",$tooltip, $text);
+ 	$text = trim(stripslashes($text[1]));
+
+	// Run our defined search-and-replace
+	$text = preg_replace($search, $replace, $text);
+
+	// Strip any other HTML tags
+	$text = strip_tags($text);
+
+	// Bring down number of empty lines to 2 max
+	$text = preg_replace("/\n\s+\n/", "\n", $text);
+	$text = preg_replace("/[\n]{3,}/", "\n\n", $text);
+	$text = substr($text, 0, -1);
+
+	return mb_convert_encoding($text, "UTF-8", "auto");
+}
+
+?>
