@@ -48,7 +48,7 @@ $AltMonitorUpdate->messages = '';
 if( $mode == 'guild_pre' )
 {
 	if( $addon_conf['AltMonitor']['update_type'] & 1 == 0 ) { return; }
-	$retval = $AltMonitorUpdate->guild_pre();
+	$retval = $AltMonitorUpdate->guild_pre($data);
 
 	if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
 
@@ -58,7 +58,7 @@ if( $mode == 'guild_pre' )
 if( $mode == 'guild' )
 {
 	if( $addon_conf['AltMonitor']['update_type'] & 1 == 0 ) { return; }
-	$retval = $AltMonitorUpdate->guild($member_id, $member_name);
+	$retval = $AltMonitorUpdate->guild($member_id, $member_name, $data);
 
 	if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
 
@@ -68,7 +68,7 @@ if( $mode == 'guild' )
 elseif( $mode == 'guild_post' )
 {
 	if( $addon_conf['AltMonitor']['update_type'] & 1 == 0 ) { return; }
-	$retval = $AltMonitorUpdate->guild_post();
+	$retval = $AltMonitorUpdate->guild_post($data);
 
 	if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
 
@@ -78,7 +78,7 @@ elseif( $mode == 'guild_post' )
 elseif( $mode == 'char_pre' )
 {
 	if( $addon_conf['AltMonitor']['update_type'] & 2 == 0 ) { return; }
-	$retval = $AltMonitorUpdate->char_pre();
+	$retval = $AltMonitorUpdate->char_pre($data);
 
 	if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
 
@@ -88,7 +88,7 @@ elseif( $mode == 'char_pre' )
 elseif( $mode == 'char' )
 {
 	if( $addon_conf['AltMonitor']['update_type'] & 2 == 0 ) { return; }
-	$retval = $AltMonitorUpdate->char($member_id, $member_name);
+	$retval = $AltMonitorUpdate->char($member_id, $member_name, $data);
 
 	if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
 
@@ -98,7 +98,7 @@ elseif( $mode == 'char' )
 elseif( $mode == 'char_post' )
 {
 	if( $addon_conf['AltMonitor']['update_type'] & 2 == 0 ) { return; }
-	$retval = $AltMonitorUpdate->char_post();
+	$retval = $AltMonitorUpdate->char_post($data);
 	
 	if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
 

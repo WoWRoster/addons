@@ -21,39 +21,43 @@ if ( !defined('ROSTER_INSTALLED') )
     exit('Detected invalid access to this file!');
 }
 
-$query = "SELECT `name`, `member_id` FROM `".ROSTER_MEMBERSTABLE."` as members";
-$memberresult = $wowdb->query( $query ) or die_quietly( $wowdb->error() );
-if ( $roster_conf['sqldebug'] )
+// Recreate the CP.lua guild subtree. Or at least the relevant parts.
+$guild = $GLOBALS['guild_info'];
+
+$query = "SELECT `member_id`, `name` AS `Name`, `note` AS `Note`, `officer_note` AS `OfficerNote` FROM `".ROSTER_MEMBERSTABLE."` as members";
+$result = $wowdb->query( $query ) or die_quietly( $wowdb->error() );
+
+while( $row = $wowdb->fetch_array($result))
 {
-	echo "<!--$query-->\n";
+	$guild['Members'][$row['Name']] = $row;
 }
 
+$wowdb->free_result($result);
+
+
+// Start the actual update process
 include_once($addonDir.'update.php');
 
 $AltMonitorUpdate = $GLOBALS['AltMonitorUpdate'];
 $AltMonitorUpdate->messages = '';
 
 // Guild pre hook. Unused, but just in case I add something there in the future and forget it here.
-$retval = $AltMonitorUpdate->guild_pre();
+$retval = $AltMonitorUpdate->guild_pre($guild);
 if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
 
 // Loop over all members
-while ($row = $wowdb->fetch_array($memberresult))
+foreach($guild['Members'] as $member_name => $char)
 {
-	$member_name = $row['name'];
-	$member_id = $row['member_id'];
+	$member_id = $char['member_id'];
 	$AltMonitorUpdate->messages .= $member_name;
-	$retval = $AltMonitorUpdate->guild($member_id, $member_name);
+	$retval = $AltMonitorUpdate->guild($member_id, $member_name, $char);
 	if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
 	$AltMonitorUpdate->messages .= "<br />\n";
 }
 
 // Guild post hook. Deletes old entries.
-$retval = $AltMonitorUpdate->guild_post();
+$retval = $AltMonitorUpdate->guild_post($guild);
 if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
-
-
-$wowdb->free_result($memberresult);
 
 $messages = $AltMonitorUpdate->messages;
 $errorstringout = $wowdb->getErrors();
