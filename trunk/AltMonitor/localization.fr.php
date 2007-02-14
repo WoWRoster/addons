@@ -56,7 +56,7 @@ $wordings['frFR']['admin']['defmain']       = 'Pas de résultats|Définir ce que s
 $wordings['frFR']['admin']['invmain']       = 'Résultat invalide|Définnir ce que sera le perso si le regex donne un perso n\'étant pas dans la guilde ou correspondant a un perso principal.';
 $wordings['frFR']['admin']['altofalt']      = 'Reroll de Reroll|Définir ce qu\'il faut faire si le perso est sans perso principal.';
 
-$wordings['frFR']['admin']['update_type']   = 'Type de mise Ã  jour | Indiquez le type de mise Ã  jour de la relation main/alt';
+$wordings['frFR']['admin']['update_type']   = 'Type de mise à jour | Indiquez le type de mise à jour de la relation main/alt';
 
 // Settings names on display page
 $wordings['frFR']['admin']['showmain']      = 'Montrer le nom du perso principal|Définir si vous voulez montrer ou masquer le nom du perso principal dans la liste des rerolls.';

@@ -1,4 +1,4 @@
-<?php
+ï»¿<?php
 /******************************
  * WoWRoster.net  Roster
  * Copyright 2002-2006
@@ -20,20 +20,20 @@
 
 // Installer
 $wordings['deDE']['AltMonitor_install_page']= 'AltMonitor Installationssystem';
-$wordings['deDE']['AltMonitor_install']     = 'Die AltMonitor Tabellen sind noch nicht installiert. Drücke Install um die benötigten Tabellen zu erzeugen.';
-$wordings['deDE']['AltMonitor_upgrade']     = 'Die AltMonitor Tabellen sind nicht auf dem neuesten Stand. Betätige Update um die Datenbank zu aktualisieren oder Install um die Tabellen zu löschen und neu zu erzeugen.';
-$wordings['deDE']['AltMonitor_no_upgrade']  = 'Die AltMonitor Tabellen sind schon auf dem neuesten Stand. Betätige Reinstall um die Tabellen nochmal zu installieren.';
-$wordings['enUS']['AltMonitor_uninstall']   = 'Dies wird die AltMonitor Konfiguration und Hauptleitung herausnehmen/alte Verhältnisse. Klicken Sie \'Deinstallation\', um fortzufahren. AltMonitor ist deinstalliert worden. Sie können jetzt das Addon von Ihrem Webserver löschen.';
+$wordings['deDE']['AltMonitor_install']     = 'Die AltMonitor Tabellen sind noch nicht installiert. Drücke Install um die benÃ¶tigten Tabellen zu erzeugen.';
+$wordings['deDE']['AltMonitor_upgrade']     = 'Die AltMonitor Tabellen sind nicht auf dem neuesten Stand. BetÃ¤tige Update um die Datenbank zu aktualisieren oder Install um die Tabellen zu lÃ¶schen und neu zu erzeugen.';
+$wordings['deDE']['AltMonitor_no_upgrade']  = 'Die AltMonitor Tabellen sind schon auf dem neuesten Stand. BetÃ¤tige Reinstall um die Tabellen nochmal zu installieren.';
+$wordings['enUS']['AltMonitor_uninstall']   = 'Dies wird die AltMonitor Konfiguration und Hauptleitung herausnehmen/alte VerhÃ¼ltnisse. Klicken Sie \'Deinstallation\', um fortzufahren. AltMonitor ist deinstalliert worden. Sie kÃ¼nnen jetzt das Addon von Ihrem Webserver lÃ¶schen.';
 $wordings['deDE']['AltMonitor_installed']   = 'GlÃ¼ckwunsch, AltMonitor wurde erfolgreich installiert. Klicke auf den unten stehenden Link um es zu Konfigurieren.';
 $wordings['enUS']['AltMonitor_uninstalled'] = 'AltMonitor has been uninstalled. You may now delete the addon from your webserver.';
 
 // Main/Alt display
 $wordings['deDE']['AltMonitor_Menu']        = 'Mains/Twinks';
-$wordings['deDE']['AltMonitor_NoAction']    = 'Schau bitte nach, ob die URL korrekt ist, da eine inkorrekte Aktion getätigt wurde. Bist du einem Link innerhalb dieses Addons gefolgt, mache bitte einen Bugreport im WoWroster Forum.';
+$wordings['deDE']['AltMonitor_NoAction']    = 'Schau bitte nach, ob die URL korrekt ist, da eine inkorrekte Aktion getÃ¤tigt wurde. Bist du einem Link innerhalb dieses Addons gefolgt, mache bitte einen Bugreport im WoWroster Forum.';
 $wordings['deDE']['main_name']              = 'Name des Mains';
-$wordings['deDE']['altlist_menu']           = '&Ouml;ffne/Schließe alle Tabs';
+$wordings['deDE']['altlist_menu']           = 'Ã–ffne/SchlieÃŸe alle Tabs';
 $wordings['deDE']['altlist_close']          = 'Alle Ã¶ffnen';
-$wordings['deDE']['altlist_open']           = 'Alle schließen';
+$wordings['deDE']['altlist_open']           = 'Alle schlieÃŸen';
 
 // Configuration
 $wordings['deDE']['AltMonitor_config']      = '&Ouml;ffne die AltMonitor Konfiguration';

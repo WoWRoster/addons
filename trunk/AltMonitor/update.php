@@ -28,26 +28,23 @@ class AltMonitorUpdate
 	
 	// Character data cache
 	var $chars = array();
-
-
+	
 	// Doesn't do anything at the moment
-	function guild_pre()
+	function guild_pre($guild)
 	{
 		global $wowdb, $roster_conf, $addon_conf, $wordings;
-		
 	}
 	
 	// The regex-based alt detection
-	function guild($member_id, $member_name)
+	function guild($member_id, $member_name, $char)
 	{
 		global $wowdb, $roster_conf, $addon_conf, $wordings;
 		
 		// --[ Fetch full member data ]--
 		$query =
 			"SELECT * ".
-			"FROM `".ROSTER_MEMBERSTABLE."` m ".
-			"LEFT JOIN `".ROSTER_ALT_TABLE."` a USING (`member_id`) ".
-			"WHERE m.`member_id`=".$member_id;
+			"FROM `".ROSTER_ALT_TABLE."` ".
+			"WHERE `member_id`=".$member_id;
 
 		$result = $wowdb->query( $query );
 
@@ -57,7 +54,7 @@ class AltMonitorUpdate
 			// Check manual record
 			if ( $row['alt_type'] & 0xC ) {
 				$wowdb->free_result( $result );
-				$this->messages .= " - <span style='color:yellow;'>Manual entry</span>\n";
+				$this->messages .= " - <span style='color:yellow;'>Manual or per-character entry</span>\n";
 				return '';
 			}
 			else
@@ -65,15 +62,9 @@ class AltMonitorUpdate
 				$wowdb->free_result( $result );
 			}
 		}
-		else
-		{
-			$wowdb->free_result( $result );
-			return("$member_name not updated, failed at line ".__LINE__);
-			break;
-		}
 
 		// --[ Use regex to parse the main name ]--
-		if(preg_match($addon_conf['AltMonitor']['getmain_regex'],$row[$addon_conf['AltMonitor']['getmain_field']], $regs))
+		if(preg_match($addon_conf['AltMonitor']['getmain_regex'],$char[$addon_conf['AltMonitor']['getmain_field']], $regs))
 		{
 			$main_name = $regs[$addon_conf['AltMonitor']['getmain_match']]; // We have a regex result.
 		}
@@ -280,7 +271,7 @@ class AltMonitorUpdate
 	}
 
 	// Throwing away the old records
-	function guild_post()
+	function guild_post($guild)
 	{
 		global $wowdb, $roster_conf, $addon_conf, $wordings;
 
@@ -300,23 +291,22 @@ class AltMonitorUpdate
 	}
 	
 	// Doesn't do anything at the moment
-	function char_pre()
+	function char_pre($chars)
 	{
 		global $wowdb, $roster_conf, $addon_conf, $wordings;
 		
 	}
 	
 	// Add the member record to the local data array
-	function char($member_id, $member_name)
+	function char($member_id, $member_name, $char)
 	{
 		global $wowdb, $roster_conf, $addon_conf, $wordings;
 		
 		// --[ Fetch full member data ]--
 		$query =
 			"SELECT * ".
-			"FROM `".ROSTER_ALT_TABLE."` a ".
-			"INNER JOIN `".ROSTER_MEMBERSTABLE."` m USING (`member_id`) ".
-			"WHERE a.`member_id`=".$member_id;
+			"FROM `".ROSTER_ALT_TABLE."` ".
+			"WHERE `member_id`=".$member_id;
 
 		$result = $wowdb->query( $query );
 
@@ -338,13 +328,15 @@ class AltMonitorUpdate
 			$wowdb->free_result( $result );
 
 		// --[ Add record to the cache of chars we'll be updating ]--
-		$this->chars[$member_id] = $row;
+		$this->chars[$member_id] = $char;
+		$this->chars[$member_id]['main_id'] = $row['main_id'];
+		$this->chars[$member_id]['alt_type'] = $row['alt_type'];
 		
 		return '';
 	}
 	
 	// Does the actual update.
-	function char_post()
+	function char_post($chars)
 	{
 		global $wowdb, $roster_conf, $addon_conf, $wordings;
 	
@@ -356,18 +348,18 @@ class AltMonitorUpdate
 		
 		foreach($this->chars as $char)
 		{
-			if( $char['guild_rank'] < $maxrank )
+			if( $char['Rank'] < $maxrank )
 			{
-				$maxrank = $char['guild_rank'];
+				$maxrank = $char['Rank'];
 			}
 		}
 		
-		foreach($this->chars as $char)
+		foreach($this->chars as $member_id => $char)
 		{
-			if( $char['guild_rank'] == $maxrank && $char['level'] > $maxlevel )
+			if( $char['Rank'] == $maxrank && $char['Level'] > $maxlevel )
 			{
-				$maxlevel = $char['level'];
-				$mainid = $char['member_id'];
+				$maxlevel = $char['Level'];
+				$mainid = $member_id;
 			}
 		}
 		
