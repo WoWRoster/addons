@@ -150,7 +150,7 @@ $siggen_translate['esES']['Brujo']        = 'Warlock';
 $siggen_translate['esES']['Guerrero']     = 'Warrior';
 
 // Race, Gender Translation
-$siggen_translate['esES']['Elfo de Sangre'] = 'Blood Elf';
+$siggen_translate['esES']['Elfo de sangre'] = 'Blood Elf';
 $siggen_translate['esES']['Draenei']      = 'Draenei';
 $siggen_translate['esES']['Elfo de la noche'] = 'Night Elf';
 $siggen_translate['esES']['Enano']        = 'Dwarf';
