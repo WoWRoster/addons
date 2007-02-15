@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /******************************
  * WoWRoster.net  Roster
  * Copyright 2002-2006
@@ -23,9 +23,9 @@ $wordings['deDE']['AltMonitor_install_page']= 'AltMonitor Installationssystem';
 $wordings['deDE']['AltMonitor_install']     = 'Die AltMonitor Tabellen sind noch nicht installiert. Dr�cke Install um die benötigten Tabellen zu erzeugen.';
 $wordings['deDE']['AltMonitor_upgrade']     = 'Die AltMonitor Tabellen sind nicht auf dem neuesten Stand. Betätige Update um die Datenbank zu aktualisieren oder Install um die Tabellen zu löschen und neu zu erzeugen.';
 $wordings['deDE']['AltMonitor_no_upgrade']  = 'Die AltMonitor Tabellen sind schon auf dem neuesten Stand. Betätige Reinstall um die Tabellen nochmal zu installieren.';
-$wordings['enUS']['AltMonitor_uninstall']   = 'Dies wird die AltMonitor Konfiguration und Hauptleitung herausnehmen/alte Verhültnisse. Klicken Sie \'Deinstallation\', um fortzufahren. AltMonitor ist deinstalliert worden. Sie künnen jetzt das Addon von Ihrem Webserver löschen.';
+$wordings['enUS']['AltMonitor_uninstall']   = 'Dies wird die AltMonitor Konfiguration und Main/ALT-Beziehungen löschen. Klicken Sie \'Deinstallation\' um fortzufahren.';
 $wordings['deDE']['AltMonitor_installed']   = 'Glückwunsch, AltMonitor wurde erfolgreich installiert. Klicke auf den unten stehenden Link um es zu Konfigurieren.';
-$wordings['enUS']['AltMonitor_uninstalled'] = 'AltMonitor has been uninstalled. You may now delete the addon from your webserver.';
+$wordings['enUS']['AltMonitor_uninstalled'] = 'AltMonitor ist deinstalliert worden. Sie können jetzt das Addon von Ihrem Webserver löschen.';
 
 // Main/Alt display
 $wordings['deDE']['AltMonitor_Menu']        = 'Mains/Twinks';
@@ -56,7 +56,7 @@ $wordings['deDE']['admin']['defmain']       = 'Kein Ergebnis|Gebe an, als was ei
 $wordings['deDE']['admin']['invmain']       = 'Ungültiges Ergebnis|Gebe an, als was ein Charakter eingestuft werden soll, wenn Regex ein Ergebnis findet, dass keinem Gildenmitglied zugeordnet werden kann oder mit dem Main Identifikator identisch ist.';
 $wordings['deDE']['admin']['altofalt']      = 'Twink eines Twinks|Gebe an, als was ein Charakter eingestuft werden soll, wenn er als Twink ohne Main erkannt wurde.';
 
-$wordings['deDE']['admin']['update_type']   = 'Update typ|Geben sie an welchen Trigger typ Sie zum Updaten vom Haupt/oderdem  altem Zustand benutzen wollen.';
+$wordings['deDE']['admin']['update_type']   = 'Update typ|Geben Sie an welchen Trigger typ Sie zum aktualisieren der Main/Alt-Beziehungen benutzen wollen.';
 
 // Settings names on display page
 $wordings['deDE']['admin']['showmain']      = 'Zeige den Namen des Mains|Gebe an, ob du möchtest, dass der Name des Mains in der Twink-Liste angezeigt werden soll oder nicht.';
@@ -67,7 +67,7 @@ $wordings['deDE']['admin']['mainlessbottom']= 'Position der Mainlosen Twinks|Geb
 //
 // Geschan
 // Sphinx
-// Demonforce
+// Lunzet
 
 
 // Notes from German translator:
