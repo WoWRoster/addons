@@ -76,7 +76,7 @@ INSERT INTO `" .ROSTER_ALT_CONFIG_TABLE."` VALUES (1070,'update_type','3','selec
 ";
 
 // ADD THE RIGHT GETMAIN_FIELD STATS HERE
-$install_sql['2.0.0'] = "
+$install_sql['2.0.1'] = "
 UPDATE `".ROSTER_ALT_CONFIG_TABLE."` SET `config_value` = 'Note', `form_type` = 'select{Public Note^Note|Officer Note^OfficerNote' WHERE `config_name` = 'getmain_field';
 ";
 
