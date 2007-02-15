@@ -75,6 +75,12 @@ $install_sql['1.6.0'] = "
 INSERT INTO `" .ROSTER_ALT_CONFIG_TABLE."` VALUES (1070,'update_type','3','select{None^0|Guild^1|Character^2|Both^3','build');
 ";
 
+// ADD THE RIGHT GETMAIN_FIELD STATS HERE
+$install_sql['2.0.0'] = "
+UPDATE `".ROSTER_ALT_CONFIG_TABLE."` SET `config_value` = 'Note', `form_type` = 'select{Public Note^Note|Officer Note^OfficerNote' WHERE `config_name` = 'getmain_field';
+";
+
+
 $uninstall_sql['1.0.0'] = "
 DROP TABLE IF EXISTS `".ROSTER_ALT_TABLE."`;
 DROP TABLE IF EXISTS `".ROSTER_ALT_CONFIG_TABLE."`;
