@@ -45,6 +45,13 @@ isn't entered into the database if the corresponding main isn't in yet.
 Unfortunately I don't get to pick the update order.
 
 VERSION LOG:
+2.0.1
+-- Fixed the DOM (three identification bytes) in the top of localization.de.php
+-- Updated some german strings with better translations. (thanks Lunzet)
+-- Fixed a load of spelling errors in the french translation. (thanks Malkom)
+-- Added a missing SQL change for 2.0.0
+
+2.0.0
 -- Fiddled around with the altlist indentation a bit
 -- Cleaned up localization. It's in 1 file per language now, since organizing
    it like that makes it easier to keep the wordings in sync.
