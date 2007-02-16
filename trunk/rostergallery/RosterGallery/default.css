@@ -1,0 +1,98 @@
+/******************************
+ * $Id: default.css,v 1.7.0 2006/05/23 07:16:03 Ulminia Exp $
+ ******************************/
+
+.ss_table {
+	white-space:nowrap;
+}
+.ss_titletext {
+	font-size:14px;
+	font-weight:bold;
+	color:#DAA520;
+}
+.ss_table {
+	border:1px solid #212121;
+	white-space:nowrap;
+	font-size:10px;
+}
+.ss_row1 {
+	
+	color:#FFFFFF;
+	background-color:#1F1E1D;
+	font-size:12px;
+	white-space:nowrap;
+	border-style:solid;
+	border-width:1px 1px 1px 1px;
+	border-color:#5D5D5D #5D5D5D #5D5D5D #5D5D5D;
+}
+.ss_row2 {
+	
+	color:#FFFFFF;
+	background-color:#2E2D2B;
+	font-size:12px;
+	white-space:nowrap;
+	border-style:solid;
+	border-width:1px 1px 1px 1px;
+	border-color:#5D5D5D #5D5D5D #5D5D5D #5D5D5D;
+}
+.ss_row_right1 {
+	vertical-align:bottom;
+	color:#FFFFFF;
+	background-color:#1F1E1D;
+	font-size:10px;
+	white-space:nowrap;
+	border-style:solid;
+	border-width:1px 1px 0px 1px;
+	border-color:#000000 #5D5D5D #5D5D5D #5D5D5D;
+}
+.ss_row_right2 {
+	vertical-align:bottom;
+	color:#FFFFFF;
+	background-color:#2E2D2B;
+	font-size:10px;
+	white-space:nowrap;
+	border-style:solid;
+	border-width:1px 1px 0px 1px;
+	border-color:#000000 #5D5D5D #5D5D5D #5D5D5D;
+}
+
+.ss_row_left1 {
+	vertical-align:bottom;
+	color:#FFFFFF;
+	background-color:#1F1E1D;
+	font-size:10px;
+	white-space:nowrap;
+	border-style:solid;
+	border-width:1px 1px 0px 1px;
+	border-color:#000000 #5D5D5D #5D5D5D #5D5D5D;
+}
+.ss_row_left2 {
+	vertical-align:bottom;
+	color:#FFFFFF;
+	background-color:#2E2D2B;
+	font-size:10px;
+	white-space:nowrap;
+	border-style:solid;
+	border-width:1px 1px 0px 1px;
+	border-color:#000000 #5D5D5D #5D5D5D #5D5D5D;
+}
+.ss_header {
+	vertical-align:bottom;
+	color:#CBA300;
+	background-color:#2E2D2B;
+	font-size:10px;
+	white-space:nowrap;
+	border-style:solid;
+	border-width:1px 0px 0px 1px;
+	border-color:#5D5D5D;
+}
+.ss_header_right {
+	vertical-align:bottom;
+	color:#CBA300;
+	background-color:#2E2D2B;
+	font-size:10px;
+	white-space:nowrap;
+	border-style:solid;
+	border-width:1px 1px 0px 1px;
+	border-color:#5D5D5D;
+}
