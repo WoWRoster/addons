@@ -3,29 +3,17 @@
 $wordings['enUS']['kbc_title_addon'] = 'Keys BC';
 
 $inst_keys_bc['enUS']['A'] = array(
-	'SH' => array( 'Quests', 'ShatteredHalls' =>
+		'SH' => array( 'Quests', 'SH' =>
                         'Shattered Halls Key|56320',
                         'Entry into the Citadel|',
                         'Grand Master Dumphry|',
                         'Dumphry\\\'s Request|',
                         'Hotter then Hell|'
                 ),
-        'SL' => array( 'Key-Only', 'ShadowLabyrinth' =>
+        'SL' => array( 'Key-Only', 'SL' =>
                         'Shadow Labyrinth Key|57267',
                 ),
-        'Arcatraz' => array( 'Quests', 'Arcatraz' =>
-                        'Key to the Arcatraz|58724',
-                        'Warp-Raider Nesaad|',
-                        'Request for Assistance|',
-                        'Rightful Repossession|',
-                        'An Audience with the Prince|',
-                        'Triangulation Point One|',
-                        'Triangulation Point Two|',
-                        'Full Triangle|',
-                        'Special Delivery to Shattrath City|',
-                        'How to Break Into the Arcatraz|'
-                ),
-        'TK' => array( 'Quests', 'TheEye' =>
+        'TK' => array( 'Quests', 'TK' =>
                         'The Tempest Key|58724',
                         'Trial of the Naaru: Mercy|',
                         'Trial of the Naaru: Strength|',
@@ -33,7 +21,7 @@ $inst_keys_bc['enUS']['A'] = array(
                         'Special Delivery to Shattrath City|',
                         'The Tempest Key|'
                 ),
-        'Kara' => array( 'Quests', 'Karazhan' =>
+        'Kara' => array( 'Quests', 'Kara' =>
                         'The Master\\\'s Key|58887',
                         'Arcane Disturbances|',
                         'Restless Activity|',
@@ -64,29 +52,17 @@ $inst_keys_bc['enUS']['A'] = array(
 
 // HORDE KEYS
 $inst_keys_bc['enUS']['H'] = array(
-	'SH' => array( 'Quests', 'ShatteredHalls' =>
+	'SH' => array( 'Quests', 'SH' =>
                         'Shattered Halls Key|56320',
                         'Entry into the Citadel|',
                         'Grand Master Dumphry|',
                         'Dumphry\\\'s Request|',
                         'Hotter then Hell|'
                 ),
-        'SL' => array( 'Key-Only', 'ShadowLabyrinth' =>
+        'SL' => array( 'Key-Only', 'SL' =>
                         'Shadow Labyrinth Key|57267',
                 ),
-        'Arcatraz' => array( 'Quests', 'Arcatraz' =>
-                        'Key to the Arcatraz|58724',
-                        'Warp-Raider Nesaad|',
-                        'Request for Assistance|',
-                        'Rightful Repossession|',
-                        'An Audience with the Prince|',
-                        'Triangulation Point One|',
-                        'Triangulation Point Two|',
-                        'Full Triangle|',
-                        'Special Delivery to Shattrath City|',
-                        'How to Break Into the Arcatraz|'
-                ),
-        'TK' => array( 'Quests', 'TheEye' =>
+        'TK' => array( 'Quests', 'TK' =>
                         'The Tempest Key|58724',
                         'Trial of the Naaru: Mercy|',
                         'Trial of the Naaru: Strength|',
@@ -94,7 +70,7 @@ $inst_keys_bc['enUS']['H'] = array(
                         'Special Delivery to Shattrath City|',
                         'The Tempest Key|'
                 ),
-        'Kara' => array( 'Quests', 'Karazhan' =>
+        'Kara' => array( 'Quests', 'Kara' =>
                         'The Master\\\'s Key|58887',
                         'Arcane Disturbances|',
                         'Restless Activity|',
