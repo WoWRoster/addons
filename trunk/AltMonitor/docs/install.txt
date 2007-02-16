@@ -45,6 +45,9 @@ isn't entered into the database if the corresponding main isn't in yet.
 Unfortunately I don't get to pick the update order.
 
 VERSION LOG:
+-- Fixed an error that caused the spanish uninstalled wording to overwrite the
+   english one.
+
 2.0.1
 -- Fixed the DOM (three identification bytes) in the top of localization.de.php
 -- Updated some german strings with better translations. (thanks Lunzet)
