@@ -73,8 +73,8 @@ $inst_keys_bc['deDE']['H'] = array(
 	'SH' => array( 'Quests', 'ZH' =>
 			'Schlüssel der zerschmetterten Hallen|56320',
 			'Zugang zur Zitadelle|',
-			'Großmeister Dumphry|',
-			'Dumphrys Bitte|',
+			'Großmeister Rohok|',
+			'Rohoks Bitte|',
 			'Heißer als die Hölle|'
 		),
 	'Arcatraz' => array( 'Quests', 'Arkatraz' =>

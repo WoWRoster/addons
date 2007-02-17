@@ -55,8 +55,8 @@ $inst_keys_bc['enUS']['H'] = array(
 	'SH' => array( 'Quests', 'SH' =>
                         'Shattered Halls Key|56320',
                         'Entry into the Citadel|',
-                        'Grand Master Dumphry|',
-                        'Dumphry\\\'s Request|',
+                        'Grand Master Rohok|',
+                        'Rohok\\\'s Request|',
                         'Hotter then Hell|'
                 ),
         'SL' => array( 'Key-Only', 'SL' =>
