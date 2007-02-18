@@ -83,10 +83,7 @@ if ( $roster_conf['index_pvplist'] == 1 )
 
 echo "  </tr>\n</table>\n";
 
-echo "<script language='JavaScript' type='text/javascript' src='addons/".$_REQUEST['roster_addon_name']."/js/toggle_display.js'></script>\n";
-
 $altopen = ((array_key_exists('altopen',$_GET) && $_GET['altopen'] != '')?($_GET['altopen']=='yes'):$addon_conf['AltMonitor']['altopen']);
-
 
 /*
 this section drives the entire output.
@@ -438,7 +435,7 @@ while ( $row = $wowdb->fetch_assoc( $result ) )
 					else
 						$openimg = 'plus.gif';
 
-					echo '    <td class="'.$stripe_class.'"><a href="#" onclick="hdr_toggle(\'playerrow-'.$row['main_name'].'\',\'foldout-'.$row['main_name'].'\',\''.$roster_conf['img_url'].'plus.gif\',\''.$roster_conf['img_url'].'minus.gif\'); return false;"><img src="'.$roster_conf['img_url'].$openimg.'" id="foldout-'.$row['main_name'].'"></a>'."\n";
+					echo '    <td class="'.$stripe_class.'"><a href="#" onclick="showHide(\'playerrow-'.$row['main_name'].'\',\'foldout-'.$row['main_name'].'\',\''.$roster_conf['img_url'].'plus.gif\',\''.$roster_conf['img_url'].'minus.gif\'); return false;"><img src="'.$roster_conf['img_url'].$openimg.'" id="foldout-'.$row['main_name'].'"></a>'."\n";
 					echo '<td class="'.$stripe_class.'">'.$cell_value.'</td>'."\n";
 				}
 				else

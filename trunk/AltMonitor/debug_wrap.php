@@ -55,19 +55,7 @@ $FIELD[] = array (
 	),
 );
 
-if($addon_conf['AltMonitor']['getmain_field'] == 'guild_title')
-{
-	$FIELD[] = array (
-		'guild_title' => array (
-			'lang_field' => 'title',
-			'divider' => true,
-			'order' => array( '`mains`.`guild_rank` ASC, `mains`.`name` ASC, isalt, `members`.`guild_rank` ASC' ),
-			'order_d' => array( '`mains`.`guild_rank` DESC, `mains`.`name` DESC, isalt, `members`.`guild_rank` DESC' ),
-		),
-	);
-}
-
-if($addon_conf['AltMonitor']['getmain_field'] == 'note')
+if($addon_conf['AltMonitor']['getmain_field'] == 'Note')
 {
 	$FIELD[] = array (
 		'note' => array(
@@ -78,7 +66,7 @@ if($addon_conf['AltMonitor']['getmain_field'] == 'note')
 	);
 }
 
-if($addon_conf['AltMonitor']['getmain_field'] == 'officer_note')
+if($addon_conf['AltMonitor']['getmain_field'] == 'OfficerNote')
 {
 	$FIELD[] = array (
 		'officer_note' => array(
