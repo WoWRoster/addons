@@ -1,4 +1,4 @@
-/******************************
+/******* TEST ADDON NO PRODUCTION YET *******
  * WoWRoster.net  Roster
  * Copyright 2002-2006
  * Licensed under the Creative Commons
