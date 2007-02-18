@@ -45,6 +45,9 @@ isn't entered into the database if the corresponding main isn't in yet.
 Unfortunately I don't get to pick the update order.
 
 VERSION LOG:
+-- Clarified update log a bit when the regex doesn't match.
+-- Fixed debug mode
+-- Changed to use a roster JS function rather than its own to show/hide alts
 -- Fixed an error that caused the spanish uninstalled wording to overwrite the
    english one.
 

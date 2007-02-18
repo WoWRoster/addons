@@ -67,17 +67,18 @@ class AltMonitorUpdate
 		if(preg_match($addon_conf['AltMonitor']['getmain_regex'],$char[$addon_conf['AltMonitor']['getmain_field']], $regs))
 		{
 			$main_name = $regs[$addon_conf['AltMonitor']['getmain_match']]; // We have a regex result.
+			$this->messages .= " - <span style='color:green;'>Main: $main_name</span>\n";
 		}
 		else if($addon_conf['AltMonitor']['defmain'])
 		{
 			$main_name = $member_name;			// No regex result; assume the character is a main
+			$this->messages .= " - <span style='color:yellow;'>No main match</span>\n";
 		}
 		else
 		{
 			$main_name = '';				// No regex result; assume the character is mainless alt
+			$this->messages .= " - <span style='color:yellow;'>No main match</span>\n";
 		}
-
-		$this->messages .= " - <span style='color:green;'>Main: $main_name</span>\n";
 
 		// If the main name is equal to this config field then this char is a main, and we should set the $main_name accordingly
 		if($main_name == $addon_conf['AltMonitor']['getmain_main'])
