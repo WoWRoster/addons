@@ -38,7 +38,7 @@ $result_fct = $wowdb->query($qry_fct) or die_quietly($wowdb->error(),'Database E
 
 $choiceForm = '<form action="'.$script_filename.'" method="POST">
 	'.$wordings[$roster_conf['roster_lang']]['Professions'].' : 
-	<select name="Professionsfilter" onchange="top.location.href=this.options[this.selectedIndex].value">
+	<select name="Professionsfilter" onchange="window.location.href=this.options[this.selectedIndex].value">
 		<option value="'.$script_filename.'&amp;Professionsfilter=All">'.$wordings[$roster_conf['roster_lang']]['AS_Select_Professions'].'</option>'."\n";
 while($row_fct = $wowdb->fetch_array($result_fct))
 {
