@@ -7,7 +7,7 @@ $inst_keys_bc['deDE']['A'] = array(
 	'SL' => array( 'Key-Only', 'SL' =>
 			'Schlüssel des Schattenlabyrinths|57267'
 		),
-	'SH' => array( 'Quests', 'ZH' =>
+	'SH' => array( 'Quests', 'SH' =>
 			'Schlüssel der zerschmetterten Hallen|56320',
 			'Zugang zur Zitadelle|',
 			'Großmeister Dumphry|',
@@ -47,19 +47,19 @@ $inst_keys_bc['deDE']['A'] = array(
 			'Sonderlieferung nach Shattrath|',
 			'Der Schlüssel der Stürme|' 
 		),
-	'HA' => array( 'Key-Only', 'hA' =>
+	'HA' => array( 'Key-Only', 'HA' =>
 			'Schlüssel der Auchenai|55216'
 		 ),
-	'HHC' => array( 'Key-Only', 'hHZ' => 
+	'HHC' => array( 'Key-Only', 'HHC' => 
 			'Flammengeschmiedeter Schlüssel|55262'
 		), 
-	'HCR' => array( 'Key-Only', 'Kessel' =>
+	'HCR' => array( 'Key-Only', 'HCR' =>
 			'Schlüssel des Kessels|55139'
 		),
-	'HTK' => array( 'Key-Only', 'hFdS' =>
+	'HTK' => array( 'Key-Only', 'HTK' =>
 			'Warpgeschmiedeter Schlüssel|55231'
 		),
-	'HCoT' => array( 'Key-Only', 'HdZ' =>
+	'HCoT' => array( 'Key-Only', 'HCoT' =>
 			'Schlüssel der Zeit|54481'
 		 ),
 );
@@ -70,7 +70,7 @@ $inst_keys_bc['deDE']['H'] = array(
 	'SL' => array( 'Key-Only', 'SL' =>
 			'Schlüssel des Schattenlabyrinths|57267'
 		),
-	'SH' => array( 'Quests', 'ZH' =>
+	'SH' => array( 'Quests', 'SH' =>
 			'Schlüssel der zerschmetterten Hallen|56320',
 			'Zugang zur Zitadelle|',
 			'Großmeister Rohok|',
@@ -110,19 +110,19 @@ $inst_keys_bc['deDE']['H'] = array(
 			'Sonderlieferung nach Shattrath|',
 			'Der Schlüssel der Stürme|' 
 		),
-	'HA' => array( 'Key-Only', 'hA' =>
+	'HA' => array( 'Key-Only', 'HA' =>
 			'Schlüssel der Auchenai|55216'
 		 ),
-	'HHC' => array( 'Key-Only', 'hHZ' => 
+	'HHC' => array( 'Key-Only', 'HHC' => 
 			'Flammengeschmiedeter Schlüssel|55262'
 		), 
-	'HCR' => array( 'Key-Only', 'hEK' =>
+	'HCR' => array( 'Key-Only', 'HCR' =>
 			'Schlüssel des Kessels|55139'
 		),
-	'HTK' => array( 'Key-Only', 'hFdS' =>
+	'HTK' => array( 'Key-Only', 'HTK' =>
 			'Warpgeschmiedeter Schlüssel|55231'
 		),
-	'HCoT' => array( 'Key-Only', 'hHdZ' =>
+	'HCoT' => array( 'Key-Only', 'HCoT' =>
 			'Schlüssel der Zeit|54481'
 		 ), 
 );
