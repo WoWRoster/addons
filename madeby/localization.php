@@ -38,7 +38,7 @@ $wordings['enUS']['dnotpopulatelist'] = 'did not populate list';
 $wordings['enUS']['applybutton']= 'Apply';
 
 // translated to frFR from enUS by Harut
-$wordings['frFR']['MadeBy'] = 'Objets d\'artisanat';
+$wordings['frFR']['MadeBy'] = 'Artisanat';
 $wordings['frFR']['professionfilter'] = 'Filtre de profession:';
 $wordings['frFR']['itemdescription'] = 'Description de l\'objet:';
 $wordings['frFR']['whocanmakeit'] = 'Artisants';
