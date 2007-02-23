@@ -251,6 +251,7 @@ while ($row = $wowdb->fetch_array($result))
 			for ($acount=1;$acount<count($items[$key])-1;$acount++) {
 				buildSQL($items[$key][$acount], "${key}$acount", $type);
 			}
+			
 		}
 	}
 
@@ -292,6 +293,7 @@ while ($row = $wowdb->fetch_array($result))
 		// quests search (only the remaining ones!)
 		$queryq = "SELECT members.name".$selectq." FROM `".ROSTER_QUESTSTABLE."` quests LEFT JOIN `".ROSTER_MEMBERSTABLE."` members ON members.member_id = quests.member_id WHERE quests.member_id = ".$row['member_id']." AND (".$whereq.") GROUP BY members.name ORDER BY members.name ASC";
 		$qresult = $wowdb->query($queryq) or die_quietly($wowdb->error(),'Database Error',basename(__FILE__),__LINE__,$queryq);
+		//echo $queryq."<br>";
 		$qrow = $wowdb->fetch_array($qresult);
 		if (is_array($qrow))
 		{
