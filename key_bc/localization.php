@@ -16,7 +16,7 @@
  *
  ******************************/
 
-$wordings['addoncredits']['Key bc v0.1'] = array(
+$wordings['addoncredits']['Key bc v0.3'] = array(
 	array(	"name"=>	"Titan99",
 		"info"=>	"look a key bc"),
 );
