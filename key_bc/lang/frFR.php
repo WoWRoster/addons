@@ -25,14 +25,6 @@ $inst_keys_bc['frFR']['A'] = array(
 			'Livraison spéciale à Shattrath|',
 			'Comment pénétrer dans l\\\'Arcatraz|'
 		),
-	'TK' => array( 'Quests', 'TK' =>
-			'La clé de la Tempête|60250',
-			'L\\\'épreuve des naaru : Miséricorde|',
-			'L\\\'épreuve des naaru : Force|',
-			'L\\\'épreuve des naaru : Ténacité|',
-			'Livraison spéciale à Shattrath|',
-			'La clé de la Tempête|'
-		),
 	'Kara' => array( 'Quests', 'Kara' =>
 			'La clé du maître|58887',
 			'Troubles arcaniques|',
@@ -44,20 +36,32 @@ $inst_keys_bc['frFR']['A'] = array(
 			'Le toucher du maître|',
 			'Retour vers Khadgar|',
 		),
-	'HA' => array( 'Key-Only', 'HA' =>
-			'Clé Auchenaï|55216'
+	'HA' => array( 'Reput', 'HA' =>
+			'Clé Auchenaï|55216',
+			'Ville basse|'
 		),
-	'HHC' => array( 'Key-Only', 'HHC' =>
-			'Clé en flammes forgées|55262'
+	'HHC' => array( 'Reput', 'HHC' =>
+			'Clé en flammes forgées|55262',
+			'Thrallmar|'
 		),
-	'HCR' => array( 'Key-Only', 'HCR' =>
-			'Clé du réservoir|55139'
+	'HCR' => array( 'Reput', 'HCR' =>
+			'Clé du réservoir|55139',
+			'Expédition cénarienne|'
 		),
-	'HTK' => array( 'Key-Only', 'HTK' =>
-			'Clé dimensionnelle|55231'
+	'HTK' => array( 'Reput', 'HTK' =>
+			'Clé dimensionnelle|55231',
+			'Les Sha\\\'tar|'
 		),
-	'HCoT' => array( 'Key-Only', 'HCoT' =>
+	'HCoT' => array( 'Reput', 'HCoT' =>
 			'Clé du Temps|54481'
+		),
+	'TK' => array( 'Quests', 'TK' =>
+			'La clé de la Tempête|60250',
+			'L\\\'épreuve des naaru : Miséricorde|',
+			'L\\\'épreuve des naaru : Force|',
+			'L\\\'épreuve des naaru : Ténacité|',
+			'Livraison spéciale à Shattrath|',
+			'La clé de la Tempête|'
 		),
 );
 
@@ -86,14 +90,6 @@ $inst_keys_bc['frFR']['H'] = array(
 			'Livraison spéciale à Shattrath|',
 			'Comment pénétrer dans l\\\'Arcatraz|'
 		),
-	'TK' => array( 'Quests', 'TK' =>
-			'La clé de la Tempête|60250',
-			'L\\\'épreuve des naaru : Miséricorde|',
-			'L\\\'épreuve des naaru : Force|',
-			'L\\\'épreuve des naaru : Ténacité|',
-			'Livraison spéciale à Shattrath|',
-			'La clé de la Tempête|'
-		),
 	'Kara' => array( 'Quests', 'Kara' =>
 			'La clé du maître|58887',
 			'Troubles arcaniques|',
@@ -105,20 +101,32 @@ $inst_keys_bc['frFR']['H'] = array(
 			'Le toucher du maître|',
 			'Retour vers Khadgar|',
 		),
-	'HA' => array( 'Key-Only', 'HA' =>
-			'Clé Auchenaï|55216'
+	'HA' => array( 'Reput', 'HA' =>
+			'Clé Auchenaï|55216',
+			'Ville basse|'
 		),
-	'HHC' => array( 'Key-Only', 'HHC' =>
-			'Clé en flammes forgées|55262'
+	'HHC' => array( 'Reput', 'HHC' =>
+			'Clé en flammes forgées|55262',
+			'Thrallmar|'
 		),
-	'HCR' => array( 'Key-Only', 'HCR' =>
-			'Clé du réservoir|55139'
+	'HCR' => array( 'Reput', 'HCR' =>
+			'Clé du réservoir|55139',
+			'Expédition cénarienne|'
 		),
-	'HTK' => array( 'Key-Only', 'HTK' =>
-			'Clé dimensionnelle|55231'
+	'HTK' => array( 'Reput', 'HTK' =>
+			'Clé dimensionnelle|55231',
+			'Les Sha\\\'tar|'
 		),
-	'HCoT' => array( 'Key-Only', 'HCoT' =>
+	'HCoT' => array( 'Reput', 'HCoT' =>
 			'Clé du Temps|54481'
+		),
+	'TK' => array( 'Quests', 'TK' =>
+			'La clé de la Tempête|60250',
+			'L\\\'épreuve des naaru : Miséricorde|',
+			'L\\\'épreuve des naaru : Force|',
+			'L\\\'épreuve des naaru : Ténacité|',
+			'Livraison spéciale à Shattrath|',
+			'La clé de la Tempête|'
 		),
 );
 

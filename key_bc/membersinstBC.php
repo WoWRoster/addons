@@ -104,7 +104,10 @@ function rankRight($sc)
 
 function buildSQL($item,$key,$type)
 {
-	global $wowdb, $selectp, $wherep, $pcount, $selectq, $whereq, $qcount;
+	global $wowdb;
+	global $selectp, $wherep, $pcount;
+	global $selectq, $whereq, $qcount;
+	global $selectR, $whereR, $Rcount;
 
 	list($iname, $thottnum) = explode('|', $item);
 
@@ -120,6 +123,12 @@ function buildSQL($item,$key,$type)
 		{
 			$whereq .= " OR quests.quest_name = '".$iname."'";
 		}
+	}
+	elseif ($type == 'reput')
+	{
+		++$Rcount;
+		$whereR = $iname;
+		$selectR = $key;
 	}
 	else
 	{
@@ -141,13 +150,13 @@ $min_skill_for_lock = array(
         'SL' => 350,
         'SH' => 350,
         'Arcatraz' => 350,
-        'TK' => 1001,
         'Kara' => 1001,
         'HA' => 1001,
         'HHC' => 1001,
         'HCR' => 1001,
         'HTK' => 1001,
         'HCoT' => 1001,
+	'TK' => 1001,
 );
 
 $items = $inst_keys_bc[$roster_conf['roster_lang']][ substr($faction,0,1) ];
@@ -205,6 +214,7 @@ while ($row = $wowdb->fetch_array($result))
 	$kcount = 0; // counts how many keys this player has. if 0 at the end don't display
 	$selectp = ''; $wherep = ''; $pcount = 0;
 	$selectq = ''; $whereq = ''; $qcount = 0;
+	$selectR = ''; $whereR = ''; $Rcount = 0;
 	// ==============================
 	// VALUE:MEANING for $krow[$key]:
 	// ==============================
@@ -243,6 +253,10 @@ while ($row = $wowdb->fetch_array($result))
 			else if ($items[$key][0] == 'Parts')
 			{
 				$type = 'item';
+			}
+			else if ($items[$key][0] == 'Reput')
+			{
+				$type = 'reput';
 			}
 			else
 			{
@@ -310,6 +324,39 @@ while ($row = $wowdb->fetch_array($result))
 		}
 		$wowdb->free_result($qresult);
 	}
+	if ($selectR != '')
+	{
+
+		// quests search (only the remaining ones!)$whereR = $iname;	$selectR = $key;
+		$queryR = "SELECT members.name , sum(if(R.name = '$whereR', 1, 0)) AS $selectR, R.curr_rep, R.max_rep, R.Standing 
+			FROM `".ROSTER_REPUTATIONTABLE."` R 
+			LEFT JOIN `".ROSTER_MEMBERSTABLE."` members ON members.member_id = R.member_id 
+			WHERE R.member_id = ".$row['member_id']." 
+			AND (R.name = '$whereR') 
+			GROUP BY members.name ORDER BY members.name ASC";
+		$Rresult = $wowdb->query($queryR) or die_quietly($wowdb->error(),'Database Error',basename(__FILE__),__LINE__,$queryR);
+//	echo $queryR."----";
+		$Rrow = $wowdb->fetch_array($Rresult);
+		 
+		if (is_array($Rrow))
+		{
+			foreach ($Rrow as $qkey => $qvalue)
+			{
+				if ($qvalue == 1 && !is_numeric($qkey))
+				{
+					++$kcount;
+					$key = preg_replace('/[0-9]/', '', $qkey);
+					$step = preg_replace('/[A-Za-z]/', '', $qkey);
+					$krow[$key] = $step;
+				}
+			}
+			$ReputTab[$key]['name']=$whereR;
+			$ReputTab[$key]['pourcent']=($Rrow['curr_rep']*100)/$Rrow['max_rep'];
+			$ReputTab[$key]['text']= $whereR." : ".$Rrow['Standing']." ".$Rrow['curr_rep']."/".$Rrow['max_rep'];
+		}
+		$wowdb->free_result($qresult);
+
+	}
 	if ($kcount == 0)
 	{
 		continue; // nothing to display -> next player
@@ -325,6 +372,7 @@ while ($row = $wowdb->fetch_array($result))
 	print '<a href="char.php?name='.$row['name'].'&amp;server='.$roster_conf['server_name'].'">'.$row['name'].'</a><br />'.$row['class'].' ('.$row['level'].')</td>'."\n";
 	foreach ($items as $key => $data)
 	{
+		//echo $krow[$key]."<br>";
 		++$acount;
 		if($acount == count($items))
 		{
@@ -370,6 +418,34 @@ while ($row = $wowdb->fetch_array($result))
 		else
 		{
 			list($iname, $thottnum) = explode('|', $items[$key][$key]);
+
+		if ($items[$key][0] == 'Reput')
+		{
+			$tooltip_h = $key.' '.$wordings[$roster_conf['roster_lang']]['key'].' Status';
+			
+			$color = $colorno;
+				
+			$tooltip = '<span style="color:#'.$color.'">'.$ReputTab[$key]['text'].'</span><br />';
+			
+
+			echo '<div style="cursor:default;" '.makeOverlib($tooltip,$tooltip_h,'',2).'>'."\n";
+			print '<a href="'.$itemlink[$roster_conf['roster_lang']].urlencode(utf8_decode($iname)).'" target="_blank">'."\n";
+			print '<span class="name">'.$items[$key][0].'</span></a>'."\n";
+			print '	<div class="levelbarParent" style="width:40px;">
+					<div class="levelbarChild"><!-- val/max--> </div>
+				</div>'."\n";
+			print '<table class="expOutline" border="0" cellpadding="0" cellspacing="0" width="40">'."\n";
+			print "<tr>\n";
+			print '<td style="background-image: url(\''.$roster_conf['img_url'].'expbar-var2.gif\');" width="'.$ReputTab[$key]['pourcent'].'%">
+				<img src="'.$roster_conf['img_url'].'pixel.gif" height="14" width="1" alt="">
+				</td>'."\n";
+			print '<td width="'.(100 - $ReputTab[$key]['pourcent']).'%"></td>'."\n";
+			print "</tr>\n
+				</table>\n
+				</div>\n";
+		}else
+		{
+
 			$qcount = count($items[$key])-2;    //number of parts/quests
 			if ($items[$key][0] == 'Quests')    //-> $krow[$key] = "5" (e.g.)
 			{
@@ -388,6 +464,7 @@ while ($row = $wowdb->fetch_array($result))
 				$tooltip .= '<span style="color:#'.$colorcur.'">'.$wordings[$roster_conf['roster_lang']]['currentstep'].'</span><br />';
 			}
 			$tooltip .= '<span style="color:#'.$colorno.'">'.$wordings[$roster_conf['roster_lang']]['uncompletedsteps'].'</span><br /><br />';
+			
 			if ($items[$key][0] == 'Quests')
 			{
 				for ($i=1;$i<count($items[$key])-1;$i++)
@@ -435,6 +512,7 @@ while ($row = $wowdb->fetch_array($result))
 			print '<td style="background-image: url(\''.$roster_conf['img_url'].'expbar-var2.gif\');" width="'.$pcent.'%"><img src="'.$roster_conf['img_url'].'pixel.gif" height="14" width="1" alt=""></td>'."\n";
 			print '<td width="'.(100 - $pcent).'%"></td>'."\n";
 			print "</tr>\n</table>\n</div>\n";
+		}
 		}
 
 		print "</td>\n";
