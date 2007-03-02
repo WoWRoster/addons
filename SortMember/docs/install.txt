@@ -38,6 +38,14 @@ It may take a couple of seconds to sort the full list; sorting a filtered list
 is faster.
 
 VERSION LOG:
+0.2
+-- Inequality filters on date columns work in FF, work even better in Opera,
+   and fail to work completely in IE. I'm not gonna fix this since it'd involve
+   writing my own date parsing function, and there are limits.
+-- Added inequality filtering. Currently supports <, >, <=, =<, >=, =>, == for
+   number fields and == for string fields. Put the symbol at the beginning of
+   the field.
+
 0.1
 -- Initial beta release.
 -- Merged the AltMonitor framework with a couple of files from the roster 1x
@@ -97,5 +105,6 @@ inc/memberslist.php
 	to make it work in an addon.
 
 js/sorttable.js
-	Original sorting code by Stuard Langridge. I don't recall where I found
-	it. The filtering code and the column show/hide code is all by PleegWat.
+	Original sorting code by Stuard Langridge. I found this code at
+	http://kryogenix.org/code/browser/sorttable/. The filtering code and
+	the column show/hide code is all by PleegWat.

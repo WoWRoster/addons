@@ -34,7 +34,7 @@ $mainQuery =
 	'`members`.`class`, '.
 	'`members`.`level`, '.
 	'`members`.`zone`, '.
-	"UNIX_TIMESTAMP( `members`.`last_online`) AS 'last_online_stamp', ".
+	"(UNIX_TIMESTAMP( `members`.`last_online`)*1000+".($roster_conf['localitmeoffset']*3600000).") AS 'last_online_stamp', ".
 	"DATE_FORMAT(  DATE_ADD(`members`.`last_online`, INTERVAL ".$roster_conf['localtimeoffset']." HOUR ), '".$timeformat[$roster_conf['roster_lang']]."' ) AS 'last_online', ".
 	'`members`.`note`, '.
 
@@ -61,7 +61,7 @@ $mainQuery =
 	'FROM `'.ROSTER_MEMBERSTABLE.'` AS members '.
 	'LEFT JOIN `'.ROSTER_PLAYERSTABLE.'` AS players ON `members`.`member_id` = `players`.`member_id` '.
 	"LEFT JOIN (SELECT `member_id` , GROUP_CONCAT( CONCAT( `skill_name` , '|', `skill_level` ) ) AS 'professions' ".
-		'FROM `roster_skills` '.
+		'FROM `'.ROSTER_SKILLSTABLE.'` '.
 		'GROUP BY `member_id`) AS proftable ON `members`.`member_id` = `proftable`.`member_id` '.
 	'WHERE `members`.`guild_id` = '.$guild_info['guild_id'].' '.
 	'ORDER BY `members`.`level` DESC, `members`.`name` ASC';
