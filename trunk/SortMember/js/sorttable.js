@@ -5,6 +5,7 @@ var SORT_COLUMN_INDEX;
 var SORT_COLUMNS;
 var SORTERS;
 var FILTER;
+var TYPES;
 
 function ts_getInnerText(el)
 {
@@ -167,6 +168,7 @@ function dosort(count,listname)
 	SORT_COLUMNS = new Array();
 	SORTERS = new Array();
 	FILTER = new Array();
+	TYPES = new Array();
 
 	table = document.getElementById(listname);
 
@@ -182,23 +184,47 @@ function dosort(count,listname)
 		else
 		{
 			SORT_COLUMNS[i] = parseFloat(cs.value);
-			sortfn = ts_sort_numeric;
 			var itm = table.rows[0].cells[SORT_COLUMNS[i]-1].id;
-			if (itm == 'name') sortfn = ts_sort_caseinsensitive;
-			if (itm == 'class') sortfn = ts_sort_caseinsensitive;
-			if (itm == 'note') sortfn = ts_sort_caseinsensitive;
-			if (itm == 'hearth') sortfn = ts_sort_caseinsensitive;
-			if (itm == 'zone') sortfn = ts_sort_caseinsensitive;
-
-			SORTERS[i] = sortfn;
+			if ((itm == 'name')
+				|| (itm == 'class')
+				|| (itm == 'note')
+				|| (itm == 'hearth')
+				|| (itm == 'zone'))
+			{
+				SORTERS[i] = ts_sort_caseinsensitive;
+			}
+			else
+			{
+				SORTERS[i] = ts_sort_numeric;
+			}
+			
 			if (cs.value.indexOf('desc') > -1) SORT_COLUMNS[i] = -SORT_COLUMNS[i];
 		}
 	}
-
+	
 	var newRows = new Array();
 	for (var i=0;i<table.rows[0].cells.length;i++)
 	{
 		FILTER[i] = document.getElementById(listname +'_filter_'+(i+1));
+
+		var itm = table.rows[0].cells[i].id;
+		if ((itm == 'name')
+			|| (itm == 'class')
+			|| (itm == 'note')
+			|| (itm == 'hearth')
+			|| (itm == 'zone'))
+		{
+			TYPES[i] = 'string';
+		}
+		else if (( itm == 'lastonline' )
+			|| (itm == 'lastupdate' ))
+		{
+			TYPES[i] = 'date';
+		}
+		else
+		{
+			TYPES[i] = 'number';
+		}
 	}
 	j=0;
 	for (var i=0;i<table.tBodies.length;i++)
@@ -248,7 +274,71 @@ function checkfilter(row)
 {
 	for (var j=0;j<row.cells.length;j++)
 	{
-		if ((FILTER[j].value.length > 0) && (row.cells[j].innerHTML.indexOf(FILTER[j].value) == -1))
+		if (FILTER[j].value.length == 0)
+		{
+			continue;
+		}
+		
+		text = ts_getInnerText(row.cells[j]);
+		op = FILTER[j].value.substr(0,2);
+
+		if( op[0] == '=' )
+		{
+			if (text != FILTER[j].value.substr(1)) return false;
+			continue;
+		}
+		else if( TYPES[j] == 'number' )
+		{
+			text = Number(text);
+			
+			if( op == '<=' || op == '=<' )
+			{
+				if (text > Number(FILTER[j].value.substr(2))) return false;
+				continue;
+			}
+			else if( op == '>=' || op == '>=' )
+			{
+				if (text < Number(FILTER[j].value.substr(2))) return false;
+				continue;
+			}
+			else if( op[0] == '<' )
+			{
+				if (text >= Number(FILTER[j].value.substr(1))) return false;
+				continue;
+			}
+			else if( op[0] == '>' )
+			{
+				if (text <= Number(FILTER[j].value.substr(1))) return false;
+				continue;
+			}
+		}
+		else if( TYPES[j] == 'date' )
+		{
+			text = Number(text);
+			
+			if( op == '<=' || op == '=<' )
+			{
+				if (text > Date.parse(FILTER[j].value.substr(2))) return false;
+				continue;
+			}
+			else if( op == '>=' || op == '>=' )
+			{
+				if (text < Date.parse(FILTER[j].value.substr(2))) return false;
+				continue;
+			}
+			else if( op[0] == '<' )
+			{
+				if (text >= Date.parse(FILTER[j].value.substr(1))) return false;
+				continue;
+			}
+			else if( op[0] == '>' )
+			{
+				if (text <= Date.parse(FILTER[j].value.substr(1))) return false;
+				continue;
+			}
+		}
+		
+		if( row.cells[j].innerHTML.toLowerCase().indexOf(FILTER[j].value.toLowerCase()) == -1 )
 		{
 			return false;
 		}
