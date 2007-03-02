@@ -21,7 +21,7 @@ if ( !defined('ROSTER_INSTALLED') )
     exit('Detected invalid access to this file!');
 }
 
-$fileversion='0.1';
+$fileversion='0.2';
 
 define('ROSTER_SORTMEMBER_CONFIG_TABLE',$GLOBALS['db_prefix'].'addon_sortmember_config');
 
