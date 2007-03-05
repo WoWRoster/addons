@@ -17,8 +17,8 @@
  ******************************/
 
 $wordings['addoncredits']['Key bc v0.3'] = array(
-	array(	"name"=>	"Titan99",
-		"info"=>	"look a key bc"),
+	array(	"name"=>	"Titan99, SartriX",
+		"info"=>	"Display a key bc"),
 );
 
 include_once($addonDir.'lang/frFR.php');

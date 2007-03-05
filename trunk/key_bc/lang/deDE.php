@@ -3,6 +3,20 @@
 /*********************DE*************************************************/
 
 $wordings['deDE']['kbc_title_addon'] = 'Schlüssel BC';
+
+$inttorep = array(0,'Neutral','Friendly','Honored','Revered','Exalted');
+
+$inst_name['SL']="Laby.";
+$inst_name['SH']="Halls";
+$inst_name['Arcatraz']="Arcatraz";
+$inst_name['Kara']="Kara";
+$inst_name['HA']="H Laby";
+$inst_name['HHC']="H Halls";
+$inst_name['HCR']="H Reser.";
+$inst_name['HTK']="H Temp.";
+$inst_name['HCoT']="H GT";
+$inst_name['TK']="Tempête";
+
 $inst_keys_bc['deDE']['A'] = array(
 	'SL' => array( 'Key-Only', 'SL' =>
 			'Schlüssel des Schattenlabyrinths|57267'
@@ -28,17 +42,6 @@ $inst_keys_bc['deDE']['A'] = array(
 			'Sonderlieferung nach Shattrath|',
 			'Wie man in Arkatraz einbricht|'
 		),
-	'TK' => array( 'Quests', 'Karazhan' => 
-			'Der Schlüssel des Meisters|58887',
-			'Arkane Störungen|',
-			'Rastlose Aktivität|',
-			'Dalarankontaktpersonen||MS',
-			'Khadgar|',
-			'Nach Karazhan|',
-			'Das zweite und das dritte Fragment|',
-			'Die Berührung des Meisters|',
-			'Rückkehr zu Khadgar|',
-		),
 	'Kara' => array( 'Quests', 'Auge' =>
 			'Schlüssel der Stürme|58724',
 			'Die Prüfung der Naaru: Erbarmen|',
@@ -62,6 +65,17 @@ $inst_keys_bc['deDE']['A'] = array(
 	'HCoT' => array( 'Key-Only', 'HCoT' =>
 			'Schlüssel der Zeit|54481'
 		 ),
+	'TK' => array( 'Quests', 'Karazhan' => 
+			'Der Schlüssel des Meisters|58887',
+			'Arkane Störungen|',
+			'Rastlose Aktivität|',
+			'Dalarankontaktpersonen||MS',
+			'Khadgar|',
+			'Nach Karazhan|',
+			'Das zweite und das dritte Fragment|',
+			'Die Berührung des Meisters|',
+			'Rückkehr zu Khadgar|',
+		),
 );
 
 
@@ -91,17 +105,6 @@ $inst_keys_bc['deDE']['H'] = array(
 			'Sonderlieferung nach Shattrath|',
 			'Wie man in Arkatraz einbricht|'
 		),
-	'TK' => array( 'Quests', 'Karazhan' => 
-			'Der Schlüssel des Meisters|58887',
-			'Arkane Störungen|',
-			'Rastlose Aktivität|',
-			'Dalarankontaktpersonen||MS',
-			'Khadgar|',
-			'Nach Karazhan|',
-			'Das zweite und das dritte Fragment|',
-			'Die Berührung des Meisters|',
-			'Rückkehr zu Khadgar|',
-		),
 	'Kara' => array( 'Quests', 'Auge' =>
 			'Schlüssel der Stürme|58724',
 			'Die Prüfung der Naaru: Erbarmen|',
@@ -125,6 +128,17 @@ $inst_keys_bc['deDE']['H'] = array(
 	'HCoT' => array( 'Key-Only', 'HCoT' =>
 			'Schlüssel der Zeit|54481'
 		 ), 
+	'TK' => array( 'Quests', 'Karazhan' => 
+			'Der Schlüssel des Meisters|58887',
+			'Arkane Störungen|',
+			'Rastlose Aktivität|',
+			'Dalarankontaktpersonen||MS',
+			'Khadgar|',
+			'Nach Karazhan|',
+			'Das zweite und das dritte Fragment|',
+			'Die Berührung des Meisters|',
+			'Rückkehr zu Khadgar|',
+		),
 );
 
 ?>
