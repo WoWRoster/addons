@@ -23,9 +23,9 @@ $wordings['frFR']['AltMonitor_install_page']= 'Installation d\'AltMonitor';
 $wordings['frFR']['AltMonitor_install']     = 'Les tables de AltMonitor n\'ont pas encore été installée. Cliquez sur Install pour débuter l\'installation.';
 $wordings['frFR']['AltMonitor_upgrade']     = 'Les tables de AltMonitor ne sont pas à jour. Cliquez sur MAJ pour mettre à jour la base de données ou cliquez sur Install pour effacer et recréer les tables nécessaires à AltMonitor.';
 $wordings['frFR']['AltMonitor_no_upgrade']  = 'Les tables de AltMonitor sont déjà à jour. Cliquez ci-dessous sur Reinstall pour réinstaller les tables.';
-$wordings['enUS']['AltMonitor_uninstall']   = 'This will remove the AltMonitor configuration and main/alt relations. Click \'Uninstall\' to proceed';
+$wordings['frFR']['AltMonitor_uninstall']   = 'This will remove the AltMonitor configuration and main/alt relations. Click \'Uninstall\' to proceed';
 $wordings['frFR']['AltMonitor_installed']   = 'Félicitations, AltMonitor a été installé avec succès. Cliquez sur le lien ci dessous pour le configurer.';
-$wordings['enUS']['AltMonitor_uninstalled'] = 'AltMonitor has been uninstalled. You may now delete the addon from your webserver.';
+$wordings['frFR']['SortMember_uninstalled'] = 'AltMonitor a été désinstallé. Vous pouvez supprimer le dossier du serveur';
 
 // Main/Alt display
 $wordings['frFR']['AltMonitor_Menu']        = 'Mains/Rerolls';
@@ -67,4 +67,4 @@ $wordings['frFR']['admin']['mainlessbottom']= 'Montrer les persos sans perso pri
 //
 // Harut
 // Antaros
-// Malkom
+// Luinil
