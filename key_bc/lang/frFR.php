@@ -2,6 +2,19 @@
 // ALLIANCE KEYS
 $wordings['frFR']['kbc_title_addon'] = 'Clefs BC';
 
+$inttorep = array(0,'Neutre','Amical','Honoré','Révéré','Exalté');
+
+$inst_name['SL']="laby";
+$inst_name['SH']="Salle B.";
+$inst_name['Arcatraz']="Arcatraz";
+$inst_name['Kara']="Kara";
+$inst_name['HA']="H Laby";
+$inst_name['HHC']="H Remp.";
+$inst_name['HCR']="H Réser.";
+$inst_name['HTK']="H Temp.";
+$inst_name['HCoT']="H GT";
+$inst_name['TK']="Tempête";
+
 $inst_keys_bc['frFR']['A'] = array(
 	'SL' => array( 'Key-Only', 'SL' =>
 			'Clé du labyrinthe des ombres|57267'
@@ -36,24 +49,25 @@ $inst_keys_bc['frFR']['A'] = array(
 			'Le toucher du maître|',
 			'Retour vers Khadgar|',
 		),
-	'HA' => array( 'Reput', 'HA' =>
+	'HA' => array( 'Reputation', 'HA' =>
 			'Clé Auchenaï|55216',
-			'Ville basse|'
+			'Ville basse|Révéré'
 		),
-	'HHC' => array( 'Reput', 'HHC' =>
+	'HHC' => array( 'Reputation', 'HHC' =>
 			'Clé en flammes forgées|55262',
-			'Thrallmar|'
+			'Thrallmar|Révéré'
 		),
-	'HCR' => array( 'Reput', 'HCR' =>
+	'HCR' => array( 'Reputation', 'HCR' =>
 			'Clé du réservoir|55139',
-			'Expédition cénarienne|'
+			'Expédition cénarienne|Révéré'
 		),
-	'HTK' => array( 'Reput', 'HTK' =>
+	'HTK' => array( 'Reputation', 'HTK' =>
 			'Clé dimensionnelle|55231',
-			'Les Sha\\\'tar|'
+			'Les Sha\\\'tar|Révéré'
 		),
-	'HCoT' => array( 'Reput', 'HCoT' =>
-			'Clé du Temps|54481'
+	'HCoT' => array( 'Reputation', 'HCoT' =>
+			'Clé du Temps|54481',
+			'Gardien du temps|Révéré'
 		),
 	'TK' => array( 'Quests', 'TK' =>
 			'La clé de la Tempête|60250',
@@ -101,24 +115,25 @@ $inst_keys_bc['frFR']['H'] = array(
 			'Le toucher du maître|',
 			'Retour vers Khadgar|',
 		),
-	'HA' => array( 'Reput', 'HA' =>
+	'HA' => array( 'Reputation', 'HA' =>
 			'Clé Auchenaï|55216',
-			'Ville basse|'
+			'Ville basse|Révéré'
 		),
-	'HHC' => array( 'Reput', 'HHC' =>
+	'HHC' => array( 'Reputation', 'HHC' =>
 			'Clé en flammes forgées|55262',
-			'Thrallmar|'
+			'Thrallmar|Révéré'
 		),
-	'HCR' => array( 'Reput', 'HCR' =>
+	'HCR' => array( 'Reputation', 'HCR' =>
 			'Clé du réservoir|55139',
-			'Expédition cénarienne|'
+			'Expédition cénarienne|Révéré'
 		),
-	'HTK' => array( 'Reput', 'HTK' =>
+	'HTK' => array( 'Reputation', 'HTK' =>
 			'Clé dimensionnelle|55231',
-			'Les Sha\\\'tar|'
+			'Les Sha\\\'tar|Révéré'
 		),
-	'HCoT' => array( 'Reput', 'HCoT' =>
-			'Clé du Temps|54481'
+	'HCoT' => array( 'Reputation', 'HCoT' =>
+			'Clé du Temps|54481',
+			'Gardiens du Temps|Révéré'
 		),
 	'TK' => array( 'Quests', 'TK' =>
 			'La clé de la Tempête|60250',

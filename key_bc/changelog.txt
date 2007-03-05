@@ -1,5 +1,8 @@
 ------- version 0.3 -------
-fixed enUS bug
+fixed enUS bugs
+fixed de bugs
+fixed fr bugs
+add reputation for reputation key
 
 ------- version 0.2 -------
 fixed bug in menu 
