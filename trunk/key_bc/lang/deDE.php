@@ -4,18 +4,19 @@
 
 $wordings['deDE']['kbc_title_addon'] = 'Schlüssel BC';
 
-$inttorep = array(0,'Neutral','Friendly','Honored','Revered','Exalted');
+$inttorep = array(0,'Neutral','Freundlich','Wohlwollend','Respektvoll','Ehrfürchtig');
 
 $inst_name['SL']="Laby.";
-$inst_name['SH']="Halls";
-$inst_name['Arcatraz']="Arcatraz";
-$inst_name['Kara']="Kara";
-$inst_name['HA']="H Laby";
-$inst_name['HHC']="H Halls";
-$inst_name['HCR']="H Reser.";
-$inst_name['HTK']="H Temp.";
-$inst_name['HCoT']="H GT";
-$inst_name['TK']="Tempête";
+$inst_name['SH']="Hallen";
+$inst_name['Arcatraz']="Arkatraz";
+$inst_name['Kara']="Karazhan";
+$inst_name['HA']="H Laby.";
+$inst_name['HHC']="H Hallen";
+$inst_name['HCR']="H Kessel.";
+$inst_name['HTK']="H Auge";
+$inst_name['HCoT']="H HdZ";
+$inst_name['TK']="Auge";
+
 
 $inst_keys_bc['deDE']['A'] = array(
 	'SL' => array( 'Key-Only', 'SL' =>
@@ -28,7 +29,7 @@ $inst_keys_bc['deDE']['A'] = array(
 			'Dumphrys Bitte|',
 			'Heißer als die Hölle|'
 		),
-	'Arcatraz' => array( 'Quests', 'Arkatraz' =>
+	'Arcatraz' => array( 'Quests', 'Arcatraz' =>
 			'Schlüssel zu Arkatraz|58724',
 			'Kristallsammlung des Konsortiums|',
 			'Ein Hügel voll Astraler|',
@@ -91,7 +92,7 @@ $inst_keys_bc['deDE']['H'] = array(
 			'Rohoks Bitte|',
 			'Heißer als die Hölle|'
 		),
-	'Arcatraz' => array( 'Quests', 'Arkatraz' =>
+	'Arcatraz' => array( 'Quests', 'Arcatraz' =>
 			'Schlüssel zu Arkatraz|58724',
 			'Kristallsammlung des Konsortiums|',
 			'Ein Hügel voll Astraler|',
