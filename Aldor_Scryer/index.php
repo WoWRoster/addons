@@ -22,7 +22,7 @@ if ( !defined('ROSTER_INSTALLED') )
 }
 
 
-$header_title = $wordings[$roster_conf['roster_lang']]['menustats'];
+$header_title = $wordings[$roster_conf['roster_lang']]['title_addon'];
 
 
 
