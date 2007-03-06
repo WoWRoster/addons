@@ -12,8 +12,8 @@ $inst_name['Arcatraz']="Arkatraz";
 $inst_name['Kara']="Karazhan";
 $inst_name['HA']="H Laby.";
 $inst_name['HHC']="H Hallen";
-$inst_name['HCR']="H Kessel.";
-$inst_name['HTK']="H Auge";
+$inst_name['HCR']="H Kessel";
+$inst_name['HTK']="H FdS";
 $inst_name['HCoT']="H HdZ";
 $inst_name['TK']="Auge";
 
@@ -43,30 +43,7 @@ $inst_keys_bc['deDE']['A'] = array(
 			'Sonderlieferung nach Shattrath|',
 			'Wie man in Arkatraz einbricht|'
 		),
-	'Kara' => array( 'Quests', 'Auge' =>
-			'Schlüssel der Stürme|58724',
-			'Die Prüfung der Naaru: Erbarmen|',
-			'Die Prüfung der Naaru: Stärke|',
-			'Die Prüfung der Naaru: Zuverlässigkeit|',
-			'Sonderlieferung nach Shattrath|',
-			'Der Schlüssel der Stürme|' 
-		),
-	'HA' => array( 'Key-Only', 'HA' =>
-			'Schlüssel der Auchenai|55216'
-		 ),
-	'HHC' => array( 'Key-Only', 'HHC' => 
-			'Flammengeschmiedeter Schlüssel|55262'
-		), 
-	'HCR' => array( 'Key-Only', 'HCR' =>
-			'Schlüssel des Kessels|55139'
-		),
-	'HTK' => array( 'Key-Only', 'HTK' =>
-			'Warpgeschmiedeter Schlüssel|55231'
-		),
-	'HCoT' => array( 'Key-Only', 'HCoT' =>
-			'Schlüssel der Zeit|54481'
-		 ),
-	'TK' => array( 'Quests', 'Karazhan' => 
+	'Kara' => array( 'Quests', 'Kara' =>
 			'Der Schlüssel des Meisters|58887',
 			'Arkane Störungen|',
 			'Rastlose Aktivität|',
@@ -75,7 +52,55 @@ $inst_keys_bc['deDE']['A'] = array(
 			'Nach Karazhan|',
 			'Das zweite und das dritte Fragment|',
 			'Die Berührung des Meisters|',
-			'Rückkehr zu Khadgar|',
+			'Rückkehr zu Khadgar|'
+		),
+	'HA' => array( 'Reputation', 'HA' =>
+			'Schlüssel der Auchenai|55216',
+ 			'Unteres Viertel|Respektvoll'
+		 ),
+	'HHC' => array( 'Reputation', 'HHC' => 
+			'Flammengeschmiedeter Schlüssel|55262',
+			'Ehrenfeste|Respektvoll'
+		), 
+	'HCR' => array( 'Reputation', 'HCR' =>
+			'Schlüssel des Kessels|55139',
+			'Expedition des Cenarius|Respektvoll'
+		),
+	'HTK' => array( 'Reputation', 'HTK' =>
+			'Warpgeschmiedeter Schlüssel|55231',
+			'Die Sha\\\'tar|Respektvoll'
+		),
+	'HCoT' => array( 'Reputation', 'HCoT' =>
+			'Schlüssel der Zeit|54481',
+			'Hüter der Zeit|Respektvoll'
+		 ),
+	'TK' => array( 'Quests', 'TK' => 
+			'Schlüssel der Stürme|60250',
+			'Oronok Herzeleid|',
+			'Ich war schon vieles...|',
+			'Eine Lektion gelernt|',
+			'Die Litanei der Verdammnis - Wahrheit und Geschichte|',
+			'Grom\\\'tor, Sohn des Oronok|',
+			'Die Litanei der Verdammnis - Grom\\\'tors Angriff|',
+			'Die Litanei der Verdammnis - Erster Teil|',
+			'Ar\\\'tor, Sohn des Oronok|',
+			'Dämonische Kristallgefängnisse|',
+			'Lohn\\\'goron, Bogen des Herzeleid|',
+			'Die Litanei der Verdammnis - Ar\\\'tors Angriff|',
+			'Die Litanei der Verdammnis - Zweiter Teil|',
+			'Borak, Sohn des Oronok|',
+			'Von Distelköpfen und Eiern...|',
+			'Ein Bündel von Blutdisteln|',
+			'Einen Distelsüchtigen fangen|',
+			'Unterwürfigkeit in Schattenmond|',
+			'Was Illidan will, soll Illidan bekommen...|',
+			'Die Litanei der Verdammnis - Boraks Angriff|',
+			'Die Litanei der Verdammnis - Dritter Teil|',
+			'Die Litanei der Verdammnis|',
+			'Die Prüfung der Naaru: Erbarmen|',
+			'Die Prüfung der Naaru: Stärke|',
+			'Die Prüfung der Naaru: Zuverlässigkeit|',
+			'Die Prüfung der Naaru: Magtheridon|'
 		),
 );
 
@@ -97,7 +122,7 @@ $inst_keys_bc['deDE']['H'] = array(
 			'Kristallsammlung des Konsortiums|',
 			'Ein Hügel voll Astraler|',
 			'Sphärenräuber Nesaad|',
-			'Bitte um Unterstützung|',
+			'Bitte um Unterstätzung|',
 			'Rechtmäßiger Besitz|',
 			'Eine Audienz beim Prinzen|',
 			'Triangulationspunkt Eins|',
@@ -106,30 +131,7 @@ $inst_keys_bc['deDE']['H'] = array(
 			'Sonderlieferung nach Shattrath|',
 			'Wie man in Arkatraz einbricht|'
 		),
-	'Kara' => array( 'Quests', 'Auge' =>
-			'Schlüssel der Stürme|58724',
-			'Die Prüfung der Naaru: Erbarmen|',
-			'Die Prüfung der Naaru: Stärke|',
-			'Die Prüfung der Naaru: Zuverlässigkeit|',
-			'Sonderlieferung nach Shattrath|',
-			'Der Schlüssel der Stürme|' 
-		),
-	'HA' => array( 'Key-Only', 'HA' =>
-			'Schlüssel der Auchenai|55216'
-		 ),
-	'HHC' => array( 'Key-Only', 'HHC' => 
-			'Flammengeschmiedeter Schlüssel|55262'
-		), 
-	'HCR' => array( 'Key-Only', 'HCR' =>
-			'Schlüssel des Kessels|55139'
-		),
-	'HTK' => array( 'Key-Only', 'HTK' =>
-			'Warpgeschmiedeter Schlüssel|55231'
-		),
-	'HCoT' => array( 'Key-Only', 'HCoT' =>
-			'Schlüssel der Zeit|54481'
-		 ), 
-	'TK' => array( 'Quests', 'Karazhan' => 
+	'Kara' => array( 'Quests', 'Kara' =>
 			'Der Schlüssel des Meisters|58887',
 			'Arkane Störungen|',
 			'Rastlose Aktivität|',
@@ -138,7 +140,55 @@ $inst_keys_bc['deDE']['H'] = array(
 			'Nach Karazhan|',
 			'Das zweite und das dritte Fragment|',
 			'Die Berührung des Meisters|',
-			'Rückkehr zu Khadgar|',
+			'Rückkehr zu Khadgar|'
+		),
+	'HA' => array( 'Reputation', 'HA' =>
+			'Schlüssel der Auchenai|55216',
+ 			'Unteres Viertel|Respektvoll'
+		 ),
+	'HHC' => array( 'Reputation', 'HHC' => 
+			'Flammengeschmiedeter Schlüssel|55262',
+			'Ehrenfeste|Respektvoll'
+		), 
+	'HCR' => array( 'Reputation', 'HCR' =>
+			'Schlüssel des Kessels|55139',
+			'Expedition des Cenarius|Ehrfürchtig'
+		),
+	'HTK' => array( 'Reputation', 'HTK' =>
+			'Warpgeschmiedeter Schlüssel|55231',
+			'Die Sha\\\'tar|Respektvoll'
+		),
+	'HCoT' => array( 'Reputation', 'HCoT' =>
+			'Schlüssel der Zeit|54481',
+			'Hüter der Zeit|Respektvoll'
+		 ),
+	'TK' => array( 'Quests', 'TK' => 
+			'Schlüssel der Stürme|60250',
+			'Oronok Herzeleid|',
+			'Ich war schon vieles...|',
+			'Eine Lektion gelernt|',
+			'Die Litanei der Verdammnis - Wahrheit und Geschichte|',
+			'Grom\\\'tor, Sohn des Oronok|',
+			'Die Litanei der Verdammnis - Grom\\\'tors Angriff|',
+			'Die Litanei der Verdammnis - Erster Teil|',
+			'Ar\\\'tor, Sohn des Oronok|',
+			'Dämonische Kristallgefängnisse|',
+			'Lohn\\\'goron, Bogen des Herzeleid|',
+			'Die Litanei der Verdammnis - Ar\\\'tors Angriff|',
+			'Die Litanei der Verdammnis - Zweiter Teil|',
+			'Borak, Sohn des Oronok|',
+			'Von Distelköpfen und Eiern...|',
+			'Ein Bündel von Blutdisteln|',
+			'Einen Distelsüchtigen fangen|',
+			'Unterwürfigkeit in Schattenmond|',
+			'Was Illidan will, soll Illidan bekommen...|',
+			'Die Litanei der Verdammnis - Boraks Angriff|',
+			'Die Litanei der Verdammnis - Dritter Teil|',
+			'Die Litanei der Verdammnis|',
+			'Die Prüfung der Naaru: Erbarmen|',
+			'Die Prüfung der Naaru: Stärke|',
+			'Die Prüfung der Naaru: Zuverlässigkeit|',
+			'Die Prüfung der Naaru: Magtheridon|'
 		),
 );
 

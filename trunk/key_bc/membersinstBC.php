@@ -266,24 +266,38 @@ while ($row = $wowdb->fetch_array($result))
 		}
 	}
 
-	if ($selectr != '') {
-	    $queryr = "SELECT reputation.name, reputation.standing, (CASE reputation.name ".$selectr."END) AS rkey FROM `".ROSTER_REPUTATIONTABLE."` reputation LEFT JOIN `". ROSTER_MEMBERSTABLE."` members ON members.member_id = reputation.member_id WHERE reputation.member_id = ".$row['member_id']." AND (".$wherer.") ORDER BY members.name ASC";
-	    $rresult = $wowdb->query($queryr) or die_quietly($wowdb->error(),'Database Error',basename(__FILE__),__LINE__,$queryr);
-	    while($rrow = $wowdb->fetch_array($rresult)) {
-		$rkey = $rrow['rkey'];
-		$rvalue = $rrow['standing'];
-		if ($reptoint[$rvalue]>0 && !is_numeric($rkey)) {
-        	    $key = preg_replace('/[0-9]/', '', $rkey);
-		    $krow[$key] = $reptoint[$rvalue];
-		    if ($row['level']>60) $kcount++;
+	if ($selectr != '') 
+	{
+		$queryr = "SELECT reputation.name, reputation.standing, (CASE reputation.name ".$selectr."END) AS rkey 
+			FROM `".ROSTER_REPUTATIONTABLE."` reputation 
+			LEFT JOIN `". ROSTER_MEMBERSTABLE."` members ON members.member_id = reputation.member_id 
+			WHERE reputation.member_id = ".$row['member_id']." AND (".$wherer.") ORDER BY members.name ASC";
+		$rresult = $wowdb->query($queryr) or die_quietly($wowdb->error(),'Database Error',basename(__FILE__),__LINE__,$queryr);
+	//echo $queryr."<br>";
+		while($rrow = $wowdb->fetch_array($rresult)) 
+		{
+			$rkey = $rrow['rkey'];
+			$rvalue = $rrow['standing'];
+
+//echo $rvalue.":".$reptoint[$rvalue]." ";
+
+			if ($reptoint[$rvalue]>0 && !is_numeric($rkey)) 
+			{
+				$key = preg_replace('/[0-9]/', '', $rkey);
+				$krow[$key] = $reptoint[$rvalue];
+				if ($row['level']>60) $kcount++;
+			}
 		}
-	    }
-	    $wowdb->free_result($rresult);
+		$wowdb->free_result($rresult);
 	}
 	if ($selectp != '')
 	{
 		// parts search (only the remaining ones!)
-		$queryp = "SELECT members.name".$selectp." FROM `".ROSTER_ITEMSTABLE."` items LEFT JOIN `".ROSTER_MEMBERSTABLE."` members ON members.member_id = items.member_id WHERE items.member_id = ".$row['member_id']." AND (".$wherep.") GROUP BY members.name ORDER BY members.name ASC";
+		$queryp = "SELECT members.name".$selectp." 
+			FROM `".ROSTER_ITEMSTABLE."` items 
+			LEFT JOIN `".ROSTER_MEMBERSTABLE."` members ON members.member_id = items.member_id 
+			WHERE items.member_id = ".$row['member_id']." AND (".$wherep.") 
+			GROUP BY members.name ORDER BY members.name ASC";
 		$presult = $wowdb->query($queryp) or die_quietly($wowdb->error(),'Database Error',basename(__FILE__),__LINE__,$queryp);
 		$prow = $wowdb->fetch_array($presult);
 		if (is_array($prow))
@@ -316,7 +330,11 @@ while ($row = $wowdb->fetch_array($result))
 	if ($selectq != '')
 	{
 		// quests search (only the remaining ones!)
-		$queryq = "SELECT members.name".$selectq." FROM `".ROSTER_QUESTSTABLE."` quests LEFT JOIN `".ROSTER_MEMBERSTABLE."` members ON members.member_id = quests.member_id WHERE quests.member_id = ".$row['member_id']." AND (".$whereq.") GROUP BY members.name ORDER BY members.name ASC";
+		$queryq = "SELECT members.name".$selectq." 
+			FROM `".ROSTER_QUESTSTABLE."` quests 
+			LEFT JOIN `".ROSTER_MEMBERSTABLE."` members ON members.member_id = quests.member_id 
+			WHERE quests.member_id = ".$row['member_id']." AND (".$whereq.") 
+			GROUP BY members.name ORDER BY members.name ASC";
 		$qresult = $wowdb->query($queryq) or die_quietly($wowdb->error(),'Database Error',basename(__FILE__),__LINE__,$queryq);
 		$qrow = $wowdb->fetch_array($qresult);
 		if (is_array($qrow))
@@ -350,6 +368,7 @@ while ($row = $wowdb->fetch_array($result))
 	print '<a href="char.php?name='.$row['name'].'&amp;server='.$roster_conf['server_name'].'">'.$row['name'].'</a><br />'.$row['class'].' ('.$row['level'].')</td>'."\n";
 	foreach ($items as $key => $data)
 	{
+		
 		++$acount;
 		if($acount == count($items))
 		{
@@ -359,6 +378,7 @@ while ($row = $wowdb->fetch_array($result))
 		{
 			rankMid((($striping_counter % 2) +1));
 		}
+		//echo $krow[$key];
 		if ($krow[$key] == '-2')
 		{
 			$iname = $wordings[$row['clientLocale']]['thievestools'];
@@ -428,8 +448,9 @@ while ($row = $wowdb->fetch_array($result))
 					$tooltip .= '<span style="color:#'.$color.'">'.$i.': '.$qname.'</span><br />';
 				}
 			}
-			else if ($items[$key][0] == 'Reputation')
+			elseif ($items[$key][0] == 'Reputation')
 			{
+			
 			    list($rname,$rtarget) = explode('|',$items[$key][1]);
 			    $qcount = $reptoint[$rtarget];
 			    if ($krow[$key]>=$qcount)
