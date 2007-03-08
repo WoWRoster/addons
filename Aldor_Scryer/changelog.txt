@@ -1,5 +1,6 @@
 ------- version 0.4 -------
 modify french title
+fixed bug title
 
 ------- version 0.3 -------
 fixed german localization

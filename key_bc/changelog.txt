@@ -1,3 +1,6 @@
+------- version 0.4 -------
+fixed enUS Arcatraz bugs
+
 ------- version 0.3 -------
 fixed enUS bugs
 fixed de bugs
