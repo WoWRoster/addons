@@ -23,7 +23,7 @@ $wordings['esES']['AltMonitor_install_page']= 'Instalador de AltMonitor';
 $wordings['esES']['AltMonitor_install']     = 'Las tablas de AltMonitor no estan instaladas todavia. Haz click en Install para empezar la instalacion.';
 $wordings['esES']['AltMonitor_upgrade']     = 'Las tablas de AltMonitor no estan al dia. Haz click en Update para actualizar la base de datos o haz click en Install para borra y volver a vrear las tablas de AltMonitor.';
 $wordings['esES']['AltMonitor_no_upgrade']  = 'Las tablas de AltMonitor estan al dia. Haz click en Reinstall debajo para reinstalar las tablas.';
-$wordings['esES']['AltMonitor_uninstall']   = 'Esto borrara la configuracion de AltMonitor y las relaciones Main/Alt. Haz click en "Uninstall" para proceder.';
+$wordings['enUS']['AltMonitor_uninstall']   = 'Esto borrara la configuracion de AltMonitor y las relaciones Main/Alt. Haz click en "Uninstall" para proceder.';
 $wordings['esES']['AltMonitor_installed']   = 'Felicidades, AltMonitor se ha instalado correctamente. Haz click en el link de debajo para configurarlo.';
 $wordings['enUS']['AltMonitor_uninstalled'] = 'AltMonitor ha sido desinstalado. Necesitas borrar el addon de tu servidor web.';
 

@@ -71,6 +71,3 @@ echo border('sgreen','start',$wordings[$roster_conf['roster_lang']]['AltMonitor_
 	$wordings[$roster_conf['roster_lang']]['AltMonitor_uninstalled'].'<br />'.
 	"<a href='".ROSTER_URL."'>".$wordings[$roster_conf['roster_lang']]['backlink']."</a>".
 	border('sgreen','end');
-
-
-?>

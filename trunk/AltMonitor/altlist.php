@@ -856,4 +856,4 @@ function note_value ( $row )
 
 	return $note;
 }
-?>
+

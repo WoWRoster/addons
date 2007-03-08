@@ -404,5 +404,3 @@ class AltMonitorUpdate
 }
 
 $GLOBALS['AltMonitorUpdate'] = new AltMonitorUpdate;
-
-?>
