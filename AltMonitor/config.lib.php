@@ -320,4 +320,3 @@ class config
 }
 
 $config = new config($tablename);
-?>

@@ -102,4 +102,3 @@ case 'uninstall_message':
 default:
 	die_quietly($wordings[$roster_conf['roster_lang']]['AltMonitor_NoAction'],'AltMonitor');
 }
-?>

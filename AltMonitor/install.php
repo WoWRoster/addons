@@ -77,6 +77,3 @@ echo border('sgreen','start',$wordings[$roster_conf['roster_lang']]['AltMonitor_
 	$wordings[$roster_conf['roster_lang']]['AltMonitor_installed'].'<br />'.
 	"<a href='?roster_addon_name=AltMonitor&action=config'>".$wordings[$roster_conf['roster_lang']]['AltMonitor_config']."</a>".
 	border('sgreen','end');
-
-
-?>

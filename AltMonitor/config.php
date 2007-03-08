@@ -80,7 +80,3 @@ if( $wowdb->sqldebug )
 		print "-->\n";
 	}
 }
-
-
-
-?>

@@ -82,4 +82,3 @@ include_once ($addonDir.'altlist.php');
 print border('syellow','start','Config').'<pre>';
 print_r($addon_conf);
 print '</pre>'.border('syellow','end');
-?>

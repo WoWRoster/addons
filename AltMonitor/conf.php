@@ -82,5 +82,3 @@ else
 	$dbversion = '0.0.0'; // we need to install
 	$addon_conf['AltMonitor']['update_type'] = 0; // for the trigger file
 }
-
-?>

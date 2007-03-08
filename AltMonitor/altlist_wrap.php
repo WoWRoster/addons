@@ -186,4 +186,3 @@ if ( $roster_conf['index_note'] == 1 && $roster_conf['compress_note'] == 1 )
 }
 
 include_once ($addonDir.'altlist.php');
-?>

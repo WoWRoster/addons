@@ -40,4 +40,3 @@ if( !$roster_login->getAuthorized() )
 	exit();
 }
 // ----[ End Check log-in ]---------------------------------
-?>
