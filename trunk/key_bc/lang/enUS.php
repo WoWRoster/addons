@@ -27,6 +27,18 @@ $inst_keys_bc['enUS']['A'] = array(
         'SL' => array( 'Key-Only', 'SL' =>
                         'Shadow Labyrinth Key|57267',
                 ),
+	'Arcatraz' => array( 'Quests', 'Arcatraz' =>
+                        'Key to the Arcatraz|58724',
+                        'Warp-Raider Nesaad|',
+                        'Request for Assistance|',
+                        'Rightful Repossession|',
+                        'An Audience with the Prince|',
+                        'Triangulation Point One|',
+                        'Triangulation Point Two|',
+                        'Full Triangle|',
+                        'Special Delivery to Shattrath City|',
+                        'How to Break Into the Arcatraz|'
+	),
         'Kara' => array( 'Quests', 'Kara' =>
                         'The Master\\\'s Key|58887',
                         'Arcane Disturbances|',
@@ -101,6 +113,18 @@ $inst_keys_bc['enUS']['H'] = array(
         'SL' => array( 'Key-Only', 'SL' =>
                         'Shadow Labyrinth Key|57267',
                 ),
+	'Arcatraz' => array( 'Quests', 'Arcatraz' =>
+                        'Key to the Arcatraz|58724',
+                        'Warp-Raider Nesaad|',
+                        'Request for Assistance|',
+                        'Rightful Repossession|',
+                        'An Audience with the Prince|',
+                        'Triangulation Point One|',
+                        'Triangulation Point Two|',
+                        'Full Triangle|',
+                        'Special Delivery to Shattrath City|',
+                        'How to Break Into the Arcatraz|'
+	),
         'Kara' => array( 'Quests', 'Kara' =>
                         'The Master\\\'s Key|58887',
                         'Arcane Disturbances|',
