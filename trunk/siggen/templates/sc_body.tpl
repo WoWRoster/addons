@@ -38,10 +38,10 @@ if ( !defined('ROSTER_INSTALLED') )
 }
 
 	// Get the current settings
-	$configData = $checkData;
+	$configData = $functions->getDbData( (ROSTER_SIGCONFIGTABLE) , '*' , "`config_id` = '$config_name'" );
 
 	// Get the current memberlist
-	$member_list = $functions->getDbList( (ROSTER_MEMBERSTABLE),'`name`',"`guild_id` = '$guild_id'" );
+	$member_list = $functions->getDbList( (ROSTER_MEMBERSTABLE),'name',"`guild_id` = '$guild_id'" );
 
 	// Get the background files
 	$backgFilesArr = $functions->listFiles( SIGGEN_DIR.$configData['image_dir'].$configData['backg_dir'],array('png','gif','jpeg','jpg') );
@@ -214,7 +214,7 @@ if( $allow_save )
         No</label></td>
     </tr>
     <tr>
-      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Specify a directory to save generated images to<br />Realative to &quot;'.str_replace('\\','/',SIGGEN_DIR).'&quot;','Saved images directory' ); ?></td>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Specify a directory to save generated images to<br />This is a full path to the save location<br />Options:<ul><li>%s% - Use this to specify the SigGen Directory</li><li>%r% - Use this to specify the Roster Directory</li></ul>Current save path is &quot;'.str_replace('\\','/',str_replace($siggen_saved_find,$siggen_saved_rep,$configData['save_images_dir'])).'&quot;','Saved images directory' ); ?></td>
       <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="save_images_dir" type="text" value="<?php print $configData['save_images_dir']; ?>" size="20" maxlength="64" /></td>
     </tr>
     <tr>
@@ -268,9 +268,12 @@ else
         No</label></td>
     </tr>
     <tr>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Specify a directory to save generated images to<br />This is a full path to the save location<br />Options:<ul><li>%s% - Use this to specify the SigGen Directory</li><li>%r% - Use this to specify the Roster Directory</li></ul>Current save path is &quot;'.str_replace('\\','/',str_replace($siggen_saved_find,$siggen_saved_rep,$configData['save_images_dir'])).'&quot;','Saved images directory' ); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="save_images_dir" type="text" value="<?php print $configData['save_images_dir']; ?>" size="20" maxlength="64" /></td>
+    </tr>
+    <tr>
       <th class="sc_header_right" colspan="2" align="center"><?php print $functions->createTip( 'Either the directory doesn&acute;t exist or &quot;Save Images&quot; is turned off','Save Image Functions Disabled' ); ?>
         <input name="save_only_mode" type="hidden" value="0" />
-        <input name="save_images_dir" type="hidden" value="<?php print $configData['save_images_dir']; ?>" />
         <input name="save_prefix" type="hidden" value="<?php print $configData['save_prefix']; ?>" />
         <input name="save_suffix" type="hidden" value="<?php print $configData['save_suffix']; ?>" />
         <input name="trigger" type="hidden" value="0" />

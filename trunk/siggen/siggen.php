@@ -32,14 +32,21 @@
  *
  */
 
-// Disable generation of headers from settings.php
-$no_roster_headers = true;
+// "settings.php" from WoWRoster
+$siggen_dir = dirname(__FILE__);
+$siggen_dir = explode(DIRECTORY_SEPARATOR,$siggen_dir);
+array_pop($siggen_dir);
+array_pop($siggen_dir);
+$siggen_dir = implode(DIRECTORY_SEPARATOR,$siggen_dir).DIRECTORY_SEPARATOR;
 
-require('../../settings.php');			// "settings.php" from WoWRoster
+require($siggen_dir.'settings.php');
+unset($siggen_dir);
 
-require( ROSTER_BASE.'addons/siggen/conf.php' );				// Require the siggen config
+// Require the siggen config
+require( ROSTER_BASE.'addons/siggen/conf.php' );
 
-require( SIGGEN_DIR.'localization.php' );		// Translation file
+// Translation file
+require( SIGGEN_DIR.'localization.php' );
 
 
 // Set track errors on
@@ -51,14 +58,13 @@ if( !ereg('ini_set', ini_get('disable_functions')) )
 
 // Get name from browser request
 // url_decode() the name, then utf-8_encode() it
-if( isset($_GET['name']) )
+if( isset($_GET['member']) )
 {
-	$char_name = utf8_encode(urldecode($_GET['name']));
+	$char_name = utf8_encode(urldecode($_GET['member']));
 }
 elseif( isset($_SERVER['PATH_INFO']) ) // Try pulling from a "path_info" request
 {
-	$path_info = utf8_encode(urldecode(substr($_SERVER['PATH_INFO'],1)));
-	list($char_name,$img_format) = explode('.',$path_info);
+	list($char_name,$img_format) = explode( '.', utf8_encode(urldecode(substr($_SERVER['PATH_INFO'],1))) );
 }
 
 
@@ -228,7 +234,10 @@ if( isset($_GET['format']) )
 		$configData['class_dir'] = str_replace( '/',DIR_SEP,$configData['class_dir'] );
 		$configData['pvplogo_dir'] = str_replace( '/',DIR_SEP,$configData['pvplogo_dir'] );
 		$configData['font_dir'] = str_replace( '/',DIR_SEP,ROSTER_BASE.$configData['font_dir'] );
-		$configData['save_images_dir'] = str_replace( '/',DIR_SEP,SIGGEN_DIR.$configData['save_images_dir'] );
+
+		$configData['save_images_dir'] = str_replace( '/',DIR_SEP,$configData['save_images_dir'] );
+		$configData['save_images_dir'] = str_replace( '%r%',ROSTER_BASE,$configData['save_images_dir'] );
+		$configData['save_images_dir'] = str_replace( '%s%',SIGGEN_DIR,$configData['save_images_dir'] );
 
 
 	// Variable references to DB for quick changing
@@ -340,7 +349,7 @@ if( isset($_GET['format']) )
 	// Debug function
 	function debugMode( $line,$message,$file=null,$config=null,$message2=null )
 	{
-		global $im;
+		global $im, $configData;
 
 		// Destroy the image
 		if( isset($im) )
@@ -393,8 +402,25 @@ if( isset($_GET['format']) )
 				}
 			}
 
-			header( 'Content-type: image/gif' );
-			imagegif( $im );
+			switch ( $configData['image_type'] )
+			{
+				case 'jpeg':
+				case 'jpg':
+					header( 'Content-type: image/jpg' );
+					@imageJpeg( $im );
+					break;
+
+				case 'png':
+					header( 'Content-type: image/png' );
+					@imagePng( $im );
+					break;
+
+				case 'gif':
+				default:
+					header( 'Content-type: image/gif' );
+					@imagegif( $im );
+					break;
+			}
 			imageDestroy( $im );
 		}
 		else
@@ -890,7 +916,7 @@ if( isset($_GET['format']) )
 				$im_back_file = $custom_back_img.'.jpeg';
 			}
 			// Try setting background from config
-			elseif( !empty($backg['getdatafrom']) && !empty($backg[$backg['getdatafrom']]) )
+			elseif( ($backg['getdatafrom'] != '') && ($backg[$backg['getdatafrom']] != '') )
 			{
 				$selected_back_img = $configData['image_dir'].$configData['backg_dir'].$backg[$backg['getdatafrom']];
 				if( file_exists($selected_back_img) )

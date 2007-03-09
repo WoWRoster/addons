@@ -25,7 +25,7 @@
  * @link http://www.wowroster.net
  * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
  * @author Joshua Clark
- * @version $Id:$
+ * @version $Id$
  * @copyright 2005-2007 Joshua Clark
  * @package SigGen
  * @filesource
@@ -38,14 +38,14 @@ if ( !defined('ROSTER_INSTALLED') )
     exit('Detected invalid access to this file!');
 }
 
+if( isset($_GET['member']) )
+{
+	require( $addonDir.'siggen.php' );
+	die();
+}
 
 // ----[ Set the Title Text ]-------------------------------
 $header_title = $siggen_locale[$roster_conf['roster_lang']]['menu_siggen_config'];
-
-
-// ----[ Get the filename for this...file ]-----------------
-$script_filename = basename($_SERVER['PHP_SELF']).'?roster_addon_name=siggen';
-// NUKED $script_filename = $roster_moddir.'&amp;op=addon&amp;roster_addon_name=siggen';
 
 
 // ----[ Clear file status cache ]--------------------------
@@ -235,10 +235,18 @@ if( isset($_POST['sc_op']) && $_POST['sc_op'] != '' )
 
 
 
+// ----[ Fix Saved Images Directory Since it is Special ]---
+$siggen_saved_find = array('/', '%r%', '%s%');
+$siggen_saved_rep  = array(DIR_SEP, ROSTER_BASE, SIGGEN_DIR);
+
+$checkData['save_images_dir'] = str_replace( $siggen_saved_find,$siggen_saved_rep,$checkData['save_images_dir'] );
+
+
+
 // ----[ Run folder maker ]---------------------------------
 if( $_REQUEST['make_dir'] == 'save' )
 {
-	if( $functions->makeDir( SIGGEN_DIR.$checkData['save_images_dir'] ) )
+	if( $functions->makeDir( $checkData['save_images_dir'] ) )
 	{
 		$functions->setMessage($siggen_locale[$roster_conf['roster_lang']]['saved_folder_created']);
 	}
@@ -250,7 +258,7 @@ if( $_REQUEST['make_dir'] == 'save' )
 
 if( $_REQUEST['make_dir'] == 'chmodsave' )
 {
-	if( $functions->checkDir( SIGGEN_DIR.$checkData['save_images_dir'],1,1 ) )
+	if( $functions->checkDir( $checkData['save_images_dir'],1,1 ) )
 	{
 		$functions->setMessage($siggen_locale[$roster_conf['roster_lang']]['saved_folder_chmoded']);
 	}
@@ -363,14 +371,14 @@ else
 // Check for the saved images directory
 if( $checkData['save_images'] )
 {
-	if( !$functions->checkDir( SIGGEN_DIR.$checkData['save_images_dir'] ) )
+	if( !$functions->checkDir( $checkData['save_images_dir'] ) )
 	{
-		$functions->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['cannot_find_save_folder'],$script_filename.'&amp;make_dir=save',SIGGEN_DIR.$checkData['save_images_dir']));
+		$functions->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['cannot_find_save_folder'],$script_filename.'&amp;make_dir=save',$checkData['save_images_dir']));
 		$allow_save = false;
 	}
-	elseif( !$functions->checkDir( SIGGEN_DIR.$checkData['save_images_dir'],1 ) )
+	elseif( !$functions->checkDir( $checkData['save_images_dir'],1 ) )
 	{
-		$functions->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['cannot_writeto_save_folder'],$script_filename.'&amp;make_dir=chmodsave',SIGGEN_DIR.$checkData['save_images_dir']));
+		$functions->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['cannot_writeto_save_folder'],$script_filename.'&amp;make_dir=chmodsave',$checkData['save_images_dir']));
 		$allow_save = false;
 	}
 	else
@@ -401,32 +409,35 @@ if( ereg('ini_set', ini_get('disable_functions')) )
 
 
 // ----[ Check for latest SigGen Version ]------------------
-$sc_file_ver_latest = '';
-
-// Check xent.homeip.net for versioning
-$sh = @fsockopen('xent.homeip.net', 80, $errno, $error, 5);
-if ( $sh )
+if( $siggen_update )
 {
-	@fputs($sh, "GET /files/siggen/version.txt HTTP/1.1\r\nHost: xent.homeip.net\r\nConnection: close\r\n\r\n");
-	while ( !@feof($sh) )
+	$sc_file_ver_latest = '';
+
+	// Check xent.homeip.net for versioning
+	$sh = @fsockopen('xent.homeip.net', 80, $errno, $error, 5);
+	if ( $sh )
 	{
-		$content = @fgets($sh, 512);
-		if ( preg_match('#<version>(.+)</version>#i',$content,$version) )
+		@fputs($sh, "GET /files/siggen/version.txt HTTP/1.1\r\nHost: xent.homeip.net\r\nConnection: close\r\n\r\n");
+		while ( !@feof($sh) )
 		{
-			$sc_file_ver_latest = $version[1];
-			break;
+			$content = @fgets($sh, 512);
+			if ( preg_match('#<version>(.+)</version>#i',$content,$version) )
+			{
+				$sc_file_ver_latest = $version[1];
+				break;
+			}
 		}
 	}
-}
-@fclose($sh);
+	@fclose($sh);
 
-if( $sc_file_ver_latest == '' )
-{
-	$functions->setMessage($siggen_locale[$roster_conf['roster_lang']]['cannot_check_version']);
-}
-elseif( $sc_file_ver_latest > $sc_file_ver )
-{
-	$functions->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['new_siggen_available'],$sc_file_ver_latest));
+	if( $sc_file_ver_latest == '' )
+	{
+		$functions->setMessage($siggen_locale[$roster_conf['roster_lang']]['cannot_check_version']);
+	}
+	elseif( $sc_file_ver_latest > $sc_file_ver )
+	{
+		$functions->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['new_siggen_available'],$sc_file_ver_latest));
+	}
 }
 
 

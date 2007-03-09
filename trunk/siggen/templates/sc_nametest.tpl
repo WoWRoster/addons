@@ -25,7 +25,7 @@
  * @link http://www.wowroster.net
  * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
  * @author Joshua Clark
- * @version $Id:$
+ * @version $Id$
  * @copyright 2005-2007 Joshua Clark
  * @package SigGen
  * @filesource
@@ -41,8 +41,16 @@ if ( !defined('ROSTER_INSTALLED') )
 <?php
 $preview_image = '
   <tr>
-    <td class="sc_row_right2" colspan="2"><img src="addons/siggen/siggen.php?name='.urlencode(utf8_decode($name_test)).'&amp;mode='.$config_name.'&amp;saveonly=0&amp;etag=0" alt="'.$name_test.' '.$config_name.' image" /></td>
-  </tr>';
+    '.($siggen_df ?
+    '<td class="sc_row_right2" colspan="2"><img src="'.getlink('&amp;file=addon&amp;roster_addon_name=siggen&amp;mode='.$config_name.'&amp;member='.urlencode(utf8_decode($name_test)).'&amp;saveonly=0&amp;etag=0').'" alt="'.$name_test.' '.$config_name.' image" /></td>'
+    : '<td class="sc_row_right2" colspan="2"><img src="addons/siggen/siggen.php?member='.urlencode(utf8_decode($name_test)).'&amp;mode='.$config_name.'&amp;saveonly=0&amp;etag=0" alt="'.$name_test.' '.$config_name.' image" /></td>').'
+  </tr>
+  <tr>
+    <td class="sc_row_right1" colspan="2">Link to this image:<br />
+      '.($siggen_df ?
+		'[ '.getlink('&amp;file=addon&amp;roster_addon_name=siggen&amp;mode='.$config_name.'&amp;member='.urlencode(utf8_decode($name_test))).' ]'
+		: '[ '.ROSTER_URL.'addons/siggen/'.($config_name == 'signature' ? 'sig' : 'ava').'.php?member='.urlencode(utf8_decode($name_test)).' ]').'</td>
+   </tr>';
 ?>
 
 <!-- Begin Image Preview Box -->

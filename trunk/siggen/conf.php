@@ -25,7 +25,7 @@
  * @link http://www.wowroster.net
  * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
  * @author Joshua Clark
- * @version $Id:$
+ * @version $Id$
  * @copyright 2005-2007 Joshua Clark
  * @package SigGen
  * @filesource
@@ -41,7 +41,13 @@ if ( !defined('ROSTER_INSTALLED') )
 
 //------[ Show the SQL Queries Window? ]------------
 	// This controls the display of the SQL Queries window in the SigGen config page
-	$sc_show_sql_win = 1;
+	$sc_show_sql_win = true;
+
+
+
+
+// ----[ Update Check Service ]-----------------------------
+$siggen_update = true;
 
 
 
@@ -50,6 +56,12 @@ if ( !defined('ROSTER_INSTALLED') )
 // This should be the path to the siggen addon directory
 // Starting from where siggen config is accessed
 define('SIGGEN_DIR', dirname(__FILE__).DIR_SEP);
+
+
+
+
+// ----[ Detect DragonFly ]---------------------------------
+$siggen_df = (defined('BASEDIR') ? true : false);
 
 
 
@@ -78,8 +90,8 @@ if( !defined('ROSTER_SIGCONFIGTABLE') )
 
 
 // ----[ Database version DO NOT CHANGE!! ]-----------------
-$sc_db_ver = '1.3';
-$sc_file_ver = '0.2.2';
+$sc_db_ver = '1.4';
+$sc_file_ver = '0.2.4';
 
 
 

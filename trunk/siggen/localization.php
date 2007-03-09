@@ -34,7 +34,7 @@
 
 // Language translations SigGen
 
-$wordings['addoncredits']['SigGen v0.2.2'] = array(
+$wordings['addoncredits']['SigGen v0.2.4'] = array(
 	array(	"name"=>	"Zanix",
 			"info"=>	"Signature and Avatar Generator"),
 );
@@ -120,7 +120,7 @@ $siggen_translate['frFR']['Démoniste']   = 'Warlock';
 $siggen_translate['frFR']['Guerrier']     = 'Warrior';
 
 // Race, Gender Translation
-$siggen_translate['frFR']['Elfe de Sang'] = 'Blood Elf';
+$siggen_translate['frFR']['Elfe de sang'] = 'Blood Elf';
 $siggen_translate['frFR']['Draenei']     = 'Draenei';
 $siggen_translate['frFR']['Elfe de la nuit'] = 'Night Elf';
 $siggen_translate['frFR']['Nain']         = 'Dwarf';
