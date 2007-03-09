@@ -25,7 +25,7 @@
  * @link http://www.wowroster.net
  * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
  * @author Joshua Clark
- * @version $Id:$
+ * @version $Id$
  * @copyright 2005-2007 Joshua Clark
  * @package SigGen
  * @filesource
@@ -39,7 +39,7 @@ if ( !defined('ROSTER_INSTALLED') )
 ?>
 
 <!-- Begin Config Select Box -->
-  <form action="<?php print $script_filename; ?>" method="post" enctype="multipart/form-data" name="config_select" onsubmit="submitonce(this)">
+  <form action="<?php print getlink($script_filename); ?>" method="post" enctype="multipart/form-data" name="config_select" onsubmit="submitonce(this)">
 <?php print border('sgreen','start','Select Config Mode'); ?>
     <table width="145" class="sc_table" cellspacing="0" cellpadding="2">
       <tr>

@@ -83,16 +83,6 @@ else
 
 
 
-// ----[ Check for password in roster conf ]----------------
-if( empty($roster_conf['roster_upd_pw']) )
-{
-	print errorMode($siggen_locale[$roster_conf['roster_lang']]['no_pass_error'],$siggen_locale[$roster_conf['roster_lang']]['no_pass_error_t']);
-	return;
-}
-// ----[ End Check for password in roster conf ]------------
-
-
-
 // ----[ Check log-in ]-------------------------------------
 require_once(ROSTER_LIB.'login.php');
 $roster_login = new RosterLogin($script_filename);
@@ -170,7 +160,7 @@ else
 // ----[ Check if the SigConfig table exists ]--------------
 if( !$functions->checkDb( (ROSTER_SIGCONFIGTABLE) ) )
 {
-	print errorMode(sprintf($siggen_locale[$roster_conf['roster_lang']]['install'],ROSTER_SIGCONFIGTABLE,$script_filename.'&amp;install=install'),$siggen_locale[$roster_conf['roster_lang']]['install_t']);
+	print errorMode(sprintf($siggen_locale[$roster_conf['roster_lang']]['install'],ROSTER_SIGCONFIGTABLE,getlink($script_filename.'&amp;install=install')),$siggen_locale[$roster_conf['roster_lang']]['install_t']);
 	return;
 }
 // ----[ End Check if the SigConfig table exists ]----------
@@ -186,7 +176,7 @@ $checkData = $functions->getDbData( (ROSTER_SIGCONFIGTABLE) , '*' , "`config_id`
 // ----[ Check db version for upgrade ]---------------------
 if( $checkData['db_ver'] != $sc_db_ver )
 {
-	print errorMode(sprintf($siggen_locale[$roster_conf['roster_lang']]['upgrade'],$sc_db_ver,$checkData['db_ver'],$script_filename.'&amp;install=upgrade&amp;reset=1&amp;ver='.$checkData['db_ver'],$script_filename.'&amp;install=upgrade&amp;reset=0&amp;ver='.$checkData['db_ver']),$siggen_locale[$roster_conf['roster_lang']]['upgrade_t']);
+	print errorMode(sprintf($siggen_locale[$roster_conf['roster_lang']]['upgrade'],$sc_db_ver,$checkData['db_ver'],getlink($script_filename.'&amp;install=upgrade&amp;reset=1&amp;ver='.$checkData['db_ver']),getlink($script_filename.'&amp;install=upgrade&amp;reset=0&amp;ver='.$checkData['db_ver'])),$siggen_locale[$roster_conf['roster_lang']]['upgrade_t']);
 	return;
 }
 
@@ -355,12 +345,12 @@ if( !$functions->checkDir( SIGGEN_DIR.$checkData['image_dir'].$checkData['border
 // Check for the custom images directory
 if( !$functions->checkDir( SIGGEN_DIR.$checkData['image_dir'].$checkData['user_dir'] ) )
 {
-	$functions->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['cannot_find_custom_folder'],$script_filename.'&amp;make_dir=user',SIGGEN_DIR.$checkData['image_dir'].$checkData['user_dir']));
+	$functions->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['cannot_find_custom_folder'],getlink($script_filename.'&amp;make_dir=user'),SIGGEN_DIR.$checkData['image_dir'].$checkData['user_dir']));
 	$allow_upload = false;
 }
 elseif( !$functions->checkDir( SIGGEN_DIR.$checkData['image_dir'].$checkData['user_dir'],1 ) )
 {
-	$functions->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['cannot_writeto_custom_folder'],$script_filename.'&amp;make_dir=chmoduser',SIGGEN_DIR.$checkData['image_dir'].$checkData['user_dir']));
+	$functions->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['cannot_writeto_custom_folder'],getlink($script_filename.'&amp;make_dir=chmoduser'),SIGGEN_DIR.$checkData['image_dir'].$checkData['user_dir']));
 	$allow_upload = false;
 }
 else
@@ -373,12 +363,12 @@ if( $checkData['save_images'] )
 {
 	if( !$functions->checkDir( $checkData['save_images_dir'] ) )
 	{
-		$functions->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['cannot_find_save_folder'],$script_filename.'&amp;make_dir=save',$checkData['save_images_dir']));
+		$functions->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['cannot_find_save_folder'],getlink($script_filename.'&amp;make_dir=save'),$checkData['save_images_dir']));
 		$allow_save = false;
 	}
 	elseif( !$functions->checkDir( $checkData['save_images_dir'],1 ) )
 	{
-		$functions->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['cannot_writeto_save_folder'],$script_filename.'&amp;make_dir=chmodsave',$checkData['save_images_dir']));
+		$functions->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['cannot_writeto_save_folder'],getlink($script_filename.'&amp;make_dir=chmodsave'),$checkData['save_images_dir']));
 		$allow_save = false;
 	}
 	else
@@ -540,7 +530,7 @@ print
 '<span class="title_text">'.sprintf($siggen_locale[$roster_conf['roster_lang']]['title_siggen_config'],$sc_file_ver).'</span><br />'.
 $roster_login->getMessage().'<br />'.
 $messages.'
-<table width="100%" class="bodyline">
+<table width="100%">
   <tr>
     <td width="140" rowspan="2" valign="top" align="left">
       '.$conf_sel.'<br />

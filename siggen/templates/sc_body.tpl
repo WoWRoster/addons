@@ -96,7 +96,7 @@ if ( !defined('ROSTER_INSTALLED') )
 ?>
 
 <!-- Begin Main Body -->
-<form action="<?php print $script_filename; ?>" method="post" enctype="multipart/form-data" id="config" name="config" onsubmit="submitonce(this)">
+<form action="<?php print getlink($script_filename); ?>" method="post" enctype="multipart/form-data" id="config" name="config" onsubmit="submitonce(this)">
 	<input type="hidden" name="sc_op" value="process" />
   <input type="submit" value="Save Settings" />
   <input type="reset" name="Reset" value="Reset" />
@@ -215,7 +215,7 @@ if( $allow_save )
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Specify a directory to save generated images to<br />This is a full path to the save location<br />Options:<ul><li>%s% - Use this to specify the SigGen Directory</li><li>%r% - Use this to specify the Roster Directory</li></ul>Current save path is &quot;'.str_replace('\\','/',str_replace($siggen_saved_find,$siggen_saved_rep,$configData['save_images_dir'])).'&quot;','Saved images directory' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="save_images_dir" type="text" value="<?php print $configData['save_images_dir']; ?>" size="20" maxlength="64" /></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="save_images_dir" type="text" value="<?php print $configData['save_images_dir']; ?>" size="20" maxlength="255" /></td>
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Image format of saved images','Saved images format' ); ?></td>
@@ -269,16 +269,16 @@ else
     </tr>
     <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Specify a directory to save generated images to<br />This is a full path to the save location<br />Options:<ul><li>%s% - Use this to specify the SigGen Directory</li><li>%r% - Use this to specify the Roster Directory</li></ul>Current save path is &quot;'.str_replace('\\','/',str_replace($siggen_saved_find,$siggen_saved_rep,$configData['save_images_dir'])).'&quot;','Saved images directory' ); ?></td>
-      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="save_images_dir" type="text" value="<?php print $configData['save_images_dir']; ?>" size="20" maxlength="64" /></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="save_images_dir" type="text" value="<?php print $configData['save_images_dir']; ?>" size="20" maxlength="255" /></td>
     </tr>
     <tr>
-      <th class="sc_header_right" colspan="2" align="center"><?php print $functions->createTip( 'Either the directory doesn&acute;t exist or &quot;Save Images&quot; is turned off','Save Image Functions Disabled' ); ?>
+      <td class="sc_header_right" colspan="2" align="center"><?php print $functions->createTip( 'Either the directory doesn&acute;t exist or &quot;Save Images&quot; is turned off','Save Image Functions Disabled' ); ?>
         <input name="save_only_mode" type="hidden" value="0" />
         <input name="save_prefix" type="hidden" value="<?php print $configData['save_prefix']; ?>" />
         <input name="save_suffix" type="hidden" value="<?php print $configData['save_suffix']; ?>" />
         <input name="trigger" type="hidden" value="0" />
         <input name="guild_trigger" type="hidden" value="0" />
-        <input name="uniup_compat" type="hidden" value="<?php print $configData['uniup_compat']; ?>" /></th>
+        <input name="uniup_compat" type="hidden" value="<?php print $configData['uniup_compat']; ?>" /></td>
     </tr>
   </table>
 <?php print border('sred','end');
@@ -343,7 +343,7 @@ if( !$configData['backg_force_default'] )
 ?>
   <table class="sc_table" cellspacing="0" cellpadding="2">
     <tr>
-      <th class="sc_header_right" colspan="2" align="center"><?php print $functions->createTip( 'The top box is what to search for<br />The bottom box is what image to set when that search is found<br /><br />The top box must be exactly like in the database<br />The bottom box is automatically filled from the backgrounds directory','Background Selection Help' ); ?></th>
+      <td class="sc_header_right" colspan="2" align="center"><?php print $functions->createTip( 'The top box is what to search for<br />The bottom box is what image to set when that search is found<br /><br />The top box must be exactly like in the database<br />The bottom box is automatically filled from the backgrounds directory','Background Selection Help' ); ?></td>
     </tr>
     <tr>
       <td class="sc_row<?php echo ((($row=0)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Select what table/field to use when selecting backgrounds','Search Config' ); ?></td>
@@ -760,7 +760,7 @@ else
             <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="center" colspan="2">
               <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
                 <tr>
-                  <th colspan="2" class="membersHeaderRight">Font settings</th>
+                  <td colspan="2" class="membersHeaderRight">Font settings</td>
                 </tr>
                 <tr>
                   <td class="sc_row1" align="left">Font name:<br />
@@ -811,7 +811,7 @@ else
             <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="center" colspan="2">
               <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
                 <tr>
-                  <th colspan="2" class="membersHeaderRight">Font settings</th>
+                  <td colspan="2" class="membersHeaderRight">Font settings</td>
                 </tr>
                 <tr>
                   <td class="sc_row1" align="left">Font name:<br />
@@ -865,7 +865,7 @@ else
             <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="center" colspan="2">
               <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
                 <tr>
-                  <th colspan="2" class="membersHeaderRight">Font settings</th>
+                  <td colspan="2" class="membersHeaderRight">Font settings</td>
                 </tr>
                 <tr>
                   <td class="sc_row1" align="left">Font name:<br />
@@ -916,7 +916,7 @@ else
             <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="center" colspan="2">
               <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
                 <tr>
-                  <th colspan="2" class="membersHeaderRight">Font settings</th>
+                  <td colspan="2" class="membersHeaderRight">Font settings</td>
                 </tr>
                 <tr>
                   <td class="sc_row1" align="left">Font name:<br />
@@ -970,7 +970,7 @@ else
             <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="center" colspan="2">
               <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
                 <tr>
-                  <th colspan="2" class="membersHeaderRight">Font settings</th>
+                  <td colspan="2" class="membersHeaderRight">Font settings</td>
                 </tr>
                 <tr>
                   <td class="sc_row1" align="left">Font name:<br />
@@ -1021,7 +1021,7 @@ else
             <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="center" colspan="2">
               <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
                 <tr>
-                  <th colspan="2" class="membersHeaderRight">Font settings</th>
+                  <td colspan="2" class="membersHeaderRight">Font settings</td>
                 </tr>
                 <tr>
                   <td class="sc_row1" align="left">Font name:<br />
@@ -1084,7 +1084,7 @@ else
             <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="center" colspan="2">
               <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
                 <tr>
-                  <th colspan="2" class="membersHeaderRight">Font settings</th>
+                  <td colspan="2" class="membersHeaderRight">Font settings</td>
                 </tr>
                 <tr>
                   <td class="sc_row1" align="left">Font name:<br />
@@ -1139,7 +1139,7 @@ else
             <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="center" colspan="2">
               <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
                 <tr>
-                  <th colspan="2" class="membersHeaderRight">Font settings</th>
+                  <td colspan="2" class="membersHeaderRight">Font settings</td>
                 </tr>
                 <tr>
                   <td class="sc_row1" align="left">Font name:<br />

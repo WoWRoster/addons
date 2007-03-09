@@ -663,7 +663,7 @@ $output .= "\n</table>";
 				// and with a '/' at the beginning
 				if( substr($settingValue, -1, 1) != '/' )
 					$settingValue .= '/';
-				if( substr($settingValue, 0, 1) == '/' )
+				if( substr($settingValue, 0, 1) == '/' && $settingName != 'save_images_dir' )
 					$settingValue = substr($settingValue, 1);
 			}
 
@@ -891,7 +891,7 @@ $output .= "\n</table>";
 				$wowdb->query($sql_load)
 					or errorMode( 'installDb: '.$wowdb->error() );
 			}
-			return sprintf($siggen_locale[$roster_conf['roster_lang']]['install_success'],ucwords($mode),$script_filename);
+			return sprintf($siggen_locale[$roster_conf['roster_lang']]['install_success'],ucwords($mode),getlink($script_filename));
 		}
 		else
 		{

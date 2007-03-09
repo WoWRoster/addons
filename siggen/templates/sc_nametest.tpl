@@ -40,21 +40,23 @@ if ( !defined('ROSTER_INSTALLED') )
 
 <?php
 $preview_image = '
-  <tr>
-    '.($siggen_df ?
-    '<td class="sc_row_right2" colspan="2"><img src="'.getlink('&amp;file=addon&amp;roster_addon_name=siggen&amp;mode='.$config_name.'&amp;member='.urlencode(utf8_decode($name_test)).'&amp;saveonly=0&amp;etag=0').'" alt="'.$name_test.' '.$config_name.' image" /></td>'
-    : '<td class="sc_row_right2" colspan="2"><img src="addons/siggen/siggen.php?member='.urlencode(utf8_decode($name_test)).'&amp;mode='.$config_name.'&amp;saveonly=0&amp;etag=0" alt="'.$name_test.' '.$config_name.' image" /></td>').'
-  </tr>
-  <tr>
-    <td class="sc_row_right1" colspan="2">Link to this image:<br />
-      '.($siggen_df ?
-		'[ '.getlink('&amp;file=addon&amp;roster_addon_name=siggen&amp;mode='.$config_name.'&amp;member='.urlencode(utf8_decode($name_test))).' ]'
-		: '[ '.ROSTER_URL.'addons/siggen/'.($config_name == 'signature' ? 'sig' : 'ava').'.php?member='.urlencode(utf8_decode($name_test)).' ]').'</td>
-   </tr>';
+    <tr>
+      '.(defined('BASEDIR') ?
+      '<td class="sc_row_right2" colspan="2"><img src="'.getlink('&amp;file=addon&amp;roster_addon_name=siggen&amp;mode='.$config_name.'&amp;member='.urlencode(utf8_decode($name_test)).'&amp;saveonly=0&amp;etag=0').'" alt="'.$name_test.' '.$config_name.' image" /></td>'
+      : '<td class="sc_row_right2" colspan="2"><img src="addons/siggen/siggen.php?member='.urlencode(utf8_decode($name_test)).'&amp;mode='.$config_name.'&amp;saveonly=0&amp;etag=0" alt="'.$name_test.' '.$config_name.' image" /></td>').'
+    </tr>';
+
+if( $name_test != '' )
+{
+	$functions->setMessage('Link to preview image:<br />
+'.(defined('BASEDIR') ?
+	'[ '.getlink('&amp;file=addon&amp;roster_addon_name=siggen&amp;mode='.$config_name.'&amp;member='.urlencode(utf8_decode($name_test)),false,true).' ]'
+	: '[ '.ROSTER_URL.'addons/siggen/'.($config_name == 'signature' ? 'sig' : 'ava').'.php?member='.urlencode(utf8_decode($name_test)).' ]'));
+}
 ?>
 
 <!-- Begin Image Preview Box -->
-<form action="<?php print $script_filename; ?>" method="post" enctype="multipart/form-data" name="preview_select" onsubmit="submitonce(this)">
+<form action="<?php print getlink($script_filename); ?>" method="post" enctype="multipart/form-data" name="preview_select" onsubmit="submitonce(this)">
 <?php print border('sblue','start','Test SigGen'); ?>
   <table class="sc_table" cellspacing="0" cellpadding="2">
     <tr>

@@ -39,7 +39,7 @@ if ( !defined('ROSTER_INSTALLED') )
 ?>
 
 <!-- Begin Settings Reset Box -->
-  <form id="reset_settings" method="post" action="<?php print $script_filename; ?>" enctype="multipart/form-data" name="reset_settings" onsubmit="submitonce(this)">
+  <form id="reset_settings" method="post" action="<?php print getlink($script_filename); ?>" enctype="multipart/form-data" name="reset_settings" onsubmit="submitonce(this)">
   <div id="resetdbCol">
 <?php print border('sgray','start','<div style="cursor:pointer;width:187px;" onclick="swapShow(\'resetdbCol\',\'resetdb\')"><img src="'.$roster_conf['img_url'].'plus.gif" style="float:right;" alt="+" />Reset to Defaults</div>'); ?>
 <?php print border('sgray','end'); ?>

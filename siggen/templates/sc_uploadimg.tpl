@@ -43,7 +43,7 @@ if ( !defined('ROSTER_INSTALLED') )
 if( $allow_upload )
 {
 ?>
-  <form id="images_upload" method="post" action="<?php print $script_filename; ?>" enctype="multipart/form-data" name="images_upload" onsubmit="submitonce(this)">
+  <form id="images_upload" method="post" action="<?php print getlink($script_filename); ?>" enctype="multipart/form-data" name="images_upload" onsubmit="submitonce(this)">
 <?php print border('sgray','start','<div style="width:187px;"><img src="'.$roster_conf['img_url'].'blue-question-mark.gif" style="float:right;" alt="" />'.$functions->createTip( 'Images are currently located in:<br />\n&quot;'.str_replace('\\','/',SIGGEN_DIR.$configData['image_dir'].$configData['user_dir']).'&quot;','Upload User Images' ).'</div>'); ?>
     <table width="198" class="sc_table" cellspacing="0" cellpadding="2">
       <tr>
