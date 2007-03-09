@@ -42,14 +42,14 @@ if ( !defined('ROSTER_INSTALLED') )
 <?php print border('spurple','start','<div style="width:187px;"><img src="'.$roster_conf['img_url'].'blue-question-mark.gif" style="float:right;" alt="" />'.$functions->createTip( 'Import and Export your SigGen Settings','Import/Export Settings' ).'</div>'); ?>
     <table width="198" class="sc_table" cellspacing="0" cellpadding="2">
       <tr>
-        <td class="sc_row_right1" align="center"><form method="post" action="<?php print $script_filename; ?>" enctype="multipart/form-data" name="import_settings" onsubmit="submitonce(this)" style="display:inline;">
+        <td class="sc_row_right1" align="center"><form method="post" action="<?php print getlink($script_filename); ?>" enctype="multipart/form-data" name="import_settings" onsubmit="submitonce(this)" style="display:inline;">
           <?php print $functions->createTip( '<span class=&quot;red&quot;>This WILL OVERWRITE ALL your settings in this config</span>','Import Settings' ); ?>
           <input type="hidden" name="sc_op" value="import" />
           <input name="userfile" type="file" /><br /><br />
           <input type="submit" value="Import" name="import" /></form></td>
       </tr>
       <tr>
-        <td class="sc_row_right2" align="center"><form method="post" action="<?php print $script_filename; ?>" enctype="multipart/form-data" name="export_settings" onsubmit="submitonce(this)" style="display:inline;">
+        <td class="sc_row_right2" align="center"><form method="post" action="<?php print getlink($script_filename); ?>" enctype="multipart/form-data" name="export_settings" onsubmit="submitonce(this)" style="display:inline;">
           <input type="hidden" name="sc_op" value="export" />
           <?php print $functions->createTip( '<span class=&quot;red&quot;>This SAVES ALL of your settings to a file</span>','Export Settings' ); ?>
           <input type="submit" value="Export" name="export" /></form></td>

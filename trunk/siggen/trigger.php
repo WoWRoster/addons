@@ -65,7 +65,9 @@ $siggen_result = $wowdb->query($siggen_sql_str);
 $siggen_set = $wowdb->fetch_assoc($siggen_result);
 
 // Use Roster's detection of UniUploader
-global $htmlout, $siggen_df;
+if( !isset($htmlout) );
+	global $htmlout;
+
 
 if( !empty($siggen_set) )
 {
@@ -96,19 +98,19 @@ foreach( $SigGenConfig as $single_config )
 	{
 		if( $htmlout == 1 )
 		{
-			if( $siggen_df )
-				print 'Saving '.ucfirst($single_config['id']).'-[ <img src="'.getlink('&amp;file=addon&amp;roster_addon_name=siggen&amp;mode='.$single_config['id'].'&amp;etag=0&amp;name='.urlencode(utf8_decode($member_name))).'" width="'.$single_config['w'].'" height="'.$single_config['h'].'" alt="" /> ]<br />'."\n";
+			if( defined('BASEDIR') )
+				print 'Saving '.ucfirst($single_config['id']).'-[ <img src="'.getlink('&amp;file=addon&amp;roster_addon_name=siggen&amp;mode='.$single_config['id'].'&amp;etag=0&amp;member='.urlencode(utf8_decode($member_name)),false,true).'" width="'.$single_config['w'].'" height="'.$single_config['h'].'" alt="" /> ]<br />'."\n";
 			else
-				print 'Saving '.ucfirst($single_config['id']).'-[ <img src="'.$roster_conf['roster_dir'].'/addons/siggen/siggen.php?mode='.$single_config['id'].'&amp;etag=0&amp;name='.urlencode(utf8_decode($member_name)).'" width="'.$single_config['w'].'" height="'.$single_config['h'].'" alt="" /> ]<br />'."\n";
+				print 'Saving '.ucfirst($single_config['id']).'-[ <img src="'.$roster_conf['roster_dir'].'/addons/siggen/siggen.php?mode='.$single_config['id'].'&amp;etag=0&amp;member='.urlencode(utf8_decode($member_name)).'" width="'.$single_config['w'].'" height="'.$single_config['h'].'" alt="" /> ]<br />'."\n";
 		}
 		elseif( $single_config['uniup'] && $htmlout == 0 )
 		{
 			if( ini_get('allow_url_fopen') )
 			{
-				if( $siggen_df )
-					$temp = @readfile(getlink('&amp;file=addon&amp;roster_addon_name=siggen&amp;mode='.$single_config['id'].'&etag=0&saveonly=1&name='.urlencode(utf8_decode($member_name))));
+				if( defined('BASEDIR') )
+					$temp = @readfile(getlink('&amp;file=addon&amp;roster_addon_name=siggen&amp;mode='.$single_config['id'].'&etag=0&saveonly=1&member='.urlencode(utf8_decode($member_name))),false,true);
 				else
-					$temp = @readfile(ROSTER_URL.'addons/siggen/siggen.php?mode='.$single_config['id'].'&etag=0&saveonly=1&name='.urlencode(utf8_decode($member_name)));
+					$temp = @readfile(ROSTER_URL.'addons/siggen/siggen.php?mode='.$single_config['id'].'&etag=0&saveonly=1&member='.urlencode(utf8_decode($member_name)));
 
 				if( $temp != false )
 					print '- Saving '.ucfirst($single_config['id'])."\n";

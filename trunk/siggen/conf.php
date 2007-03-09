@@ -40,8 +40,8 @@ if ( !defined('ROSTER_INSTALLED') )
 
 
 //------[ Show the SQL Queries Window? ]------------
-	// This controls the display of the SQL Queries window in the SigGen config page
-	$sc_show_sql_win = true;
+// This controls the display of the SQL Queries window in the SigGen config page
+$sc_show_sql_win = true;
 
 
 
@@ -56,12 +56,6 @@ $siggen_update = true;
 // This should be the path to the siggen addon directory
 // Starting from where siggen config is accessed
 define('SIGGEN_DIR', dirname(__FILE__).DIR_SEP);
-
-
-
-
-// ----[ Detect DragonFly ]---------------------------------
-$siggen_df = (defined('BASEDIR') ? true : false);
 
 
 
@@ -97,3 +91,12 @@ $sc_file_ver = '0.2.4';
 
 
 define('SIGCONFIG_CONF',true);
+
+
+if( !function_exists('getlink') )
+{
+	function getlink( $url='' , $null1=true , $null2=false )
+	{
+		return $url;
+	}
+}
