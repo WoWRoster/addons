@@ -442,6 +442,8 @@ $output .= "\n</table>";
 
 			if( empty($field) )
 				$field = '*';
+			else
+				$field = "`$field`";
 
 			// SQL String
 			$sql_str = "SELECT $field FROM `$table` $where;";
