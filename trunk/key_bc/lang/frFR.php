@@ -55,7 +55,7 @@ $inst_keys_bc['frFR']['A'] = array(
 		),
 	'HHC' => array( 'Reputation', 'HHC' =>
 			'Clé en flammes forgées|55262',
-			'Thrallmar|Révéré'
+			'Bastion de l\\\'Honneur|Révéré'
 		),
 	'HCR' => array( 'Reputation', 'HCR' =>
 			'Clé du réservoir|55139',
@@ -67,7 +67,7 @@ $inst_keys_bc['frFR']['A'] = array(
 		),
 	'HCoT' => array( 'Reputation', 'HCoT' =>
 			'Clé du Temps|54481',
-			'Gardien du temps|Révéré'
+			'Gardiens du temps|Révéré'
 		),
 	'TK' => array( 'Quests', 'TK' =>
 			'La clé de la Tempête|60250',

@@ -142,7 +142,7 @@ $inst_keys_bc['enUS']['H'] = array(
                 ),
         'HHC' => array( 'Reputation', 'HHC' =>
                         'Flamewrought Key|55262',
-			'Honor Hold|Revered'
+			'Thrallmar|Revered'
                 ),
         'HCR' => array( 'Reputation', 'HCR' =>
                         'Reservoir Key|55139',

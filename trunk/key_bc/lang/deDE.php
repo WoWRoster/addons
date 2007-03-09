@@ -3,6 +3,7 @@
 /*********************DE*************************************************/
 
 $wordings['deDE']['kbc_title_addon'] = 'Schlüssel BC';
+$wordings['deDE']['Link_to_classic_keys'] = 'Link zu alten WoW Schlüsseln';
 
 $inttorep = array(0,'Neutral','Freundlich','Wohlwollend','Respektvoll','Ehrfürchtig');
 
@@ -54,26 +55,6 @@ $inst_keys_bc['deDE']['A'] = array(
 			'Die Berührung des Meisters|',
 			'Rückkehr zu Khadgar|'
 		),
-	'HA' => array( 'Reputation', 'HA' =>
-			'Schlüssel der Auchenai|55216',
- 			'Unteres Viertel|Respektvoll'
-		 ),
-	'HHC' => array( 'Reputation', 'HHC' => 
-			'Flammengeschmiedeter Schlüssel|55262',
-			'Ehrenfeste|Respektvoll'
-		), 
-	'HCR' => array( 'Reputation', 'HCR' =>
-			'Schlüssel des Kessels|55139',
-			'Expedition des Cenarius|Respektvoll'
-		),
-	'HTK' => array( 'Reputation', 'HTK' =>
-			'Warpgeschmiedeter Schlüssel|55231',
-			'Die Sha\\\'tar|Respektvoll'
-		),
-	'HCoT' => array( 'Reputation', 'HCoT' =>
-			'Schlüssel der Zeit|54481',
-			'Hüter der Zeit|Respektvoll'
-		 ),
 	'TK' => array( 'Quests', 'TK' => 
 			'Schlüssel der Stürme|60250',
 			'Oronok Herzeleid|',
@@ -102,6 +83,26 @@ $inst_keys_bc['deDE']['A'] = array(
 			'Die Prüfung der Naaru: Zuverlässigkeit|',
 			'Die Prüfung der Naaru: Magtheridon|'
 		),
+	'HA' => array( 'Reputation', 'HA' =>
+			'Schlüssel der Auchenai|55216',
+ 			'Unteres Viertel|Respektvoll'
+		 ),
+	'HHC' => array( 'Reputation', 'HHC' => 
+			'Flammengeschmiedeter Schlüssel|55262',
+			'Ehrenfeste|Respektvoll'
+		), 
+	'HCR' => array( 'Reputation', 'HCR' =>
+			'Schlüssel des Kessels|55139',
+			'Expedition des Cenarius|Respektvoll'
+		),
+	'HTK' => array( 'Reputation', 'HTK' =>
+			'Warpgeschmiedeter Schlüssel|55231',
+			'Die Sha\\\'tar|Respektvoll'
+		),
+	'HCoT' => array( 'Reputation', 'HCoT' =>
+			'Schlüssel der Zeit|54481',
+			'Hüter der Zeit|Respektvoll'
+		 ),
 );
 
 
@@ -142,26 +143,6 @@ $inst_keys_bc['deDE']['H'] = array(
 			'Die Berührung des Meisters|',
 			'Rückkehr zu Khadgar|'
 		),
-	'HA' => array( 'Reputation', 'HA' =>
-			'Schlüssel der Auchenai|55216',
- 			'Unteres Viertel|Respektvoll'
-		 ),
-	'HHC' => array( 'Reputation', 'HHC' => 
-			'Flammengeschmiedeter Schlüssel|55262',
-			'Ehrenfeste|Respektvoll'
-		), 
-	'HCR' => array( 'Reputation', 'HCR' =>
-			'Schlüssel des Kessels|55139',
-			'Expedition des Cenarius|Ehrfürchtig'
-		),
-	'HTK' => array( 'Reputation', 'HTK' =>
-			'Warpgeschmiedeter Schlüssel|55231',
-			'Die Sha\\\'tar|Respektvoll'
-		),
-	'HCoT' => array( 'Reputation', 'HCoT' =>
-			'Schlüssel der Zeit|54481',
-			'Hüter der Zeit|Respektvoll'
-		 ),
 	'TK' => array( 'Quests', 'TK' => 
 			'Schlüssel der Stürme|60250',
 			'Oronok Herzeleid|',
@@ -190,6 +171,26 @@ $inst_keys_bc['deDE']['H'] = array(
 			'Die Prüfung der Naaru: Zuverlässigkeit|',
 			'Die Prüfung der Naaru: Magtheridon|'
 		),
+	'HA' => array( 'Reputation', 'HA' =>
+			'Schlüssel der Auchenai|55216',
+ 			'Unteres Viertel|Respektvoll'
+		 ),
+	'HHC' => array( 'Reputation', 'HHC' => 
+			'Flammengeschmiedeter Schlüssel|55262',
+			'Thrallmar|Respektvoll'
+		), 
+	'HCR' => array( 'Reputation', 'HCR' =>
+			'Schlüssel des Kessels|55139',
+			'Expedition des Cenarius|Respektvoll'
+		),
+	'HTK' => array( 'Reputation', 'HTK' =>
+			'Warpgeschmiedeter Schlüssel|55231',
+			'Die Sha\\\'tar|Respektvoll'
+		),
+	'HCoT' => array( 'Reputation', 'HCoT' =>
+			'Schlüssel der Zeit|54481',
+			'Hüter der Zeit|Respektvoll'
+		 ),
 );
 
 ?>

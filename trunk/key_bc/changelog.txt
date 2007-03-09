@@ -1,5 +1,7 @@
 ------- version 0.4 -------
-fixed enUS Arcatraz bugs
+fixed enUS : Arcatraz bugs
+fixed frFR : ally bugs
+fixed deDE : all bugs by daddelkopp
 
 ------- version 0.3 -------
 fixed enUS bugs
