@@ -45,6 +45,7 @@ isn't entered into the database if the corresponding main isn't in yet.
 Unfortunately I don't get to pick the update order.
 
 VERSION LOG:
+2.0.2
 -- Removed php close tags in files that don't need them.
 -- Fixed the update type setting to actually work.
 -- Clarified update log a bit when the regex doesn't match.
