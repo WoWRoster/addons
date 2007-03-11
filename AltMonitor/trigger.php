@@ -53,7 +53,7 @@ if( $mode == 'guild_pre' )
 	if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
 
 	// echo messages for roster's update.php
-	if (!empty($AltMonitorUpdate->messages)) echo 'AltMonitor'.$AltMonitorUpdate->messages."<br/>\n";
+	if (!empty($AltMonitorUpdate->messages)) echo '<li>AltMonitor'.$AltMonitorUpdate->messages."</li>\n";
 }
 if( $mode == 'guild' )
 {
@@ -63,7 +63,7 @@ if( $mode == 'guild' )
 	if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
 
 	// echo messages for roster's update.php
-	if (!empty($AltMonitorUpdate->messages)) echo 'AltMonitor'.$AltMonitorUpdate->messages;
+	if (!empty($AltMonitorUpdate->messages)) echo '<li>AltMonitor'.$AltMonitorUpdate->messages."</li>\n";
 }
 elseif( $mode == 'guild_post' )
 {
@@ -73,7 +73,7 @@ elseif( $mode == 'guild_post' )
 	if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
 
 	// echo messages for roster's update.php
-	if (!empty($AltMonitorUpdate->messages)) echo 'AltMonitor'.$AltMonitorUpdate->messages."<br/>\n";
+	if (!empty($AltMonitorUpdate->messages)) echo '<li>AltMonitor'.$AltMonitorUpdate->messages."</li>\n";
 }
 elseif( $mode == 'char_pre' )
 {
@@ -93,7 +93,7 @@ elseif( $mode == 'char' )
 	if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
 
 	// echo messages for roster's update.php
-	if (!empty($AltMonitorUpdate->messages)) echo 'AltMonitor'.$AltMonitorUpdate->messages;
+	if (!empty($AltMonitorUpdate->messages)) echo '<li>AltMonitor'.$AltMonitorUpdate->messages."</li>\n";
 }
 elseif( $mode == 'char_post' )
 {
