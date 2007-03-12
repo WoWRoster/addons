@@ -5,7 +5,6 @@
 $wordings['deDE']['kbc_title_addon'] = 'Schlüssel BC';
 $wordings['deDE']['Link_to_classic_keys'] = 'Link zu alten WoW Schlüsseln';
 
-$inttorep = array(0,'Neutral','Freundlich','Wohlwollend','Respektvoll','Ehrfürchtig');
 
 $inst_name['SL']="Laby.";
 $inst_name['SH']="Hallen";
