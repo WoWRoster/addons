@@ -23,7 +23,7 @@ require_once (ROSTER_LIB.'item.php');
 
 //---[ Check for Guild Info ]------------
 if( empty($guild_info) )
-	message_die( $wordings[$roster_conf['roster_lang']]['nodata'] );
+	message_die( $wordings[$row['clientLocale']]['nodata'] );
 
 // Get guild info from guild info check above
 $guildId = $guild_info['guild_id'];
@@ -58,7 +58,7 @@ function tableHeaderRow($th)
 		if($items[$header])
 		{
 			list($iname, $thottnum) = explode('|', $items[$header][$header]);
-			$header = '<a href="'.$itemlink[$roster_conf['roster_lang']].urlencode(utf8_decode(stripslashes($iname))).'" target="_blank">'.$inst_name[$header].'</a>';
+			$header = '<a href="'.$itemlink[$row['clientLocale']].urlencode(utf8_decode(stripslashes($iname))).'" target="_blank">'.$inst_name[$header].'</a>';
 		}
 		if ($acount == 1)
 		{
@@ -139,9 +139,6 @@ function buildSQL($item,$key,$type)
 	}
 }
 
-
-$reptoint = array_flip($inttorep);
-
 //Minimum lockpicking skill to get it, 1000 indicates that the lock can't be picked
 
 $min_skill_for_lock = array(
@@ -179,7 +176,7 @@ while ($row = $wowdb->fetch_array($result))
 {
 	if ($row['clientLocale'] == '')
 	{
-		$row['clientLocale'] = $roster_conf['roster_lang'];
+		$row['clientLocale'] = $row['clientLocale'];
 	}
 	// build SQL search string for the instance keys only
 	$selectk = ''; $wherek = ''; $countk = 0;
@@ -212,6 +209,18 @@ while ($row = $wowdb->fetch_array($result))
 	$selectp = ''; $wherep = ''; $pcount = 0;
 	$selectq = ''; $whereq = ''; $qcount = 0;
 	$selectr = ''; $wherer = ''; $rcount = 0;
+
+
+	$inttorep = array(0,
+		$wordings[$row['clientLocale']]['neutral'],
+		$wordings[$row['clientLocale']]['friendly'],
+		$wordings[$row['clientLocale']]['honored'],
+		$wordings[$row['clientLocale']]['revered'],
+		$wordings[$row['clientLocale']]['exalted']);
+	$reptoint = array_flip($inttorep);
+
+
+
 	// ==============================
 	// VALUE:MEANING for $krow[$key]:
 	// ==============================
@@ -426,13 +435,13 @@ while ($row = $wowdb->fetch_array($result))
 				$bcount = count($parray)-1;
 			}
 
-			$tooltip_h = $key.' '.$wordings[$roster_conf['roster_lang']]['key'].' Status';
-			$tooltip = '<span style="color:#'.$colorcmp.'">'.$wordings[$roster_conf['roster_lang']]['completedsteps'].'</span><br />';
+			$tooltip_h = $key.' '.$wordings[$row['clientLocale']]['key'].' Status';
+			$tooltip = '<span style="color:#'.$colorcmp.'">'.$wordings[$row['clientLocale']]['completedsteps'].'</span><br />';
 			if ($items[$key][0] == 'Quests')
 			{
-				$tooltip .= '<span style="color:#'.$colorcur.'">'.$wordings[$roster_conf['roster_lang']]['currentstep'].'</span><br />';
+				$tooltip .= '<span style="color:#'.$colorcur.'">'.$wordings[$row['clientLocale']]['currentstep'].'</span><br />';
 			}
-			$tooltip .= '<span style="color:#'.$colorno.'">'.$wordings[$roster_conf['roster_lang']]['uncompletedsteps'].'</span><br /><br />';
+			$tooltip .= '<span style="color:#'.$colorno.'">'.$wordings[$row['clientLocale']]['uncompletedsteps'].'</span><br /><br />';
 			if ($items[$key][0] == 'Quests')
 			{
 				for ($i=1;$i<count($items[$key])-1;$i++)
@@ -506,7 +515,7 @@ while ($row = $wowdb->fetch_array($result))
 			$pcent = round(($bcount/$qcount) * 100);
 
 			echo '<div style="cursor:default;" '.makeOverlib($tooltip,$tooltip_h,'',2).'>'."\n";
-			print '<a href="'.$itemlink[$roster_conf['roster_lang']].urlencode(utf8_decode($iname)).'" target="_blank">'."\n";
+			print '<a href="'.$itemlink[$row['clientLocale']].urlencode(utf8_decode($iname)).'" target="_blank">'."\n";
 			print '<span class="name">'.substr($items[$key][0], 0, 5).'</span></a>'."\n";
 
 			print '<div class="levelbarParent" style="width:40px;"><div class="levelbarChild">'.$bcount.'/'.$qcount.'</div></div>'."\n";

@@ -21,11 +21,9 @@ $wordings['addoncredits']['Key bc v0.3'] = array(
 		"info"=>	"Display a key bc"),
 );
 
-if($roster_conf['roster_lang']=="frFR")
+
 	include_once($addonDir.'lang/frFR.php');
-elseif($roster_conf['roster_lang']=="deDE")
 	include_once($addonDir.'lang/deDE.php');
-elseif($roster_conf['roster_lang']=="enUS")
 	include_once($addonDir.'lang/enUS.php');
 
 

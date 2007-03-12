@@ -2,8 +2,6 @@
 // ALLIANCE KEYS
 $wordings['frFR']['kbc_title_addon'] = 'Clefs BC';
 
-$inttorep = array(0,'Neutre','Amical','Honoré','Révéré','Exalté');
-
 $inst_name['SL']="laby";
 $inst_name['SH']="Salle B.";
 $inst_name['Arcatraz']="Arcatraz";
@@ -71,10 +69,32 @@ $inst_keys_bc['frFR']['A'] = array(
 		),
 	'TK' => array( 'Quests', 'TK' =>
 			'La clé de la Tempête|60250',
-			'L\\\'épreuve des naaru : Miséricorde|',
-			'L\\\'épreuve des naaru : Force|',
-			'L\\\'épreuve des naaru : Ténacité|',
+			'Oronok Cœur-fendu|',
+			'J\\\'ai tenu bien des rôles...|',
+			'Une leçon bien apprise|',
+			'La Formule de damnation - vérité et histoire|',
+			'Grom\\\'tor, fils d\\\'Oronok|',
+			'La Formule de damnation - la charge de Grom\\\'tor|',
+			'La Formule de damnation - Premier fragment retrouvé|',
+			'Ar\\\'tor, fils d\\\'Oronok|',
+			'Prisons de cristal démoniaque|',
+			'Lohn\\\'goron, arc du Coeur-fendu|',
+			'La Formule de damnation - la charge d\\\'Ar\\\'tor|',
+			'La Formule de damnation - Second fragment retrouvé|',
+			'Borak, fils d\\\'Oronok|',
+			'Des chardonomanes et des oeufs|',
+			'Le fagot de chardons sanglants|',
+			'Pour une poignée de chardons|',
+			'Le bonneteau ombrelune|',
+			'Ce qu\\\'Illidan veut, Illidan l\\\'obtient...|',
+			'La Formule de damnation - la charge de Borak|',
+			'La Formule de damnation - Troisième fragment retrouvé|',
+			'La Formule de damnation|',
+			'L\\\'épreuve des naaru : Miséricorde|',
+			'L\\\'épreuve des naaru : Force|',
+			'L\\\'épreuve des naaru : Ténacité|',
 			'Livraison spéciale à Shattrath|',
+			'L\\\'épreuve des naaru : Magtheridon|',
 			'La clé de la Tempête|'
 		),
 );
@@ -137,10 +157,32 @@ $inst_keys_bc['frFR']['H'] = array(
 		),
 	'TK' => array( 'Quests', 'TK' =>
 			'La clé de la Tempête|60250',
-			'L\\\'épreuve des naaru : Miséricorde|',
-			'L\\\'épreuve des naaru : Force|',
-			'L\\\'épreuve des naaru : Ténacité|',
+			'Oronok Cœur-fendu|',
+			'J\\\'ai tenu bien des rôles...|',
+			'Une leçon bien apprise|',
+			'La Formule de damnation - vérité et histoire|',
+			'Grom\\\'tor, fils d\\\'Oronok|',
+			'La Formule de damnation - la charge de Grom\\\'tor|',
+			'La Formule de damnation - Premier fragment retrouvé|',
+			'Ar\\\'tor, fils d\\\'Oronok|',
+			'Prisons de cristal démoniaque|',
+			'Lohn\\\'goron, arc du Coeur-fendu|',
+			'La Formule de damnation - la charge d\\\'Ar\\\'tor|',
+			'La Formule de damnation - Second fragment retrouvé|',
+			'Borak, fils d\\\'Oronok|',
+			'Des chardonomanes et des oeufs|',
+			'Le fagot de chardons sanglants|',
+			'Pour une poignée de chardons|',
+			'Le bonneteau ombrelune|',
+			'Ce qu\\\'Illidan veut, Illidan l\\\'obtient...|',
+			'La Formule de damnation - la charge de Borak|',
+			'La Formule de damnation - Troisième fragment retrouvé|',
+			'La Formule de damnation|',
+			'L\\\'épreuve des naaru : Miséricorde|',
+			'L\\\'épreuve des naaru : Force|',
+			'L\\\'épreuve des naaru : Ténacité|',
 			'Livraison spéciale à Shattrath|',
+			'L\\\'épreuve des naaru : Magtheridon|',
 			'La clé de la Tempête|'
 		),
 );

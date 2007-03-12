@@ -2,7 +2,6 @@
 /*********************EN*************************************************/
 $wordings['enUS']['kbc_title_addon'] = 'Keys BC';
 
-$inttorep = array(0,'Neutral','Friendly','Honored','Revered','Exalted');
 
 $inst_name['SL']="Laby.";
 $inst_name['SH']="Halls";
