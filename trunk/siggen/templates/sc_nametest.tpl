@@ -51,7 +51,7 @@ if( $name_test != '' )
 	$functions->setMessage('Link to preview image:<br />
 '.(defined('BASEDIR') ?
 	'[ '.getlink('&amp;file=addon&amp;roster_addon_name=siggen&amp;mode='.$config_name.'&amp;member='.urlencode(utf8_decode($name_test)),false,true).' ]'
-	: '[ '.ROSTER_URL.'addons/siggen/'.($config_name == 'signature' ? 'sig' : 'ava').'.php?member='.urlencode(utf8_decode($name_test)).' ]'));
+	: '[ '.ROSTER_URL.'/addons/siggen/'.($config_name == 'signature' ? 'sig' : 'ava').'.php?member='.urlencode(utf8_decode($name_test)).' ]'));
 }
 ?>
 
