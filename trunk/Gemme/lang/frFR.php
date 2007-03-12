@@ -21,7 +21,7 @@ $Gem_info['frFR']['slot']="châsse";
 $Gem_info['frFR']['type']['blue']="bleue";
 $Gem_info['frFR']['type']['red']="rouge";
 $Gem_info['frFR']['type']['yellow']="jaune";
-$Gem_info['frFR']['type']['meta']="méta-châsses";
+$Gem_info['frFR']['type']['meta']="méta-gemme";
 
 
 
