@@ -620,6 +620,13 @@ if( isset($_GET['format']) )
 		return($html);
 	}
 
+	function removeAccents($string)
+	{
+		return strtr($string,
+			"ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ",
+			"AAAAAAaaaaaaOOOOOOooooooEEEEeeeeCcIIIIiiiiUUUUuuuuyNn");
+	}
+
 	// Write Text
 	function writeText( $image,$fontsize,$xpos,$ypos,$color,$font,$text,$align,$shadow_color )
 	{

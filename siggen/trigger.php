@@ -110,7 +110,7 @@ foreach( $SigGenConfig as $single_config )
 				if( defined('BASEDIR') )
 					$temp = @readfile(getlink('&amp;file=addon&amp;roster_addon_name=siggen&amp;mode='.$single_config['id'].'&etag=0&saveonly=1&member='.urlencode(utf8_decode($member_name))),false,true);
 				else
-					$temp = @readfile(ROSTER_URL.'addons/siggen/siggen.php?mode='.$single_config['id'].'&etag=0&saveonly=1&member='.urlencode(utf8_decode($member_name)));
+					$temp = @readfile(ROSTER_URL.'/addons/siggen/siggen.php?mode='.$single_config['id'].'&etag=0&saveonly=1&member='.urlencode(utf8_decode($member_name)));
 
 				if( $temp != false )
 					print '- Saving '.ucfirst($single_config['id'])."\n";
