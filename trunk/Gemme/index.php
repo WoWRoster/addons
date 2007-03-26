@@ -24,11 +24,30 @@ if ( !defined('ROSTER_INSTALLED') )
 
 $header_title = $wordings[$roster_conf['roster_lang']]['gemme_title_addon'];
 
+//check for available clientLocales
+$clientLocales = array();
+$clquery = "SELECT DISTINCT p.clientLocale FROM `".ROSTER_PLAYERSTABLE."` p;";
+$clresult = $wowdb->query($clquery) or die_quietly($wowdb->error(),'Database Error', basename(__FILE__),__LINE__,$clquery);
+$i = 0;
+while($clrow = $wowdb->fetch_array($clresult))
+{
+  $clientLocales[$i] = $clrow['clientLocale'];
+  $i++;
+}
+if ($i == 0) $clientLocales[$i] = $roster_conf['roster_lang'];
+
+
 $query = "SELECT DISTINCT `recipe_name` , `reagents`, `recipe_tooltip`, `recipe_texture`, `item_color`
 		FROM `".ROSTER_RECIPESTABLE."`
-		WHERE `recipe_type` = '".$Gem_info[$roster_conf['roster_lang']]['Gem']."'
-		AND `skill_name` = '".$Gem_info[$roster_conf['roster_lang']]['sill']."'
-		ORDER BY `reagents` ASC";
+		WHERE (`recipe_type` = '".$Gem_info[$clientLocales[0]]['Gem']."'
+		AND `skill_name` = '".$Gem_info[$clientLocales[0]]['sill']."') ";
+for ($i = 1; $i<count($clientLocales); $i++)
+{
+   if ($clientLocales[$i] != '')
+      $query .= " OR (`recipe_type` = '".$Gem_info[$clientLocales[$i]]['Gem']."'
+		  AND `skill_name` = '".$Gem_info[$clientLocales[$i]]['sill']."') ";
+}
+$query .=       "ORDER BY `reagents` ASC";
 
 $result = $wowdb->query($query) or die_quietly($wowdb->error(),'Database Error', basename(__FILE__),__LINE__,$query);
 
@@ -41,26 +60,39 @@ $countR=$countB=$countY=$countM=0;
 
 while($row = $wowdb->fetch_array($result))
 {
-	if(ereg($Gem_info[$roster_conf['roster_lang']]['type']['blue'], $row['recipe_tooltip']))
+	$matchBlue=$matchRed=$matchYellow=$matchMeta=false;
+        for ($i = 0; $i<count($clientLocales); $i++)
 	{
+           if(ereg($Gem_info[$clientLocales[$i]]['type']['blue'], $row['recipe_tooltip']))
+               $matchBlue=true;
+	   if(ereg($Gem_info[$clientLocales[$i]]['type']['red'], $row['recipe_tooltip']))
+               $matchRed=true;
+	   if(ereg($Gem_info[$clientLocales[$i]]['type']['yellow'], $row['recipe_tooltip']))
+               $matchYellow=true;
+	   if(ereg($Gem_info[$clientLocales[$i]]['type']['meta'], $row['recipe_tooltip']))
+               $matchMeta=true;
+        }
+
+        if ($matchBlue == true)
+        {
 		$type['blue'][$countB]=$row;
 		$countB++;
-	}
-	if(ereg($Gem_info[$roster_conf['roster_lang']]['type']['red'], $row['recipe_tooltip']))
-	{
+        }
+	if ($matchRed == true)
+        {
 		$type['red'][$countR]=$row;
 		$countR++;
-	}
-	if(ereg($Gem_info[$roster_conf['roster_lang']]['type']['yellow'], $row['recipe_tooltip']))
-	{
+        }
+	if ($matchYellow == true)
+        {
 		$type['yellow'][$countY]=$row;
 		$countY++;
-	}
-	if(ereg($Gem_info[$roster_conf['roster_lang']]['type']['meta'], $row['recipe_tooltip']))
-	{
+        }
+	if ($matchMeta == true)
+        {
 		$type['meta'][$countM]=$row;
 		$countM++;
-	}
+        }
 }
 
 ////////////DISPLAY
@@ -87,10 +119,10 @@ foreach($Gem_info[$roster_conf['roster_lang']]['type'] as $keyColor=>$couleur)
 		<td class="simplebordercenter">
 			<table width="100%" class="bodyline" cellspacing="0" id="table_0">
 				<tr>
-					<th class="membersHeader"><?=$Gem_info['frFR']['Objet']?></th>
-					<th class="membersHeader"><?=$Gem_info['frFR']['Name']?></th>
-					<th class="membersHeader"><?=$Gem_info['frFR']['compo']?></th>
-					<th class="membersHeader"><?=$Gem_info['frFR']['crafter']?></th>
+					<th class="membersHeader"><?=$Gem_info[$roster_conf['roster_lang']]['Objet']?></th>
+					<th class="membersHeader"><?=$Gem_info[$roster_conf['roster_lang']]['Name']?></th>
+					<th class="membersHeader"><?=$Gem_info[$roster_conf['roster_lang']]['compo']?></th>
+					<th class="membersHeader"><?=$Gem_info[$roster_conf['roster_lang']]['crafter']?></th>
 				</tr>
 <?php
 	$tmp=$type[$keyColor];
@@ -99,7 +131,7 @@ foreach($Gem_info[$roster_conf['roster_lang']]['type'] as $keyColor=>$couleur)
 	{
     $tooltip = makeOverlib($item['recipe_tooltip'],'',$item['item_color'],0,$lang);
     $itemAff = '<div class="item" '.$tooltip.'>';
-    $itemAff.="<img src=\"".$roster_conf['interface_url'].$item['recipe_texture']."\" class=\"icon\" alt=\"\" />";
+    $itemAff.="<img src=\"".$roster_conf['interface_url'].$item['recipe_texture'].".jpg\" class=\"icon\" alt=\"\" />";
     $itemAff.='</div>';
     
     $query = "SELECT M.name
