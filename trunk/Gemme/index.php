@@ -31,8 +31,8 @@ $clresult = $wowdb->query($clquery) or die_quietly($wowdb->error(),'Database Err
 $i = 0;
 while($clrow = $wowdb->fetch_array($clresult))
 {
-  $clientLocales[$i] = $clrow['clientLocale'];
-  $i++;
+	$clientLocales[$i] = $clrow['clientLocale'];
+	$i++;
 }
 if ($i == 0) $clientLocales[$i] = $roster_conf['roster_lang'];
 
@@ -43,8 +43,8 @@ $query = "SELECT DISTINCT `recipe_name` , `reagents`, `recipe_tooltip`, `recipe_
 		AND `skill_name` = '".$Gem_info[$clientLocales[0]]['sill']."') ";
 for ($i = 1; $i<count($clientLocales); $i++)
 {
-   if ($clientLocales[$i] != '')
-      $query .= " OR (`recipe_type` = '".$Gem_info[$clientLocales[$i]]['Gem']."'
+	if ($clientLocales[$i] != '')
+	$query .= " OR (`recipe_type` = '".$Gem_info[$clientLocales[$i]]['Gem']."'
 		  AND `skill_name` = '".$Gem_info[$clientLocales[$i]]['sill']."') ";
 }
 $query .=       "ORDER BY `reagents` ASC";
@@ -73,26 +73,30 @@ while($row = $wowdb->fetch_array($result))
                $matchMeta=true;
         }
 
-        if ($matchBlue == true)
-        {
-		$type['blue'][$countB]=$row;
-		$countB++;
-        }
-	if ($matchRed == true)
-        {
-		$type['red'][$countR]=$row;
-		$countR++;
-        }
-	if ($matchYellow == true)
-        {
-		$type['yellow'][$countY]=$row;
-		$countY++;
-        }
-	if ($matchMeta == true)
-        {
+	//first checking for a metagem, because it matches the other colors too ;-)
+        if ($matchMeta == true)
+	{
 		$type['meta'][$countM]=$row;
 		$countM++;
-        }
+	} 
+	else
+	{
+		if ($matchBlue == true)
+		{
+			$type['blue'][$countB]=$row;
+			$countB++;
+		}
+		if ($matchRed == true)
+		{
+			$type['red'][$countR]=$row;
+			$countR++;
+		}
+		if ($matchYellow == true)
+		{
+			$type['yellow'][$countY]=$row;
+			$countY++;
+		}
+	}
 }
 
 ////////////DISPLAY
@@ -129,25 +133,25 @@ foreach($Gem_info[$roster_conf['roster_lang']]['type'] as $keyColor=>$couleur)
 
 	foreach($tmp as $item)
 	{
-    $tooltip = makeOverlib($item['recipe_tooltip'],'',$item['item_color'],0,$lang);
-    $itemAff = '<div class="item" '.$tooltip.'>';
-    $itemAff.="<img src=\"".$roster_conf['interface_url'].$item['recipe_texture'].".jpg\" class=\"icon\" alt=\"\" />";
-    $itemAff.='</div>';
-    
-    $query = "SELECT M.name
-      		FROM `".ROSTER_RECIPESTABLE."` R, `".ROSTER_MEMBERSTABLE."` M
-      		WHERE R.member_id=M.member_id
-          AND R.`recipe_name` = '".addslashes($item['recipe_name'])."'
-          ";
-
-    $result = $wowdb->query($query) or die_quietly($wowdb->error(),'Database Error', basename(__FILE__),__LINE__,$query);
-    
-    $craftName='';
-    
-    while($row = $wowdb->fetch_array($result))
-    {
-        $craftName.=$row[name].", ";
-    }
+		$tooltip = makeOverlib($item['recipe_tooltip'],'',$item['item_color'],0,$lang);
+		$itemAff = '<div class="item" '.$tooltip.'>';
+		$itemAff.="<img src=\"".$roster_conf['interface_url'].$item['recipe_texture'].".jpg\" class=\"icon\" alt=\"\" />";
+		$itemAff.='</div>';
+		
+		$query = "SELECT M.name
+				FROM `".ROSTER_RECIPESTABLE."` R, `".ROSTER_MEMBERSTABLE."` M
+				WHERE R.member_id=M.member_id
+				AND R.`recipe_name` = '".addslashes($item['recipe_name'])."'
+			";
+		
+		$result = $wowdb->query($query) or die_quietly($wowdb->error(),'Database Error', basename(__FILE__),__LINE__,$query);
+		
+		$craftName='';
+		
+		while($row = $wowdb->fetch_array($result))
+		{
+			$craftName.=$row[name].", ";
+		}
 ?>
 				<tr>
 					<td class="membersRow1">
