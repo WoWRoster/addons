@@ -16,8 +16,8 @@
  *
  ******************************/
 
-$wordings['addoncredits']['Key bc v0.3'] = array(
-	array(	"name"=>	"Titan99",
+$wordings['addoncredits']['Gems Display v0.2'] = array(
+	array(	"name"=>	"Titan99,  Tyradil",
 		"info"=>	"Display Gemmes by slot"),
 );
 
@@ -29,6 +29,7 @@ $color['meta']="#AAAAAA";
 include_once($addonDir.'lang/frFR.php');
 include_once($addonDir.'lang/deDE.php');
 include_once($addonDir.'lang/enUS.php');
+include_once($addonDir.'lang/esES.php');
 
 
 ?>
