@@ -11,18 +11,20 @@ function createTables(){
 	global $wowdb, $roster_conf, $wordings, $db_prefix;
 	
 	// Declare tables needed for RaidTracker
-	$create_nodes = "CREATE TABLE `".$db_prefix."gatherer_nodes` (
-  		`id` int(5) NOT NULL auto_increment,
-  		`continent` varchar(25) NOT NULL default '',
-  		`map` varchar(25) NOT NULL default '',
-  		`nodeNumber` varchar(10) NOT NULL default '',
-  		`nodeTypeWord` varchar(50) NOT NULL default '',
-  		`nodeType` varchar(25) NOT NULL default '',
-  		`xPos` varchar(10) NOT NULL default '',
-  		`yPos` varchar(10) NOT NULL default '',
-  		`method` varchar(10) NOT NULL default '',
-  		PRIMARY KEY  (`id`)
-		) TYPE=MyISAM AUTO_INCREMENT=1 ;";
+	$create_nodes = "CREATE TABLE `roster_gatherer_nodes` (
+                         `id` int(5) NOT NULL auto_increment,
+                         `continent` varchar(25) NOT NULL default '',
+                         `map` varchar(25) NOT NULL,
+                         `nodeNumber` varchar(10) NOT NULL default '',
+                         `nodeType` varchar(25) NOT NULL default '',
+                         `xPos` varchar(10) NOT NULL,
+                         `yPos` varchar(10) NOT NULL,
+                         `method` varchar(10) NOT NULL default '',
+                         PRIMARY KEY  (`id`),
+                         KEY `xPos` (`xPos`),
+                         KEY `yPos` (`yPos`),
+                         KEY `map` (`map`)
+                       ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC";
 	
 	// Create tables declared above
 	$tables = 0;

@@ -24,17 +24,26 @@ function processGatherer($GatherData)
 
 						if(is_array($value))
 						{
-							$xPos 			= $value['1'];
-							$yPos 			= $value['2'];
-							$type  = (isset($value['6']) ? $value['6'] : 'Unknown');
-							$nodetypeword = (isset(${$nodeInfo2['gtype']}[$nodeNumber]) ? ${$nodeInfo2['gtype']}[$nodeNumber] : 'Unknown');
+							$xPos 			= substr($value['1'], 0, 6);
+							$yPos 			= substr($value['2'], 0, 6);
+							$type  			= (isset($value['6']) ? $value['6'] : 'Unknown');
 
-							if(!isset($inserts))
+							$query = "SELECT * FROM ".$db_prefix."gatherer_nodes where `xPos` = '".$xPos."' and `yPos` = '".$yPos."' and `map` = '".$wowdb->escape($map)."'";
+							$results = $wowdb->query($query) or die_quietly($wowdb->error(),'Database Error',basename(__FILE__),__LINE__,$query);
+
+							if($wowdb->num_rows($results) > 0)
 							{
-								$inserts = "( '".$locations[$index]."', '".$wowdb->escape($map)."', '".$nodeNumber."', '".$wowdb->escape($nodetypeword)."', '".$nodeInfo2['gtype']."', '".$xPos."', '".$yPos."')";
+								continue;
 							}
 							else {
-								$inserts .= ", ( '".$locations[$index]."', '".$wowdb->escape($map)."', '".$nodeNumber."', '".$wowdb->escape($nodetypeword)."', '".$nodeInfo2['gtype']."', '".$xPos."', '".$yPos."')";
+
+								if(!isset($inserts))
+								{
+									$inserts = "( '".$locations[$index]."', '".$wowdb->escape($map)."', '".$nodeNumber."', '".$nodeInfo2['gtype']."', '".$xPos."', '".$yPos."')";
+								}
+								else {
+									$inserts .= ", ( '".$locations[$index]."', '".$wowdb->escape($map)."', '".$nodeNumber."', '".$nodeInfo2['gtype']."', '".$xPos."', '".$yPos."')";
+								}
 							}
 						}
 					}
@@ -45,7 +54,7 @@ function processGatherer($GatherData)
 
 	if(isset($inserts))
 	{
-		$query = "INSERT INTO ".$db_prefix."gatherer_nodes (continent, map, nodeNumber, nodeTypeWord, nodeType, xPos, yPos) VALUES ";
+		$query = "INSERT INTO ".$db_prefix."gatherer_nodes (continent, map, nodeNumber, nodeType, xPos, yPos) VALUES ";
 		$query = $query . $inserts . ";";
 		$results = $wowdb->query($query) or die_quietly($wowdb->error(),'Database Error',basename(__FILE__),__LINE__,$query);
 	}
