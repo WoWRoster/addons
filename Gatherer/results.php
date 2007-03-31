@@ -1,44 +1,52 @@
 <?php
 /******************************
-* WoWRoster.net  Roster
-* Copyright 2002-2006
-* Licensed under the Creative Commons
-* "Attribution-NonCommercial-ShareAlike 2.5" license
-*
-* Short summary
-*  http://creativecommons.org/licenses/by-nc-sa/2.5/
-*
-* Full license information
-*  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
-* -----------------------------
-*
-* $Id: bookworm.php 59 2006-06-14 21:17:28Z Sahasrahla $
-*
+* $Id: $
 ******************************/
 
-include_once('../../settings.php');
+// Make sure we include the right files by doing some pathing voodoo
+// THis is to help if this addon sis ported over to wowrosterdf
+// Although many other things would need to be changed to actually make it work
+$roster_dir = $gatherer_dir = dirname(__FILE__); // Here we have "somepath/roster/addons/gatherer"
+$gatherer_dir .= DIRECTORY_SEPARATOR;
+$roster_dir = explode(DIRECTORY_SEPARATOR,$roster_dir);
 
-if(isset($_GET['continent']))
-{
-	$continent = $_GET['continent'];
-}
+// Take off two parent directories
+array_pop($roster_dir); // Here we have "somepath/roster/addons"
+array_pop($roster_dir); // Here we have "somepath/roster"
+$roster_dir = implode(DIRECTORY_SEPARATOR,$roster_dir).DIRECTORY_SEPARATOR; // Here we have "somepath/roster/"
 
-if(isset($_GET['map']))
-{
-	$map = $_GET['map'];
-}
+// Include roster's settings file
+include_once($roster_dir.'settings.php');
+unset($roster_dir);
+
+// Include gatherer's conf and locale files
+include_once($gatherer_dir.'conf.php');
+include_once($gatherer_dir.'localization.php');
+unset($gatherer_dir);
+
+// Set roster's current locale to a more simple, easy to use variable
+$gatherwords = &$wordings[$roster_conf['roster_lang']];
+
+
+// Get our map and continent if they exist
+$continent = ( isset($_GET['continent']) ? $_GET['continent'] : '');
+$map = ( isset($_GET['map']) ? $_GET['map'] : '');
+
+
+// Grab our data
+$query  = "SELECT * FROM `".GATHERER_TABLE."` WHERE `continent` = '$continent' AND `map` = '$map' ORDER BY `nodeType` DESC;";
+$result = $wowdb->query($query) or die_quietly($wowdb->error(),'Database Error',basename(__FILE__),__LINE__,$query);
 
 header('Content-type: text/xml');
 
+echo ("<map>\n <a_map continent=\"".$gatherwords['continents'][$continent]."\" map=\"".$gatherwords['zones'][$continent][$map]."\" image=\"".ROSTER_URL."/images/MAP/$continent/$map.jpg\"> \n");
 
-$query  = "SELECT * FROM `".$db_prefix."gatherer_nodes` WHERE continent ='$continent' and map = '$map' ORDER BY nodeType DESC";
-$result = $wowdb->query($query) or die_quietly($wowdb->error(),'Database Error',basename(__FILE__),__LINE__,$query);
-
-echo ("<map>\n <a_map continent=\"$continent\" map=\"$map\" image=\"".ROSTER_URL."/images/MAP/$continent/$map.jpg\"> \n");
-
-while ($row = mysql_fetch_array($result)) 
+while( $row = mysql_fetch_array($result) )
 {
-	echo ("<Gatherable Gtype=\"".$row['nodeType']."\" XPos=\"".($row['xPos'] * 1002)."\" YPos=\"".($row['yPos'] * 668)."\" Icon=\"".ROSTER_URL."/images/".$row['nodeType']."/".$row['nodeNumber'].".png\" GatherableName=\"".$row['nodeTypeWord']."\" />");
+	$nodeName = ( isset($gatherwords['node_names'][$row['nodeType']]) ? $gatherwords['node_names'][$row['nodeType']] : $row['nodeType'] );
+
+	echo ("<Gatherable Gtype=\"".$row['nodeType']."\" XPos=\"".($row['xPos'] * 1000)."\" YPos=\"".($row['yPos'] * 668)."\" Icon=\"".ROSTER_URL."/images/".$row['nodeType']."/".$row['nodeNumber'].".png\" GatherableName=\"".$gatherwords['node_names'][$row['nodeType']]."\" />");
 }
 echo("</a_map> \n </map> \n");
+
 ?>

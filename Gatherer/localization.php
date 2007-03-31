@@ -1,28 +1,31 @@
 <?php
 /******************************
- * WoWRoster.net  Roster
- * Copyright 2002-2006
- * Licensed under the Creative Commons
- * "Attribution-NonCommercial-ShareAlike 2.5" license
- *
- * Short summary
- *  http://creativecommons.org/licenses/by-nc-sa/2.5/
- *
- * Full license information
- *  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
- * -----------------------------
- *
- * $Id: localization.php 59 2006-06-14 21:17:28Z mathos $
- *
- ******************************/
- 
- $creditspage['enUS']['addons']['gatherer'] = array(
-				array(	"name"=>	" Foxy",
-				"info"=>	"Original Addon Developer"),
+* $Id: $
+******************************/
+
+$wordings['addoncredits']['Gatherer'] = array(
+	array(
+		"name"=>	"Foxy",
+		"info"=>	"Original Addon Developer"
+	),
+	array(
+		"name"=>	"Zeryl",
+		"info"=>	"SQL import optimizations"
+	),
+	array(
+		"name"=>	"Zanix",
+		"info"=>	"Localization, fixed many minor issues"
+	)
 );
+
 // ENGLISH
-$wordings['enUS']['gatherer_addon'] = 'Gatherer';
+include_once($addonDir.'languages'.DIR_SEP.'enUS.php');
+
+// FRENCH
+include_once($addonDir.'languages'.DIR_SEP.'frFR.php');
+
+// SPANISH
+include_once($addonDir.'languages'.DIR_SEP.'esES.php');
 
 // GERMAN
-$wordings['deDE']['gatherer_addon'] = 'Sammler';
-?>
+include_once($addonDir.'languages'.DIR_SEP.'deDE.php');
