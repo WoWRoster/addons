@@ -10,7 +10,7 @@ $wordings['addoncredits']['Gatherer'] = array(
 	),
 	array(
 		"name"=>	"Zeryl",
-		"info"=>	"SQL import optimizations"
+		"info"=>	"Localization, fixed many minor issues, SQL import optimizations"
 	),
 	array(
 		"name"=>	"Zanix",
