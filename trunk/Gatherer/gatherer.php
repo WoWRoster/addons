@@ -1,61 +1,66 @@
 <?php
 /******************************
- * WoWRoster.net  Roster
- * Copyright 2002-2006
- * Licensed under the Creative Commons
- * "Attribution-NonCommercial-ShareAlike 2.5" license
- *
- * Short summary
- *  http://creativecommons.org/licenses/by-nc-sa/2.5/
- *
- * Full license information
- *  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
- * -----------------------------
- *
- * $Id: bookworm.php 59 2006-06-14 21:17:28Z Sahasrahla $
- *
- ******************************/
+* $Id: $
+******************************/
 
-if( eregi(basename(__FILE__),$_SERVER['PHP_SELF']) )
+if ( !defined('ROSTER_INSTALLED') )
 {
-	die("You can't access this file directly!");
+    exit('Detected invalid access to this file!');
 }
 
-if(isset($_GET['continent']))
+// Set roster's current locale to a more simple, easy to use variable
+$gatherwords = &$wordings[$roster_conf['roster_lang']];
+
+
+// Get our map and continent if they exist
+$continent = ( isset($_GET['continent']) ? $_GET['continent'] : '');
+$map = ( isset($_GET['map']) ? $_GET['map'] : '');
+
+
+// Initialize our select boxes
+$options_table = "<table cellspacing=\"0\"><tr>\n";
+$options= '';
+
+// Itterate over our locale defines for world continents and zones
+foreach( $gatherwords['continents'] as $worldnumber => $worldname )
 {
-	$continent = $_GET['continent'];
-}
+	// Store the world map names to a separate variable so we can make headers
+	$options_table .= "\t<th class=\"membersHeader\">$worldname</th>\n";
 
-if(isset($_GET['map']))
-{
-	$map = $_GET['map'];
-}
+	// Start the selectbox
+	$options .= "\t<td>\n\t\t<select class=\"combobox\" name=\"$worldname\" onchange=\"if(options[selectedIndex].value){location = options[selectedIndex].value}\">\n";
 
-require_once('arrays.php');
+	// First option is blank
+	$options .= "\t\t<option>------</option>\n";
 
-$options = '';
-
-
-foreach($locations as $zonenumber => $zonename)
-{
-	$options .= "<select class=\"combobox\" name=\"$zonename\" onchange=\"if(options[selectedIndex].value){location = options[selectedIndex].value}\">\r\n";
-	$options .= "\t<option selected value=\"$script_filename&amp;continent=$zonename\">$zonename</option>\r\n";
-	foreach($zones[$zonenumber] as $cap => $localized)
+	foreach( $gatherwords['zones'][$worldnumber] as $zone => $zonename )
 	{
-		$options .= "\t<option value=\"$script_filename&amp;continent=$zonename&amp;map=$cap\">$localized</option>\r\n";
+		// Select the option if we are viewing it
+		if( $continent == $worldnumber && $map == $zone )
+			$options .= "\t\t<option selected=\"selected\" value=\"$script_filename&amp;continent=".rawurlencode($worldname)."&amp;map=$zone\">$zonename</option>\n";
+		else
+			$options .= "\t\t<option value=\"$script_filename&amp;continent=$worldnumber&amp;map=$zone\">$zonename</option>\n";
 	}
-	$options .= "</select>\r\n";
+
+	$options .= "\t\t</select></td>\n";
 }
+
+// Build the complete table
+$options = $options_table."</tr>\n<tr>\n".$options."</tr></table>\n";
+
+// Output table in a pretty border
+$options = messagebox($options,$gatherwords['gatherer_selectzone']);
 
 
 ?>
 <div align="center">
-  <FORM METHOD="POST" ACTION="gatherer.php">
-<?php echo($options);?>
-  </FORM>
-  <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="1000" height="668" title="Gatherer">
-    <param name="movie" value="/roster/addons/gatherer/flash/gatherer.swf?addonResults=<?php echo("$addonResults"); ?>&amp;continent=<?php echo("$continent");?>&amp;map=<?php echo("$map"); ?>">
-    <param name="quality" value="high">
-    <embed src="<?php echo(ROSTER_URL); ?>/addons/gatherer/flash/gatherer.swf?addonResults=<?php echo("$addonResults"); ?>&amp;continent=<?php echo("$continent");?>&amp;map=<?php echo("$map"); ?>" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="1000" height="668"></embed>
-  </object>
+	<form method="post" action="<?php print $script_filename; ?>">
+<?php echo($options); ?>
+	</form>
+	<br />
+	<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="1000" height="668" title="Gatherer">
+		<param name="movie" value="<?php echo(ROSTER_URL); ?>/addons/<?php print $addonName; ?>/flash/gatherer.swf?addonResults=<?php echo ("$addonResults"); ?>&amp;continent=<?php echo ("$continent");?>&amp;map=<?php echo rawurlencode("$map"); ?>">
+		<param name="quality" value="high">
+		<embed src="<?php echo(ROSTER_URL); ?>/addons/<?php print $addonName; ?>/flash/gatherer.swf?addonResults=<?php echo ("$addonResults"); ?>&amp;continent=<?php echo ("$continent");?>&amp;map=<?php echo rawurlencode("$map"); ?>" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="1000" height="668"></embed>
+	</object>
 </div>
