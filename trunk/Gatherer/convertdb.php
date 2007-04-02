@@ -65,7 +65,7 @@ $sql = 'CREATE TABLE `'.GATHERER_TABLE.'` (
 		`continent` int(3) NOT NULL,
 		PRIMARY KEY  (`id`),
 		KEY `number` (`number`)
-		) ENGINE=MyISAM DEFAULT CHARSET=utf8;';
+		) ENGINE=MyISAM;';
 
 $insert = $wowdb->query($sql) or die_quietly($wowdb->error(),'Database Error',basename(__FILE__),__LINE__,$sql);
 unset($insert);
