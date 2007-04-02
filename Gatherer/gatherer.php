@@ -8,10 +8,6 @@ if ( !defined('ROSTER_INSTALLED') )
     exit('Detected invalid access to this file!');
 }
 
-// Set roster's current locale to a more simple, easy to use variable
-$gatherwords = &$wordings[$roster_conf['roster_lang']];
-
-
 // Get our map and continent if they exist
 $continent = ( isset($_GET['continent']) ? $_GET['continent'] : '');
 $map = ( isset($_GET['map']) ? $_GET['map'] : '');

@@ -13,7 +13,6 @@ global $uploadData, $addon_conf;
 $output = '';
 
 //----------[ INSERT UPDATE TRIGGER BELOW ]-----------------------
-
 // Run this on a character update
 if( $mode == 'char_post' )
 {
@@ -24,7 +23,19 @@ if( $mode == 'char_post' )
 		{
 			print "<span class=\"green\">Updating Gatherer Data</span>\n<br /><br />\n";
 			include_once($addonDir.'functions.php');
-			processGatherer($uploadData['GatherItems']);
+			processGatherer($uploadData['GatherItems'], $gatherwords);
+		}
+		if( isset($uploadData['Cartoherb']) )
+		{
+			print "<span class=\"green\">Updating Cartographer Herbalism Data</span>\n<br /><br />\n";
+			include_once($addonDir.'functions.php');
+			processCartoHerb($uploadData['Cartoherb'], $gatherwords);
+		}
+		if( isset($uploadData['Cartomine']) )
+		{
+			print "<span class=\"green\">Updating Cartographer Mining Data</span>\n<br /><br />\n";
+			include_once($addonDir.'functions.php');
+			processCartoMine($uploadData['Cartomine'], $gatherwords);
 		}
 	}
 }
