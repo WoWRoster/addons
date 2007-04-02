@@ -24,10 +24,6 @@ include_once($gatherer_dir.'conf.php');
 include_once($gatherer_dir.'localization.php');
 unset($gatherer_dir);
 
-// Set roster's current locale to a more simple, easy to use variable
-$gatherwords = &$wordings[$roster_conf['roster_lang']];
-
-
 // Get our map and continent if they exist
 $continent = ( isset($_GET['continent']) ? $_GET['continent'] : '');
 $map = ( isset($_GET['map']) ? $_GET['map'] : '');
@@ -45,8 +41,24 @@ while( $row = mysql_fetch_array($result) )
 {
 	$nodeName = ( isset($gatherwords['node_names'][$row['nodeType']]) ? $gatherwords['node_names'][$row['nodeType']] : $row['nodeType'] );
 
-	echo ("<Gatherable Gtype=\"".$row['nodeType']."\" XPos=\"".($row['xPos'] * 1000)."\" YPos=\"".($row['yPos'] * 668)."\" Icon=\"".ROSTER_URL."/images/".$row['nodeType']."/".$row['nodeNumber'].".png\" GatherableName=\"".$gatherwords['node_names'][$row['nodeType']]."\" />");
+	$coords = toXY($row['number']);
+	$xPos   = $coords['xPos'];
+	$yPos   = $coords['yPos'];
+	
+	echo ("<Gatherable Gtype=\"".$row['nodeType']."\" XPos=\"".($xPos * 1000)."\" YPos=\"".($yPos * 668)."\" Icon=\"".ROSTER_URL."/images/".$row['nodeType']."/".$row['nodeNumber'].".png\" GatherableName=\"".$gatherwords['node_names'][$row['nodeType']][$row['nodeNumber']]."\" />");
 }
 echo("</a_map> \n </map> \n");
+
+function toID($xPos, $yPos)
+{
+	return round($xPos * 10000, 0) + (round($yPos * 10000, 0) * 10001);
+}
+
+function toXY($num)
+{
+	$return['xPos'] = ($num % 10001) / 10000;
+	$return['yPos'] = floor($num / 10001) / 10000;
+	return $return;
+}
 
 ?>

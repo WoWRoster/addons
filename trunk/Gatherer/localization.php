@@ -29,3 +29,5 @@ include_once($addonDir.'languages'.DIR_SEP.'esES.php');
 
 // GERMAN
 include_once($addonDir.'languages'.DIR_SEP.'deDE.php');
+
+$gatherwords = &$wordings[$roster_conf['roster_lang']];
