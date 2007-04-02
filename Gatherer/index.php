@@ -10,7 +10,7 @@ if ( !defined('ROSTER_INSTALLED') )
 
 $header_title = $wordings[$roster_conf['roster_lang']]['gatherer_addon'];
 
-if( !$wowdb->query("SELECT * FROM `".GATHERER_TABLE."`;") )
+if( !$wowdb->query("SELECT * FROM `".GATHERER_TABLE."` LIMIT 1;") )
 {
 	require ($addonDir.'install_db.php');
 }
