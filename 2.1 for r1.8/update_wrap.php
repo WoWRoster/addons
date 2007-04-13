@@ -36,30 +36,22 @@ $wowdb->free_result($result);
 
 
 // Start the actual update process
-include_once($addon['dir'].'update.php');
+include_once($addon['dir'].'update_hook.php');
 
-$AltMonitorUpdate = $GLOBALS['AltMonitorUpdate'];
-$AltMonitorUpdate->messages = '';
-
-// Guild pre hook. Unused, but just in case I add something there in the future and forget it here.
-$retval = $AltMonitorUpdate->guild_pre($guild);
-if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
+$AltMonitor = new AltMonitor;
 
 // Loop over all members
 foreach($guild['Members'] as $member_name => $char)
 {
 	$member_id = $char['member_id'];
-	$AltMonitorUpdate->messages .= $member_name;
-	$retval = $AltMonitorUpdate->guild($member_id, $member_name, $char);
-	if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
-	$AltMonitorUpdate->messages .= "<br />\n";
+	$AltMonitor->messages .= $member_name;
+	$AltMonitor->guild($member_id, $member_name, $char);
 }
 
 // Guild post hook. Deletes old entries.
-$retval = $AltMonitorUpdate->guild_post($guild);
-if (!empty($retval)) $AltMonitorUpdate->messages .= " - <span style='color:red;'>".$retval."</span><br/>\n";
+$AltMonitor->guild_post($guild);
 
-$messages = $AltMonitorUpdate->messages;
+$messages = $AltMonitor->messages;
 $errorstringout = $wowdb->getErrors();
 
 // print the error messages
