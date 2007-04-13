@@ -9,12 +9,6 @@ NOTES:
 
 
 INSTALL:
-!) Special note on this SVN branch: This is my first port of the addon to the
-   alpha version of roster 1.8. copy the files in 
-   "roster1_addons/branches/AltMonitor/2.1 for r1.8" to
-   "roster/addons/AltMonitor/". A different directory will cause errors during the
-   addon installation!
-
 1) Extract the AltMonitor archive to the roster/addons/ directory on your site.
 
 2) Go to the roster control panel, manage addons, and click the AltMonitor
@@ -25,8 +19,8 @@ INSTALL:
 4) Click the new AltMonitor button in the pagebar to configure AltMonitor.
 
 CONFIGURE:
-1) Go to the AltMonitor configuration panel using the link at the bottom of the
-   main/alt list.
+1) Go to the AltMonitor configuration panel using the link in the Roster Control
+   Panel
 
 2) Change any options you want. Use the buttons on the left side to see more
    options.

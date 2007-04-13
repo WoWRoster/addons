@@ -21,55 +21,101 @@ if ( !defined('ROSTER_INSTALLED') )
     exit('Detected invalid access to this file!');
 }
 
-class AltMonitorUpdate
+class AltMonitor
 {
 	// Update messages
-	var $messages;
+	var $messages = '';
+	
+	// Addon data object, recieved in constructor
+	var $data;
+	
+	// LUA upload files accepted. We don't use any.
+	var $files = array();
 	
 	// Character data cache
 	var $chars = array();
 	
-	// Doesn't do anything at the moment
-	function guild_pre($guild)
+	/**
+	 * Constructor
+	 *
+	 * @param array $data
+	 *		Addon data object
+	 */
+	function AltMonitor($data)
 	{
-		global $wowdb, $roster_conf, $addon_conf, $wordings;
+		$this->data = $data;
 	}
 	
-	// The regex-based alt detection
-	function guild($member_id, $member_name, $char)
+	/**
+	 * Resets addon messages
+	 */
+	function reset_messages()
 	{
-		global $addon, $wowdb, $roster_conf, $addon_conf, $wordings;
+		$this->messages = 'AltMonitor';
+	}
+
+	/**
+	 * Guild trigger, the regex-based alt detection
+	 *
+	 * @param array $char
+	 *		CP.lua guild member data
+	 * @param int $member_id
+	 * 		Member ID
+	 */
+	function guild($char, $member_id)
+	{
+		global $wowdb, $roster_conf;
+		
+		// --[ Check if this update type is enables ]--
+		if(( $this->data['config']['update_type'] & 1 ) == 0 )
+		{
+			return true;
+		}
 		
 		// --[ Fetch full member data ]--
 		$query =
-			"SELECT * ".
-			"FROM `".ROSTER_ALT_TABLE."` ".
-			"WHERE `member_id`=".$member_id;
+			"SELECT `alt`.*, `member`.`name` ".
+			"FROM `".ROSTER_MEMBERSTABLE."` member ".
+				"LEFT JOIN `".ROSTER_ALT_TABLE."` alt ".
+					"ON `alt`.`member_id` = `member`.`member_id` ".
+			"WHERE `member`.`member_id` = '".$member_id."';";
 
 		$result = $wowdb->query( $query );
 
-		if ( !$result ) { return("$member_name not updated, failed at line ".__LINE__); }
+		if ( !$result )
+		{
+			$this->messages .= ' - <span style="color:red;">'.$member_name.' not updated, failed at line '.__LINE__.'</span><br/>'."\n";
+			return false;
+		}
 
 		if ( $row = $wowdb->fetch_array( $result )) {
 			// Check manual record
-			if ( $row['alt_type'] & 0xC ) {
+			if ( $row['alt_type'] & 0x8 ) {
 				$wowdb->free_result( $result );
-				$this->messages .= " - <span style='color:yellow;'>Manual or per-character entry</span>\n";
-				return '';
+				$this->messages .= " - <span style='color:yellow;'>Manual entry</span><br/>\n";
+				return true;
 			}
 			else
 			{
 				$wowdb->free_result( $result );
+				$member_name = $row['name'];
 			}
+		}
+		else
+		{
+			$wowdb->free_result( $result );
+			$this->messages .= ' - <span style="color:red;">'.$member_name.' not updated, failed at line '.__LINE__.'</span><br/>'."\n";
+			return false;
 		}
 
 		// --[ Use regex to parse the main name ]--
-		if(preg_match($addon['config']['getmain_regex'],$char[$addon['config']['getmain_field']], $regs))
+		$matchfield = isset($char[$this->data['config']['getmain_field']])?$char[$this->data['config']['getmain_field']]:'';
+		if(preg_match($this->data['config']['getmain_regex'], $matchfield, $regs))
 		{
-			$main_name = $regs[$addon['config']['getmain_match']]; // We have a regex result.
+			$main_name = $regs[$this->data['config']['getmain_match']]; // We have a regex result.
 			$this->messages .= " - <span style='color:green;'>Main: $main_name</span>\n";
 		}
-		else if($addon['config']['defmain'])
+		else if($this->data['config']['defmain'])
 		{
 			$main_name = $member_name;			// No regex result; assume the character is a main
 			$this->messages .= " - <span style='color:yellow;'>No main match</span>\n";
@@ -81,7 +127,7 @@ class AltMonitorUpdate
 		}
 
 		// If the main name is equal to this config field then this char is a main, and we should set the $main_name accordingly
-		if($main_name == $addon['config']['getmain_main'])
+		if($main_name == $this->data['config']['getmain_main'])
 		{
 			$main_name = $member_name;
 		}
@@ -100,7 +146,11 @@ class AltMonitorUpdate
 
 			$result = $wowdb->query( $query );
 
-			if ( !$result ) { return("$member_name not updated, failed at line ".__LINE__); }
+			if ( !$result )
+			{
+				$this->messages .= ' - <span style="color:red;">'.$member_name.' not updated, failed at line '.__LINE__.'</span><br/>'."\n";
+				return false;
+			}
 
 			$row = mysql_fetch_array( $result );
 
@@ -130,14 +180,18 @@ class AltMonitorUpdate
 
 			$result = $wowdb->query( $query );
 
-			if ( !$result ) { return("$member_name not updated, failed at line ".__LINE__); }
+			if ( !$result )
+			{
+				$this->messages .= ' - <span style="color:red;">'.$member_name.' not updated, failed at line '.__LINE__.'</span><br/>'."\n";
+				return false;
+			}
 
 			if ( $row = $wowdb->fetch_array( $result )) {
 				$main_id = $row['member_id'];
 				$wowdb->free_result( $result );
 
 				// --[ Alt of alt check ]--
-				if ( $addon['config']['altofalt'] == 'leave' ) {
+				if ( $this->data['config']['altofalt'] == 'leave' ) {
 					$alt_type = ALTMONITOR_ALT_WITH_MAIN;	// Don't check if we're allowing alt of alt in the database
 				}
 				else {
@@ -150,14 +204,18 @@ class AltMonitorUpdate
 
 					$result = $wowdb->query( $query );
 
-					if ( !$result ) { return("$member_name not updated, failed at line ".__LINE__); }
+					if ( !$result )
+					{
+						$this->messages .= ' - <span style="color:red;">'.$member_name.' not updated, failed at line '.__LINE__.'</span><br/>'."\n";
+						return false;
+					}
 
 					if ( $row = $wowdb->fetch_array( $result )) {
 						if ( ( $row['alt_type'] & 2 ) == 0 ) { // Alt of main
 							$alt_type = ALTMONITOR_ALT_WITH_MAIN;
 							$this->messages .= " - <span style='color:green;'>Alt of Main</span>\n";
 						}
-						elseif ( $addon['config']['altofalt'] == 'main' ) {
+						elseif ( $this->data['config']['altofalt'] == 'main' ) {
 							// The main is an alt so the member is being made a main
 							$this->messages .= " - <span style='color:red;'>Alt of Alt</span>\n";
 
@@ -171,7 +229,11 @@ class AltMonitorUpdate
 
 							$result = $wowdb->query( $query );
 
-							if ( !$result ) { return("$member_name not updated, failed at line ".__LINE__); }
+							if ( !$result )
+							{
+								$this->messages .= ' - <span style="color:red;">'.$member_name.' not updated, failed at line '.__LINE__.'</span><br/>'."\n";
+								return false;
+							}
 
 							$row = $wowdb->fetch_array( $result );
 
@@ -184,7 +246,7 @@ class AltMonitorUpdate
 								$this->messages .= " - <span style='color:red;'>Main with alts </span>\n";
 							}
 						}
-						elseif ( $addon['config']['altofalt'] == 'alt' ) {
+						elseif ( $this->data['config']['altofalt'] == 'alt' ) {
 							$main_id = 0;
 							$alt_type = ALTMONITOR_ALT_NO_MAIN;
 							$this->messages .= " - <span style='color:red;'>Alt of Alt</span>\n";
@@ -204,7 +266,7 @@ class AltMonitorUpdate
 			else
 			{
 				$this->messages .= " - <span style='color:red;'>Invalid main</span>\n";
-				if($addon['config']['invmain'])
+				if($this->data['config']['invmain'])
 				{
 					$this->messages .= " - <span style='color:green;'>Main</span>\n";
 					
@@ -219,7 +281,11 @@ class AltMonitorUpdate
 
 					$result = $wowdb->query( $query );
 
-					if ( !$result ) { return("$member_name not updated, failed at line ".__LINE__); }
+					if ( !$result )
+					{
+						$this->messages .= ' - <span style="color:red;">'.$member_name.' not updated, failed at line '.__LINE__.'</span><br/>'."\n";
+						return false;
+					}
 
 					$row = $wowdb->fetch_array( $result );
 
@@ -245,12 +311,15 @@ class AltMonitorUpdate
 
 
 		// -[ Start DB update code ]-
-
 		$query = "SELECT `member_id` FROM `".ROSTER_ALT_TABLE."` WHERE `member_id`='$member_id'";
 
 		$result = $wowdb->query( $query );
 
-		if ( !$result ) { return("$member_name not updated, failed at line ".__LINE__); }
+		if ( !$result )
+		{
+			$this->messages .= ' - <span style="color:red;">'.$member_name.' not updated, failed at line '.__LINE__.'</span><br/>'."\n";
+			return false;
+		}
 
 		$update = $wowdb->num_rows( $result ) == 1;
 		$wowdb->free_result($result);
@@ -270,15 +339,31 @@ class AltMonitorUpdate
 
 		$result = $wowdb->query( $querystr );
 
-		if ( !$result ) { return("$member_name not updated, failed at line ".__LINE__); }
+		if ( !$result )
+		{
+			$this->messages .= ' - <span style="color:red;">'.$member_name.' not updated, failed at line '.__LINE__.'</span><br/>'."\n";
+			return false;
+		}
 		
-		return '';
+		$this->messages .= '<br/>';
+		return true;
 	}
 
-	// Throwing away the old records
+	/**
+	 * Guild_post trigger: throwing away the old records
+	 *
+	 * @param array $guild
+	 *		CP.lua guild data
+	 */
 	function guild_post($guild)
 	{
-		global $wowdb, $roster_conf, $addon_conf, $wordings;
+		global $wowdb, $roster_conf;
+		
+		// --[ Check if this update type is enables ]--
+		if(( $this->data['config']['update_type'] & 1 ) == 0 )
+		{
+			return true; 
+		}
 
 		$query = "DELETE `".ROSTER_ALT_TABLE."` ".
 			"FROM `".ROSTER_ALT_TABLE."` ".
@@ -291,61 +376,93 @@ class AltMonitorUpdate
 		}
 		else
 		{
-			return('Old records not deleted. MySQL said: '.$wowdb->error());
+			$this->messages .= ' - <span style="color:red;">Old records not deleted. MySQL said: '.$wowdb->error().'</span><br/>'."\n";
+			return false;
 		}
-	}
-	
-	// Doesn't do anything at the moment
-	function char_pre($chars)
-	{
-		global $wowdb, $roster_conf, $addon_conf, $wordings;
 		
+		return true;
 	}
 	
-	// Add the member record to the local data array
-	function char($member_id, $member_name, $char)
+	/**
+	 * Char trigger: add the member record to the local data array
+	 *
+	 * @param array $char
+	 *		CP.lua character data
+	 * @param int $member_id
+	 *		Member ID
+	 */
+	function char($char, $member_id)
 	{
-		global $wowdb, $roster_conf, $addon_conf, $wordings;
+		global $wowdb, $roster_conf;
+		
+		// --[ Check if this update type is enables ]--
+		if(( $this->data['config']['update_type'] & 2 ) == 0 )
+		{
+			return true; 
+		}
 		
 		// --[ Fetch full member data ]--
 		$query =
-			"SELECT * ".
-			"FROM `".ROSTER_ALT_TABLE."` ".
-			"WHERE `member_id`=".$member_id;
+			"SELECT `alt`.*, `member`.`name` ".
+			"FROM `".ROSTER_MEMBERSTABLE."` member ".
+				"LEFT JOIN `".ROSTER_ALT_TABLE."` alt ".
+					"ON `alt`.`member_id` = `member`.`member_id` ".
+			"WHERE `member`.`member_id` = '".$member_id."';";
 
 		$result = $wowdb->query( $query );
 
-		if ( !$result ) { return("$member_name not updated, failed at line ".__LINE__); }
+		if ( !$result )
+		{
+			$this->messages .= ' - <span style="color:red;">'.$member_name.' not updated, failed at line '.__LINE__.'. MySQL said:<br/>'.$wowdb->error().'</span><br/>'."\n";
+			return false;
+		}
 
 		if ( $row = $wowdb->fetch_array( $result )) {
 			// Check manual record
 			if ( $row['alt_type'] & 0x8 ) {
 				$wowdb->free_result( $result );
-				$this->messages .= " - <span style='color:yellow;'>Manual entry</span>\n";
-				return '';
+				$this->messages .= " - <span style='color:yellow;'>Manual entry</span><br/>\n";
+				return true;
 			}
 			else
 			{
 				$wowdb->free_result( $result );
+				$member_name = $row['name'];
 			}
 		}
 		else
+		{
 			$wowdb->free_result( $result );
+			$this->messages .= ' - <span style="color:red;">'.$member_name.' not updated, failed at line '.__LINE__.'</span><br/>'."\n";
+			return false;
+		}
 
 		// --[ Add record to the cache of chars we'll be updating ]--
 		$this->chars[$member_id] = $char;
 		$this->chars[$member_id]['main_id'] = $row['main_id'];
 		$this->chars[$member_id]['alt_type'] = $row['alt_type'];
 		
-		return '';
+		$this->messages = substr($this->messages,0,-10);
+		return true;
 	}
 	
-	// Does the actual update.
+	/**
+	 * Char_post trigger: does the actual update.
+	 *
+	 * @param array $chars
+	 *		CP.lua characters data
+	 */
 	function char_post($chars)
 	{
-		global $wowdb, $roster_conf, $addon_conf, $wordings;
+		global $wowdb, $roster_conf;
+		
+		// --[ Check if this update type is enables ]--
+		if(( $this->data['config']['update_type'] & 2 ) == 0 )
+		{
+			return true; 
+		}
 	
-		if( empty($this->chars) ) { return ''; }
+		if( empty($this->chars) ) { return true; }
 		
 		// Decide upon a main: Highest leveled among those with highest guild rank
 		$maxrank = 11;
@@ -376,9 +493,13 @@ class AltMonitorUpdate
 			$query = "UPDATE `".ROSTER_ALT_TABLE."` SET `main_id` = '".$mainid."', `alt_type` = '".ALTMONITOR_MAIN_MANUAL_NO_ALTS."' WHERE `member_id` = '".$mainid."'";
 			if( $wowdb->query($query) )
 			{
-				$this->messages .= ' - '.$this->chars[$mainid]['name'].' written as main without alts';
+				$this->messages .= ' - '.$this->chars[$mainid]['name'].' written as main without alts<br/>'."\n";
 			}
-	
+			else
+			{
+				$this->messages .= ' - <span style="color:red;">Main not written. MySQL said: '.$wowdb->error().'</span><br/>'."\n";
+				return false;
+			}
 		}
 		else
 		{
@@ -389,22 +510,22 @@ class AltMonitorUpdate
 			}
 			else
 			{
-				return('Alts not written. MySQL said: '.$wowdb->error());
+				$this->messages .= ' - <span style="color:red;">Alts not written. MySQL said: '.$wowdb->error().'</span><br/>'."\n";
+				return false;
 			}
 			
 			$query = "UPDATE `".ROSTER_ALT_TABLE."` SET `main_id` = '".$mainid."', `alt_type` = '".ALTMONITOR_MAIN_MANUAL_WITH_ALTS."' WHERE `member_id` = '".$mainid."'";
 			if( $wowdb->query($query) )
 			{
-				$this->messages .= ' - Main written';
+				$this->messages .= ' - Main written<br/>'."\n";
 			}
 			else
 			{
-				return('Main not written. MySQL said: '.$wowdb->error());
+				$this->messages .= ' - <span style="color:red;">Main not written. MySQL said: '.$wowdb->error().'</span><br/>'."\n";
+				return false;
 			}
 		}
 		
-		return '';
+		return true;
 	}
 }
-
-$GLOBALS['AltMonitorUpdate'] = new AltMonitorUpdate;
