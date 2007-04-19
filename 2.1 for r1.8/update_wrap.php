@@ -45,7 +45,7 @@ foreach($guild['Members'] as $member_name => $char)
 {
 	$member_id = $char['member_id'];
 	$AltMonitor->messages .= $member_name;
-	$AltMonitor->guild($member_id, $member_name, $char);
+	$AltMonitor->guild($char, $member_id);
 }
 
 // Guild post hook. Deletes old entries.
