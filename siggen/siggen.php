@@ -58,9 +58,12 @@ if( !ereg('ini_set', ini_get('disable_functions')) )
 
 // Get name from browser request
 // url_decode() the name, then utf-8_encode() it
-if( isset($_GET['member']) )
+if( isset($_GET['member']) || isset($_GET['name']) )
 {
-	$char_name = utf8_encode(urldecode($_GET['member']));
+	if( $_GET['member'] != '' )
+		$char_name = utf8_encode(urldecode($_GET['member']));
+	else
+		$char_name = utf8_encode(urldecode($_GET['name']));
 }
 elseif( isset($_SERVER['PATH_INFO']) ) // Try pulling from a "path_info" request
 {
