@@ -161,19 +161,36 @@ foreach ($items as $key => $data)
 	array_push($keys,$key);
 }
 print("<h1>".$wordings[$roster_conf['roster_lang']]['kbc_title_addon']."</h1><br>");
-borderTop();
+/*borderTop();
 print($tableHeader);
-tableHeaderRow($keys);
+tableHeaderRow($keys);*/
 
-$query = "SELECT name, level, member_id, class, clientLocale FROM `".ROSTER_PLAYERSTABLE."` GROUP BY name ORDER BY name ASC";
+$query = "SELECT name, level, member_id, class, clientLocale FROM `".ROSTER_PLAYERSTABLE."` GROUP BY name ORDER BY class ASC";
 $result = $wowdb->query($query) or die_quietly($wowdb->error(),'Database Error',basename(__FILE__),__LINE__,$query);
 if ($roster_conf['sqldebug'])
 {
 	print ("<!--$query-->");
 }
+$tmp_class="";
 
 while ($row = $wowdb->fetch_array($result))
 {
+	if($tmp_class!=$row['class'])
+	{
+		if($tmp_class!="")
+		{
+			print($tableFooter);
+			borderBottom();
+		}
+		print("<h2>".$row['class']."</h2><br>");
+		borderTop();
+		print($tableHeader);
+		tableHeaderRow($keys);
+
+		$tmp_class=$row['class'];
+	}
+
+
 	if ($row['clientLocale'] == '')
 	{
 		$row['clientLocale'] = $row['clientLocale'];
