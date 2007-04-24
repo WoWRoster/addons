@@ -1,29 +1,53 @@
 <?php
 /******************************
- * WoWRoster.net  Roster
- * Copyright 2002-2006
- * Licensed under the Creative Commons
- * "Attribution-NonCommercial-ShareAlike 2.5" license
- *
- * Short summary
- *  http://creativecommons.org/licenses/by-nc-sa/2.5/
- *
- * Full license information
- *  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
- * -----------------------------
- *
- * $Id$
- *
- ******************************/
+* WoWRoster.net  Roster
+* Copyright 2002-2006
+* Licensed under the Creative Commons
+* "Attribution-NonCommercial-ShareAlike 2.5" license
+*
+* Short summary
+*  http://creativecommons.org/licenses/by-nc-sa/2.5/
+*
+* Full license information
+*  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
+* -----------------------------
+*
+* $Id$
+*
+******************************/
 
 #--[ CONFIG ]--------------------------------------------------------
 
-	// Made By Recipe list configuration
-	$display_recipe_icon = 1;			//Recipe Icon column display ( 1 on | 0 off)
-	$display_recipe_name = 1;			//Recipe Name column display ( 1 on | 0 off)
-	$display_recipe_level = 1;			//Recipe Level column display ( 1 on | 0 off)
-	$display_recipe_tooltip = 0;		//Recipe tooltip column display ( 1 on | 0 off )
-	$display_recipe_type = 0;			//Recipe Type column display ( 1 on | 0 off)
-	$display_recipe_reagents = 1;		//Recipe Reagents column display ( 1 on | 0 off)
-	$display_recipe_makers = 1;			//Recipe Who can make what column display ( 1 on | 0 off)
-	$display_recipe_makers_count = 3;	//Number of makers per row in makers column (3 is default)
+define('MADEBY_CONFIG_TABLE', $db_prefix.'addon_madeby_config');
+include_once($addonDir.'lib/madeby_common.php');  
+
+$fileversion='2.0.2';
+
+$query = "SHOW TABLES LIKE '".MADEBY_CONFIG_TABLE."'";
+
+$result = $wowdb->query( $query ) or die_quietly($wowdb->error(),'MadeBy',__FILE__,__LINE__, $query );
+
+if ( $row = $wowdb->fetch_assoc($result) )
+{
+//	$wowdb->free_result($result);
+
+	// -[ Get config values and insert them into the array ]-
+	$query = "SELECT `config_name`, `config_value` FROM `".MADEBY_CONFIG_TABLE."` ORDER BY `id` ASC;";
+
+	$result = $wowdb->query( $query ) or die_quietly($wowdb->error(),'MadeBy',__FILE__,__LINE__, $query );
+
+	while( $row = $wowdb->fetch_assoc($result) )
+	{
+		$addon_conf['MadeBy'][$row['config_name']] = stripslashes($row['config_value']);
+	}
+
+//	$wowdb->free_result($result);
+
+	$dbversion = $addon_conf['MadeBy']['version'];
+}
+else
+{
+	$dbversion = '0.0.0'; // we need to install
+}
+
+?>
