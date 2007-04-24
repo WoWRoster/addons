@@ -15,8 +15,7 @@
  *
  ******************************/
 
-
-.difficulty_1:visited {
+.difficulty_1.visited {
 	color: #CCCCCC
 }
 .difficulty_1:link    {
