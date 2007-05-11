@@ -121,7 +121,7 @@ $siggen_translate['frFR']['Guerrier']     = 'Warrior';
 
 // Race, Gender Translation
 $siggen_translate['frFR']['Elfe de sang'] = 'Blood Elf';
-$siggen_translate['frFR']['Draenei']     = 'Draenei';
+$siggen_translate['frFR']['Draeneï']     = 'Draenei';
 $siggen_translate['frFR']['Elfe de la nuit'] = 'Night Elf';
 $siggen_translate['frFR']['Nain']         = 'Dwarf';
 $siggen_translate['frFR']['Gnome']        = 'Gnome';
