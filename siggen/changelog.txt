@@ -3,13 +3,19 @@
 SigGen Change Log
 
 
-0.2.5 - 04.20.07
-* SigGen
-   o You can use name= again, but not if SigGen is in WoWRosterDF
-   o Added a removeAccents function
-* SigGen Config
+0.2.5 - 06.16.07
+ * SigGen
+   o Fixed: You can use name= again
+      SigGen for WoWRosterDF MUST use member=
+   o Fixed: av.php and sig.php now use full paths to siggen.php
+   o Added: Ability to remove accents from saved images
+      This will convert accented characters in a player's name to non accented characters when saving images
+	  WARNING: All players with names that map to the same name can and will be overwritten
+   o Added: Talent spec and talent points (thanks ulminia)
+ * SigGen Config
    o Fixed: Missing slash in readfile() in trigger.php
    o Fixed: Missing slash in preview link
+   o Changed: Version check now uses wowroster.net rss feed for downloads
 
 
 0.2.4 - 03.09.07

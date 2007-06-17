@@ -214,6 +214,14 @@ if( $allow_save )
         No</label></td>
     </tr>
     <tr>
+      <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'This will convert accented characters in a player\\\'s name to non accented characters when saving images<br /><span class=&quot;red&quot;>WARNING:</span> All players with names that map to the same name can and will be overwritten<br />For a list of converted characters, view the SigGen Documentation','Convert Accents' ); ?></td>
+      <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><label>
+        <input type="radio" class="checkBox" name="save_char_convert" value="1" <?php print ( $configData['save_char_convert'] ? 'checked="checked"' : '' ); ?> />
+        Yes</label> <label>
+        <input type="radio" class="checkBox" name="save_char_convert" value="0" <?php print ( !$configData['save_char_convert'] ? 'checked="checked"' : '' ); ?> />
+        No</label></td>
+    </tr>
+    <tr>
       <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Specify a directory to save generated images to<br />This is a full path to the save location<br />Options:<ul><li>%s% - Use this to specify the SigGen Directory</li><li>%r% - Use this to specify the Roster Directory</li></ul>Current save path is &quot;'.str_replace('\\','/',str_replace($siggen_saved_find,$siggen_saved_rep,$configData['save_images_dir'])).'&quot;','Saved images directory' ); ?></td>
       <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="save_images_dir" type="text" value="<?php print $configData['save_images_dir']; ?>" size="20" maxlength="255" /></td>
     </tr>
@@ -274,6 +282,7 @@ else
     <tr>
       <td class="sc_header_right" colspan="2" align="center"><?php print $functions->createTip( 'Either the directory doesn&acute;t exist or &quot;Save Images&quot; is turned off','Save Image Functions Disabled' ); ?>
         <input name="save_only_mode" type="hidden" value="0" />
+        <input name="save_char_convert" type="hidden" value="<?php print $configData['save_char_convert']; ?>" />
         <input name="save_prefix" type="hidden" value="<?php print $configData['save_prefix']; ?>" />
         <input name="save_suffix" type="hidden" value="<?php print $configData['save_suffix']; ?>" />
         <input name="trigger" type="hidden" value="0" />
@@ -1154,6 +1163,111 @@ else
                 <tr>
                   <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
                     <input type="text" maxlength="7" style="background-color:<?php print $configData['text_custom_shadow']; ?>;" value="<?php print $configData['text_custom_shadow']; ?>" name="text_custom_shadow" id="text_custom_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_custom_shadow'))" alt="" /></td>
+                </tr>
+              </table></td>
+          </tr>
+        </table>
+<?php print border('sgreen','end'); ?>
+        </div></td>
+
+    </tr>
+    <tr>
+
+      <td valign="top"><!-- ===[ Begin Text Config 9 ]=== -->
+        <div id="textT9Col" style="display:inline">
+<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT9Col','textT9')\"><img src=\"".$roster_conf['img_url']."plus.gif\" style=\"float:right;\" alt=\"+\" />Talent Spec</div>"); ?>
+<?php print border('syellow','end'); ?>
+        </div>
+        <div id="textT9" style="display:none">
+<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT9Col','textT9')\"><img src=\"".$roster_conf['img_url']."minus.gif\" style=\"float:right;\" alt=\"-\" />Talent Spec</div>"); ?>
+        <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
+          <tr>
+            <td class="sc_row<?php echo ((($row=0)%2)+1); ?>" align="left">Display Talent Spec</td>
+            <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><label>
+              <input type="radio" class="checkBox" name="text_spec_disp" value="1" <?php print ( $configData['text_spec_disp'] ? 'checked="checked"' : '' ); ?> />
+              Yes</label> <label>
+              <input type="radio" class="checkBox" name="text_spec_disp" value="0" <?php print ( !$configData['text_spec_disp'] ? 'checked="checked"' : '' ); ?> />
+              No</label></td>
+          </tr>
+          <tr>
+            <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left">Talent Spec placement</td>
+            <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right">Horiz: <input name="text_spec_loc_x" type="text" value="<?php print $configData['text_spec_loc_x']; ?>" size="3" maxlength="3" />
+              Vert: <input name="text_spec_loc_y" type="text" value="<?php print $configData['text_spec_loc_y']; ?>" size="3" maxlength="3" /></td>
+          </tr>
+          <tr>
+            <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left">Talent Spec alignment</td>
+            <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionList($alignArr,$configData['text_spec_align'],'text_spec_align' ); ?></td>
+          </tr>
+          <tr>
+            <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="center" colspan="2">
+              <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
+                <tr>
+                  <td colspan="2" class="membersHeaderRight">Font settings</td>
+                </tr>
+                <tr>
+                  <td class="sc_row1" align="left">Font name:
+                  	<?php print $functions->createOptionList($fontFilesArr,$configData['text_spec_font_name'],'text_spec_font_name',1 ); ?></td>
+                  <td class="sc_row_right1" align="right">Font size:
+                  	<input name="text_spec_font_size" type="text" value="<?php print $configData['text_spec_font_size']; ?>" size="3" maxlength="3" /></td>
+                </tr>
+                <tr>
+                  <td class="sc_row_right2" align="left" colspan="2">Font color:
+                  	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_spec_font_color']; ?>;" value="<?php print $configData['text_spec_font_color']; ?>" name="text_spec_font_color" id="text_spec_font_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_spec_font_color'))" alt="" /></td>
+                </tr>
+                <tr>
+                  <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
+                    <input type="text" maxlength="7" style="background-color:<?php print $configData['text_spec_shadow']; ?>;" value="<?php print $configData['text_spec_shadow']; ?>" name="text_spec_shadow" id="text_spec_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_spec_shadow'))" alt="" /></td>
+                </tr>
+              </table></td>
+          </tr>
+        </table>
+<?php print border('sgreen','end'); ?>
+        </div></td>
+
+      <td valign="top"><!-- ===[ Begin Text Config 10 ]=== -->
+        <div id="textT10Col" style="display:inline">
+<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT10Col','textT10')\"><img src=\"".$roster_conf['img_url']."plus.gif\" style=\"float:right;\" alt=\"+\" />Talent Points</div>"); ?>
+<?php print border('syellow','end'); ?>
+        </div>
+        <div id="textT10" style="display:none">
+<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT10Col','textT10')\"><img src=\"".$roster_conf['img_url']."minus.gif\" style=\"float:right;\" alt=\"-\" />Talent Points</div>"); ?>
+        <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
+          <tr>
+            <td class="sc_row<?php echo ((($row=0)%2)+1); ?>" align="left">Display Talent Points</td>
+            <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><label>
+              <input type="radio" class="checkBox" name="text_talpoints_disp" value="1" <?php print ( $configData['text_talpoints_disp'] ? 'checked="checked"' : '' ); ?> />
+              Yes</label> <label>
+              <input type="radio" class="checkBox" name="text_talpoints_disp" value="0" <?php print ( !$configData['text_talpoints_disp'] ? 'checked="checked"' : '' ); ?> />
+              No</label></td>
+          </tr>
+          <tr>
+            <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left">Talent Points placement</td>
+            <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right">Horiz: <input name="text_talpoints_loc_x" type="text" value="<?php print $configData['text_talpoints_loc_x']; ?>" size="3" maxlength="3" />
+              Vert: <input name="text_talpoints_loc_y" type="text" value="<?php print $configData['text_talpoints_loc_y']; ?>" size="3" maxlength="3" /></td>
+          </tr>
+          <tr>
+            <td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left">Talent Points alignment</td>
+            <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionList($alignArr,$configData['text_talpoints_align'],'text_talpoints_align' ); ?></td>
+          </tr>
+          <tr>
+            <td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="center" colspan="2">
+              <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
+                <tr>
+                  <td colspan="2" class="membersHeaderRight">Font settings</td>
+                </tr>
+                <tr>
+                  <td class="sc_row1" align="left">Font name:
+                  	<?php print $functions->createOptionList($fontFilesArr,$configData['text_talpoints_font_name'],'text_talpoints_font_name',1 ); ?></td>
+                  <td class="sc_row_right1" align="right">Font size:
+                  	<input name="text_talpoints_font_size" type="text" value="<?php print $configData['text_talpoints_font_size']; ?>" size="3" maxlength="3" /></td>
+                </tr>
+                <tr>
+                  <td class="sc_row_right2" align="left" colspan="2">Font color:
+                  	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_talpoints_font_color']; ?>;" value="<?php print $configData['text_talpoints_font_color']; ?>" name="text_talpoints_font_color" id="text_talpoints_font_color" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_talpoints_font_color'))" alt="" /></td>
+                </tr>
+                <tr>
+                  <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
+                    <input type="text" maxlength="7" style="background-color:<?php print $configData['text_talpoints_shadow']; ?>;" value="<?php print $configData['text_talpoints_shadow']; ?>" name="text_talpoints_shadow" id="text_talpoints_shadow" size="10"><img src="<?php print $roster_conf['roster_dir']; ?>/addons/siggen/inc/color/images/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_talpoints_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
           </tr>

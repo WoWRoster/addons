@@ -403,11 +403,11 @@ if( $siggen_update )
 {
 	$sc_file_ver_latest = '';
 
-	// Check xent.homeip.net for versioning
-	$sh = @fsockopen('xent.homeip.net', 80, $errno, $error, 5);
+	// Check wowroster.net for versioning
+	$sh = @fsockopen('wowroster.net', 80, $errno, $error, 5);
 	if ( $sh )
 	{
-		@fputs($sh, "GET /files/siggen/version.txt HTTP/1.1\r\nHost: xent.homeip.net\r\nConnection: close\r\n\r\n");
+		@fputs($sh, "GET /rss/downloads.php?id=20 HTTP/1.1\r\nHost: wowroster.net\r\nConnection: close\r\n\r\n");
 		while ( !@feof($sh) )
 		{
 			$content = @fgets($sh, 512);
