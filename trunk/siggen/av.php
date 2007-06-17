@@ -25,7 +25,7 @@
  * @link http://www.wowroster.net
  * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
  * @author Joshua Clark
- * @version $Id:$
+ * @version $Id$
  * @copyright 2005-2007 Joshua Clark
  * @package SigGen
  * @filesource
@@ -35,6 +35,6 @@
 $config_name = 'avatar'; // Avatar config name
 
 // Require sig.php (must be in the same directory)
-require ('siggen.php');
+require (dirname(__FILE__).DIRECTORY_SEPARATOR.'siggen.php');
 
 ?>

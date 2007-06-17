@@ -199,18 +199,18 @@ if( isset($_GET['format']) )
 
 
 	// Read skills_table from Database
-	if( $member_id )
+	if( isset($playersData['name']) )
 	{
 		$skill_str = 'SELECT * FROM `'.ROSTER_SKILLSTABLE."` WHERE `member_id` = $member_id ORDER BY `skill_order` ASC;";
-		$SQL_skill = $wowdb->query($skill_str);
+		$skill_sql = $wowdb->query($skill_str);
 
-		$skill_rows = $wowdb->num_rows($SQL_skill);
+		$skill_rows = $wowdb->num_rows($skill_sql);
 
 		if( $skill_rows != 0 )
 		{
 			for( $n=0; $n<$skill_rows; $n++ )
 			{
-				$tempData = $wowdb->fetch_assoc($SQL_skill);
+				$tempData = $wowdb->fetch_assoc($skill_sql);
 
 				list($lvl,$maxlvl) = explode( ':', $tempData['skill_level'] );
 
@@ -220,7 +220,33 @@ if( isset($_GET['format']) )
 										'max' => $maxlvl);
 			}
 		}
-		$wowdb->free_result($SQL_skill);
+		$wowdb->free_result($skill_sql);
+	}
+	
+	// Get Talent Spec
+	if( isset($playersData['name']) )
+	{
+		$spec_str = 'SELECT `pointsspent`, `tree` FROM `'.ROSTER_TALENTTREETABLE."` WHERE `member_id` = '$member_id' ORDER BY `pointsspent` DESC;";
+		$spec_sql = $wowdb->query($spec_str);
+		
+		$spec_rows = $wowdb->num_rows($spec_sql);
+
+		if( $spec_rows != 0 )
+		{
+			$specData = array();
+			for( $n=0; $n<$spec_rows; $n++ )
+			{
+				$tempData = $wowdb->fetch_assoc($spec_sql);
+
+				if( !isset($specData['tree']) )
+				{
+					$specData['tree'] = $tempData['tree'];
+				}
+				$specData['points'][] = $tempData['pointsspent'];
+			}
+			$specData['points'] = implode(' / ',$specData['points']);
+		}
+		$wowdb->free_result($spec_sql);
 	}
 
 	// Explicitly close the db
@@ -1168,6 +1194,18 @@ if( isset($_GET['format']) )
 		writeText( $im,$configData['text_sitename_font_size'],$configData['text_sitename_loc_x'],$configData['text_sitename_loc_y'],$configData['text_sitename_font_color'],$configData['text_sitename_font_name'],$sig_site_name,$configData['text_sitename_align'],$configData['text_sitename_shadow'] );
 	}
 
+	// Place Talent Spec Text
+	if( $configData['text_spec_disp'] && !empty($specData['tree']) )
+	{
+		writeText( $im,$configData['text_spec_font_size'],$configData['text_spec_loc_x'],$configData['text_spec_loc_y'],$configData['text_spec_font_color'],$configData['text_spec_font_name'],$specData['tree'],$configData['text_spec_align'],$configData['text_spec_shadow'] );
+	}
+
+	// Place Talent Points Text
+	if( $configData['text_talpoints_disp'] && !empty($specData['tree']) )
+	{
+		writeText( $im,$configData['text_talpoints_font_size'],$configData['text_talpoints_loc_x'],$configData['text_talpoints_loc_y'],$configData['text_talpoints_font_color'],$configData['text_talpoints_font_name'],$specData['points'],$configData['text_talpoints_align'],$configData['text_talpoints_shadow'] );
+	}
+
 	// Place Custom Text
 	if( $configData['text_custom_disp'] && !empty($configData['text_custom_text']) )
 	{
@@ -1324,7 +1362,8 @@ if( isset($_GET['format']) )
 	if( $configData['save_images'] && $configData['default_message'] != $sig_name )
 	{
 		$save_dir = $configData['save_images_dir'];
-		$saved_image = $save_dir.$configData['save_prefix'].$sig_name.$configData['save_suffix'].'.'.$configData['save_images_format'];
+		$saved_name = ( $configData['save_char_convert'] ? removeAccents($sig_name) : $sig_name );
+		$saved_image = $save_dir.$configData['save_prefix'].$saved_name.$configData['save_suffix'].'.'.$configData['save_images_format'];
 
 		if( file_exists($save_dir) )
 		{
