@@ -424,7 +424,7 @@ if( $siggen_update )
 	{
 		$functions->setMessage($siggen_locale[$roster_conf['roster_lang']]['cannot_check_version']);
 	}
-	elseif( $sc_file_ver_latest > $sc_file_ver )
+	elseif( version_compare($sc_file_ver_latest, $sc_file_ver,'>') == true )
 	{
 		$functions->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['new_siggen_available'],$sc_file_ver_latest));
 	}
