@@ -222,24 +222,26 @@ if( isset($_GET['format']) )
 		}
 		$wowdb->free_result($skill_sql);
 	}
-	
+
 	// Get Talent Spec
 	if( isset($playersData['name']) )
 	{
-		$spec_str = 'SELECT `pointsspent`, `tree` FROM `'.ROSTER_TALENTTREETABLE."` WHERE `member_id` = '$member_id' ORDER BY `pointsspent` DESC;";
+		$spec_str = 'SELECT `pointsspent`, `tree` FROM `'.ROSTER_TALENTTREETABLE."` WHERE `member_id` = '$member_id' ORDER BY `order` ASC;";
 		$spec_sql = $wowdb->query($spec_str);
-		
+
 		$spec_rows = $wowdb->num_rows($spec_sql);
 
 		if( $spec_rows != 0 )
 		{
 			$specData = array();
+			$point_holder = 0;
 			for( $n=0; $n<$spec_rows; $n++ )
 			{
 				$tempData = $wowdb->fetch_assoc($spec_sql);
 
-				if( !isset($specData['tree']) )
+				if( $tempData['pointsspent'] > $point_holder )
 				{
+					$point_holder = $tempData['pointsspent'];
 					$specData['tree'] = $tempData['tree'];
 				}
 				$specData['points'][] = $tempData['pointsspent'];
