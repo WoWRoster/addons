@@ -18,11 +18,12 @@ $Gem_info['frFR']['sill']="Joaillerie";
 $Gem_info['frFR']['slot']="châsse";
 
 //color
-$Gem_info['frFR']['type']['blue']="bleue";
-$Gem_info['frFR']['type']['red']="rouge";
-$Gem_info['frFR']['type']['yellow']="jaune";
-$Gem_info['frFR']['type']['meta']="méta-gemme";
-
-
+$Gem_info['frFR']['type']['blue']="Bleue";
+$Gem_info['frFR']['type']['red']="Rouge";
+$Gem_info['frFR']['type']['yellow']="Jaune";
+$Gem_info['frFR']['type']['green']="Verte";
+$Gem_info['frFR']['type']['orange']="Orange";
+$Gem_info['frFR']['type']['purple']="Violette";
+$Gem_info['frFR']['type']['meta']="Méta";
 
 ?>

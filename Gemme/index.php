@@ -21,6 +21,35 @@ if ( !defined('ROSTER_INSTALLED') )
     exit('Detected invalid access to this file!');
 }
 
+function gemlookup($locales, $color)
+{
+   global $wowdb,$Gem_info;
+
+   $query = "SELECT DISTINCT `recipe_name`, `reagents`, `recipe_type`, `recipe_tooltip`, `recipe_texture`, `item_color`
+		FROM `".ROSTER_RECIPESTABLE."`
+		WHERE (`recipe_type` = '".$Gem_info[$locales[0]]['type'][$color]."'
+		AND `skill_name` = '".$Gem_info[$locales[0]]['sill']."') ";
+   for ($i = 1; $i<count($locales); $i++)
+   {
+     if ($locales[$i] != '')
+          $query .= " OR (`recipe_type` = '".$Gem_info[$locales[$i]]['type'][$color]."'
+		AND `skill_name` = '".$Gem_info[$locales[$i]]['sill']."') ";
+   }
+   $query .=       "ORDER BY `reagents`,`recipe_name` ";
+
+   $result = $wowdb->query($query) or die_quietly($wowdb->error(),'Database Error', basename(__FILE__),__LINE__,$query);
+
+   $count = 0;
+   $temp = array();
+   while($row = $wowdb->fetch_array($result))
+   {
+        $temp[$count]=$row;
+	$count++;
+   }
+
+   return $temp;
+}
+
 
 $header_title = $wordings[$roster_conf['roster_lang']]['gemme_title_addon'];
 
@@ -31,72 +60,32 @@ $clresult = $wowdb->query($clquery) or die_quietly($wowdb->error(),'Database Err
 $i = 0;
 while($clrow = $wowdb->fetch_array($clresult))
 {
-	$clientLocales[$i] = $clrow['clientLocale'];
-	$i++;
+  $clientLocales[$i] = $clrow['clientLocale'];
+  $i++;
 }
 if ($i == 0) $clientLocales[$i] = $roster_conf['roster_lang'];
 
-
-$query = "SELECT DISTINCT `recipe_name` , `reagents`, `recipe_tooltip`, `recipe_texture`, `item_color`
-		FROM `".ROSTER_RECIPESTABLE."`
-		WHERE (`recipe_type` = '".$Gem_info[$clientLocales[0]]['Gem']."'
-		AND `skill_name` = '".$Gem_info[$clientLocales[0]]['sill']."') ";
-for ($i = 1; $i<count($clientLocales); $i++)
+$type['blue']=gemlookup($clientLocales, 'blue');
+$type['red']=gemlookup($clientLocales, 'red');
+$type['yellow']=gemlookup($clientLocales, 'yellow');
+$type['purple']=gemlookup($clientLocales, 'purple');
+$type['green']=gemlookup($clientLocales, 'green');
+$type['orange']=gemlookup($clientLocales, 'orange');
+$type['meta']=gemlookup($clientLocales, 'meta');
+if (!empty($type['purple']))
 {
-	if ($clientLocales[$i] != '')
-	$query .= " OR (`recipe_type` = '".$Gem_info[$clientLocales[$i]]['Gem']."'
-		  AND `skill_name` = '".$Gem_info[$clientLocales[$i]]['sill']."') ";
+    $type['blue']= array_merge($type['blue'],$type['purple']);
+    $type['red']= array_merge($type['red'],$type['purple']);
 }
-$query .=       "ORDER BY `reagents` ASC";
-
-$result = $wowdb->query($query) or die_quietly($wowdb->error(),'Database Error', basename(__FILE__),__LINE__,$query);
-
-$type['bleu']=array();
-$type['red']=array();
-$type['yellow']=array();
-$type['meta']=array();
-
-$countR=$countB=$countY=$countM=0;
-
-while($row = $wowdb->fetch_array($result))
+if (!empty($type['green']))
 {
-	$matchBlue=$matchRed=$matchYellow=$matchMeta=false;
-        for ($i = 0; $i<count($clientLocales); $i++)
-	{
-           if(ereg($Gem_info[$clientLocales[$i]]['type']['blue'], $row['recipe_tooltip']))
-               $matchBlue=true;
-	   if(ereg($Gem_info[$clientLocales[$i]]['type']['red'], $row['recipe_tooltip']))
-               $matchRed=true;
-	   if(ereg($Gem_info[$clientLocales[$i]]['type']['yellow'], $row['recipe_tooltip']))
-               $matchYellow=true;
-	   if(ereg($Gem_info[$clientLocales[$i]]['type']['meta'], $row['recipe_tooltip']))
-               $matchMeta=true;
-        }
-
-	//first checking for a metagem, because it matches the other colors too ;-)
-        if ($matchMeta == true)
-	{
-		$type['meta'][$countM]=$row;
-		$countM++;
-	} 
-	else
-	{
-		if ($matchBlue == true)
-		{
-			$type['blue'][$countB]=$row;
-			$countB++;
-		}
-		if ($matchRed == true)
-		{
-			$type['red'][$countR]=$row;
-			$countR++;
-		}
-		if ($matchYellow == true)
-		{
-			$type['yellow'][$countY]=$row;
-			$countY++;
-		}
-	}
+    $type['blue']= array_merge($type['blue'],$type['green']);
+    $type['yellow']= array_merge($type['yellow'],$type['green']);
+}
+if (!empty($type['orange']))
+{
+    $type['yellow']= array_merge($type['yellow'],$type['orange']);
+    $type['red']= array_merge($type['red'],$type['orange']);
 }
 
 ////////////DISPLAY
@@ -104,6 +93,8 @@ print("<h1>".$wordings[$roster_conf['roster_lang']]['gemme_title_addon']."</h1><
 
 foreach($Gem_info[$roster_conf['roster_lang']]['type'] as $keyColor=>$couleur)
 {
+  if (($keyColor == 'blue') || ($keyColor == 'red') || ($keyColor == 'yellow')  || ($keyColor == 'meta'))
+  {
 ?>
 <table cellspacing="0" cellpadding="0" border="0">
 	<tr>
@@ -133,25 +124,29 @@ foreach($Gem_info[$roster_conf['roster_lang']]['type'] as $keyColor=>$couleur)
 
 	foreach($tmp as $item)
 	{
-		$tooltip = makeOverlib($item['recipe_tooltip'],'',$item['item_color'],0,$lang);
-		$itemAff = '<div class="item" '.$tooltip.'>';
-		$itemAff.="<img src=\"".$roster_conf['interface_url'].$item['recipe_texture'].".jpg\" class=\"icon\" alt=\"\" />";
-		$itemAff.='</div>';
-		
-		$query = "SELECT M.name
-				FROM `".ROSTER_RECIPESTABLE."` R, `".ROSTER_MEMBERSTABLE."` M
-				WHERE R.member_id=M.member_id
-				AND R.`recipe_name` = '".addslashes($item['recipe_name'])."'
-			";
-		
-		$result = $wowdb->query($query) or die_quietly($wowdb->error(),'Database Error', basename(__FILE__),__LINE__,$query);
-		
-		$craftName='';
-		
-		while($row = $wowdb->fetch_array($result))
-		{
-			$craftName.=$row[name].", ";
-		}
+    $tooltip = makeOverlib($item['recipe_tooltip'],'',$item['item_color'],0,$lang);
+    $itemAff = '<div class="item" '.$tooltip.'>';
+    $itemAff.="<img src=\"".$roster_conf['interface_url'].$item['recipe_texture'].".jpg\" class=\"icon\" alt=\"\" />";
+    $itemAff.='</div>';
+
+    $query = "SELECT M.name
+      		FROM `".ROSTER_RECIPESTABLE."` R, `".ROSTER_MEMBERSTABLE."` M
+      		WHERE R.member_id=M.member_id
+          AND R.`recipe_name` = '".addslashes($item['recipe_name'])."'
+          ";
+
+    $result = $wowdb->query($query) or die_quietly($wowdb->error(),'Database Error', basename(__FILE__),__LINE__,$query);
+    
+    $craftName='';
+    
+    $craftSeperator = false;
+    while($row = $wowdb->fetch_array($result))
+    {
+        if ($craftSeperator == true)
+             $craftName.= ", ";
+        $craftName.=$row[name];
+        $craftSeperator = true;
+    }
 ?>
 				<tr>
 					<td class="membersRow1">
@@ -176,5 +171,6 @@ foreach($Gem_info[$roster_conf['roster_lang']]['type'] as $keyColor=>$couleur)
 </table>
 <br>
 <?php
+ }
 }//end foreach($Gem_info[$roster_conf['roster_lang']] as $value)
 ?>
