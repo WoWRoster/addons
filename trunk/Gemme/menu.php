@@ -16,7 +16,7 @@
  *
  ******************************/
 
-$config['menu_name'] = 'Key bc';
+$config['menu_name'] = 'Gems';
 $config['menu_min_user_level'] = 0;
 $config['menu_index_file'] = array();
 
