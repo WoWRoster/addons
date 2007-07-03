@@ -91,6 +91,37 @@ if (!empty($type['orange']))
 ////////////DISPLAY
 print("<h1>".$wordings[$roster_conf['roster_lang']]['gemme_title_addon']."</h1><br>");
 
+?>
+<script type='text/JavaScript' language='JavaScript'>
+	function refreshURL(form) {
+		var var1 = (form.quality.options[form.quality.selectedIndex].value);
+		if(var1!=0)
+		{
+			urlt='addon.php?roster_addon_name=Gemme&quality=';
+			urlt+=var1;
+			self.location=urlt;
+		}
+	}
+</script>
+<form method="post" action="#">
+<?php echo $Gem_info[$roster_conf['roster_lang']]['Filter']; ?>
+<select name="quality"  onChange="refreshURL(this.form)">
+	<option value="none"><?php echo $Gem_info[$roster_conf['roster_lang']]['NoFilter']; ?></option>
+<?php
+foreach($Gem_info['frFR']['qualities'] as $keyColor=>$name)
+{
+	if(isset($_GET['quality'])&& $_GET['quality']==$keyColor)
+		echo '<option value="'.$keyColor.'" selected>'.$name.'</option>\n';
+	else
+		echo '<option value="'.$keyColor.'">'.$name.'</option>\n';
+}
+?>
+</select>
+</form>
+<br>
+<br>
+<?php
+
 foreach($Gem_info[$roster_conf['roster_lang']]['type'] as $keyColor=>$couleur)
 {
   if (($keyColor == 'blue') || ($keyColor == 'red') || ($keyColor == 'yellow')  || ($keyColor == 'meta'))
@@ -105,7 +136,7 @@ foreach($Gem_info[$roster_conf['roster_lang']]['type'] as $keyColor=>$couleur)
 	<tr>
 		<td class="simplebordercenterleft sgraybordercenterleft"></td>
 		<th class="simpleborderheader sgrayborderheader" align="center" valign="top">
-			<?=$Gem_info[$roster_conf['roster_lang']]['Gem_title']?> : <span style="color: <?=$color[$keyColor]?>;"><?=ucfirst($couleur)?></span>
+			<?php echo $Gem_info[$roster_conf['roster_lang']]['Gem_title']?> : <span style="color: <?php echo $color[$keyColor]?>;"><?php echo ucfirst($couleur)?></span>
 		</th>
 		<td class="simplebordercenterright sgraybordercenterright"></td>
 	</tr>
@@ -114,50 +145,53 @@ foreach($Gem_info[$roster_conf['roster_lang']]['type'] as $keyColor=>$couleur)
 		<td class="simplebordercenter">
 			<table width="100%" class="bodyline" cellspacing="0" id="table_0">
 				<tr>
-					<th class="membersHeader"><?=$Gem_info[$roster_conf['roster_lang']]['Objet']?></th>
-					<th class="membersHeader"><?=$Gem_info[$roster_conf['roster_lang']]['Name']?></th>
-					<th class="membersHeader"><?=$Gem_info[$roster_conf['roster_lang']]['compo']?></th>
-					<th class="membersHeader"><?=$Gem_info[$roster_conf['roster_lang']]['crafter']?></th>
+					<th class="membersHeader"><?php echo $Gem_info[$roster_conf['roster_lang']]['Objet']?></th>
+					<th class="membersHeader"><?php echo $Gem_info[$roster_conf['roster_lang']]['Name']?></th>
+					<th class="membersHeader"><?php echo $Gem_info[$roster_conf['roster_lang']]['compo']?></th>
+					<th class="membersHeader"><?php echo $Gem_info[$roster_conf['roster_lang']]['crafter']?></th>
 				</tr>
 <?php
 	$tmp=$type[$keyColor];
 
 	foreach($tmp as $item)
 	{
-    $tooltip = makeOverlib($item['recipe_tooltip'],'',$item['item_color'],0,$lang);
-    $itemAff = '<div class="item" '.$tooltip.'>';
-    $itemAff.="<img src=\"".$roster_conf['interface_url'].$item['recipe_texture'].".jpg\" class=\"icon\" alt=\"\" />";
-    $itemAff.='</div>';
-
-    $query = "SELECT M.name
-      		FROM `".ROSTER_RECIPESTABLE."` R, `".ROSTER_MEMBERSTABLE."` M
-      		WHERE R.member_id=M.member_id
-          AND R.`recipe_name` = '".addslashes($item['recipe_name'])."'
-          ";
-
-    $result = $wowdb->query($query) or die_quietly($wowdb->error(),'Database Error', basename(__FILE__),__LINE__,$query);
-    
-    $craftName='';
-    
-    $craftSeperator = false;
-    while($row = $wowdb->fetch_array($result))
-    {
-        if ($craftSeperator == true)
-             $craftName.= ", ";
-        $craftName.=$row[name];
-        $craftSeperator = true;
-    }
+		if((isset($_GET['quality'])&& $_GET['quality']==$item['item_color'])||!isset($_GET['quality'])||(isset($_GET['quality'])&& $_GET['quality']=="none"))
+		{
+			$tooltip = makeOverlib($item['recipe_tooltip'],'',$item['item_color'],0,$lang);
+			$itemAff = '<div class="item" '.$tooltip.'>';
+			$itemAff.="<img src=\"".$roster_conf['interface_url'].$item['recipe_texture'].".jpg\" class=\"icon\" alt=\"\" />";
+			$itemAff.='</div>';
+		
+			$query = "SELECT M.name
+					FROM `".ROSTER_RECIPESTABLE."` R, `".ROSTER_MEMBERSTABLE."` M
+					WHERE R.member_id=M.member_id
+				AND R.`recipe_name` = '".addslashes($item['recipe_name'])."'
+				";
+			
+			$result = $wowdb->query($query) or die_quietly($wowdb->error(),'Database Error', basename(__FILE__),__LINE__,$query);
+			
+			$craftName='';
+			
+			$craftSeperator = false;
+			while($row = $wowdb->fetch_array($result))
+			{
+				if ($craftSeperator == true)
+				$craftName.= ", ";
+				$craftName.=$row[name];
+				$craftSeperator = true;
+			}
 ?>
 				<tr>
 					<td class="membersRow1">
-						<?=$itemAff?>
+						<?php echo $itemAff?>
 					</td>
-					<td class="membersRow1"><?=$item['recipe_name']?></td>
-					<td class="membersRow1"><?=$item['reagents']?></td>
-					<td class="membersRowRight1"><?=$craftName?>&nbsp;</td>
+					<td class="membersRow1"><?php echo $item['recipe_name']?></td>
+					<td class="membersRow1"><?php echo $item['reagents']?></td>
+					<td class="membersRowRight1"><?php echo $craftName?>&nbsp;</td>
 				</tr>
 <?php
-	}//end 
+		}//end if
+	}//end foreach($tmp as $item)
 ?>
 			</table>
 		</td>
