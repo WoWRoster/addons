@@ -8,7 +8,16 @@ $Gem_info['deDE']['Name']='Name';
 $Gem_info['deDE']['level']='Stufe';
 $Gem_info['deDE']['compo']='Reagenzien';
 $Gem_info['deDE']['crafter']='Wer kann es herstellen?';
+$Gem_info['deDE']['Filter']='Filter :';
+$Gem_info['deDE']['NoFilter']='No Filter';
 
+//qualities table rare, uncommon, epic, common, trash
+$Gem_info['deDE']['qualities']['9d9d9d'] = 'trash';
+$Gem_info['deDE']['qualities']['ffffff'] = 'common';
+$Gem_info['deDE']['qualities']['1eff00'] = 'uncommon';
+$Gem_info['deDE']['qualities']['0070dd'] = 'rare';
+$Gem_info['deDE']['qualities']['a335ee'] = 'epic';
+$Gem_info['deDE']['qualities']['ff8000'] = 'legend';
 
 //Craft Name
 $Gem_info['deDE']['Gem']="Edelsteine";
