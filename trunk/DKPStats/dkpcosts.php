@@ -12,8 +12,8 @@
  * @copyright  2006-2007 PoloDude
  * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5"
  * @version    1.0.0
+ * @svn        SVN: $Id$
  * @author     PoloDude
- * @updated    17/06/2007
  * @link       http://www.wowroster.net/Forums/viewforum/f=55.html
  * @since      01/11/2006
  *
