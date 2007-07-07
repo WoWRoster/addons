@@ -20,7 +20,7 @@
 
 //Characters that can update the raids
 	$addon_conf['RaidTracker']['RaidUpdaters'] = array(
-		'Nogarth','Calaglin',
+		'Updater1','Updater2',
 	);
 
 //where is the itemstats lib
