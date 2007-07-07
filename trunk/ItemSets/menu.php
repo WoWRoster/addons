@@ -11,16 +11,12 @@
  *
  * @copyright  2004-2007 PoloDude
  * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5"
- * @version    1.8.0
+ * @version    1.8.1
+ * @svn        SVN: $Id$
  * @author     Gorgar, PoloDude, Zeryl
- * @updated    21/05/2007
  * @link       http://www.wowroster.net/Forums/viewforum/f=35.html
  *
 */
-
-$versions['versionDate']['itemsets'] = '$Date: 2007/05/21 $'; 
-$versions['versionRev']['itemsets'] = '$Revision: 1.8.0 $';   
-$versions['versionAuthor']['itemsets'] = '$Author: Gorgar, PoloDude, Zeryl $'; 
 
 $config['menu_name'] = 'Item Sets';    //<- This is just a general name and can be called anything, as it is used in the array, I generally use the name of the addon.
 
