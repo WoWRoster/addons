@@ -12,9 +12,10 @@
  * @copyright  2004-2007 PoloDude
  * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5"
  * @version    1.8.1
+ * @svn        SVN: $Id$
  * @author     Gorgar, PoloDude, Zeryl
- * @updated    21/05/2007
  * @link       http://www.wowroster.net/Forums/viewforum/f=35.html
+ *
 */
 
 if( eregi(basename(__FILE__),$_SERVER['PHP_SELF']) )
