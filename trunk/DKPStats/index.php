@@ -14,7 +14,7 @@
  * @version    1.0.0
  * @svn        SVN: $Id$
  * @author     PoloDude
- * @link       http://www.wowroster.net/Forums/viewforum/f=55.html
+ * @link        http://www.wowroster.net/Forums/viewforum/f=112.html
  * @since      01/11/2006
  *
 */
@@ -25,9 +25,8 @@ if ( !defined('ROSTER_INSTALLED') )
 }
 
 // Version Check
-/*
 	$file_ver = $addon_conf['DKPStats']['Version'];
-	$wrnet_download_id = '';
+	$wrnet_download_id = '111';
 	$file_ver_latest = '';	
 
 	// Check wowroster.net for versioning
@@ -55,7 +54,6 @@ if ( !defined('ROSTER_INSTALLED') )
 	{
 		print '<b><a href="http://www.wowroster.net/Downloads/details/id='.$wrnet_download_id.'.html" target="_blank">There is a new version available! v' . $file_ver_latest . '</a></b><br/><br/>';
 	}
-*/
 
 // Add itemstats css and javascript to header
 $more_css = "  <link rel=\"stylesheet\" href=\"".$addon_conf['DKPStats']['itemstatsLib']."/templates/".$addon_conf['DKPStats']['itemstatsCSS']."\" type=\"text/css\">\n";

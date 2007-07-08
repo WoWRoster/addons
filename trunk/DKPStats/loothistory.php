@@ -14,7 +14,7 @@
  * @version    1.0.0
  * @svn        SVN: $Id$
  * @author     PoloDude
- * @link       http://www.wowroster.net/Forums/viewforum/f=55.html
+ * @link        http://www.wowroster.net/Forums/viewforum/f=112.html
  * @since      01/11/2006
  *
 */
