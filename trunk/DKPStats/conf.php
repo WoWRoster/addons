@@ -21,7 +21,7 @@
 
 //where is the itemstats lib
 	$addon_conf['DKPStats']['itemstatsLib'] = "./itemstats";
-	$addon_conf['DKPStats']['itemstatsCSS'] = "wowhead.css";
+	$addon_conf['DKPStats']['itemstatsCSS'] = "itemstats.css";
 	$addon_conf['DKPStats']['itemstatsLibFile'] = "wowroster_itemstats.php";
 
 //Is eqdkp data in another database the the roster?
