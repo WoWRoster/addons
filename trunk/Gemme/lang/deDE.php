@@ -12,12 +12,12 @@ $Gem_info['deDE']['Filter']='Filter :';
 $Gem_info['deDE']['NoFilter']='No Filter';
 
 //qualities table rare, uncommon, epic, common, trash
-$Gem_info['deDE']['qualities']['9d9d9d'] = 'trash';
-$Gem_info['deDE']['qualities']['ffffff'] = 'common';
+//$Gem_info['deDE']['qualities']['9d9d9d'] = 'trash';
+//$Gem_info['deDE']['qualities']['ffffff'] = 'common';
 $Gem_info['deDE']['qualities']['1eff00'] = 'uncommon';
 $Gem_info['deDE']['qualities']['0070dd'] = 'rare';
-$Gem_info['deDE']['qualities']['a335ee'] = 'epic';
-$Gem_info['deDE']['qualities']['ff8000'] = 'legend';
+//$Gem_info['deDE']['qualities']['a335ee'] = 'epic';
+//$Gem_info['deDE']['qualities']['ff8000'] = 'legend';
 
 //Craft Name
 $Gem_info['deDE']['Gem']="Edelsteine";
@@ -31,7 +31,9 @@ $Gem_info['deDE']['type']['blue']="blau";
 $Gem_info['deDE']['type']['red']="rot";
 $Gem_info['deDE']['type']['yellow']="gelb";
 $Gem_info['deDE']['type']['meta']="Meta";
-
+$Gem_info['deDE']['type']['green']="Green";
+$Gem_info['deDE']['type']['orange']="Orange";
+$Gem_info['deDE']['type']['purple']="Purple";
 
 
 ?>

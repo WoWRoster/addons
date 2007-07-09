@@ -12,12 +12,12 @@ $Gem_info['enUS']['Filter']='Filter :';
 $Gem_info['frFR']['NoFilter']='No Filter';
 
 //qualities table rare, uncommon, epic, common, trash
-$Gem_info['enUS']['qualities']['9d9d9d'] = 'trash';
-$Gem_info['enUS']['qualities']['ffffff'] = 'common';
+//$Gem_info['enUS']['qualities']['9d9d9d'] = 'trash';
+//$Gem_info['enUS']['qualities']['ffffff'] = 'common';
 $Gem_info['enUS']['qualities']['1eff00'] = 'uncommon';
 $Gem_info['enUS']['qualities']['0070dd'] = 'rare';
-$Gem_info['enUS']['qualities']['a335ee'] = 'epic';
-$Gem_info['enUS']['qualities']['ff8000'] = 'legend';
+//$Gem_info['enUS']['qualities']['a335ee'] = 'epic';
+//$Gem_info['enUS']['qualities']['ff8000'] = 'legend';
 
 //Craft Name
 $Gem_info['enUS']['Gem']="Gems";
@@ -30,6 +30,9 @@ $Gem_info['enUS']['slot']="Slot";
 $Gem_info['enUS']['type']['blue']="Blue";
 $Gem_info['enUS']['type']['red']="Red";
 $Gem_info['enUS']['type']['yellow']="Yellow";
+$Gem_info['enUS']['type']['green']="Green";
+$Gem_info['enUS']['type']['orange']="Orange";
+$Gem_info['enUS']['type']['purple']="Purple";
 $Gem_info['enUS']['type']['meta']="meta";
 
 
