@@ -12,12 +12,12 @@ $Gem_info['frFR']['Filter']='Filtre sur la qualité:';
 $Gem_info['frFR']['NoFilter']='Non Filtré';
 
 //qualities table rare, uncommon, epic, common, trash
-$Gem_info['frFR']['qualities']['9d9d9d'] = 'Médiocre';
-$Gem_info['frFR']['qualities']['ffffff'] = 'Classique';
+//$Gem_info['frFR']['qualities']['9d9d9d'] = 'Médiocre';
+//$Gem_info['frFR']['qualities']['ffffff'] = 'Classique';
 $Gem_info['frFR']['qualities']['1eff00'] = 'Bonne qualité';
 $Gem_info['frFR']['qualities']['0070dd'] = 'Supérieure';
-$Gem_info['frFR']['qualities']['a335ee'] = 'Epique';
-$Gem_info['frFR']['qualities']['ff8000'] = 'Légendaire';
+//$Gem_info['frFR']['qualities']['a335ee'] = 'Epique';
+//$Gem_info['frFR']['qualities']['ff8000'] = 'Légendaire';
 
 //Craft Name
 $Gem_info['frFR']['Gem']="Gemmes";

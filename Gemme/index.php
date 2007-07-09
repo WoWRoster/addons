@@ -108,7 +108,7 @@ print("<h1>".$wordings[$roster_conf['roster_lang']]['gemme_title_addon']."</h1><
 <select name="quality"  onChange="refreshURL(this.form)">
 	<option value="none"><?php echo $Gem_info[$roster_conf['roster_lang']]['NoFilter']; ?></option>
 <?php
-foreach($Gem_info['frFR']['qualities'] as $keyColor=>$name)
+foreach($Gem_info[$roster_conf['roster_lang']]['qualities'] as $keyColor=>$name)
 {
 	if(isset($_GET['quality'])&& $_GET['quality']==$keyColor)
 		echo '<option value="'.$keyColor.'" selected>'.$name.'</option>\n';
