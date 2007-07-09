@@ -25,7 +25,7 @@
 
 //where is the itemstats lib
 	$addon_conf['RaidTracker']['itemstatsLib'] = "./itemstats";
-	$addon_conf['RaidTracker']['itemstatsCSS'] = "wowhead.css";
+	$addon_conf['RaidTracker']['itemstatsCSS'] = "itemstats.css";
 	$addon_conf['RaidTracker']['itemstatsLibFile'] = "wowroster_itemstats.php";
 
 // Date display like "Y-m-d G:i:s", "d-m-Y G:i:s"
