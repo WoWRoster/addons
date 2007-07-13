@@ -1,39 +1,52 @@
 <?php
-// ALLIANCE KEYS
-$wordings['enUS']['gemme_title_addon'] = 'Gems';
+/**
+ * WoWRoster.net WoWRoster
+ *
+ * LICENSE: Licensed under the Creative Commons
+ *          "Attribution-NonCommercial-ShareAlike 2.5" license
+ *
+ * @copyright  2002-2007 WoWRoster.net
+ * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5"
+ * @version    SVN: $ v0.5 Titan99 and Tyradil $
+ * @link       http://www.wowroster.net
+ * @package    GemsDisplay
+ * @subpackage Installer
+*/
+$lang['GemsDisplay_menu'] = 'Gems|Display Gems craft';
+$lang['gemme_title_addon'] = 'Gems';
 
-$Gem_info['enUS']['Gem_title']="Gems for Slot";
-$Gem_info['enUS']['Objet']='Object';
-$Gem_info['enUS']['Name']='Name';
-$Gem_info['enUS']['level']='Level';
-$Gem_info['enUS']['compo']='Reagents';
-$Gem_info['enUS']['crafter']='Who can make it';
-$Gem_info['enUS']['Filter']='Filter :';
-$Gem_info['frFR']['NoFilter']='No Filter';
+$lang['Gem_title']="Gems for Slot";
+$lang['Objet']='Object';
+$lang['Name']='Name';
+$lang['level']='Level';
+$lang['compo']='Reagents';
+$lang['crafter']='Who can make it';
+$lang['Filter']='Filter :';
+$lang['frFR']['NoFilter']='No Filter';
 
 //qualities table rare, uncommon, epic, common, trash
-//$Gem_info['enUS']['qualities']['9d9d9d'] = 'trash';
-//$Gem_info['enUS']['qualities']['ffffff'] = 'common';
-$Gem_info['enUS']['qualities']['1eff00'] = 'uncommon';
-$Gem_info['enUS']['qualities']['0070dd'] = 'rare';
-//$Gem_info['enUS']['qualities']['a335ee'] = 'epic';
-//$Gem_info['enUS']['qualities']['ff8000'] = 'legend';
+//$lang['qualities']['9d9d9d'] = 'trash';
+//$lang['qualities']['ffffff'] = 'common';
+$lang['qualities']['1eff00'] = 'uncommon';
+$lang['qualities']['0070dd'] = 'rare';
+//$lang['qualities']['a335ee'] = 'epic';
+//$lang['qualities']['ff8000'] = 'legend';
 
 //Craft Name
-$Gem_info['enUS']['Gem']="Gems";
-$Gem_info['enUS']['sill']="Jewelcrafting";
+$lang['Gem']="Gems";
+$lang['sill']="Jewelcrafting";
 
 //slot name
-$Gem_info['enUS']['slot']="Slot";
+$lang['slot']="Slot";
 
 //color
-$Gem_info['enUS']['type']['blue']="Blue";
-$Gem_info['enUS']['type']['red']="Red";
-$Gem_info['enUS']['type']['yellow']="Yellow";
-$Gem_info['enUS']['type']['green']="Green";
-$Gem_info['enUS']['type']['orange']="Orange";
-$Gem_info['enUS']['type']['purple']="Purple";
-$Gem_info['enUS']['type']['meta']="meta";
+$lang['type']['blue']="Blue";
+$lang['type']['red']="Red";
+$lang['type']['yellow']="Yellow";
+$lang['type']['green']="Green";
+$lang['type']['orange']="Orange";
+$lang['type']['purple']="Purple";
+$lang['type']['meta']="meta";
 
 
 

@@ -1,39 +1,52 @@
 <?php
-// ALLIANCE KEYS
-$wordings['esES']['gemme_title_addon'] = 'Gemas';
+/**
+ * WoWRoster.net WoWRoster
+ *
+ * LICENSE: Licensed under the Creative Commons
+ *          "Attribution-NonCommercial-ShareAlike 2.5" license
+ *
+ * @copyright  2002-2007 WoWRoster.net
+ * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5"
+ * @version    SVN: $ v0.5 Titan99 and Tyradil $
+ * @link       http://www.wowroster.net
+ * @package    GemsDisplay
+ * @subpackage Installer
+*/
+$lang['GemsDisplay_menu'] = 'Gemas|Display Gems craft';
+$lang['gemme_title_addon'] = 'Gemas';
 
-$Gem_info['esES']['Gem_title']="Gemas para la Ranura";
-$Gem_info['esES']['Objet']='Objeto';
-$Gem_info['esES']['Name']='Nombre';
-$Gem_info['esES']['level']='Nivel';
-$Gem_info['esES']['compo']='Reagentes';
-$Gem_info['esES']['crafter']='Quien puede hacermelo';
-$Gem_info['esES']['Filter']='Filtre :';
-$Gem_info['esES']['NoFilter']='Non Filter';
+$lang['Gem_title']="Gemas para la Ranura";
+$lang['Objet']='Objeto';
+$lang['Name']='Nombre';
+$lang['level']='Nivel';
+$lang['compo']='Reagentes';
+$lang['crafter']='Quien puede hacermelo';
+$lang['Filter']='Filtre :';
+$lang['NoFilter']='Non Filter';
 
 //qualities table rare, uncommon, epic, common, trash
-//$Gem_info['esES']['qualities']['9d9d9d'] = 'trash';
-//$Gem_info['esES']['qualities']['ffffff'] = 'common';
-$Gem_info['esES']['qualities']['1eff00'] = 'uncommon';
-$Gem_info['esES']['qualities']['0070dd'] = 'rare';
-//$Gem_info['esES']['qualities']['a335ee'] = 'epic';
-//$Gem_info['esES']['qualities']['ff8000'] = 'legend';
+//$lang['qualities']['9d9d9d'] = 'trash';
+//$lang['qualities']['ffffff'] = 'common';
+$lang['qualities']['1eff00'] = 'uncommon';
+$lang['qualities']['0070dd'] = 'rare';
+//$lang['qualities']['a335ee'] = 'epic';
+//$lang['qualities']['ff8000'] = 'legend';
 
 //Craft Name
-$Gem_info['esES']['Gem']="Gemas";
-$Gem_info['esES']['sill']="Joyeria";
+$lang['Gem']="Gemas";
+$lang['sill']="Joyeria";
 
 //slot name
-$Gem_info['esES']['slot']="Ranura";
+$lang['slot']="Ranura";
 
 //color
-$Gem_info['esES']['type']['blue']="Azul";
-$Gem_info['esES']['type']['red']="Rojo";
-$Gem_info['esES']['type']['yellow']="Amarillo";
-$Gem_info['esES']['type']['meta']="meta";
-$Gem_info['esES']['type']['green']="Green";
-$Gem_info['esES']['type']['orange']="Orange";
-$Gem_info['esES']['type']['purple']="Purple";
+$lang['type']['blue']="Azul";
+$lang['type']['red']="Rojo";
+$lang['type']['yellow']="Amarillo";
+$lang['type']['meta']="meta";
+$lang['type']['green']="Green";
+$lang['type']['orange']="Orange";
+$lang['type']['purple']="Purple";
 
 
 
