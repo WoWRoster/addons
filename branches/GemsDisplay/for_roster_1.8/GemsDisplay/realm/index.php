@@ -22,31 +22,31 @@ include_once ($addon['dir'] . 'inc/conf.php');
 
 function gemlookup($locales, $color)
 {
-   global $roster,$Gem_info;
-
-   $query = "SELECT DISTINCT `recipe_name`, `reagents`, `recipe_type`, `recipe_tooltip`, `recipe_texture`, `item_color`
-		FROM `".$roster->db->table('recipes')."`
-		WHERE (`recipe_type` = '".$Gem_info[$locales[0]]['type'][$color]."'
-		AND `skill_name` = '".$Gem_info[$locales[0]]['sill']."') ";
-   for ($i = 1; $i<count($locales); $i++)
-   {
-     if ($locales[$i] != '')
-          $query .= " OR (`recipe_type` = '".$Gem_info[$locales[$i]]['type'][$color]."'
-		AND `skill_name` = '".$Gem_info[$locales[$i]]['sill']."') ";
-   }
-   $query .=       "ORDER BY `reagents`,`recipe_name` ";
-
-   $result = $roster->db->query($query) or die_quietly($roster->db->error(),'Database Error', basename(__FILE__),__LINE__,$query);
-
-   $count = 0;
-   $temp = array();
-   while($row = $roster->db->fetch($result))
-   {
-        $temp[$count]=$row;
-	$count++;
-   }
-
-   return $temp;
+	global $roster;
+	
+	$query = "SELECT DISTINCT `recipe_name`, `reagents`, `recipe_type`, `recipe_tooltip`, `recipe_texture`, `item_color`
+			FROM `".$roster->db->table('recipes')."`
+			WHERE (`recipe_type` = '".$roster->locale->act['GemType'][$color]."'
+			AND `skill_name` = '".$roster->locale->act['sill']."') ";
+	for ($i = 1; $i<count($locales); $i++)
+	{
+	if ($locales[$i] != '')
+		$query .= " OR (`recipe_type` = '".$roster->locale->act['GemType'][$color]."'
+			AND `skill_name` = '".$roster->locale->act['sill']."') ";
+	}
+	$query .=       "ORDER BY `reagents`,`recipe_name` ";
+	
+	$result = $roster->db->query($query) or die_quietly($roster->db->error(),'Database Error', basename(__FILE__),__LINE__,$query);
+	
+	$count = 0;
+	$temp = array();
+	while($row = $roster->db->fetch($result))
+	{
+		$temp[$count]=$row;
+		$count++;
+	}
+	
+	return $temp;
 }
 
 
@@ -151,7 +151,7 @@ print border('sgray','start',$roster->locale->act['Gem_title']." : <span style=\
 		{
 			$tooltip = makeOverlib($item['recipe_tooltip'],'',$item['item_color'],0,$lang);
 			$itemAff = '<div class="item" '.$tooltip.'>';
-			$itemAff.="<img src=\"".$roster_conf['interface_url'].$item['recipe_texture'].".jpg\" class=\"icon\" alt=\"\" />";
+			$itemAff.="<img src=\"". $roster->config['interface_url'] . 'Interface/Icons/' . $item['recipe_texture'] . '.' . $roster->config['img_suffix'] . "\" class=\"icon\" alt=\"\" />";
 			$itemAff.='</div>';
 		
 			$query = "SELECT M.name
@@ -169,7 +169,7 @@ print border('sgray','start',$roster->locale->act['Gem_title']." : <span style=\
 			{
 				if ($craftSeperator == true)
 				$craftName.= ", ";
-				$craftName.=$row[name];
+				$craftName.=$row['name'];
 				$craftSeperator = true;
 			}
 ?>
