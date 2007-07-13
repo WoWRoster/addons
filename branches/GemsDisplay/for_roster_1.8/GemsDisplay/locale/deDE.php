@@ -1,39 +1,52 @@
 <?php
-// ALLIANCE KEYS
-$wordings['deDE']['gemme_title_addon'] = 'Edelsteine';
+/**
+ * WoWRoster.net WoWRoster
+ *
+ * LICENSE: Licensed under the Creative Commons
+ *          "Attribution-NonCommercial-ShareAlike 2.5" license
+ *
+ * @copyright  2002-2007 WoWRoster.net
+ * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5"
+ * @version    SVN: $ v0.5 Titan99 and Tyradil $
+ * @link       http://www.wowroster.net
+ * @package    GemsDisplay
+ * @subpackage Installer
+*/
+$lang['GemsDisplay_menu'] = 'Edelsteine|Affiche les gemmes crafter dans la guilde';
+$lang['gemme_title_addon'] = 'Edelsteine';
 
-$Gem_info['deDE']['Gem_title']="Edelsteine f&uuml;r Sockel";
-$Gem_info['deDE']['Objet']='Objekt';
-$Gem_info['deDE']['Name']='Name';
-$Gem_info['deDE']['level']='Stufe';
-$Gem_info['deDE']['compo']='Reagenzien';
-$Gem_info['deDE']['crafter']='Wer kann es herstellen?';
-$Gem_info['deDE']['Filter']='Filter :';
-$Gem_info['deDE']['NoFilter']='No Filter';
+$lang['Gem_title']="Edelsteine f&uuml;r Sockel";
+$lang['Objet']='Objekt';
+$lang['Name']='Name';
+$lang['level']='Stufe';
+$lang['compo']='Reagenzien';
+$lang['crafter']='Wer kann es herstellen?';
+$lang['Filter']='Filter :';
+$lang['NoFilter']='No Filter';
 
 //qualities table rare, uncommon, epic, common, trash
-//$Gem_info['deDE']['qualities']['9d9d9d'] = 'trash';
-//$Gem_info['deDE']['qualities']['ffffff'] = 'common';
-$Gem_info['deDE']['qualities']['1eff00'] = 'uncommon';
-$Gem_info['deDE']['qualities']['0070dd'] = 'rare';
-//$Gem_info['deDE']['qualities']['a335ee'] = 'epic';
-//$Gem_info['deDE']['qualities']['ff8000'] = 'legend';
+//$lang['qualities']['9d9d9d'] = 'trash';
+//$lang['qualities']['ffffff'] = 'common';
+$lang['qualities']['1eff00'] = 'uncommon';
+$lang['qualities']['0070dd'] = 'rare';
+//$lang['qualities']['a335ee'] = 'epic';
+//$lang['qualities']['ff8000'] = 'legend';
 
 //Craft Name
-$Gem_info['deDE']['Gem']="Edelsteine";
-$Gem_info['deDE']['sill']="Juwelenschleifen";
+$lang['Gem']="Edelsteine";
+$lang['sill']="Juwelenschleifen";
 
 //slot name
-$Gem_info['deDE']['slot']="Sockel";
+$lang['slot']="Sockel";
 
 //color
-$Gem_info['deDE']['type']['blue']="blau";
-$Gem_info['deDE']['type']['red']="rot";
-$Gem_info['deDE']['type']['yellow']="gelb";
-$Gem_info['deDE']['type']['meta']="Meta";
-$Gem_info['deDE']['type']['green']="Green";
-$Gem_info['deDE']['type']['orange']="Orange";
-$Gem_info['deDE']['type']['purple']="Purple";
+$lang['type']['blue']="blau";
+$lang['type']['red']="rot";
+$lang['type']['yellow']="gelb";
+$lang['type']['meta']="Meta";
+$lang['type']['green']="Green";
+$lang['type']['orange']="Orange";
+$lang['type']['purple']="Purple";
 
 
 ?>
