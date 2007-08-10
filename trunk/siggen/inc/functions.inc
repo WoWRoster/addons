@@ -772,7 +772,7 @@ $output .= "\n</table>";
 						{
 							if( $sc_db_ver != $value )
 							{
-								$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['import_upload_failed_ver'],$value,$sc_db_ver);
+								$this->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['import_upload_failed_ver'],$value,$sc_db_ver));
 								return false;
 							}
 							$firstline = false;
