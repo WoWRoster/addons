@@ -242,7 +242,7 @@ $siggen_locale['enUS']['select_import_file'] = 'Please select a siggen_saved fil
 $siggen_locale['enUS']['import_mustbe_right'] = 'The file must be [<span class="green">%1$s</span>]';
 $siggen_locale['enUS']['import_upload_success'] = 'SigGen import successful';
 $siggen_locale['enUS']['import_upload_failed'] = 'SigGen import failed';
-$siggen_locale['enUS']['import_upload_failed_ver'] = 'SigGen import failed<br />Import file version does not match current version<br /><div align="right">This version [<span class="green">%1$s</span>]<br />File version [<span class="red">%1$s</span>]';
+$siggen_locale['enUS']['import_upload_failed_ver'] = 'SigGen import failed<br />Import file version does not match current version<br /><div align="right">This version [<span class="green">%1$s</span>]<br />File version [<span class="red">%2$s</span>]';
 
 // ----[ End US English (enUS) ]----------------------------
 
@@ -310,7 +310,7 @@ $siggen_locale['deDE']['select_import_file'] = 'Please select a siggen_saved fil
 $siggen_locale['deDE']['import_mustbe_right'] = 'The file must be [<span class="green">%1$s</span>]';
 $siggen_locale['deDE']['import_upload_success'] = 'SigGen import successful';
 $siggen_locale['deDE']['import_upload_failed'] = 'SigGen import failed';
-$siggen_locale['deDE']['import_upload_failed_ver'] = 'SigGen import failed<br />Import file version does not match current version<br /><div align="right">This version [<span class="green">%1$s</span>]<br />File version [<span class="red">%1$s</span>]';
+$siggen_locale['deDE']['import_upload_failed_ver'] = 'SigGen import failed<br />Import file version does not match current version<br /><div align="right">This version [<span class="green">%1$s</span>]<br />File version [<span class="red">%2$s</span>]';
 
 // ----[ End German (deDE) ]--------------------------------
 
@@ -378,7 +378,7 @@ $siggen_locale['frFR']['select_import_file'] = 'Please select a siggen_saved fil
 $siggen_locale['frFR']['import_mustbe_right'] = 'The file must be [<span class="green">%1$s</span>]';
 $siggen_locale['frFR']['import_upload_success'] = 'SigGen import successful';
 $siggen_locale['frFR']['import_upload_failed'] = 'SigGen import failed';
-$siggen_locale['frFR']['import_upload_failed_ver'] = 'SigGen import failed<br />Import file version does not match current version<br /><div align="right">This version [<span class="green">%1$s</span>]<br />File version [<span class="red">%1$s</span>]';
+$siggen_locale['frFR']['import_upload_failed_ver'] = 'SigGen import failed<br />Import file version does not match current version<br /><div align="right">This version [<span class="green">%1$s</span>]<br />File version [<span class="red">%2$s</span>]';
 
 // ----[ End French (frFR) ]--------------------------------
 
@@ -446,6 +446,6 @@ $siggen_locale['esES']['select_import_file'] = 'Please select a siggen_saved fil
 $siggen_locale['esES']['import_mustbe_right'] = 'The file must be [<span class="green">%1$s</span>]';
 $siggen_locale['esES']['import_upload_success'] = 'SigGen import successful';
 $siggen_locale['esES']['import_upload_failed'] = 'SigGen import failed';
-$siggen_locale['esES']['import_upload_failed_ver'] = 'SigGen import failed<br />Import file version does not match current version<br /><div align="right">This version [<span class="green">%1$s</span>]<br />File version [<span class="red">%1$s</span>]';
+$siggen_locale['esES']['import_upload_failed_ver'] = 'SigGen import failed<br />Import file version does not match current version<br /><div align="right">This version [<span class="green">%1$s</span>]<br />File version [<span class="red">%2$s</span>]';
 
 // ----[ End Spanish (esES) ]--------------------------------
