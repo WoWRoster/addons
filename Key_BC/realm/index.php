@@ -109,7 +109,7 @@ while($row = $roster->db->fetch($result_player))
 
 ?>
 	<tr>
-		<td class="membersRow1"><?php echo '<a href="' .makelink("char-info&member=".$row['name']).'">'.$row['name']."</a><br/>".$row['class']." ".$row['level']."<br/>".'<a href="' .makelink("guild-memberslist&guild=".$row['guild_id']).'">'.$row['guild_name']."</a>"; ?></td>
+		<td class="membersRow1"><?php echo '<a href="' .makelink("char-info&amp;member=".$row['name']).'">'.$row['name']."</a><br/>".$row['class']." ".$row['level']."<br/>".'<a href="' .makelink("guild-memberslist&amp;guild=".$row['guild_id']).'">'.$row['guild_name']."</a>"; ?></td>
 <?php
 		foreach( $tab_key As $tmp)
 		{
