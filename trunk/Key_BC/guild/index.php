@@ -19,7 +19,7 @@ if ( !defined('ROSTER_INSTALLED') )
 }
 
 include_once ($addon['dir'] . 'inc/conf.php');
-
+include_once ($addon['dir'] . 'inc/lib_progressbar.php');
 
 $header_title = $roster->locale->act['KeyBC_title_addon'];
 
