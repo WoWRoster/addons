@@ -18,6 +18,8 @@ if ( !defined('ROSTER_INSTALLED') )
     exit('Detected invalid access to this file!');
 }
 
+include_once('lib_progressbar.php');
+
 $query="SELECT *
 	FROM `".$roster->db->table('Quest','Key_BC')."` P
 	WHERE P.`id` = '".$tmpKey['id']."'
@@ -26,6 +28,9 @@ $query="SELECT *
 	
 	";
 $result_tt = $roster->db->query($query) or die_quietly($roster->db->error(),'Database Error', 	basename(__FILE__),__LINE__,$query);
+
+$current=0;
+$max=100;
 
 if($row3 = $roster->db->fetch($result_tt))
 {
@@ -47,6 +52,8 @@ if($row3 = $roster->db->fetch($result_tt))
 		$Aff.= '<span style="color:#'.$colorcur.'">';
 		$Aff.=$row4['Standing'].' '.$row4['curr_rep'].'/'.$row4['max_rep'];
 		$Aff.= '</span>';
+		$current=$row4['curr_rep'];
+		$max=$row4['max_rep'];
 
 		$tt=makeOverlib( $Aff , $tmpKey['key_name'] , '' , 0 , '' , '' );
 	}
@@ -56,5 +63,5 @@ if($row3 = $roster->db->fetch($result_tt))
 else
 	$tt='';
 
-$tab_key[$i]='<a href="#" '.$tt.'>'.$roster->locale->act['Reputation'].'</a>';
+$tab_key[$i]='<a href="#" '.$tt.'>'.$roster->locale->act['Reputation'].'<br/>'.progress_bar($current,$max,40,2).'</a>';
 ?>

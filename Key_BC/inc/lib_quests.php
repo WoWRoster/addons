@@ -18,6 +18,8 @@ if ( !defined('ROSTER_INSTALLED') )
     exit('Detected invalid access to this file!');
 }
 
+include_once('lib_progressbar.php');
+
 $query="SELECT *
 	FROM `".$roster->db->table('Quest','Key_BC')."` P, `".$roster->db->table('quests')."` Q
 	WHERE P.`id` = '".$tmpKey['id']."'
@@ -47,16 +49,20 @@ if($row2 = $roster->db->fetch($result_parts_search))
 		if($row3['order']<$row2['order'])
 			$color = $colorcmp;
 		elseif($row3['order']==$row2['order'])
+		{
 			$color = $colorcur;
+			$current=$row3['order'];
+		}
 		else
 			$color= $colorno;
 
 		$Aff .= '<span style="color:#'.$color.'">'.$row3['order'].'. '.$row3['part'].'</span><br/>';
+		$max=$row3['order'];
 	}
 
 	$tt=makeOverlib( $Aff , $tmpKey['key_name'] , '' , 0 , '' , '' );
 
-	$tab_key[$i]='<a href="#" '.$tt.'>'.$roster->locale->act['Quests'].'</a>';
+	$tab_key[$i]='<a href="#" '.$tt.'>'.$roster->locale->act['Quests'].'<br/>'.progress_bar($current,$max,40).'</a>';
 	$affiche=1;
 }
 
