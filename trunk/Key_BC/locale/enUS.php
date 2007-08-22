@@ -13,15 +13,15 @@
  * @subpackage Installer
 */
 
-$lang['KeyBC_menu'] = 'Clef BC|Affiche les clef des instances BC';
-$lang['KeyBC_title_addon'] = 'Clef BC';
+$lang['KeyBC_menu'] = 'Key BC|Display Key BC';
+$lang['KeyBC_title_addon'] = 'Key BC';
 
-$lang['Name'] = 'Nom';
-$lang['Quests'] = 'Quêtes';
+$lang['Name'] = 'Name';
+$lang['Quests'] = 'Quests';
 $lang['Reputation'] = 'Reput.';
 
-$lang['Objective'] = 'Objectif';
-$lang['Current'] = 'Actuel';
+$lang['Objective'] = 'Objective';
+$lang['Current'] = 'Currents';
 
 
 ?>
