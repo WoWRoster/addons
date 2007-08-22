@@ -32,7 +32,7 @@ class GemsDisplay
 
 	var $upgrades = array(); // There are no previous versions to upgrade from
 
-	var $version = '1.8.0-0';
+	var $version = '2.0.0-0';
 
 	var $fullname = 'Gems Display';
 	var $description = 'Display Gemmes by slot.';
@@ -67,7 +67,7 @@ class GemsDisplay
 	function upgrade($oldversion)
 	{
 		// Nothing to upgrade from yet
-		return false;
+		return true;
 	}
 
 	/**
