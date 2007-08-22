@@ -97,7 +97,7 @@ print("<h1>".$roster->locale->act['gemme_title_addon']."</h1><br/>");
 		var var1 = (form.quality.options[form.quality.selectedIndex].value);
 		if(var1!=0)
 		{
-			urlt='index.php?p=realm-GemsDisplay&quality=';
+			urlt='index.php?p=realm-GemsDisplay&amp;quality=';
 			urlt+=var1;
 			self.location=urlt;
 		}
@@ -105,7 +105,7 @@ print("<h1>".$roster->locale->act['gemme_title_addon']."</h1><br/>");
 </script>
 <form method="post" action="#">
 <?php echo $roster->locale->act['Filter']; ?>
-<select name="quality"  onChange="refreshURL(this.form)">
+<select name="quality"  onchange="refreshURL(this.form)">
 	<option value="none"><?php echo $roster->locale->act['NoFilter']; ?></option>
 <?php
 foreach($roster->locale->act['qualities'] as $keyColor=>$name)
@@ -136,7 +136,7 @@ foreach($roster->locale->act['GemType'] as $keyColor=>$couleur)
  */
 print border('sgray','start',$roster->locale->act['Gem_title']." : <span style=\"color: ".$color[$keyColor].";\">".ucfirst($couleur)."</span>")
 ?>
-	<table width="100%" class="bodyline" cellspacing="0" id="table_0">
+	<table width="100%" class="bodyline" cellspacing="0">
 		<tr>
 			<th class="membersHeader"><?php echo $roster->locale->act['Objet']?></th>
 			<th class="membersHeader"><?php echo $roster->locale->act['Name']?></th>
