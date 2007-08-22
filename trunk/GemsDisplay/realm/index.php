@@ -97,7 +97,9 @@ print("<h1>".$roster->locale->act['gemme_title_addon']."</h1><br/>");
 		var var1 = (form.quality.options[form.quality.selectedIndex].value);
 		if(var1!=0)
 		{
-			urlt='index.php?p=realm-GemsDisplay&amp;quality=';
+			urlt='index.php?p=realm-GemsDisplay';
+			urlt+='&';
+			urlt+='quality=';
 			urlt+=var1;
 			self.location=urlt;
 		}
