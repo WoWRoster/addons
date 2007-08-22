@@ -32,7 +32,7 @@ class Key_BC
 
 	var $upgrades = array(); // There are no previous versions to upgrade from
 
-	var $version = '1.8.0-0';
+	var $version = '1.9.0-0';
 
 	var $fullname = 'Key BC';
 	var $description = 'Display Key BC.';
@@ -109,7 +109,7 @@ class Key_BC
 	function upgrade($oldversion)
 	{
 		// Nothing to upgrade from yet
-		return false;
+		return true;
 	}
 
 	/**

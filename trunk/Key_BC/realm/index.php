@@ -54,7 +54,8 @@ while($row = $roster->db->fetch($result_key))
 <?php
 $query="SELECT p.member_id, p.name, g.guild_name, p.clientLocale, p.level, p.class, g.factionEn, g.guild_id
 	FROM `".$roster->db->table('players')."` p, `".$roster->db->table('guild')."` g
-	ORDER BY `member_id` ASC";
+	WHERE p.guild_id=g.guild_id
+	ORDER BY `name` ASC";
 
 $result_player = $roster->db->query($query) or die_quietly($roster->db->error(),'Database Error', 	basename(__FILE__),__LINE__,$query);
 
