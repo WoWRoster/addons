@@ -18,7 +18,7 @@ if ( !defined('ROSTER_INSTALLED') )
     exit('Detected invalid access to this file!');
 }
 
-echo border('sgreen','start','title');
+echo border('sgreen','start',$roster->locale->act['keybc_title_manage_key']);
 
 if(isset($_POST['check']))
 	$id=$_POST['check'];
@@ -33,12 +33,12 @@ else
 <!-- id   	 lang   	 id_display   	 instance_name   	 key_name   	 Type   	 order -->
 		<tr>
 			<th class="membersHeader" > Select</th>
-			<th class="membersHeader" <?php echo makeOverlib("id");?>> id</th>
-			<th class="membersHeader" <?php echo makeOverlib("id_display");?>> id_display</th>
-			<th class="membersHeader" <?php echo makeOverlib("instance_name");?>> instance_name</th>
-			<th class="membersHeader" <?php echo makeOverlib("key_name");?>> key_name</th>
-			<th class="membersHeader" <?php echo makeOverlib("Type");?>> Type</th>
-			<th class="membersHeader" <?php echo makeOverlib("order");?>> order</th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['id_key_use']);?>> <?php echo $roster->locale->act['id_key'];?> </th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['id_display_use']);?>> <?php echo $roster->locale->act['id_display'];?> </th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['instance_name_use']);?>> <?php echo $roster->locale->act['instance_name'];?> </th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['key_name_use']);?>> <?php echo $roster->locale->act['key_name'];?> </th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['Type_use']);?>> <?php echo $roster->locale->act['Type'];?> </th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['order_use']);?>> <?php echo $roster->locale->act['order'];?> </th>
 			<th class="membersHeaderRight">&nbsp;</th>
 		</tr>
 	</thead>
@@ -87,7 +87,7 @@ while($row = $roster->db->fetch($result_key))
 			<td class="membersRow1"><?php echo $row['key_name'];?></td>
 			<td class="membersRow1"><?php echo $row['Type'];?></td>
 			<td class="membersRow1"><?php echo $row['order']; $max=$row['order'];?></td>
-			<td class="membersRowRight1"><button type="submit" class="input" onclick="setvalue('action','del_<?php echo $row['id'];?>');">Delete</button></td>
+			<td class="membersRowRight1"><button type="submit" class="input" onclick="setvalue('action','del_<?php echo $row['id'];?>');"><?php echo $roster->locale->act['delete'];?></button></td>
 		</tr>
 <?php
 }//end while
@@ -106,7 +106,7 @@ while($row = $roster->db->fetch($result_key))
         </select>
       </td>
 			<td class="membersRow2"><?php echo ($max+1);?></td>
-			<td class="membersRowRight2"><button type="submit" class="input" onclick="setvalue('action','add');">Add</button></td>
+			<td class="membersRowRight2"><button type="submit" class="input" onclick="setvalue('action','add');"><?php echo $roster->locale->act['add'];?></button></td>
 		</tr>
 	</tbody>
 </table>

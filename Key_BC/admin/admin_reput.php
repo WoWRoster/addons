@@ -18,7 +18,7 @@ if ( !defined('ROSTER_INSTALLED') )
     exit('Detected invalid access to this file!');
 }
 
-echo border('syellow','start','title2');
+echo border('syellow','start',$roster->locale->act['keybc_title_change_reput']);
 
 $query="SELECT *
 	FROM `" . $roster->db->table('Quest','Key_BC') . "`
@@ -50,10 +50,10 @@ if($row = $roster->db->fetch($result_key))
 	<thead>
 <!-- id   	 lang   	 id_display   	 instance_name   	 key_name   	 Type   	 order -->
 		<tr>
-			<th class="membersHeader" <?php echo makeOverlib("id");?>> id</th>
-			<th class="membersHeader" <?php echo makeOverlib("Faction");?>> Faction</th>
-			<th class="membersHeader" <?php echo makeOverlib("part");?>> Reput name</th>
-			<th class="membersHeader" > level</th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['id_key_use']);?>> <?php echo $roster->locale->act['id_key'];?> </th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['id_faction_use']);?>> <?php echo $roster->locale->act['id_faction'];?> </th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['id_rfaction_use']);?>> <?php echo $roster->locale->act['id_rfaction'];?> </th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['id_rlevel_use']);?>> <?php echo $roster->locale->act['id_rlevel'];?> </th>
 			<th class="membersHeaderRight">&nbsp;</th>
 		</tr>
 	</thead>
@@ -72,13 +72,13 @@ if($row = $roster->db->fetch($result_key))
 	if($Q_id=='')
 	{
 ?>
-				<button type="submit" class="input" onclick="setvalue('action','RHAdd');">Add</button>
+				<button type="submit" class="input" onclick="setvalue('action','RHAdd');"><?php echo $roster->locale->act['add'];?></button>
 <?php
 	}
 	else
 	{
 ?>
-				<button type="submit" class="input" onclick="setvalue('action','RHchange');">Change</button>
+				<button type="submit" class="input" onclick="setvalue('action','RHchange');"><?php echo $roster->locale->act['update'];?></button>
 <?php
 	}
 ?>
@@ -117,10 +117,10 @@ if($row = $roster->db->fetch($result_key))
 	<thead>
 <!-- id   	 lang   	 id_display   	 instance_name   	 key_name   	 Type   	 order -->
 		<tr>
-			<th class="membersHeader" <?php echo makeOverlib("id");?>> id</th>
-			<th class="membersHeader" <?php echo makeOverlib("Faction");?>> Faction</th>
-			<th class="membersHeader" <?php echo makeOverlib("part");?>> Reput name</th>
-			<th class="membersHeader" > level</th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['id_key_use']);?>> <?php echo $roster->locale->act['id_key'];?> </th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['id_faction_use']);?>> <?php echo $roster->locale->act['id_faction'];?> </th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['id_rfaction_use']);?>> <?php echo $roster->locale->act['id_rfaction'];?> </th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['id_rlevel_use']);?>> <?php echo $roster->locale->act['id_rlevel'];?> </th>
 			<th class="membersHeaderRight">&nbsp;</th>
 		</tr>
 	</thead>
@@ -139,13 +139,13 @@ if($row = $roster->db->fetch($result_key))
 	if($Q_id=='')
 	{
 ?>
-				<button type="submit" class="input" onclick="setvalue('action','RAAdd');">Add</button>
+				<button type="submit" class="input" onclick="setvalue('action','RAAdd');"><?php echo $roster->locale->act['add'];?></button>
 <?php
 	}
 	else
 	{
 ?>
-				<button type="submit" class="input" onclick="setvalue('action','RAchange');">Change</button>
+				<button type="submit" class="input" onclick="setvalue('action','RAchange');"><?php echo $roster->locale->act['update'];?></button>
 <?php
 	}
 ?>

@@ -18,7 +18,7 @@ if ( !defined('ROSTER_INSTALLED') )
     exit('Detected invalid access to this file!');
 }
 
-echo border('syellow','start','title2');
+echo border('syellow','start',$roster->locale->act['keybc_title_change_key']);
 
 ?>
 
@@ -26,11 +26,11 @@ echo border('syellow','start','title2');
 	<thead>
 <!-- id   	 lang   	 id_display   	 instance_name   	 key_name   	 Type   	 order -->
 		<tr>
-			<th class="membersHeader" <?php echo makeOverlib("id");?>> id</th>
-			<th class="membersHeader" <?php echo makeOverlib("id_display");?>> id_display</th>
-			<th class="membersHeader" <?php echo makeOverlib("instance_name");?>> instance_name</th>
-			<th class="membersHeader" <?php echo makeOverlib("key_name");?>> key_name</th>
-			<th class="membersHeader" <?php echo makeOverlib("Type");?>> Type</th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['id_key_use']);?>> <?php echo $roster->locale->act['id_key'];?> </th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['id_display_use']);?>> <?php echo $roster->locale->act['id_display'];?> </th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['instance_name_use']);?>> <?php echo $roster->locale->act['instance_name'];?> </th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['key_name_use']);?>> <?php echo $roster->locale->act['key_name'];?> </th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['Type_use']);?>> <?php echo $roster->locale->act['Type'];?> </th>
 			<th class="membersHeaderRight">&nbsp;</th>
 		</tr>
 	</thead>
@@ -47,7 +47,7 @@ echo border('syellow','start','title2');
           <option <?php if($Type=='Reputation') echo 'selected';?> >Reputation</option>
         </select>
       </td>
-			<td class="membersRowRight2"><button type="submit" class="input" onclick="setvalue('action','change');">Change</button></td>
+			<td class="membersRowRight2"><button type="submit" class="input" onclick="setvalue('action','change');"><?php echo $roster->locale->act['update'];?></button></td>
 		</tr>
 	</tbody>
 </table>

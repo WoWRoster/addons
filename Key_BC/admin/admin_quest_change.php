@@ -18,7 +18,7 @@ if ( !defined('ROSTER_INSTALLED') )
     exit('Detected invalid access to this file!');
 }
 
-echo border('syellow','start','title2');
+echo border('syellow','start',$roster->locale->act['keybc_title_change_quest']);
 
 ?>
 
@@ -26,10 +26,10 @@ echo border('syellow','start','title2');
 	<thead>
 <!-- id   	 lang   	 id_display   	 instance_name   	 key_name   	 Type   	 order -->
 		<tr>
-			<th class="membersHeader" <?php echo makeOverlib("id");?>> id</th>
-			<th class="membersHeader" <?php echo makeOverlib("order");?>> order</th>
-			<th class="membersHeader" <?php echo makeOverlib("Faction");?>> Faction</th>
-			<th class="membersHeader" <?php echo makeOverlib("part");?>> part</th>			
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['id_key_use']);?>> <?php echo $roster->locale->act['id_key'];?> </th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['order_use']);?>> <?php echo $roster->locale->act['order'];?> </th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['id_rfaction_use']);?>> <?php echo $roster->locale->act['id_rfaction'];?> </th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['part']);?>> <?php echo $roster->locale->act['part'];?> </th>
 			<th class="membersHeaderRight">&nbsp;</th>
 		</tr>
 	</thead>
@@ -45,11 +45,12 @@ echo border('syellow','start','title2');
 			</td>
 			<td class="membersRow2"><input class="wowinput128" type="text" name="QC_part" value="<?php echo $Q_part;?>" MAXLENGTH="50"/></td>
 		
-			<td class="membersRowRight2"><button type="submit" class="input" onclick="setvalue('action','Qchange');">Change</button></td>
+			<td class="membersRowRight2"><button type="submit" class="input" onclick="setvalue('action','Qchange');"><?php echo $roster->locale->act['update'];?></button></td>
 		</tr>
 	</tbody>
 </table>
 <?php
-echo '<input type="hidden" id="AMid" name="AQid" value="'.$Q_id.'" />';
+echo '<input type="hidden" id="AQ_order" name="AQ_order" value="'.$Q_order.'" />
+<input type="hidden" id="AQ_Faction" name="AQ_Faction" value="'.$Q_Faction.'" />';
 echo border('syellow','end');
 ?>

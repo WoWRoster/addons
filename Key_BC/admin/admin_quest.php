@@ -18,7 +18,7 @@ if ( !defined('ROSTER_INSTALLED') )
     exit('Detected invalid access to this file!');
 }
 
-echo border('sblue','start','title3');
+echo border('sblue','start',$roster->locale->act['keybc_title_manage_quest']);
 ?>
 <input type="hidden" id="Qcheck" name="Qcheck" value=" " />
 
@@ -26,11 +26,11 @@ echo border('sblue','start','title3');
 	<thead>
 <!-- id   	 lang   	 order   	 Faction   	 part -->
 		<tr>
-			<th class="membersHeader" > Select</th>
-			<th class="membersHeader" <?php echo makeOverlib("id");?>> id</th>
-			<th class="membersHeader" <?php echo makeOverlib("order");?>> order</th>
-			<th class="membersHeader" <?php echo makeOverlib("Faction");?>> Faction</th>
-			<th class="membersHeader" <?php echo makeOverlib("part");?>> part</th>			
+			<th class="membersHeader" > <?php echo $roster->locale->act['Select'];?></th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['id_key_use']);?>> <?php echo $roster->locale->act['id_key'];?> </th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['order_use']);?>> <?php echo $roster->locale->act['order'];?> </th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['id_rfaction_use']);?>> <?php echo $roster->locale->act['id_rfaction'];?> </th>
+			<th class="membersHeader" <?php echo makeOverlib($roster->locale->act['part']);?>> <?php echo $roster->locale->act['part'];?> </th>			
 			<th class="membersHeaderRight">&nbsp;</th>
 		</tr>
 	</thead>
@@ -45,8 +45,9 @@ $query="SELECT *
 $result_key = $roster->db->query($query) or die_quietly($roster->db->error(),'Database Error', 	basename(__FILE__),__LINE__,$query);
 
 $max=0;
-$Q_id='';
+$Q_id=$id;
 $Q_pk='';
+$Q_change='';
 
 while($row = $roster->db->fetch($result_key))
 {
@@ -61,10 +62,11 @@ while($row = $roster->db->fetch($result_key))
 ?>
  					<img src="img/check_on.png" alt="" />
 <?php
-    $Q_id=$row['id'];
-    $Q_order=$row['order'];
-    $Q_Faction=$row['Faction'];
-    $Q_part=$row['part'];
+	$Q_id=$row['id'];
+	$Q_order=$row['order'];
+	$Q_Faction=$row['Faction'];
+	$Q_part=$row['part'];
+	$Q_change=1;
   }
   else
   {
@@ -80,7 +82,7 @@ while($row = $roster->db->fetch($result_key))
 			<td class="membersRow1"><?php echo $row['order']; $max=$row['order'];?></td>
 			<td class="membersRow1"><?php echo $row['Faction'];?></td>
 			<td class="membersRow1"><?php echo $row['part'];?></td>
-			<td class="membersRowRight1"><button type="submit" class="input" onclick="setvalue('action','Qdel_<?php echo $row['id'];?>');">Delete</button></td>
+			<td class="membersRowRight1"><button type="submit" class="input" onclick="setvalue('action','Qdel_<?php echo $Q_pk;?>');"><?php echo $roster->locale->act['delete'];?></button></td>
 		</tr>
 <?php
 }//end while
@@ -97,7 +99,7 @@ while($row = $roster->db->fetch($result_key))
 			</td>
 			<td class="membersRow2"><input class="wowinput128" type="text" name="Q_part" value="" MAXLENGTH="50"/></td>
 		
-			<td class="membersRowRight2"><button type="submit" class="input" onclick="setvalue('action','Qadd');">Add</button></td>
+			<td class="membersRowRight2"><button type="submit" class="input" onclick="setvalue('action','Qadd');"><?php echo $roster->locale->act['add'];?></button></td>
 		</tr>
 	</tbody>
 </table>
