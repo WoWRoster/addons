@@ -32,7 +32,7 @@ class Key_BC
 
 	var $upgrades = array(); // There are no previous versions to upgrade from
 
-	var $version = '1.9.0-0';
+	var $version = '2.0.0-0';
 
 	var $fullname = 'Key BC';
 	var $description = 'Display Key BC.';
@@ -108,7 +108,16 @@ class Key_BC
 	 */
 	function upgrade($oldversion)
 	{
-		// Nothing to upgrade from yet
+		global $installer, $roster;
+
+		if($oldversion!='1.9.0-0')
+			return false;
+
+		foreach( $roster->multilanguages as $lang )
+		{
+		  if(file_exists(realpath(dirname(__FILE__))."/../locale/upgrade_".$oldversion."_".$lang.".php"))
+			 include_once(realpath(dirname(__FILE__))."/../locale/upgrade_".$oldversion."_".$lang.".php");
+		}
 		return true;
 	}
 
