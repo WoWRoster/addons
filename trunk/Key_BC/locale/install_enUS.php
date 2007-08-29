@@ -23,7 +23,8 @@ $installer->add_query("
 		('HHC', 'enUS', 'H Halls','Halls : Heroic', 'Flamewrought Key', 'Reputation', '6'),
 		('HCR', 'enUS', 'H Reser.','Glissecroc : Heroic', 'Reservoir Key', 'Reputation', '6'),
 		('HTK', 'enUS', 'H Temp.','Tempest : Heroic', 'Warpforged Key', 'Reputation', '7'),
-		('HCoT', 'enUS', 'H CoT',' COt : Heroic', 'Key of Time', 'Reputation', '8');
+		('HCoT', 'enUS', 'H CoT',' COt : Heroic', 'Key of Time', 'Reputation', '8'),
+		('Templ', 'enUS', 'B. T.', 'Black Temple', 'Medallion of Karabor', 'Quests', 9);
 ");
 
 
@@ -54,7 +55,23 @@ $installer->add_query("
 		('HHC', 'enUS', '1', 'H', 'Thrallmar|Revered'),
 		('HCR', 'enUS', '1', 'H', 'Cenarion Expedition|Revered'),
 		('HTK', 'enUS', '1', 'H', 'The Sha\'tar|Revered'),
-		('HCoT', 'enUS', '1', 'H', 'Keepers of Time|Revered');
+		('HCoT', 'enUS', '1', 'H', 'Keepers of Time|Revered'),
+		('Templ', 'enUS', 1, 'H', 'Tablets of Baa\'ri'),
+        ('Templ', 'enUS', 2, 'H', 'Oronu the Elder'),
+        ('Templ', 'enUS', 3, 'H', 'The Ashtongue Corruptors'),
+        ('Templ', 'enUS', 4, 'H', 'The Warden\'s Cage'),
+        ('Templ', 'enUS', 5, 'H', 'Proof of Allegiance'),
+        ('Templ', 'enUS', 6, 'H', 'Akama'),
+        ('Templ', 'enUS', 7, 'H', 'Seer Udalo'),
+        ('Templ', 'enUS', 8, 'H', 'A Mysterious Portent'),
+        ('Templ', 'enUS', 9, 'H', 'The Ata\'mal Terrace'),
+        ('Templ', 'enUS', 10, 'H', 'Akama\'s Promise'),
+        ('Templ', 'enUS', 11, 'H', 'The Secret Compromised'),
+        ('Templ', 'enUS', 12, 'H', 'Ruse of the Ashtongue'),
+        ('Templ', 'enUS', 13, 'H', 'An Artifact From the Past'),
+        ('Templ', 'enUS', 14, 'H', 'The Hostage Soul'),
+        ('Templ', 'enUS', 15, 'H', 'Entry Into the Black Temple'),
+        ('Templ', 'enUS', 16, 'H', 'A Distraction for Akama');
 ");
 $installer->add_query("
 	INSERT INTO `".$roster->db->table('Quest','Key_BC')."` ( `id` , `lang` , `order` , `Faction`, `part` )
@@ -83,7 +100,23 @@ $installer->add_query("
 		('HHC', 'enUS', '1', 'A', 'Thrallmar|Revered'),
 		('HCR', 'enUS', '1', 'A', 'Cenarion Expedition|Revered'),
 		('HTK', 'enUS', '1', 'A', 'The Sha\'tar|Revered'),
-		('HCoT', 'enUS', '1', 'A', 'Keepers of Time|Revered');
+		('HCoT', 'enUS', '1', 'A', 'Keepers of Time|Revered'),
+		('Templ', 'enUS', 1, 'A', 'Tablets of Baa\'ri'),
+        ('Templ', 'enUS', 2, 'A', 'Oronu the Elder'),
+        ('Templ', 'enUS', 3, 'A', 'The Ashtongue Corruptors'),
+        ('Templ', 'enUS', 4, 'A', 'The Warden\'s Cage'),
+        ('Templ', 'enUS', 5, 'A', 'Proof of Allegiance'),
+        ('Templ', 'enUS', 6, 'A', 'Akama'),
+        ('Templ', 'enUS', 7, 'A', 'Seer Udalo'),
+        ('Templ', 'enUS', 8, 'A', 'A Mysterious Portent'),
+        ('Templ', 'enUS', 9, 'A', 'The Ata\'mal Terrace'),
+        ('Templ', 'enUS', 10, 'A', 'Akama\'s Promise'),
+        ('Templ', 'enUS', 11, 'A', 'The Secret Compromised'),
+        ('Templ', 'enUS', 12, 'A', 'Ruse of the Ashtongue'),
+        ('Templ', 'enUS', 13, 'A', 'An Artifact From the Past'),
+        ('Templ', 'enUS', 14, 'A', 'The Hostage Soul'),
+        ('Templ', 'enUS', 15, 'A', 'Entry Into the Black Temple'),
+        ('Templ', 'enUS', 16, 'A', 'A Distraction for Akama');
 ");
 
 ?>
