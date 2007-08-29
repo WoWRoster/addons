@@ -23,5 +23,40 @@ $lang['Reputation'] = 'Reput.';
 $lang['Objective'] = 'Objective';
 $lang['Current'] = 'Currents';
 
+$lang['Select'] = 'Select.';
+$lang['keybc_title_change_quest'] = 'Modifier une quête d\'accés.';
+$lang['keybc_title_change_reput'] = 'Modifier un accés de réputation.';
+$lang['keybc_title_change_key'] = 'Modifier une clé.';
+$lang['keybc_title_manage_key'] = 'Gestion des clés gérées pas l\'addons.';
+$lang['keybc_title_manage_quest'] = 'Gestion des quêtes d\'accés';
 
+$lang['id_key'] = 'index';
+$lang['id_key_use'] = 'index unique pour tous les langues';
+
+$lang['id_faction'] = 'Faction';
+$lang['id_faction_use'] = 'H = Horde<br/>A = Alliance';
+
+$lang['id_rfaction'] = 'Faction de Reput.';
+$lang['id_rfaction_use'] = 'Faction de Reputation liée à la clé';
+
+$lang['id_rlevel'] = 'Niveau de Reput.';
+$lang['id_rlevel_use'] = 'Niveau de Reputation pour obtenir la clé';
+
+$lang['id_display'] = 'Abrév.';
+$lang['id_display_use'] = 'Abréviation pour l\'affichage court';
+
+$lang['instance_name'] = 'Nom de l\'inst.';
+$lang['instance_name_use'] = 'Nom de l\'instance ou de la zone d\'action de la clé';
+
+$lang['key_name'] = 'Nom de la clé';
+$lang['key_name_use'] = 'Nom exacte de la clé';
+
+$lang['Type'] = 'Type';
+$lang['Type_use'] = 'Type de la clé';
+
+$lang['order'] = 'Ordre';
+$lang['order_use'] = 'Ordre d\'affichage';
+
+$lang['part'] = 'Nom de la quête';
+$lang['part_use'] = 'Nom ig de la quête d\'accé';
 ?>
