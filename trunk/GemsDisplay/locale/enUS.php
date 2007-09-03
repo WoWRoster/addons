@@ -40,13 +40,13 @@ $lang['sill']="Jewelcrafting";
 $lang['slot']="Slot";
 
 //color
-$lang['type']['blue']="Blue";
-$lang['type']['red']="Red";
-$lang['type']['yellow']="Yellow";
-$lang['type']['green']="Green";
-$lang['type']['orange']="Orange";
-$lang['type']['purple']="Purple";
-$lang['type']['meta']="meta";
+$lang['GemType']['blue']="Blue";
+$lang['GemType']['red']="Red";
+$lang['GemType']['yellow']="Yellow";
+$lang['GemType']['green']="Green";
+$lang['GemType']['orange']="Orange";
+$lang['GemType']['purple']="Purple";
+$lang['GemType']['meta']="meta";
 
 
 

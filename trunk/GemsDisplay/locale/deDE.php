@@ -40,13 +40,13 @@ $lang['sill']="Juwelenschleifen";
 $lang['slot']="Sockel";
 
 //color
-$lang['type']['blue']="blau";
-$lang['type']['red']="rot";
-$lang['type']['yellow']="gelb";
-$lang['type']['meta']="Meta";
-$lang['type']['green']="Green";
-$lang['type']['orange']="Orange";
-$lang['type']['purple']="Purple";
+$lang['GemType']['blue']="blau";
+$lang['GemType']['red']="rot";
+$lang['GemType']['yellow']="gelb";
+$lang['GemType']['meta']="meta";
+$lang['GemType']['green']="grün";
+$lang['GemType']['orange']="orange";
+$lang['GemType']['purple']="violett";
 
 
 ?>
