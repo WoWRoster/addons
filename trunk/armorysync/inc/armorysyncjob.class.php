@@ -84,8 +84,22 @@ class ArmorySyncJob {
      * fetch insert jobid, fill jobqueue
      *
      */
-    function prepare_updateMemberlist() {
+    function prepare_updateMemberlist( $id = 0, $name = false , $server = false , $region = false ) {
         global $roster, $addon;
+        
+        if ( ! $id ) {
+            $id = $roster->data['guild_id'];
+        }
+        if ( ! $name ) {
+            $name = $roster->data['guild_name'];
+        }
+        if ( ! $server ) {
+            $server = $roster->data['server'];
+        }
+        if ( ! $region ) {
+            $region = $roster->data['region'];
+        }
+        
     
         $this->time_started = gmdate('Y-m-d H:i:s');
             
@@ -93,10 +107,10 @@ class ArmorySyncJob {
                     array(
                             'name' => false,
                             'member_id' => false,
-                            'guild_id' => $roster->data['guild_id'],
-                            'guild_name' => $roster->data['guild_name'],
-                            'server' => $roster->data['server'],
-                            'region' => $roster->data['region'] ) );
+                            'guild_id' => $id,
+                            'guild_name' => $name,
+                            'server' => $server,
+                            'region' => $region ) );
         
         if ( array_keys( $this->members ) ) {
             
@@ -483,9 +497,14 @@ function popup(\$arg) {
      * Create java reload code for guild memberlists
      * 
      */
-    function link_guildMemberlist() {
+    function link_guildMemberlist( $id = 0 ) {
         global $roster;
-        $link = 'index.php?p=guild-armorysync-memberlist&guild='. $roster->data['guild_id']. '&job_id='. $this->jobid;
+        
+        if ( ! $id ) {
+            $id = $roster->data['guild_id'];
+        }
+        
+        $link = 'index.php?p=guild-armorysync-memberlist&guild='. $id. '&job_id='. $this->jobid;
         $this->_link( $link );
     }
     
@@ -586,7 +605,6 @@ function popup(\$arg) {
             $query = "SELECT LAST_INSERT_ID();";
             $jobid = $roster->db->query_first($query);
             if ( $jobid ) {
-                //print "Job inserted to ". $roster->db->table('jobs',$addon['basename']). " with id: ". $jobid. "<br>\n";
                 return $jobid;
             } else {
                 print "Error fetching id <br>\n";

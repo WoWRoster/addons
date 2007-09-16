@@ -66,6 +66,8 @@ if( $roster_login->getAuthorized() < 2 )
         }
     
     } else {
-        print "No Guild given<br>";
+        $html = $roster->locale->act['error_no_guild']. "<br>&nbsp;&nbsp;".
+                $roster->locale->act['error_use_menu']. "&nbsp;&nbsp;";
+        print messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
     }
 }

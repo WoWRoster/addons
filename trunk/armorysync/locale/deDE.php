@@ -19,7 +19,7 @@
 // Button names
 $lang['async_button']			= 'Armory Sync|Syncronisiere deine Charactere mit Blizzards Armory';
 $lang['async_button2']			= 'Armory Memberlist Sync|Syncronisiere deine Mitgliederliste mit Blizzards Armory';
-
+$lang['async_button3']			= 'Armory Memberlist Sync für neue Gilde|Füge eine neue Gilde ein und syncronisiere<br>die Mitgliederliste mit Blizzards Armory';
 // Config strings
 $lang['admin']['armorysync_conf']			= 'ArmorySync Konfiguration';
 $lang['admin']['armorysync_host']			= 'Host|Host mit dem syncronisiert werden soll.';
@@ -113,6 +113,16 @@ $lang['armorySyncTitle_Realm'] = "ArmorySync für Realms";
 $lang['next_to_update'] = "Nächstes Update: ";
 $lang['nothing_to_do'] = "Im Moment ist nichts zu tun";
 
-$lang['complete'] = "fertig";
+$lang['error'] = "Fehler";
+$lang['error_no_character'] = "Es wurde kein Charakter übergeben.";
+$lang['error_no_guild'] = "Es wurde keine Gilde übergeben.";
+$lang['error_no_realm'] = "Es wurde kein Realm übergeben.";
+$lang['error_use_menu'] = "Benutze das Menü zum syncronisieren.";
 
+$lang['error_guild_insert'] = "Fehler beim anlegen der Gilde.";
+$lang['error_guild_notexist'] = "Die angegebene Gilde existiert nicht in der Armory.";
+$lang['error_missing_params'] = "Fehlende Angaben. Bitte versuch es erneut.";
+$lang['armorysync_guildadd'] = "Guilde hinzufügen und Mitgliederliste<br>mit der Armory syncronisieren.";
+$lang['armorysync_guildadd_help'] = "Hinweis";
+$lang['armorysync_guildadd_helpText'] = "Schreibe die Gilde und den Server exakt so wie sie, bzw. er, bei Blizzard geführt werden.<br>Die Region ist EU für europäische Gilden und US für amerikanische. Es wird zuerst<br>überprüft ob die Gilde existiert. Anschließend wird eine Syncronisierung der<br>Mitgliederliste angestoßen.";
 

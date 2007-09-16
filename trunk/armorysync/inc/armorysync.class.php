@@ -131,7 +131,7 @@ class ArmorySync {
     }
 
     /**
-     * fetches character info
+     * fetches guild info
      *
      */
     function _getGuildInfo() {
@@ -231,6 +231,25 @@ class ArmorySync {
         }
     }
     
+    /**
+     * fetches guild info
+     *
+     */
+    function checkGuildInfo( $name = false, $server = false, $region = false ) {
+        global $roster;
+        
+        include_once(ROSTER_LIB . 'armory.class.php');
+        $armory = new RosterArmory;
+        $armory->region = $region;
+        
+        $content = $this->_parseData( $armory->fetchGuild( $name, $roster->config['locale'], $server ) );
+        if ( $content->guildInfo->hasProp( 'guild' ) ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * fetches character info
      *

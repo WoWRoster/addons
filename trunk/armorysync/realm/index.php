@@ -68,6 +68,8 @@ if( $roster_login->getAuthorized() < 3 )
         }
     
     } else {
-        $title .= "No Member given<br>";
+        $html = $roster->locale->act['error_no_realm']. "<br>&nbsp;&nbsp;".
+                $roster->locale->act['error_use_menu']. "&nbsp;&nbsp;";
+        print messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
     }
 }

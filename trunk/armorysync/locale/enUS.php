@@ -19,6 +19,7 @@
 // Button names
 $lang['async_button']			= 'Armory Sync|Syncronize your characters with Blizzards Armory';
 $lang['async_button2']			= 'Armory Memberlist Sync|Syncronize your memberlist with Blizzards Armory';
+$lang['async_button3']			= 'Armory Memberlist Sync for a new guild|Add a new guild and syncronize<br>the meberlist with Blizzards Armory';
 
 // Config strings
 $lang['admin']['armorysync_conf']			= 'ArmorySync Configuration';
@@ -107,10 +108,22 @@ $lang['finished'] = "finnished";
 
 $lang['armorySyncTitle_Char'] = "ArmorySync for Charakters";
 $lang['armorySyncTitle_Guild'] = "ArmorySync for Guilds";
-$lang['armorySyncTitle_Guildmembers'] = "ArmorySync for Guildmemberlists";
+$lang['armorySyncTitle_Guildmembers'] = "ArmorySync for Guild Memberlists";
 $lang['armorySyncTitle_Realm'] = "ArmorySync for Realms";
 
 $lang['next_to_update'] = "Next Update: ";
 $lang['nothing_to_do'] = "Nothing to do at the moment";
 
+$lang['error'] = "Error";
+$lang['error_no_character'] = "No Charakter referred.";
+$lang['error_no_guild'] = "No Guild referred.";
+$lang['error_no_realm'] = "No Realm referred.";
+$lang['error_use_menu'] = "Use menue to syncronize.";
+
+$lang['error_guild_insert'] = "Error creating guild.";
+$lang['error_guild_notexist'] = "The guild given does not exist in the Armory.";
+$lang['error_missing_params'] = "Missing parameters. Plaese try again";
+$lang['armorysync_guildadd'] = "Adding Guild and syncronize<br>memberlist with the Armory.";
+$lang['armorysync_guildadd_help'] = "Information";
+$lang['armorysync_guildadd_helpText'] = "Spell the guild and the server exactly how they are listed at Blizzards Armory.<br>Region is EU for european and US for american guilds. In the first place<br>the guild will be checked for existenz. Afterwards a syncronization of the<br>meberlist will be started.";
 
