@@ -45,7 +45,7 @@ if( $roster_login->getAuthorized() < 3 )
             $job->title = $title;
             $job->show_status();
             if ( $ret ) {
-                $job->link_char();
+                $job->link_realm();
             }
         } else {
             $job->nothing_to_do();
@@ -64,7 +64,7 @@ if( $roster_login->getAuthorized() < 3 )
         $job->title = $title;
         $job->show_status();
         if ( $ret ) {
-            $job->link_char();
+            $job->link_realm();
         }
     
     } else {

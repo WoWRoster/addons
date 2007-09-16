@@ -470,6 +470,16 @@ function popup(\$arg) {
     }
     
     /**
+     * Create java reload code for guilds
+     * 
+     */
+    function link_realm() {
+        global $roster;
+        $link = 'index.php?p=realm-armorysync&realm='. $roster->data['region']. '-'. $roster->data['server']. '&job_id='. $this->jobid;
+        $this->_link( $link );
+    }
+
+    /**
      * Create java reload code for guild memberlists
      * 
      */

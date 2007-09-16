@@ -104,21 +104,6 @@ class ArmorySync {
             $update = new update;
             $update->fetchAddonData();
             
-            //$currentTimeStamp = time();
-            //
-            //$guilddata = $update->get_guild_info( $roster->data['server'], $roster->data['guild_name'], $roster->data['region'] );
-            //
-            //$guilddata['Ranks'] = $this->_getGuildRanks( $roster->data['guild_id'] );
-            //
-            //$update->update_guild( $roster->data['server'], $roster->data['guild_name'], $currentTimeStamp, array( 'Info' => $guilddata['guild_info_text'] ), $roster->data['region'] );
-            //
-            //
-            //foreach ( $this->data as $char ) {
-            //    $update->update_guild_member( $roster->data['guild_id'], $char['name'], $roster->data['server'], $roster->data['region'], $char, $currentTimeStamp, $guilddata);
-            //}
-            //
-            //$update->remove_guild_members( $roster->data['guild_id'], $currentTimeStamp);
-            
             $update->uploadData['characterprofiler']['myProfile'][$this->server]['Guild'][$this->data['name']] = $this->data;
             $this->message = $update->processGuildRoster();
             $tmp = explode( "\n", $this->message);

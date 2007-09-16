@@ -29,7 +29,7 @@ class armorysync
 	var $active = true;
 	var $icon = 'inv_misc_enggizmos_02';
         
-	var $version = '2.5.9.716';
+	var $version = '2.5.9.221';
 
 	var $fullname = 'Armory Sync';
 	var $description = 'Syncronises chars with Blizzards Armory';
