@@ -267,6 +267,8 @@ class ArmorySync {
             $char = $content->characterInfo->character;
             $tab = $content->characterInfo->characterTab;
             
+            $rank = $this->_getMemberRank( $this->memberId );
+            
             $this->data["Name"] = $char->name;
             $this->data["Level"] = $char->level;
             $this->data["Server"] = $char->realm;
@@ -275,6 +277,8 @@ class ArmorySync {
             } elseif ($char->hasProp("name")) {
                     $this->data["Guild"]["Name"] = $char->name;
             }
+            $this->data["Guild"]["Title"] = $rank['guild_title'];
+            $this->data["Guild"]["Rank"] = $rank['guild_rank'];
             $this->data["CPprovider"] = 'rpgo';
             $this->data["CPversion"] = '2.1.1';
 
@@ -1116,6 +1120,7 @@ class ArmorySync {
                         "FROM ". $roster->db->table('members'). " AS members ".
                         "WHERE ".
                         "members.guild_id=". $guild_id. " ".
+                        "AND NOT members.guild_title='' ".
                         "GROUP BY guild_rank, guild_title;";
         $result = $roster->db->query($query);
         if( $roster->db->num_rows($result) > 0 ) {
@@ -1127,10 +1132,39 @@ class ArmorySync {
             }
             return $array;
         } else {
-            return array();
+            $array = array();
+            $array['0']['Title'] = $roster->locale->act['guildleeder'];
+            for ( $i = 1; $i <= 9; $i++ ) {
+                $array[$i]['Title'] = $roster->locale->act['rank']. $i;
+            }
+            return $array;
         }
     }
 
+    /**
+     * db function to get members guild_rank and guild_title by its id
+     * 
+     * @param int $memberId
+     * @return string $memberName
+     */
+    function _getMemberRank( $member_id ) {
+        global $roster, $addon;
+        
+        $query =	"SELECT ".
+                        "guild_rank, guild_title ".
+                        "FROM ". $roster->db->table('members'). " AS members ".
+                        "WHERE ".
+                        "members.member_id=". $member_id. ";";
+        $result = $roster->db->query($query);
+        if( $roster->db->num_rows($result) > 0 ) {
+            
+            $ranks = $roster->db->fetch_all();
+            return $ranks[0];
+        } else {
+            $array = array();
+            return $array;
+        }
+    }
 
 
 }

@@ -1,0 +1,9 @@
+Zanix:
+Please use $_GET or $_POST and not $_REQUEST
+
+Zanix:
+Also, each page seems to automatically start the updating process
+I think there should be a button that starts it, and not make it automatic
+
+all:
+change function _getLocalisedTime to not use DateTime

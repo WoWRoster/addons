@@ -98,7 +98,7 @@ $lang['Talenttrees']['Warrior']['Arms'] = "Armes";
 $lang['Talenttrees']['Warrior']['Fury'] = "Fureur";
 $lang['Talenttrees']['Warrior']['Protection'] = "Protection";
 
-$lang['misc']['Rank'] = "Rank";
+$lang['misc']['Rank'] = "Rang";
 
 $lang['guild_short'] = "Guild";
 $lang['character_short'] = "Char.";
@@ -127,7 +127,9 @@ $lang['error_use_menu'] = "Use menue to syncronize.";
 $lang['error_guild_insert'] = "Error creating guild.";
 $lang['error_guild_notexist'] = "The guild given does not exist in the Armory.";
 $lang['error_missing_params'] = "Missing parameters. Plaese try again";
+$lang['error_wrong_region'] = "Invalid region. Only EU and US are valid regions.";
 $lang['armorysync_guildadd'] = "Adding Guild and syncronize<br>memberlist with the Armory.";
 $lang['armorysync_guildadd_help'] = "Information";
 $lang['armorysync_guildadd_helpText'] = "Spell the guild and the server exactly how they are listed at Blizzards Armory.<br>Region is EU for european and US for american guilds. In the first place<br>the guild will be checked for existenz. Afterwards a syncronization of the<br>meberlist will be started.";
 
+$lang['guildleeder'] = "Guildleeder";

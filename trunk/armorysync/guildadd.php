@@ -42,33 +42,45 @@ if( $roster_login->getAuthorized() < 3 )
             
             if ( isset($_POST['name']) && isset($_POST['server']) && isset($_POST['region']) ) {
                 
-                if ( check_guild_exist( $_POST['name'], $_POST['server'], $_POST['region'] ) ) {
-
-                    insert_uploadRule( $_POST['name'], $_POST['server'], $_POST['region'] );
-                    if ( $id = insert_guild( $_POST['name'], $_POST['server'], $_POST['region'] ) ) {
-                        
-                        require_once ($addon['dir'] . 'inc/armorysyncjob.class.php');
-                        
-                        $job = new ArmorySyncJob();
-                        $job->title = $title;
-                        if ( $job->prepare_updateMemberlist( $id, $_POST['name'], $_POST['server'], $_POST['region'] ) ) {
-                            $ret = $job->update_statusMemberlist();
-                            $job->show_statusMemberlist();
-                            if ( $ret ) {
-                                $job->link_guildMemberlist( $id );
+                $name = urldecode(trim(stripslashes( $_POST['name'] )));
+                $server = urldecode(trim(stripslashes( $_POST['server'] )));
+                $region = strtoupper($_POST['region']);
+                
+                if ( $region == "EU" || $region == "US" ) {
+                    if ( check_guild_exist( $name, $server, $_POST['region'] ) ) {
+    
+                        insert_uploadRule( $name, $server, $_POST['region'] );
+                        if ( $id = insert_guild( $name, $server, $_POST['region'] ) ) {
+                            
+                            require_once ($addon['dir'] . 'inc/armorysyncjob.class.php');
+                            
+                            $job = new ArmorySyncJob();
+                            $job->title = $title;
+                            if ( $job->prepare_updateMemberlist( $id, $name, $server, $region ) ) {
+                                $ret = $job->update_statusMemberlist();
+                                $job->show_statusMemberlist();
+                                if ( $ret ) {
+                                    $job->link_guildMemberlist( $id );
+                                }
+                            } else {
+                                $job->nothing_to_do();
                             }
                         } else {
-                            $job->nothing_to_do();
+                            $html = "&nbsp;&nbsp;".
+                                    $roster->locale->act['error_guild_insert'].
+                                    "&nbsp;&nbsp;";
+                            print messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
                         }
                     } else {
                         $html = "&nbsp;&nbsp;".
-                                $roster->locale->act['error_guild_insert'].
+                                $roster->locale->act['error_guild_notexist'].
                                 "&nbsp;&nbsp;";
                         print messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
                     }
                 } else {
+
                     $html = "&nbsp;&nbsp;".
-                            $roster->locale->act['error_guild_notexist'].
+                            $roster->locale->act['error_wrong_region'].
                             "&nbsp;&nbsp;";
                     print messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
                 }

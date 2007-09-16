@@ -1,0 +1,29 @@
+svn[223]
+- added urldecode to $_POST variables / thx to Subxero@wowroster.net
+- added frensh locales / thx to tuigii@wowroster.net
+- added standard rank texts to guild sync
+- fetch guild_rank and guild_title from db as workaround for memberlist update hook
+- started playing with templates and added a simple footer
+- fixed shaman_talenticons.php / thx to tuigii@wowroster.net
+
+svn[222]
+- Added new feature for adding a new guild and sync memberlist in util section
+
+svn[221]
+- fixed realm syncing
+
+svn[220]
+- changed case of all files to lowercase
+- fixed some enUS locales
+
+svn[207]
+- fixed error in sql statement line 511 ArmorySyncJob.class.php
+
+svn[206]
+- moved repository to wowroster.net/svn/rost...armorysync new revision
+
+svn[716]
+- added meberlist.php to archive
+
+svn[714]
+- fixed case problem in ArmorySync.class.php 

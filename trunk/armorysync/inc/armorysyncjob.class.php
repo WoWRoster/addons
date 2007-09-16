@@ -141,7 +141,7 @@ class ArmorySyncJob {
      * @param int $jobid
      */
     function show_status( $jobid = 0, $memberlist = false ) {
-        global $roster;
+        global $roster, $addon;
         
         $members = $this->members; //_getMembersFromJobqueue( $jobid );
         
@@ -175,6 +175,9 @@ function popup(\$arg) {
         $title .= "      </td>
                     </tr>
                 </table>";
+        
+        $html .= '<img src="img/plus.gif" style="float:right;cursor:pointer;" alt="" id="update_details_img" onclick="showHide(\'update_details\',\'update_details_img\',\'img/minus.gif\',\'img/plus.gif\');" />';
+        $html .= '<div id="update_details" style="display:none;">';
         
         $html .= '<table align="center"><tr><td>';
         $html .= '<table class="border_frame">';
@@ -304,8 +307,13 @@ function popup(\$arg) {
         
         $html .= " </table>\n";
         $html .= "</td></tr></table>";
+        $html .= "</div>";
         
         print messagebox( $html , $title , 'syellow' , "800px" );
+        
+        $roster->tpl->assign_var('ARMORYSYNC_VERSION',$addon['version']);
+        $roster->tpl->set_filenames(array('footer' => '../../addons/armorysync/templates/footer.html'));
+        $roster->tpl->display('footer');
     }
     
     /**
