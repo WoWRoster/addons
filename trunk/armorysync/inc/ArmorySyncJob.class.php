@@ -508,7 +508,7 @@ function popup(\$arg) {
     function _getRealmMembersToUpdate(){
         global $roster;
         
-        return $this->_getMembersToUpdate("members.server = \"". $roster->data['server']. "\" AND members.region = \"". $roster->data['region']. "\" AND NOT members.guild_id = 0 " );
+        return $this->_getMembersToUpdate("members.server = \"". $roster->data['server']. "\" AND members.region = \"". $roster->data['region']. "\" AND NOT members.guild_id = 0 AND " );
     }
 
     /**
