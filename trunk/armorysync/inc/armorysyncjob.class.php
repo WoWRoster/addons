@@ -39,7 +39,7 @@ class ArmorySyncJob {
         global $addon;
        
         if ( ! is_object( $this->ArmorySync ) ) {
-            require_once ($addon['dir'] . 'inc/ArmorySync.class.php');
+            require_once ($addon['dir'] . 'inc/armorysync.class.php');
             $this->ArmorySync = new ArmorySync();
         }
     }
