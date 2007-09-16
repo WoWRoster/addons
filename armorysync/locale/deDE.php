@@ -122,7 +122,9 @@ $lang['error_use_menu'] = "Benutze das Menü zum syncronisieren.";
 $lang['error_guild_insert'] = "Fehler beim anlegen der Gilde.";
 $lang['error_guild_notexist'] = "Die angegebene Gilde existiert nicht in der Armory.";
 $lang['error_missing_params'] = "Fehlende Angaben. Bitte versuch es erneut.";
+$lang['error_wrong_region'] = "Ungültige Region. Nur EU und US sind gültige Regionen.";
 $lang['armorysync_guildadd'] = "Guilde hinzufügen und Mitgliederliste<br>mit der Armory syncronisieren.";
 $lang['armorysync_guildadd_help'] = "Hinweis";
 $lang['armorysync_guildadd_helpText'] = "Schreibe die Gilde und den Server exakt so wie sie, bzw. er, bei Blizzard geführt werden.<br>Die Region ist EU für europäische Gilden und US für amerikanische. Es wird zuerst<br>überprüft ob die Gilde existiert. Anschließend wird eine Syncronisierung der<br>Mitgliederliste angestoßen.";
 
+$lang['guildleeder'] = "Gildenmeister";

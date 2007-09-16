@@ -34,8 +34,12 @@ class armorysync
 	var $fullname = 'Armory Sync';
 	var $description = 'Syncronizes chars with Blizzards Armory';
 	var $credits = array(
-		array(	"name"=>	"daniel@siegers.biz",
-			"info"=>	"Original author")
+		array(	"name"=>	"poetter@WoWRoster.net",
+			"info"=>	"Author of 2.6 rewrite"),
+		array(	"name"=>	"kristof22@WoWRoster.net",
+			"info"=>	"Original author"),
+		array(	"name"=>	"tuigii@wowroster.net",
+			"info"=>	"Testing, bugfixing and translating 2.6"),
 	);
 
 
