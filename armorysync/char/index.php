@@ -66,6 +66,8 @@ if( $roster_login->getAuthorized() < 1 )
         }
     
     } else {
-        $title .= "No Member given<br>";
+        $html = $roster->locale->act['error_no_char']. "<br>&nbsp;&nbsp;".
+                $roster->locale->act['error_use_menu']. "&nbsp;&nbsp;";
+        print messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
     }
 }

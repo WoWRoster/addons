@@ -29,13 +29,13 @@ class armorysync
 	var $active = true;
 	var $icon = 'inv_misc_enggizmos_02';
         
-	var $version = '2.5.9.221';
+	var $version = '2.6.0.0';
 
 	var $fullname = 'Armory Sync';
-	var $description = 'Syncronises chars with Blizzards Armory';
+	var $description = 'Syncronizes chars with Blizzards Armory';
 	var $credits = array(
 		array(	"name"=>	"daniel@siegers.biz",
-				"info"=>	"Original author")
+			"info"=>	"Original author")
 	);
 
 
@@ -63,6 +63,7 @@ class armorysync
 		$installer->add_menu_button('async_button','guild');
 		$installer->add_menu_button('async_button2','guild', 'memberlist', 'inv_misc_enggizmos_01');
 		$installer->add_menu_button('async_button','char');
+		$installer->add_menu_button('async_button3','util', 'guildadd', 'inv_misc_enggizmos_01');
                 
                 $installer->add_query("
                         CREATE TABLE `". $installer->table('jobs') ."`

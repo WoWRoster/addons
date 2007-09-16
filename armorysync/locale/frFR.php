@@ -3,6 +3,7 @@
  * WoWRoster.net WoWRoster
  *
  * french localisaton
+ * thx to tuigii@wowroster.net. visit his page at http://www.papy-team.fr
  *
  * LICENSE: Licensed under the Creative Commons
  *          "Attribution-NonCommercial-ShareAlike 2.5" license
@@ -14,11 +15,12 @@
  * @package    ArmorySync
 */
 
-// -[ deDE Localization ]-
+// -[ frFR Localization ]-
 
 // Button names
 $lang['async_button']			= 'Armory Sync|Syncronise your characters with Blizzards Armory';
 $lang['async_button2']			= 'Armory Memberlist Sync|Syncronise your memberlist with Blizzards Armory';
+$lang['async_button3']			= 'Armory Memberlist Sync for a new guild|Add a new guild and syncronize<br>the meberlist with Blizzards Armory';
 
 // Config strings
 $lang['admin']['armorysync_conf']			= 'ArmorySync Configuration';
@@ -33,84 +35,99 @@ $lang['admin']['armorysync_reloadwaittime']	= 'Reload wait time|Time in seconds.
 $lang['admin']['armorysync_protectedtitle']	= "Protected Guild Title|Characters with this guild titles are protected<br>from beeing deleted by a syncronisation off the meberlist against the armory.<br>The problem often occours with bank characters.<br>Multivalue possible with seperation by \",\". F.e. Banker,Stock";
 
 
-$lang['bindings']['bind_on_pickup'] = "Binds when picked up";
-$lang['bindings']['bind_on_equip'] = "Binds when equiped";
-$lang['bindings']['bind'] = "Soulbound";
+// [done]
+$lang['bindings']['bind_on_pickup'] = "Lié quand ramassé"; //"Binds when picked up";
+$lang['bindings']['bind_on_equip'] = "Lié quand équipé"; //"Binds when equiped";
+$lang['bindings']['bind'] = "Lié"; // "Soulbound";
 
-// Addon strings
-$lang['RepStanding']['Exalted'] = 'Exalted';
-$lang['RepStanding']['Revered'] = 'Revered';
-$lang['RepStanding']['Honored'] = 'Honored';
-$lang['RepStanding']['Friendly'] = 'Friendly';
-$lang['RepStanding']['Neutral'] = 'Neutral';
-$lang['RepStanding']['Unfriendly'] = 'Unfriendly';
+// Addon strings [done]
+$lang['RepStanding']['Exalted'] = 'Exalté';
+$lang['RepStanding']['Revered'] = 'Révéré';
+$lang['RepStanding']['Honored'] = 'Honoré';
+$lang['RepStanding']['Friendly'] = 'Amical';
+$lang['RepStanding']['Neutral'] = 'Neutre';
+$lang['RepStanding']['Unfriendly'] = 'Inamical';
 $lang['RepStanding']['Hostile'] = 'Hostile';
-$lang['RepStanding']['Hated'] = 'Hated';
+$lang['RepStanding']['Hated'] = 'Détesté';
 
-$lang['Skills']['Class Skills'] = "Class Skills";
-$lang['Skills']['Professions'] = "Professions";
-$lang['Skills']['Secondary Skills'] = "Secondary Skills";
-$lang['Skills']['Weapon Skills'] = "Weapon Skills";
-$lang['Skills']['Armor Proficiencies'] = "Armor Proficiencies";
-$lang['Skills']['Languages'] = "Languages";
+// [done]
+$lang['Skills']['Class Skills'] = "Compétences de classe";
+$lang['Skills']['Professions'] = "Métiers";
+$lang['Skills']['Secondary Skills'] = "Compétences secondaires";
+$lang['Skills']['Weapon Skills'] = "Compétences d'armes";
+$lang['Skills']['Armor Proficiencies'] = "Armures utilisables";
+$lang['Skills']['Languages'] = "Langues";
 
-
-$lang['Classes']['Druid'] = 'Druid';
-$lang['Classes']['Hunter'] = 'Hunter';
+// [done]
+$lang['Classes']['Druid'] = 'Druide';
+$lang['Classes']['Hunter'] = 'Chasseur';
 $lang['Classes']['Mage'] = 'Mage';
 $lang['Classes']['Paladin'] = 'Paladin';
-$lang['Classes']['Priest'] = 'Priest';
-$lang['Classes']['Rogue'] = 'Rogue';
-$lang['Classes']['Shaman'] = 'Shaman';
-$lang['Classes']['Warlock'] = 'Warlock';
-$lang['Classes']['Warrior'] = 'Warrior';
+$lang['Classes']['Priest'] = 'Prêtre';
+$lang['Classes']['Rogue'] = 'Voleur';
+$lang['Classes']['Shaman'] = 'Chaman';
+$lang['Classes']['Warlock'] = 'Démoniste';
+$lang['Classes']['Warrior'] = 'Guerrier';
 
-$lang['Talenttrees']['Druid']['Balance'] = "Balance";
-$lang['Talenttrees']['Druid']['Feral Combat'] = "Feral Combat";
-$lang['Talenttrees']['Druid']['Restoration'] = "Restoration";
-$lang['Talenttrees']['Hunter']['Beast Mastery'] = "Beast Mastery";
-$lang['Talenttrees']['Hunter']['Marksmanship'] = "Marksmanship";
-$lang['Talenttrees']['Hunter']['Survival'] = "Survival";
-$lang['Talenttrees']['Mage']['Arcane'] = "Arcane";
-$lang['Talenttrees']['Mage']['Fire'] = "Fire";
-$lang['Talenttrees']['Mage']['Frost'] = "Frost";
-$lang['Talenttrees']['Paladin']['Holy'] = "Holy";
+// [done]
+$lang['Talenttrees']['Druid']['Balance'] = "Equilibre";
+$lang['Talenttrees']['Druid']['Feral Combat'] = "Combat farouche";
+$lang['Talenttrees']['Druid']['Restoration'] = "Restauration";
+$lang['Talenttrees']['Hunter']['Beast Mastery'] = "Maîtrise des bêtes";
+$lang['Talenttrees']['Hunter']['Marksmanship'] = "Précision ";
+$lang['Talenttrees']['Hunter']['Survival'] = "Survie";
+$lang['Talenttrees']['Mage']['Arcane'] = "Arcanes";
+$lang['Talenttrees']['Mage']['Fire'] = "Fue";
+$lang['Talenttrees']['Mage']['Frost'] = "Givre";
+$lang['Talenttrees']['Paladin']['Holy'] = "Sacré";
 $lang['Talenttrees']['Paladin']['Protection'] = "Protection";
-$lang['Talenttrees']['Paladin']['Retribution'] = "Retribution";
+$lang['Talenttrees']['Paladin']['Retribution'] = "Vindicte";
 $lang['Talenttrees']['Priest']['Discipline'] = "Discipline";
-$lang['Talenttrees']['Priest']['Holy'] = "Holy";
-$lang['Talenttrees']['Priest']['Shadow'] = "Shadow";
-$lang['Talenttrees']['Rogue']['Assassination'] = "Assassination";
+$lang['Talenttrees']['Priest']['Holy'] = "Sacré";
+$lang['Talenttrees']['Priest']['Shadow'] = "Ombre";
+$lang['Talenttrees']['Rogue']['Assassination'] = "Assassinat";
 $lang['Talenttrees']['Rogue']['Combat'] = "Combat";
-$lang['Talenttrees']['Rogue']['Subtlety'] = "Subtlety";
+$lang['Talenttrees']['Rogue']['Subtlety'] = "Finesse";
 $lang['Talenttrees']['Shaman']['Elemental'] = "Elemental";
 $lang['Talenttrees']['Shaman']['Enhancement'] = "Enhancement";
-$lang['Talenttrees']['Shaman']['Restoration'] = "Restoration";
+$lang['Talenttrees']['Shaman']['Restoration'] = "Restauration";
 $lang['Talenttrees']['Warlock']['Affliction'] = "Affliction";
-$lang['Talenttrees']['Warlock']['Demonology'] = "Demonology";
+$lang['Talenttrees']['Warlock']['Demonology'] = " Démonologie";
 $lang['Talenttrees']['Warlock']['Destruction'] = "Destruction";
-$lang['Talenttrees']['Warrior']['Arms'] = "Arms";
-$lang['Talenttrees']['Warrior']['Fury'] = "Fury";
+$lang['Talenttrees']['Warrior']['Arms'] = "Armes";
+$lang['Talenttrees']['Warrior']['Fury'] = "Fureur";
 $lang['Talenttrees']['Warrior']['Protection'] = "Protection";
 
 $lang['misc']['Rank'] = "Rank";
 
 $lang['guild_short'] = "Guild";
 $lang['character_short'] = "Char.";
-$lang['skill_short'] = "Skill";
+$lang['skill_short'] = "Prof";
 $lang['reputation_short'] = "Repu.";
 $lang['equipment_short'] = "Equip";
 $lang['talents_short'] = "Talent";
 
-$lang['started'] = "started";
-$lang['finished'] = "finnished";
+$lang['started'] = "Démarré";
+$lang['finished'] = "Fini";
 
-$lang['armorySyncTitle_Char'] = "ArmorySync for Charakters";
-$lang['armorySyncTitle_Guild'] = "ArmorySync for Guilds";
-$lang['armorySyncTitle_Guildmembers'] = "ArmorySync for Guildmemberlists";
-$lang['armorySyncTitle_Realm'] = "ArmorySync for Realms";
+$lang['armorySyncTitle_Char'] = "ArmorySync pour Characters";
+$lang['armorySyncTitle_Guild'] = "ArmorySync pour Guilds";
+$lang['armorySyncTitle_Guildmembers'] = "ArmorySync pour Guildmemberlists";
+$lang['armorySyncTitle_Realm'] = "ArmorySync pour Realms";
 
-$lang['next_to_update'] = "Next Update: ";
-$lang['nothing_to_do'] = "Nothing to do at the moment";
+$lang['next_to_update'] = "Prochaine mise à jour : ";
+$lang['nothing_to_do'] = "Rien à faire en ce moment";
 
+$lang['error'] = "Error";
+$lang['error_no_character'] = "No Charakter referred.";
+$lang['error_no_guild'] = "No Guild referred.";
+$lang['error_no_realm'] = "No Realm referred.";
+$lang['error_use_menu'] = "Use menue to syncronize.";
+
+$lang['error_guild_insert'] = "Error creating guild.";
+$lang['error_guild_notexist'] = "The guild given does not exist in the Armory.";
+$lang['error_missing_params'] = "Missing parameters. Plaese try again";
+$lang['armorysync_guildadd'] = "Adding Guild and syncronize<br>memberlist with the Armory.";
+$lang['armorysync_guildadd_help'] = "Information";
+$lang['armorysync_guildadd_helpText'] = "Spell the guild and the server exactly how they are listed at Blizzards Armory.<br>Region is EU for european and US for american guilds. In the first place<br>the guild will be checked for existenz. Afterwards a syncronization of the<br>meberlist will be started.";
 
