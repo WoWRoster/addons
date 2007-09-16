@@ -17,20 +17,20 @@
 // -[ deDE Localization ]-
 
 // Button names
-$lang['async_button']			= 'Armory Sync|Syncronise your characters with Blizzards Armory';
-$lang['async_button2']			= 'Armory Memberlist Sync|Syncronise your memberlist with Blizzards Armory';
+$lang['async_button']			= 'Armory Sync|Syncronize your characters with Blizzards Armory';
+$lang['async_button2']			= 'Armory Memberlist Sync|Syncronize your memberlist with Blizzards Armory';
 
 // Config strings
 $lang['admin']['armorysync_conf']			= 'ArmorySync Configuration';
-$lang['admin']['armorysync_host']			= 'Host|Host to syncronise with.';
-$lang['admin']['armorysync_minlevel']		= 'Minimum Level|Minimum level of characters to syncronise.';
-$lang['admin']['armorysync_synchcutofftime']	= 'Sync cutoff time|Time in days.<br>All characters not beeing updated in last (x) days will be syncronised.';
-$lang['admin']['armorysync_reloadwaittime']	= 'Reload wait time|Time in seconds.<br>Time in seconds befor next syncronisation will be done.';
+$lang['admin']['armorysync_host']			= 'Host|Host to syncronize with.';
+$lang['admin']['armorysync_minlevel']		= 'Minimum Level|Minimum level of characters to syncronize.';
+$lang['admin']['armorysync_synchcutofftime']	= 'Sync cutoff time|Time in days.<br>All characters not beeing updated in last (x) days will be syncronized.';
+$lang['admin']['armorysync_reloadwaittime']	= 'Reload wait time|Time in seconds.<br>Time in seconds before next synchronization will be done.';
 //$lang['admin']['armorysync_usecurl']		= 'Use Curl|Auf false setzen wenn du die original FileSocket function benutzen möchtest.';
 //$lang['admin']['armorysync_debuglevel']		= 'Debug level';
 //$lang['admin']['armorysync_updateroster']	= "Update Roster|Das Roster aktualisieren oder nicht.<br>Sinnvoll fürs Debuggen.";
 //$lang['admin']['armorysync_ismysqllower411']	= "MySQL < 4.1.1|Auf True setzen wenn deine MySQL Version kleiner als 4.1.1 ist.";
-$lang['admin']['armorysync_protectedtitle']	= "Protected Guild Title|Characters with this guild titles are protected<br>from beeing deleted by a syncronisation off the meberlist against the armory.<br>The problem often occours with bank characters.<br>Multivalue possible with seperation by \",\". F.e. Banker,Stock";
+$lang['admin']['armorysync_protectedtitle']	= "Protected Guild Title|Characters with this guild titles are protected<br>from beeing deleted by a synchronization off the meberlist against the armory.<br>The problem often occours with bank characters.<br>Multivalue possible with seperation by \",\". F.e. Banker,Stock";
 
 
 $lang['bindings']['bind_on_pickup'] = "Binds when picked up";

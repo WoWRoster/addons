@@ -616,11 +616,11 @@ class ArmorySync {
             $class = strtolower($dl_class);
             $locale = $roster->config['locale'];
             
-            require_once ($addon['dir'] . 'inc/ArmorySyncTalents.class.php');
+            require_once ($addon['dir'] . 'inc/armorysynctalents.class.php');
             $ast = new ArmorySyncTalents();
             $talents = $ast->getTalents(  $class );
             
-            require_once ($addon['dir'] . 'inc/talentIcons_'. $class. '.php');
+            require_once ($addon['dir'] . 'inc/talenticons_'. $class. '.php');
             
             $pointsSpent = array();
             

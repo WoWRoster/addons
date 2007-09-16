@@ -35,7 +35,7 @@ if( $roster_login->getAuthorized() < 1 )
 } else {
 // ----[ Check log-in ]-------------------------------------
 
-    require_once ($addon['dir'] . 'inc/ArmorySyncJob.class.php');
+    require_once ($addon['dir'] . 'inc/armorysyncjob.class.php');
     
     if ( isset($_REQUEST['member']) && !isset($_REQUEST['job_id'])) {
         
