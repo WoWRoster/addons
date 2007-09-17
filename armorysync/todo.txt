@@ -1,9 +1,16 @@
-Zanix:
+zanix:
 Please use $_GET or $_POST and not $_REQUEST
 
-Zanix:
+zanix:
 Also, each page seems to automatically start the updating process
 I think there should be a button that starts it, and not make it automatic
 
 all:
-change function _getLocalisedTime to not use DateTime
+change function _getLocalisedTime to not use DateTime [done]
+
+zabix:
+RaceEn, ClassEn, Power are not being set in the players table
+These are needed for the char-info addon
+RaceEn - English Race
+ClassEn - English Class
+Power - Mana, Rage, Energy, Focus, etc.. - This can be localized
