@@ -37,7 +37,7 @@ if( $roster_login->getAuthorized() < 3 )
     
     require_once ($addon['dir'] . 'inc/armorysyncjob.class.php');
     
-    if ( isset($_REQUEST['realm']) && !isset($_REQUEST['job_id'])) {
+    if ( isset($roster->data['server']) && !isset($_GET['job_id'])) {
         
         $job = new ArmorySyncJob();
         if ( $job->prepare_update() ) {
@@ -51,12 +51,12 @@ if( $roster_login->getAuthorized() < 3 )
             $job->nothing_to_do();
         }
         
-    } elseif ( isset($_REQUEST['realm']) && isset($_REQUEST['job_id'])) {
+    } elseif ( isset($roster->data['server']) && isset($_GET['job_id'])) {
     
         //print "This is Jobs next step. Job ID: ". $_REQUEST['job_id']. "<br>\n";
         
         $job = new ArmorySyncJob();
-        $job->jobid = $_REQUEST['job_id'];
+        $job->jobid = $_GET['job_id'];
         $ret = $job->update_status();
         if ( $ret ) {
             $ret = $job->update_status();

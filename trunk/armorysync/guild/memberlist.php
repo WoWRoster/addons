@@ -37,7 +37,7 @@ if( $roster_login->getAuthorized() < 2 )
 
     require_once ($addon['dir'] . 'inc/armorysyncjob.class.php');
     
-    if ( isset($_REQUEST['guild']) && !isset($_REQUEST['job_id'])) {
+    if ( isset($roster->data['guild_id']) && !isset($_GET['job_id'])) {
         
         $job = new ArmorySyncJob();
         $job->title = $title;
@@ -51,11 +51,11 @@ if( $roster_login->getAuthorized() < 2 )
             $job->nothing_to_do();
         }
     
-    } elseif ( isset($_REQUEST['guild']) && isset($_REQUEST['job_id'])) {
+    } elseif ( isset($roster->data['guild_id']) && isset($_GET['job_id'])) {
     
         $job = new ArmorySyncJob();
         $job->title = $title;
-        $job->jobid = $_REQUEST['job_id'];
+        $job->jobid = $_GET['job_id'];
         $ret = $job->update_statusMemberlist();
         if ( $ret ) {
             $ret = $job->update_statusMemberlist();

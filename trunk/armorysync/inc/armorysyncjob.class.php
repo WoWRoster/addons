@@ -429,10 +429,10 @@ function popup(\$arg) {
     function _getLocalisedTime ( $time = false ) {
         global $roster;
         
-        $offset = $roster->config['localtimeoffset'];
-        $date = new DateTime($time);
-        $date->modify("+". $offset. " hour");
-        $ret = $date->format("d.m H:i:s");
+        $offset = $roster->config['localtimeoffset'] * 60 * 60;
+        $stamp = strtotime( $time );
+        $stamp += $offset;
+        $ret = date("d.m H:i:s", $stamp);
         return $ret;
     }
     /**
@@ -478,6 +478,7 @@ function popup(\$arg) {
         global $roster;
         
         $link = 'index.php?p=char-armorysync&member='. $roster->data['member_id']. '&job_id='. $this->jobid;
+        //$link = makelink('&member='. $roster->data['member_id']. '&job_id='. $this->jobid);
         $this->_link( $link );
     }
     
@@ -488,6 +489,7 @@ function popup(\$arg) {
     function link_guild() {
         global $roster;
         $link = 'index.php?p=guild-armorysync&guild='. $roster->data['guild_id']. '&job_id='. $this->jobid;
+        //$link = makelink('&guild='. $roster->data['guild_id']. '&job_id='. $this->jobid);
         $this->_link( $link );
     }
     
@@ -498,6 +500,7 @@ function popup(\$arg) {
     function link_realm() {
         global $roster;
         $link = 'index.php?p=realm-armorysync&realm='. $roster->data['region']. '-'. $roster->data['server']. '&job_id='. $this->jobid;
+        //$link = makelink('&realm='. $roster->data['region']. '-'. $roster->data['server']. '&job_id='. $this->jobid);
         $this->_link( $link );
     }
 
