@@ -134,6 +134,72 @@ class ArmorySyncJob {
         print messagebox( $html , $title=$this->title , $style='syellow' , $width='' );
     }
 
+
+    /**
+     * statusbox output with templates ( experimental )
+     *
+     * @param int $jobid
+     */
+    function show_status2( $jobid = 0, $memberlist = false ) {
+        global $roster, $addon;
+        
+        $members = $this->members;
+        $jscript = "
+<script type=\"text/javascript\">
+function popup(\$arg) {
+	var formID = document.getElementById(\$arg);
+
+	formID.style.display=(formID.style.display=='block'?'none':'block');
+}
+</script>
+";
+
+        $style = 'syellow';
+        
+        $roster->tpl->assign_vars(array(
+                'J_SCRIPT' => $jscript,
+                'START_BORDER'     => border( $style, 'start', '', '800px' ),
+                'STYLE' => $style,
+                'TITLE'  => $this->title,
+                'PROGRESSBAR' => $this->_getProgressBar($this->done, $this->total),
+                )
+                                 );
+                                  
+        if ($this->active_member['name']) {
+            $roster->tpl->assign_var( 'NEXT', $roster->locale->act['next_to_update']. $this->active_member['name'] );
+        }
+
+        $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['name']));
+        $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['guild']));
+        $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['realm']));
+        $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => "Infos<br>". $roster->locale->act['guild_short']));
+        
+        if ( ! $memberlist ) {
+            $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => "Infos<br>". $roster->locale->act['character_short']));
+            $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => "Infos<br>". $roster->locale->act['skill_short']));
+            $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => "Infos<br>". $roster->locale->act['reputation_short']));
+            $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => "Infos<br>". $roster->locale->act['equipment_short']));
+            $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => "Infos<br>". $roster->locale->act['talents_short']));
+        }
+
+        $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['started']));
+        $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['finished']));
+        $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => "Log" ));
+
+
+        $roster->tpl->assign_var('STOP_BORDER', border( 'syellow', 'end' ));
+        $roster->tpl->assign_var('ARMORYSYNC_VERSION',$addon['version']);
+
+        $roster->tpl->set_filenames(array(
+                'status_head' => '../../addons/armorysync/templates/status_head.html',
+                'status_body' => '../../addons/armorysync/templates/status_body.html',
+                'footer' => '../../addons/armorysync/templates/footer.html',
+                ));
+
+        $roster->tpl->display('status_head');
+        $roster->tpl->display('status_body');
+        $roster->tpl->display('footer');
+    }
     
     /**
      * statusbox output
@@ -477,8 +543,8 @@ function popup(\$arg) {
     function link_char() {
         global $roster;
         
-        $link = 'index.php?p=char-armorysync&member='. $roster->data['member_id']. '&job_id='. $this->jobid;
-        //$link = makelink('&member='. $roster->data['member_id']. '&job_id='. $this->jobid);
+        //$link = 'index.php?p=char-armorysync&member='. $roster->data['member_id']. '&job_id='. $this->jobid;
+        $link = makelink('char-armorysync&member='. $roster->data['member_id']. '&job_id='. $this->jobid);
         $this->_link( $link );
     }
     
@@ -488,8 +554,8 @@ function popup(\$arg) {
      */
     function link_guild() {
         global $roster;
-        $link = 'index.php?p=guild-armorysync&guild='. $roster->data['guild_id']. '&job_id='. $this->jobid;
-        //$link = makelink('&guild='. $roster->data['guild_id']. '&job_id='. $this->jobid);
+        //$link = 'index.php?p=guild-armorysync&guild='. $roster->data['guild_id']. '&job_id='. $this->jobid;
+        $link = makelink('guild-armorysync&guild='. $roster->data['guild_id']. '&job_id='. $this->jobid);
         $this->_link( $link );
     }
     
@@ -499,8 +565,8 @@ function popup(\$arg) {
      */
     function link_realm() {
         global $roster;
-        $link = 'index.php?p=realm-armorysync&realm='. $roster->data['region']. '-'. $roster->data['server']. '&job_id='. $this->jobid;
-        //$link = makelink('&realm='. $roster->data['region']. '-'. $roster->data['server']. '&job_id='. $this->jobid);
+        //$link = 'index.php?p=realm-armorysync&realm='. $roster->data['region']. '-'. $roster->data['server']. '&job_id='. $this->jobid;
+        $link = makelink('guild-armorysync&realm='. $roster->data['region']. '-'. $roster->data['server']. '&job_id='. $this->jobid);
         $this->_link( $link );
     }
 
@@ -515,7 +581,8 @@ function popup(\$arg) {
             $id = $roster->data['guild_id'];
         }
         
-        $link = 'index.php?p=guild-armorysync-memberlist&guild='. $id. '&job_id='. $this->jobid;
+        //$link = 'index.php?p=guild-armorysync-memberlist&guild='. $id. '&job_id='. $this->jobid;
+        $link = makelink('guild-armorysync-memberlist&guild='. $id. '&job_id='. $this->jobid);
         $this->_link( $link );
     }
     

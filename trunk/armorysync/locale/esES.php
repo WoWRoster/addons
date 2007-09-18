@@ -128,4 +128,8 @@ $lang['armorysync_guildadd'] = "Adding Guild and syncronize<br>memberlist with t
 $lang['armorysync_guildadd_help'] = "Information";
 $lang['armorysync_guildadd_helpText'] = "Spell the guild and the server exactly how they are listed at Blizzards Armory.<br>Region is EU for european and US for american guilds. In the first place<br>the guild will be checked for existenz. Afterwards a syncronization of the<br>meberlist will be started.";
 
-$lang['guildleeder'] = "Guildleeder";
+$lang['guildleader'] = "Guildleader";
+
+$lang['rage'] = "Rage";
+$lang['energy'] = "Energy";
+$lang['focus'] = "Focus";

@@ -1,3 +1,11 @@
+svn[225]
+- fixed max value of class skills poison and lockpicking
+- replaced all url's with a makelink() created one
+- replaced mb_convert_encoding with a more compatible workaround
+- Added ClassEn, RaceEn and Power to CharacterInfos
+- changed to use faction reputation from the base locales
+- played more with templates. started to code armporysyncjob.show_status with templates (not activated yet)
+
 svn[224]
 - changed function _getLocalisedTime to not use DateTime / thx to Subxero@wowroster.net
 - replaced all $_REQUEST with $roster->data where possible and $_GET where not

@@ -406,18 +406,36 @@ class ArmorySync {
             $this->data["TalentPoints"] = ($char->level > 0) ? $char->level - $tab->talentSpec->treeOne - $tab->talentSpec->treeTwo - $tab->talentSpec->treeThree - 9 : 0;
             $this->data["Race"] = $char->race;
             $this->data["RaceId"] = $char->raceId;
-            // ??? $this->data["RaceEn"] = $char->raceId;
+            $this->data["RaceEn"] = $roster->locale->act['race_to_en'][$char->race];
             $this->data["Class"] = $char->class;
+            
+            // This is an ugly workaround for an encoding error in the armory
             if ( substr($this->data["Class"] ,0,1) == 'J' && substr($this->data["Class"] ,-3) == 'ger' ) {
                     $this->data["Class"] = utf8_encode('Jäger');
             }
+            // This is an ugly workaround for an encoding error in the armory
+
             $this->data["ClassId"] = $char->classId;
+            $this->data["ClassEn"] = $roster->locale->act['class_to_en'][$this->data["Class"]];
             $this->data["Health"] = $tab->characterBars->health->effective;
             $this->data["Mana"] = $tab->characterBars->secondBar->effective;
+            if ( $tab->characterBars->secondBar->type == "m" ) {
+                $this->data["Power"] = $roster->locale->act['mana'];
+            } elseif ( $tab->characterBars->secondBar->type == "r" ) {
+                $this->data["Power"] = $roster->locale->act['rage'];
+            } elseif ( $tab->characterBars->secondBar->type == "e" ) {
+                $this->data["Power"] = $roster->locale->act['energy'];
+            } elseif ( $tab->characterBars->secondBar->type == "f" ) {
+                $this->data["Power"] = $roster->locale->act['focus'];
+            }
             $this->data["Sex"] = $char->gender;
+
+            // This is an ugly workaround for an encoding error in the armory
             if ( substr($this->data["Sex"],0,1) == 'M' && substr($this->data["Sex"],-6) == 'nnlich' ) {
                     $this->data["Sex"] = utf8_encode('Männlich');
             }
+            // This is an ugly workaround for an encoding error in the armory
+
             $this->data["SexId"] = $char->genderId;
             
             $this->data["Money"]["Copper"] = 0;
@@ -542,7 +560,11 @@ class ArmorySync {
                 
                 if (is_array($skillSet->skill)) {
                     foreach($skillSet->skill as $skill) {
-                        $this->data["Skills"][$type][$skill->name] = $skill->value . ":" . (($skill->max > 0) ? $skill->max : 1);
+                        if ( $skill->key == 'lockpicking' || $skill->key == 'poisons' ) {
+                            $this->data["Skills"][$type][$skill->name] = $skill->value . ":" . (($skill->max > 0) ? $skill->max : $skill->value);
+                        } else {
+                            $this->data["Skills"][$type][$skill->name] = $skill->value . ":" . (($skill->max > 0) ? $skill->max : 1);
+                        }
                         $this->status['skillInfo'] += 1;
                     }
                 } else {
@@ -620,7 +642,8 @@ class ArmorySync {
             
             $armoryTalents = $content->characterInfo->talentTab->talentTree->value;
             $talentArray = preg_split('//', $armoryTalents, -1, PREG_SPLIT_NO_EMPTY);
-            $dl_class = $this->_getDelocalisedClass($this->data["Class"]);
+            $dl_class = $roster->locale->act['class_to_en'][$this->data["Class"]];
+            //$dl_class = $this->_getDelocalisedClass($this->data["Class"]);
             $class = strtolower($dl_class);
             $locale = $roster->config['locale'];
             
@@ -857,7 +880,8 @@ class ArmorySync {
             $content = strip_tags( $content );
             
             $content = str_replace("%__BRTAG%", "<br>", $content );
-            $content = mb_convert_encoding( $content, "UTF-8", "HTML-ENTITIES");
+            $content = utf8_encode($this->_unhtmlentities( $content ));
+            //$content = mb_convert_encoding( $content, "UTF-8", "HTML-ENTITIES");
             $content = str_replace($roster->locale->act['bindings']['bind_on_pickup'], $roster->locale->act['bindings']['bind'], $content);
             $content = str_replace($roster->locale->act['bindings']['bind_on_equip'], $roster->locale->act['bindings']['bind'], $content);
             return $content;
@@ -1042,20 +1066,35 @@ class ArmorySync {
     function _getRepStanding($value) {
         global $roster;
         
-        if ($value >= 42000 && $value < 43000) { return $roster->locale->act['RepStanding']['Exalted']; }
-        if ($value >= 21000 && $value < 42000) { return $roster->locale->act['RepStanding']['Revered']; }
-        if ($value >= 9000 && $value < 21000) { return $roster->locale->act['RepStanding']['Honored']; }
-        if ($value >= 3000 && $value < 9000) { return $roster->locale->act['RepStanding']['Friendly']; }
-        if ($value >= 0 && $value < 3000) { return $roster->locale->act['RepStanding']['Neutral']; }
-        if ($value >= -3000 && $value < 0) { return $roster->locale->act['RepStanding']['Unfriendly']; }
-        if ($value >= -6000 && $value < -3000) { return $roster->locale->act['RepStanding']['Hostile']; }
-        if ($value >= -42000 && $value < -6000) { return $roster->locale->act['RepStanding']['Hated']; }
+        if ($value >= 42000 && $value < 43000) { return $roster->locale->act['exalted']; }
+        if ($value >= 21000 && $value < 42000) { return $roster->locale->act['revered']; }
+        if ($value >= 9000 && $value < 21000) { return $roster->locale->act['honored']; }
+        if ($value >= 3000 && $value < 9000) { return $roster->locale->act['friendly']; }
+        if ($value >= 0 && $value < 3000) { return $roster->locale->act['neutral']; }
+        if ($value >= -3000 && $value < 0) { return $roster->locale->act['unfriendly']; }
+        if ($value >= -6000 && $value < -3000) { return $roster->locale->act['hostile']; }
+        if ($value >= -42000 && $value < -6000) { return $roster->locale->act['hated']; }
         
         return "";
     }
 
-
-
+    /**
+     * helper function mbconvert workaround
+     *
+     * @param int $value
+     * @return string RepStanding
+     */
+    function _unhtmlentities($string)
+    {
+        // Ersetzen numerischer Darstellungen
+        $string = preg_replace('~&#x([0-9a-f]+);~ei', 'chr(hexdec("\\1"))', $string);
+        $string = preg_replace('~&#([0-9]+);~e', 'chr("\\1")', $string);
+        // Ersetzen benannter Zeichen
+        $trans_tbl = get_html_translation_table(HTML_ENTITIES);
+        $trans_tbl = array_flip($trans_tbl);
+        return strtr($string, $trans_tbl);
+    }
+    
 
 
     // DB functions
@@ -1133,7 +1172,7 @@ class ArmorySync {
             return $array;
         } else {
             $array = array();
-            $array['0']['Title'] = $roster->locale->act['guildleeder'];
+            $array['0']['Title'] = $roster->locale->act['guildleader'];
             for ( $i = 1; $i <= 9; $i++ ) {
                 $array[$i]['Title'] = $roster->locale->act['rank']. $i;
             }

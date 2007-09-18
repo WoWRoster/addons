@@ -127,4 +127,8 @@ $lang['armorysync_guildadd'] = "Guilde hinzufügen und Mitgliederliste<br>mit de
 $lang['armorysync_guildadd_help'] = "Hinweis";
 $lang['armorysync_guildadd_helpText'] = "Schreibe die Gilde und den Server exakt so wie sie, bzw. er, bei Blizzard geführt werden.<br>Die Region ist EU für europäische Gilden und US für amerikanische. Es wird zuerst<br>überprüft ob die Gilde existiert. Anschließend wird eine Syncronisierung der<br>Mitgliederliste angestoßen.";
 
-$lang['guildleeder'] = "Gildenmeister";
+$lang['guildleader'] = "Gildenmeister";
+
+$lang['rage'] = "Wut";
+$lang['energy'] = "Energie";
+$lang['focus'] = "Focus";
