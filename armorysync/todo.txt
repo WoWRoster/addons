@@ -1,16 +1,40 @@
-zanix:
-Please use $_GET or $_POST and not $_REQUEST
-
-zanix:
+zanix: http://wowroster.net/Forums/viewtopic/p=26775.html#26775
 Also, each page seems to automatically start the updating process
 I think there should be a button that starts it, and not make it automatic
+
+leusent: http://www.wowroster.net/Forums/viewtopic/p=26832.html#26832
+lib/update.lib.php
+Notice line 389: strtotime(): Called with empty time parameter
+
+
+
+
+
+zanix: http://www.wowroster.net/Forums/viewtopic/p=26860.html#26860
+Roster already has faction reputation in the base locale [done]
+
+zanix: http://wowroster.net/Forums/viewtopic/p=26772.html#26772
+Please use $_GET or $_POST and not $_REQUEST [done]
 
 all:
 change function _getLocalisedTime to not use DateTime [done]
 
-zabix:
+tuigii:
+poison max at 1 [maybe done]
+
+zanix: http://wowroster.net/Forums/viewtopic/p=26779.html#26779
+replace mb_convert_encoding with somthing more compatible [done]
+
+zanix:
+replace all url's with makelink [done]
+
+
+zanix: http://wowroster.net/Forums/viewtopic/p=26780.html#26780
 RaceEn, ClassEn, Power are not being set in the players table
 These are needed for the char-info addon
 RaceEn - English Race
 ClassEn - English Class
-Power - Mana, Rage, Energy, Focus, etc.. - This can be localized
+Power - Mana, Rage, Energy, Focus, etc.. - This can be localized [done]
+
+
+
