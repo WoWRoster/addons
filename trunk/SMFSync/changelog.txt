@@ -1,0 +1,43 @@
+[14]
+-Change email removal on suspension so it doenst erase the email, but makes it invalid.
+[13]
+-Removed personalizations from installer to prepare for public beta
+[12]
+-Removed option for auto adding of members
+-Added routine for suspending forum accounts
+-Changed language file for suspend routine
+-Fixed typo in Avatar update routine
+-Added notice for group creation when group already existed
+-Added automatic creation of group Suspended for members who have left the guild
+[11]
+-Changed default guild on installer to 1 instead of 0(disabled)
+-Added routine for Personal Text
+-Changed variable used in disabling create groups
+[10]
+-Fixed bug where smfsync would attempt to set the members group before the groups were created.
+-Added more language variables
+[9]
+-Created starting blocks for add members, suspend members and personal text
+[8]
+- Typo in SQL
+[7]
+- Fixed bug where additionalGroups was not getting set.
+[6]
+- Updated some comments in update_hook
+- Changes to language file.
+- Added the routine to manage the groups
+[5]
+- Updated to fix showing Hearth in log on Zone update to location.
+
+Todo
+Ready for public beta.
+
+Bugs
+Running Armorysync - Guild - Armory Memberlist Sync
+addons/smfsync/inc/update_hook.php
+  Notice line 84: Undefined index: Name
+  Notice line 130: Undefined index: Name
+On every user updated - Personal text not updated. May be current or user not found.
+
+addons/smfsync/inc/update_hook.php 
+  Notice line 273: Undefined index: Zone 
