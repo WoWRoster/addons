@@ -1,3 +1,12 @@
+svn[]
+- fixed makelink again
+- implemented content check
+- switched output to template based
+- changed log of memberlist update to overlib
+
+svn[226]
+- fixed makelink problem
+
 svn[225]
 - fixed max value of class skills poison and lockpicking
 - replaced all url's with a makelink() created one
@@ -5,6 +14,7 @@ svn[225]
 - Added ClassEn, RaceEn and Power to CharacterInfos
 - changed to use faction reputation from the base locales
 - played more with templates. started to code armporysyncjob.show_status with templates (not activated yet)
+- updated enUS locales
 
 svn[224]
 - changed function _getLocalisedTime to not use DateTime / thx to Subxero@wowroster.net

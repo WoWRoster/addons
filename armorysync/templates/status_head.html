@@ -7,25 +7,23 @@
 <div class="header_text {STYLE}border">
 <table align="center" width="100%">
     <tr>
-	<td width=33% align="center">
-		{NEXT}
-	</td>
-	<td width=33% align="center">
-		{TITLE}
-	</td>
+	<td width=33% align="center">{NEXT}</td>
+	<td width=33% align="center">{TITLE}</td>
 	<td width=33% align="right">
 		{PROGRESSBAR}
+                
 	</td>
     </tr>
 </table>
 </div>
 
+<img src="img/plus.gif" style="float:right;cursor:pointer;" alt="" id="update_details_img" onclick="showHide('update_details','update_details_img','img/minus.gif','img/plus.gif');">
+<br>
+<div id="update_details" style="display:none;">
 <table class="bodyline" cellspacing="0" align="center">
 	<tr>
 		<td>
 			<table class="border_frame">
 <!-- BEGIN head_col -->
-				<th class="membersHeader ts_string">
-					{head_col.HEAD_TITLE}
-				</th>
+				<th class="membersHeader ts_string">{head_col.HEAD_TITLE}</th>
 <!-- END head_col -->

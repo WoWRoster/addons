@@ -14,7 +14,7 @@
  * @package    ArmorySync
 */
 
-// -[ enEN Localization ]-
+// -[ enUS Localization ]-
 
 // Button names
 $lang['async_button']			= 'Armory Sync|Synchronize your characters with Blizzard\'s Armory';

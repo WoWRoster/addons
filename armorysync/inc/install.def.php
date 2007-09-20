@@ -29,7 +29,7 @@ class armorysync
 	var $active = true;
 	var $icon = 'inv_misc_enggizmos_02';
         
-	var $version = '2.6.0.0';
+	var $version = '2.6.0.228';
 
 	var $fullname = 'Armory Sync';
 	var $description = 'Syncronizes chars with Blizzards Armory';
@@ -39,7 +39,14 @@ class armorysync
 		array(	"name"=>	"kristof22@WoWRoster.net",
 			"info"=>	"Original author"),
 		array(	"name"=>	"tuigii@wowroster.net",
-			"info"=>	"Testing, bugfixing and translating 2.6"),
+			"info"=>	"testing, bugfixing and translating"),
+		array(	"name"=>	"zanix@wowroster.net",
+			"info"=>	"testing, bugfixing and translating"),
+		array(	"name"=>	"ds@wowroster.net",
+			"info"=>	"supporting"),
+		array(	"name"=>	"Subxero@wowroster.net",
+			"info"=>	"testing, bugfixing and code support"),
+                
 	);
 
 

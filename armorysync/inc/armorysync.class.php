@@ -243,7 +243,7 @@ class ArmorySync {
         $armory->region = $region;
         
         $content = $this->_parseData( $armory->fetchGuild( $name, $roster->config['locale'], $server ) );
-        if ( $content->guildInfo->hasProp( 'guild' ) ) {
+        if ( $this->_checkContent( $content, array( 'guildInfo', 'guild' ) ) ) {
             return true;
         } else {
             return false;
@@ -262,7 +262,7 @@ class ArmorySync {
         $armory->region = $roster->data['region'];
         
         $content = $this->_parseData( $armory->fetchCharacter( $this->memberName, $roster->config['locale'], $this->server ) );
-        if ( $content->characterInfo->hasProp( 'characterTab' ) ) {
+        if ( $this->_checkContent($content, array('characterInfo', 'characterTab' ) ) ) {
             
             $char = $content->characterInfo->character;
             $tab = $content->characterInfo->characterTab;
@@ -490,7 +490,10 @@ class ArmorySync {
             
             $armory = new RosterArmory;
             $armory->region = $roster->data['region'];
-            if ( $content = $this->_parseData( $armory->fetchItemTooltip( $item->id, $roster->config['locale'], $this->memberName, $this->server ) ) ) {
+            
+            $content = $this->_parseData( $armory->fetchItemTooltip( $item->id, $roster->config['locale'], $this->memberName, $this->server ) );
+            
+            if ( $this->_checkContent( $content, array( 'itemTooltips', 'itemTooltip' ) ) ) {
                 
                 $tooltip = $content->itemTooltips->itemTooltip;
                 $this->data["Equipment"][$slot]['Name'] = $tooltip->name->_CDATA;
@@ -550,7 +553,7 @@ class ArmorySync {
         
         $content = $this->_parseData( $armory->fetchCharacterSkills( $this->memberName, $roster->config['locale'], $this->server ) );
         
-        if ( $content->characterInfo->hasProp('skillTab') ) {
+        if ( $this->_checkContent( $content, array( 'characterInfo', 'skillTab' ) ) ) {
             
             $skillSets = $content->characterInfo->skillTab->skillCategory;
             
@@ -593,7 +596,7 @@ class ArmorySync {
         
         $content = $this->_parseData( $armory->fetchCharacterReputation( $this->memberName, $roster->config['locale'], $this->server ) );
         
-        if ( $content->characterInfo->hasProp('reputationTab') ) {
+        if ( $this->_checkContent( $content, array( 'characterInfo', 'reputationTab') ) ) {
             
             $factionReputation = $content->characterInfo->reputationTab->factionCategory;
             
@@ -638,7 +641,7 @@ class ArmorySync {
         
         $content = $this->_parseData( $armory->fetchCharacterTalents( $this->memberName, $roster->config['locale'], $this->server ) );
         
-        if ( $content->characterInfo->hasProp('talentTab') ) {
+        if ( $this->_checkContent( $content, array( 'characterInfo', 'talentTab') ) ) {
             
             $armoryTalents = $content->characterInfo->talentTab->talentTree->value;
             $talentArray = preg_split('//', $armoryTalents, -1, PREG_SPLIT_NO_EMPTY);
@@ -702,7 +705,32 @@ class ArmorySync {
      * @param string $tree
      * @return string
      */
+    function _checkContent( $object = false, $keys = array( ) ) {
 
+        if ( is_object ($object ) && count (array_keys ( $keys ) ) !== 0 ) {
+            
+            $subobject = $object;
+            
+            foreach ( $keys as $key ) {
+                if ( $subobject->hasProp($key) ) {
+                    $subobject = $subobject->$key;
+                } else {
+                    return $false;
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * helper function to get classes for content
+     *
+     * @param string $class
+     * @param string $tree
+     * @return string
+     */
     function _setFactionRep( $factionType, $faction = array() ) {
         $this->data["Reputation"][$factionType][$faction->name] = array();
         $this->data["Reputation"][$factionType][$faction->name]["Value"] = $this->_getRepValue($faction->reputation) . ":" . $this->_getRepCap($faction->reputation);
