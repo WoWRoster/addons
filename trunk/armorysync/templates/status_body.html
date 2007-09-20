@@ -2,13 +2,28 @@
 
 <!-- ArmorySync Status Body -->
 <!-- BEGIN body_row -->
-<!-- END body_row -->
-                                <tr>
-                                        <td>
-                                        </td>
+                                <tr  class="membersRowColor{body_row.COLOR}">
+                                        <!-- IF CHARLIST -->
+                                        <td class="membersRowCell">{body_row.NAME}</td>
+                                        <!-- ENDIF -->
+                                        <td class="membersRowCell">{body_row.GUILD}</td>
+                                        <td class="membersRowCell">{body_row.SERVER}</td>
+                                        <td class="membersRowCell">{body_row.GUILD_INFO}</td>
+                                        <!-- IF CHARLIST -->
+                                        <td class="membersRowCell">{body_row.CHARACTER_INFO}</td>
+                                        <td class="membersRowCell">{body_row.SKILL_INFO}</td>
+                                        <td class="membersRowCell">{body_row.REPUTATION_INFO}</td>
+                                        <td class="membersRowCell">{body_row.EQUIPMENT_INFO}</td>
+                                        <td class="membersRowCell">{body_row.TALENT_INFO}</td>
+                                        <!-- ENDIF -->
+                                        <td class="membersRowCell" width="100">{body_row.STARTTIMEUTC}</td>
+                                        <td class="membersRowCell" width="100">{body_row.STOPTIMEUTC}</td>
+                                        <td class="membersRowCell">{body_row.LOG}</td>
                                 </tr>
+<!-- END body_row -->
                         </table>
                 </td>
         </tr>
 </table>
+</div>
 {STOP_BORDER}
