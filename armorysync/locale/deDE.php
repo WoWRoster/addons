@@ -26,6 +26,7 @@ $lang['admin']['armorysync_host']			= 'Host|Host mit dem syncronisiert werden so
 $lang['admin']['armorysync_minlevel']		= 'Minimum Level|Minimum level der Charactere die syncronisiert werden.';
 $lang['admin']['armorysync_synchcutofftime']	= 'Sync cutoff time|Zeit in tagen.<br>Alle Charactere die nicht in den letzten (x) Tagen aktualisiert wurden werden syncronisiert.';
 $lang['admin']['armorysync_reloadwaittime']	= 'Reload wait time|Zeit in Sekunden.<br>Zeit in Sekunden bevor die nächste Syncronisierung angestossen wird.';
+$lang['admin']['armorysync_fetch_timeout'] = 'Armory Fetch timeout|Zeit in Sekunden bis das Herunterladen<br>einer einzelnen XML Datei abgebrochen wird.';
 //$lang['admin']['armorysync_usecurl']		= 'Use Curl|Auf false setzen wenn du die original FileSocket function benutzen möchtest.';
 //$lang['admin']['armorysync_debuglevel']		= 'Debug level';
 //$lang['admin']['armorysync_updateroster']	= "Update Roster|Das Roster aktualisieren oder nicht.<br>Sinnvoll fürs Debuggen.";
@@ -132,3 +133,5 @@ $lang['guildleader'] = "Gildenmeister";
 $lang['rage'] = "Wut";
 $lang['energy'] = "Energie";
 $lang['focus'] = "Focus";
+
+$lang['armorysync_credits'] = 'Danke an <a target="_blank" href="http://www.papy-team.fr">tuigii</a>, <a target="_blank" href="http://xent.homeip.net">zanix</a>, <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=1126.html">ds</a> and <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=711.html">Subxero</a> fürs Testen, Übersetzen und Unterstützen.<br>Besonderen Dank an <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=13101.html">kristoff22</a> für den originalen Code von ArmorySync.';

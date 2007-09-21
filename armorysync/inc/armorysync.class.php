@@ -140,6 +140,7 @@ class ArmorySync {
         include_once(ROSTER_LIB . 'armory.class.php');
         $armory = new RosterArmory;
         $armory->region = $roster->data['region'];
+        $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
         
         $content = $this->_parseData( $armory->fetchGuild( $this->memberName, $roster->config['locale'], $this->server ) );
         if ( $content->guildInfo->hasProp( 'guild' ) ) {
@@ -236,11 +237,12 @@ class ArmorySync {
      *
      */
     function checkGuildInfo( $name = false, $server = false, $region = false ) {
-        global $roster;
+        global $roster, $addon;
         
         include_once(ROSTER_LIB . 'armory.class.php');
         $armory = new RosterArmory;
         $armory->region = $region;
+        $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
         
         $content = $this->_parseData( $armory->fetchGuild( $name, $roster->config['locale'], $server ) );
         if ( $this->_checkContent( $content, array( 'guildInfo', 'guild' ) ) ) {
@@ -255,11 +257,12 @@ class ArmorySync {
      *
      */
     function _getCharacterInfo() {
-        global $roster;
+        global $roster, $addon;
         
         include_once(ROSTER_LIB . 'armory.class.php');
         $armory = new RosterArmory;
         $armory->region = $roster->data['region'];
+        $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
         
         $content = $this->_parseData( $armory->fetchCharacter( $this->memberName, $roster->config['locale'], $this->server ) );
         if ( $this->_checkContent($content, array('characterInfo', 'characterTab' ) ) ) {
@@ -474,7 +477,7 @@ class ArmorySync {
      *
      */
     function _getEquipmentInfo( $equip = array() ) {
-        global $roster;
+        global $roster, $addon;
 
         include_once(ROSTER_LIB . 'armory.class.php');
         
@@ -490,6 +493,7 @@ class ArmorySync {
             
             $armory = new RosterArmory;
             $armory->region = $roster->data['region'];
+            $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
             
             $content = $this->_parseData( $armory->fetchItemTooltip( $item->id, $roster->config['locale'], $this->memberName, $this->server ) );
             
@@ -545,11 +549,12 @@ class ArmorySync {
      *
      */
     function _getSkillInfo() {
-        global $roster;
+        global $roster, $addon;
         
         include_once(ROSTER_LIB . 'armory.class.php');
         $armory = new RosterArmory;
         $armory->region = $roster->data['region'];
+        $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
         
         $content = $this->_parseData( $armory->fetchCharacterSkills( $this->memberName, $roster->config['locale'], $this->server ) );
         
@@ -588,11 +593,12 @@ class ArmorySync {
      *
      */
     function _getReputationInfo() {
-        global $roster;
+        global $roster, $addon;
         
         include_once(ROSTER_LIB . 'armory.class.php');
         $armory = new RosterArmory;
         $armory->region = $roster->data['region'];
+        $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
         
         $content = $this->_parseData( $armory->fetchCharacterReputation( $this->memberName, $roster->config['locale'], $this->server ) );
         
@@ -638,6 +644,7 @@ class ArmorySync {
         include_once(ROSTER_LIB . 'armory.class.php');
         $armory = new RosterArmory;
         $armory->region = $roster->data['region'];
+        $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
         
         $content = $this->_parseData( $armory->fetchCharacterTalents( $this->memberName, $roster->config['locale'], $this->server ) );
         
@@ -893,12 +900,14 @@ class ArmorySync {
      * @return string 
      */
     function _getItemTooltip( $itemId = 0 ) {
-        global $roster;
+        global $roster, $addon;
         
         include_once(ROSTER_LIB . 'armory.class.php');
 
         $armory = new RosterArmory;
         $armory->region = $roster->data['region'];
+        $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
+
         if ( $content = $armory->fetchItemTooltipHTML( $itemId, $roster->config['locale'], $this->memberName, $this->server ) ) {
             
             $content = str_replace("\n", "", $content );
@@ -924,7 +933,7 @@ class ArmorySync {
      * @return string 
      */
     function _getGemTooltip( $itemId = 0 ) {
-        global $roster;
+        global $roster, $addon;
         
         include_once(ROSTER_LIB . 'armory.class.php');
 
@@ -1025,7 +1034,7 @@ class ArmorySync {
      * @return int SkillOrder
      */
     function _getSkillOrder($value) {
-        global $roster;
+        global $roster, $addon;
         switch ($value) {
             case $roster->locale->act['Skills']['Class Skills']: return 1;
             case $roster->locale->act['Skills']['Professions']: return 2;
@@ -1092,7 +1101,7 @@ class ArmorySync {
      * @return string RepStanding
      */
     function _getRepStanding($value) {
-        global $roster;
+        global $roster, $addon;
         
         if ($value >= 42000 && $value < 43000) { return $roster->locale->act['exalted']; }
         if ($value >= 21000 && $value < 42000) { return $roster->locale->act['revered']; }

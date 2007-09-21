@@ -239,7 +239,9 @@ function popup(\$arg) {
         }
 
         $roster->tpl->assign_var('STOP_BORDER', border( 'syellow', 'end' ));
-        $roster->tpl->assign_var('ARMORYSYNC_VERSION',$addon['version']. ' by poetter');
+        
+        // footer
+        $this->_armorySyncFooter();
 
         $roster->tpl->set_filenames(array(
                 'status_head' => '../../addons/armorysync/templates/status_head.html',
@@ -252,6 +254,18 @@ function popup(\$arg) {
         $roster->tpl->display('footer');
     }
     
+    /**
+     * create footer
+     *
+     * @param int $jobid
+     */
+    function _armorySyncFooter() {
+        global $roster, $addon;
+        
+        $roster->tpl->assign_var('ARMORYSYNC_VERSION',$addon['version']. ' by poetter');
+        $roster->tpl->assign_var('ARMORYSYNC_CREDITS',$roster->locale->act['armorysync_credits']);
+    }
+
     /**
      * statusbox output
      *
