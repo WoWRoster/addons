@@ -28,7 +28,7 @@ class smfsync
 	var $active = true;
 	var $icon = 'smf.gif';
 
-	var $version = '1.9.9.13';
+	var $version = '1.9.9.228';
 
 	var $fullname = 'smfsync';
 	var $description = 'smfsync_desc';
@@ -55,6 +55,7 @@ class smfsync
 		$installer->add_config("'110','smf_menu_main',NULL,'blockframe','menu'");
 		$installer->add_config("'120','smf_menu_player',NULL,'blockframe','menu'");
 		$installer->add_config("'130','smf_menu_guild',NULL,'blockframe','menu'");
+		$installer->add_config("'140','smf_menu_permissions','rostercp-addon-smfsync-permissions','makelink','menu'");
 
 		$installer->add_config("'1100','main_enable','0','radio{yes^1|no^0','smf_menu_main'");
 		$installer->add_config("'1101','forum_prefix','smf_','text{200|30','smf_menu_main'");
@@ -74,8 +75,6 @@ class smfsync
 		$installer->add_config("'1302','guild_groups','0','radio{yes^1|no^0','smf_menu_guild'");
 		$installer->add_config("'1303','guild_groups_create','0','radio{yes^1|no^0','smf_menu_guild'");
 		$installer->add_config("'1304','guild_enable_personaltext','0','radio{yes^1|no^0','smf_menu_guild'");
-
-
 
 		return true;
 	}

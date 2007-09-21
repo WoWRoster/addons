@@ -24,6 +24,7 @@ $lang['smfsync_desc']='Syncrhonize guild members with forum members.';
 $lang['admin']['smf_menu_main']='Main|Main settings';
 $lang['admin']['smf_menu_player']='Player|Options for items updated on player update';
 $lang['admin']['smf_menu_guild']='Guild|Options for items updated on guild update';
+$lang['admin']['smf_menu_permissions']='Permissions|Set permissions for groups here';
 
 $lang['admin']['main_enable']='Enable SMFSync|If disabled, SMFSync will not run at all.';
 $lang['admin']['forum_prefix']='SMF database prefix|This must be the same as the forums DB prefix.<br />Default is: smf_';
@@ -41,6 +42,8 @@ $lang['admin']['guild_suspend']='Allow suspend members|Allow SMFSync to suspend 
 $lang['admin']['guild_groups']='Allow to manage groups|Allow SMFSync to change guild members groups based on guild rank.<br />Members will not be assigned to groups until they are created<br />It will error on the first time the guild update is run but will work successfully thereafter.';
 $lang['admin']['guild_groups_create']='Automatically create groups|Automatically create the groups in SMF.<br />This setting will automatically disable itself after successful run.<br />(Don\'t forget to set your group permissions in SMF.)';
 $lang['admin']['guild_enable_personaltext']='Set Personal text to Guild note|Set SMF Personal Text to Guild note.';
+
+$lang['admin']['group_permissions']='Group Permissions';
 
 $lang['LocationNotSpecified']='Location not specified. Assuming inside ArmorySync.';
 $lang['LocationIsCurrent']='Location is current.';
@@ -74,6 +77,11 @@ $lang['PersonalTextNone']='No guild note set.';
 $lang['MemberSuspended']='\'s forum account has been suspended.';
 
 $lang['NoLongerAMember']='I am no longer a member of the guild.';
+
+$lang['Admin']='Admin';
+$lang['Officer']='Officer';
+$lang['Guild']='Guild';
+$lang['Public']='Public';
 
 //SMF Specific Settings
 $lang['Stars']='1#star.gif';
