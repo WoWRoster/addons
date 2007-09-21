@@ -20,8 +20,8 @@ if ( !defined('IN_ROSTER') )
 }
 
 /**
- * GuildBank Addon Installer
- * @package GuildBank
+ * ArmorySync Addon Installer
+ * @package ArmorySync
  * @subpackage Installer
  */
 class armorysync
@@ -29,14 +29,14 @@ class armorysync
 	var $active = true;
 	var $icon = 'inv_misc_enggizmos_02';
         
-	var $version = '2.6.0.228';
+	var $version = '2.6.0.229';
 
 	var $fullname = 'Armory Sync';
 	var $description = 'Syncronizes chars with Blizzards Armory';
 	var $credits = array(
 		array(	"name"=>	"poetter@WoWRoster.net",
 			"info"=>	"Author of 2.6 rewrite"),
-		array(	"name"=>	"kristof22@WoWRoster.net",
+		array(	"name"=>	"kristoff22@WoWRoster.net",
 			"info"=>	"Original author"),
 		array(	"name"=>	"tuigii@wowroster.net",
 			"info"=>	"testing, bugfixing and translating"),
@@ -65,6 +65,7 @@ class armorysync
 		$installer->add_config("'1100', 'armorysync_minlevel', '10', 'text{2|2', 'armorysync_conf'");
 		$installer->add_config("'1200', 'armorysync_synchcutofftime', '10', 'text{4|4', 'armorysync_conf'");
                 $installer->add_config("'1300', 'armorysync_reloadwaittime', '5', 'text{4|4', 'armorysync_conf'");
+                $installer->add_config("'1350', 'armorysync_fetch_timeout', '8', 'text{2|2', 'armorysync_conf'");
                 $installer->add_config("'1400', 'armorysync_protectedtitle', 'Banker', 'text{30|64', 'armorysync_conf'");
 //		$installer->add_config("'1500', 'armorysync_debuglevel', '2', 'radio{more verbose^2|verbose^1|quiet^0', 'armorysync_conf'");
 //		$installer->add_config("'1600', 'armorysync_updateroster', '1', 'radio{yes^1|no^0', 'armorysync_conf'");
@@ -116,7 +117,8 @@ class armorysync
 	 */
 	function upgrade($oldversion)
 	{
-            // Nothing to upgrade from yet
+            global $installer;
+            $installer->add_config("'1350', 'armorysync_fetch_timeout', '8', 'text{2|2', 'armorysync_conf'");
             return true;
 	}
 

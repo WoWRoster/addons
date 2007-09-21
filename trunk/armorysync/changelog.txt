@@ -1,4 +1,8 @@
-svn[]
+svn[230]
+- added armory fetch timeout to config
+- added credits to footer
+
+svn[228]
 - fixed makelink again
 - implemented content check
 - switched output to template based

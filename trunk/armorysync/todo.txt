@@ -10,9 +10,6 @@ poetter:
 processtime in footer
 
 poetter:
-credits in footer
-
-poetter:
 memberlistsync for realms
 
 poetter:
@@ -25,12 +22,15 @@ poetter:
 upgrade handling (buttons, tables)
 
 poetter:
-version forth didgit back to svn revision
-
-poetter:
 cache cleanup
 
 
+
+poetter:
+version forth digit back to svn revision [done]
+
+poetter:
+credits in footer [done]
 
 zanix: http://www.wowroster.net/Forums/viewtopic/p=26860.html#26860
 Roster already has faction reputation in the base locale [done]
