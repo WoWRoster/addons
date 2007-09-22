@@ -28,6 +28,7 @@ $lang['admin']['smf_menu_permissions']='Permissions|Set permissions for groups h
 
 $lang['admin']['main_enable']='Enable SMFSync|If disabled, SMFSync will not run at all.';
 $lang['admin']['forum_prefix']='SMF database prefix|This must be the same as the forums DB prefix.<br />Default is: smf_';
+$lang['admin']['forum_path']='Web path from root site|Enter the path to get to your SMF forum here<br />Ex: forum/; SMF/;<br />Be sure to include the last /';
 $lang['admin']['choose_guild']='Choose a guild|Choose the guild which you wish to sync to SMF.';
 
 $lang['admin']['player_update_location']='Set Location|Set the Location in SMF with Hearth or Zone. Set below.<br />ex. Location: Shattrath City';

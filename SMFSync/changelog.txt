@@ -1,7 +1,17 @@
-[228]
+[233]
+-Code changes to accommodate for /lib/login.php
+[232]
+-Added file /login.php which goes in /lib/
+[231]
+-Added file /README.txt
+[230]
+-Added file /addons/smfsync/inc/login.php
+[229]
 -Updated svn version.
 -Added functions for permissions (admin/permissions.php)
 --Still need to modify /inc/login.php
+[228]
+-Added file /admin/permissions.php
 [227]
 -Uploaded files to wowroster SVN from private SVN.
 -Version changed on it's own.
