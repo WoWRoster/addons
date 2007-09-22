@@ -28,7 +28,7 @@ class smfsync
 	var $active = true;
 	var $icon = 'smf.gif';
 
-	var $version = '1.9.9.228';
+	var $version = '1.9.9.233';
 
 	var $fullname = 'smfsync';
 	var $description = 'smfsync_desc';
@@ -59,7 +59,8 @@ class smfsync
 
 		$installer->add_config("'1100','main_enable','0','radio{yes^1|no^0','smf_menu_main'");
 		$installer->add_config("'1101','forum_prefix','smf_','text{200|30','smf_menu_main'");
-		$installer->add_config("'1102','choose_guild','1','function{GetGuildList','smf_menu_main'");
+		$installer->add_config("'1102','forum_path','forum/','text{200|30','smf_menu_main'");
+		$installer->add_config("'1103','choose_guild','1','function{GetGuildList','smf_menu_main'");
 
 		$installer->add_config("'1200','player_update_location','1','radio{yes^1|no^0','smf_menu_player'");
 		$installer->add_config("'1201','player_location','Zone','select{Hearth^Hearth|Zone^Zone','smf_menu_player'");
@@ -75,6 +76,8 @@ class smfsync
 		$installer->add_config("'1302','guild_groups','0','radio{yes^1|no^0','smf_menu_guild'");
 		$installer->add_config("'1303','guild_groups_create','0','radio{yes^1|no^0','smf_menu_guild'");
 		$installer->add_config("'1304','guild_enable_personaltext','0','radio{yes^1|no^0','smf_menu_guild'");
+
+		$installer->add_query ("INSERT INTO `{$roster->db->prefix}config` (`id` ,`config_name` ,`config_value` ,`form_type` ,`config_type` )VALUES ('1180', 'use_external_auth', '0', 'radio{on^1|off^0', 'main_conf'");
 
 		return true;
 	}

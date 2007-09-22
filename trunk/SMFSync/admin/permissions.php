@@ -23,7 +23,6 @@ if( isset($_POST['process']) && $_POST['process'] != '' )
 	$roster_config_message = processData();
 }
 
-
 //Check to make sure database field exists, if not create it.
 $fieldExists = '';
 $query = "SELECT * FROM `{$addon['config']['forum_prefix']}membergroups`";
@@ -38,7 +37,11 @@ while ($i > -1){
 }
 
 if ($fieldExists != true){
+	//If the table isnt setup properly, alter the table
 	$query = "ALTER TABLE `{$addon['config']['forum_prefix']}membergroups` ADD `rosterGroup` VARCHAR( 128 ) NOT NULL ;";
+	$result = $roster->db->query ( $query );
+	//Set the Administrator group as admin, this is a failsafe.
+	$query = "UPDATE `{$addon['config']['forum_prefix']}membergroups` SET `rosterGroup` = '3' WHERE `groupName` = 'Administrator' LIMIT 1";
 	$result = $roster->db->query ( $query );
 }
 
@@ -96,7 +99,16 @@ function levels( $rank, $set=0 ){
 	global $roster;
 	$return = "\n";
 
-	$return .= '			<select name="rank_' . $rank . '">'."\n";
+	//Group 1 should always be "Administrators". You don't want to be able to disable your admin access.
+	if ($rank == 1)
+	{
+		$return .= '			<select name="rank_' . $rank . '" DISABLED>'."\n";
+	}
+	else
+	{
+		$return .= '			<select name="rank_' . $rank . '">'."\n";
+	}
+
 
 	$return .= '				<option value="3" ';
 	if ($set == 3){$return .= 'selected="selected"';}
