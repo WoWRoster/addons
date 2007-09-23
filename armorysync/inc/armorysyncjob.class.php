@@ -34,6 +34,25 @@ class ArmorySyncJob {
     var $message;
     
     var $ArmorySync;
+    var $id = 0;
+    var $isMemberList = 0;
+    var $isAuth = 0;
+    
+    var $functions = array(
+                        array(
+                            'link' => '_link',
+                            'prepare_update' => '_prepare_update',
+                            'update_status' => '_update_status',
+                            'show_status' => '_show_status',
+                        ),
+                        array(
+                            'link' => '_link_guildMemberlist',
+                            'prepare_update' => '_prepare_updateMemberlist',
+                            'update_status' => '_update_statusMemberlist',
+                            'show_status' => '_show_statusMemberlist',
+                        ),
+                    );
+
     
     function _init() {
         global $addon;
@@ -48,7 +67,185 @@ class ArmorySyncJob {
      * fetch insert jobid, fill jobqueue
      *
      */
-    function prepare_update() {
+    function start() {
+        global $roster, $addon;
+        
+        $this->_check_env();
+        
+        if ( ! $this->isAuth ) {
+            $this->_showFooter();
+            return;
+        }
+        
+        if ( isset($roster->pages[2]) && $roster->pages[2] == 'guildadd' && !isset($_POST['process']) ) {
+            
+            $this->_showAddGuildScreen();
+            
+        } elseif ( isset($roster->pages[2]) && $roster->pages[2] == 'guildadd' && isset($_POST['process']) && $_POST['process'] == 'process' ) {
+            
+            $this->_startAddGuild();
+            
+        } elseif ( $this->id && $addon['config']['armorysync_skip_start'] == 0 && !( isset($_GET['job_id']) || isset($_POST['job_id']) ) ) {
+            
+            $this->_showStartPage();
+            
+        } elseif ( $this->id && ( isset($_GET['job_id']) || isset($_POST['job_id']) || $addon['config']['armorysync_skip_start'] == 1 ) ) {
+            
+            $this->_startSyncing();
+
+        } else {
+            
+            $this->_showErrors();
+        }
+        $this->_showFooter();
+    }
+    
+
+    /**
+     * fetch insert jobid, fill jobqueue
+     *
+     */
+    function _showErrors() {
+        global $roster;
+        if ( $roster->scope == 'char' ) {
+            $html = $roster->locale->act['error_no_character']. "<br>&nbsp;&nbsp;".
+                    $roster->locale->act['error_use_menu']. "&nbsp;&nbsp;";
+        } elseif ( $roster->scope == 'guild' ) {
+            $html = $roster->locale->act['error_no_guild']. "<br>&nbsp;&nbsp;".
+                    $roster->locale->act['error_use_menu']. "&nbsp;&nbsp;";
+        } elseif ( $roster->scope == 'realm' ) {
+            $html = $roster->locale->act['error_no_realm']. "<br>&nbsp;&nbsp;".
+                    $roster->locale->act['error_use_menu']. "&nbsp;&nbsp;";
+        }
+        print messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
+    }
+
+
+    /**
+     * fetch insert jobid, fill jobqueue
+     *
+     */
+    function _startSyncing() {
+        global $roster;
+        
+        if ( isset($_GET['job_id']) ) {
+            $this->jobid = $_GET['job_id'];
+        }
+        $ret;
+        $functions = $this->functions[$this->isMemberList];
+        if ( $this->jobid == 0 ) {
+            if ( $this->$functions['prepare_update']() ) {
+                $ret = $this->$functions['update_status']();
+                $this->$functions['show_status']();
+                if ( $ret ) {
+                    $this->$functions['link']();
+                }
+            } else {
+                $this->_nothing_to_do();
+            }
+        } else {
+            $ret = $this->$functions['update_status']();
+            if ( $ret ) {
+                $ret = $this->$functions['update_status']();
+            }
+            $this->$functions['show_status']();
+            if ( $ret ) {
+                $this->$functions['link']();
+            }
+        }
+    }
+
+    /**
+     * fetch insert jobid, fill jobqueue
+     *
+     */
+    function _startAddGuild() {
+        global $roster;
+        if ( isset($_POST['action']) && $_POST['action'] == 'add' ) {
+            
+            if ( isset($_POST['name']) && isset($_POST['server']) && isset($_POST['region']) ) {
+                
+                $name = urldecode(trim(stripslashes( $_POST['name'] )));
+                $server = urldecode(trim(stripslashes( $_POST['server'] )));
+                $region = strtoupper($_POST['region']);
+                
+                if ( $region == "EU" || $region == "US" ) {
+                    if ( $this->_check_guild_exist( $name, $server, $region ) ) {
+    
+                        $this->_insert_uploadRule( $name, $server, $region );
+                        if ( $id = $this->_insert_guild( $name, $server, $region ) ) {
+                            
+                            if ( $this->_prepare_updateMemberlist( $id, $name, $server, $region ) ) {
+                                $ret = $this->_update_statusMemberlist();
+                                $this->_show_statusMemberlist();
+                                if ( $ret ) {
+                                    $this->_link_guildMemberlist( $id );
+                                }
+                            } else {
+                                $this->_nothing_to_do();
+                            }
+                        } else {
+                            $html = "&nbsp;&nbsp;".
+                                    $roster->locale->act['error_guild_insert'].
+                                    "&nbsp;&nbsp;";
+                            print messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
+                        }
+                    } else {
+                        $html = "&nbsp;&nbsp;".
+                                $roster->locale->act['error_guild_notexist'].
+                                "&nbsp;&nbsp;";
+                        print messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
+                    }
+                } else {
+                    $html = "&nbsp;&nbsp;".
+                            $roster->locale->act['error_wrong_region'].
+                            "&nbsp;&nbsp;";
+                    print messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
+                }
+            } else {
+                $html = "&nbsp;&nbsp;".
+                        $roster->locale->act['error_missing_params'].
+                        "&nbsp;&nbsp;";
+                print messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
+            }
+        }
+    }
+
+    /**
+     * fetch insert jobid, fill jobqueue
+     *
+     */
+    function _check_env() {
+        global $roster;
+        if ( $roster->scope == 'char' ) {
+            $this->id = $roster->data['member_id'];
+            $this->title = "<h3>". $roster->locale->act['armorySyncTitle_Char']. "</h3>\n";
+            $this->isAuth = $this->_checkAuth('armorysync_char_update_access');
+        } elseif ( $roster->scope == 'guild' && isset( $roster->pages[2] ) && $roster->pages[2] == 'memberlist' ) {
+            $this->id = $roster->data['guild_id'];
+            $this->title = "<h3>". $roster->locale->act['armorySyncTitle_Guildmembers']. "</h3>\n";
+            $this->isMemberList = 1;
+            $this->isAuth = $this->_checkAuth('armorysync_guild_update_access');
+        } elseif ( $roster->scope == 'guild' ) {
+            $this->id = $roster->data['guild_id'];
+            $this->title = "<h3>". $roster->locale->act['armorySyncTitle_Guild']. "</h3>\n";
+            $this->isAuth = $this->_checkAuth('armorysync_guild_memberlist_update_access');
+        } elseif ( $roster->scope == 'realm' ) {
+            $this->id = $roster->data['server'];
+            $this->title = "<h3>". $roster->locale->act['armorySyncTitle_Realm']. "</h3>\n";
+            $this->isAuth = $this->_checkAuth('armorysync_realm_update_access');
+        } elseif ( $roster->scope == 'util' ) {
+            $this->title = "<h3>". $roster->locale->act['armorySyncTitle_Guildmembers']. "</h3>\n";
+            $this->isMemberList = 1;
+            $this->isAuth = $this->_checkAuth('armorysync_guild_update_access');
+        }
+    }
+
+    /**
+     * fetch insert jobid, fill jobqueue
+     *
+     */
+    function _prepare_update() {
         global $roster, $addon;
     
         $this->time_started = gmdate('Y-m-d H:i:s');
@@ -84,7 +281,7 @@ class ArmorySyncJob {
      * fetch insert jobid, fill jobqueue
      *
      */
-    function prepare_updateMemberlist( $id = 0, $name = false , $server = false , $region = false ) {
+    function _prepare_updateMemberlist( $id = 0, $name = false , $server = false , $region = false ) {
         global $roster, $addon;
         
         if ( ! $id ) {
@@ -126,7 +323,7 @@ class ArmorySyncJob {
      *
      * @param int $jobid
      */
-    function nothing_to_do() {
+    function _nothing_to_do() {
         global $roster;
         
         $html = '<h3>&nbsp;&nbsp;'. $roster->locale->act['nothing_to_do']. '&nbsp;&nbsp;</h3>';
@@ -140,7 +337,7 @@ class ArmorySyncJob {
      *
      * @param int $jobid
      */
-    function show_status( $jobid = 0, $memberlist = false ) {
+    function _show_status( $jobid = 0, $memberlist = false ) {
         global $roster, $addon;
         
         $members = $this->members;
@@ -240,17 +437,29 @@ function popup(\$arg) {
 
         $roster->tpl->assign_var('STOP_BORDER', border( 'syellow', 'end' ));
         
-        // footer
-        $this->_armorySyncFooter();
 
         $roster->tpl->set_filenames(array(
                 'status_head' => '../../addons/armorysync/templates/status_head.html',
                 'status_body' => '../../addons/armorysync/templates/status_body.html',
-                'footer' => '../../addons/armorysync/templates/footer.html',
                 ));
 
         $roster->tpl->display('status_head');
         $roster->tpl->display('status_body');
+    }
+    
+    /**
+     * create footer
+     *
+     * @param int $jobid
+     */
+    function _showFooter() {
+        global $roster, $addon;
+        
+        $roster->tpl->assign_var('ARMORYSYNC_VERSION',$addon['version']. ' by poetter');
+        $roster->tpl->assign_var('ARMORYSYNC_CREDITS',$roster->locale->act['armorysync_credits']);
+        $roster->tpl->set_filenames(array(
+                'footer' => '../../addons/armorysync/templates/footer.html',
+                ));
         $roster->tpl->display('footer');
     }
     
@@ -259,203 +468,87 @@ function popup(\$arg) {
      *
      * @param int $jobid
      */
-    function _armorySyncFooter() {
+    function _showAddGuildScreen() {
         global $roster, $addon;
         
-        $roster->tpl->assign_var('ARMORYSYNC_VERSION',$addon['version']. ' by poetter');
-        $roster->tpl->assign_var('ARMORYSYNC_CREDITS',$roster->locale->act['armorysync_credits']);
+        $body = '';
+        $body .= '<form action="' . makelink() . '" method="post" id="allow">
+        <input type="hidden" id="addguild" name="action" value="" />
+        <input type="hidden" name="process" value="process" />
+        <input type="hidden" name="block" value="allow" />';
+        
+        $body .= $this->_ruletable_head('sgreen',$roster->locale->act['armorysync_guildadd'],'addguild','');
+        $body .= $this->_ruletable_foot('sgreen','addguild','');
+        
+        $body .= '</form>';
+        
+        $body .= "<br />\n";
+        $body .= messagebox($roster->locale->act['armorysync_guildadd_helpText'],'<img src="' . $roster->config['img_url'] . 'blue-question-mark.gif" alt="?" style="float:right;" />' . $roster->locale->act['armorysync_guildadd_help'],'sgray');
+        
+        print $body;
     }
 
-    /**
-     * statusbox output
-     *
-     * @param int $jobid
-     */
-    function show_status2( $jobid = 0, $memberlist = false ) {
-        global $roster, $addon;
-        
-        $members = $this->members; //_getMembersFromJobqueue( $jobid );
-        
-        $html = '';
-        $html .= "
-<script type=\"text/javascript\">
-function popup(\$arg) {
-	var formID = document.getElementById(\$arg);
-
-	formID.style.display=(formID.style.display=='block'?'none':'block');
-}
-</script>
-";
-        
-        
-        $title = '';
-        
-        $title .= "
-                <table align=\"center\" width=\"100%\">
-                    <tr>
-                        <td width=33% align=\"center\">";
-        if ($this->active_member['name']) {
-            $title .= $roster->locale->act['next_to_update']. $this->active_member['name'];
-        }
-        $title .= "      </td>
-                        <td width=33% align=\"center\">";
-        $title .= $this->title;
-        $title .= "      </td>
-                        <td width=33% align=\"right\">";
-        $title .=            $this->_getProgressBar($this->done, $this->total);
-        $title .= "      </td>
-                    </tr>
-                </table>";
-        
-        $html .= '<img src="img/plus.gif" style="float:right;cursor:pointer;" alt="" id="update_details_img" onclick="showHide(\'update_details\',\'update_details_img\',\'img/minus.gif\',\'img/plus.gif\');" />';
-        $html .= '<div id="update_details" style="display:none;">';
-        
-        $html .= '<table align="center"><tr><td>';
-        $html .= '<table class="border_frame">';
-        if (  ! $memberlist ) {
-            $html .= '
-                    <th class="membersHeader ts_string">'.$roster->locale->act['name']. '</th>';
-        }
-        $html .= '  <th class="membersHeader ts_string">'.$roster->locale->act['guild']. '</th>
-                    <th class="membersHeader ts_string">'.$roster->locale->act['realm']. '</th>
-                    <th class="membersHeader ts_string">Infos<br>'.$roster->locale->act['guild_short']. '</th>';
-        if (  ! $memberlist ) {
-            $html .= '
-                    <th class="membersHeader ts_string">Infos<br>'.$roster->locale->act['character_short']. '</th>
-                    <th class="membersHeader ts_string">Infos<br>'.$roster->locale->act['skill_short']. '</th>
-                    <th class="membersHeader ts_string">Infos<br>'.$roster->locale->act['reputation_short']. '</th>
-                    <th class="membersHeader ts_string">Infos<br>'.$roster->locale->act['equipment_short']. '</th>
-                    <th class="membersHeader ts_string">Infos<br>'.$roster->locale->act['talents_short']. '</th>';
-        }
-        $html .= '  <th class="membersHeader ts_string">'.$roster->locale->act['started']. '</th>
-                    <th class="membersHeader ts_string">'.$roster->locale->act['finished']. '</th>
-                    <th class="membersHeader ts_string">'."Log". '</th>';
-        
-        $i = 1;
-        $l = 1;
-        foreach ( $members as $member ) {
-            
-            $j = $i > 0 ? 1 : 2;
-            $html .= "<tr class=\"membersRowColor". $j. "\">";
-            if (  ! $memberlist ) {
-                $html .= "
-                        <td class=\"membersRowCell\">". $member['name']. "</td>";
-            }
-            $html .= "  <td class=\"membersRowCell\">". $member['guild_name']. "</td>
-                        <td class=\"membersRowCell\">". $member['region']."-". $member['server']."</td>";
-            if ( ! $memberlist ) {
-                $html .= "  <td class=\"membersRowCell\"><img src='img/";
-                                isset ($member['guild_info']) ?
-                                    ( $member['guild_info'] == 1 ?    $html .= "pvp-win.gif'/>" :
-                                                                    $html .= "pvp-loss.gif'/>" ) :
-                                    $html .= "blue-question-mark.gif'/>";
-            } else {
-                $html .= "  <td class=\"membersRowCell\">";
-                                isset ($member['guild_info']) ?
-                                    $html .= $member['guild_info'] :
-                                    $html .= "<img src='img/blue-question-mark.gif'/>";
-            }
-            $html .= "         </td>";
-    
-            if (  ! $memberlist ) {
-                $html .= "
-                            <td class=\"membersRowCell\"><img src='img/";
-                            isset ($member['character_info']) ?
-                                ( $member['character_info'] == 1 ?  $html .= "pvp-win.gif'" :
-                                                                    $html .= "pvp-loss.gif'" ) :
-                                $html .= "blue-question-mark.gif'";
-                $html .= "         /></td>";
-    
-                $html .= "     <td class=\"membersRowCell\">";
-                            isset ($member['skill_info']) ?
-                                ( $member['skill_info'] >= 1 ?  $html .= $member['skill_info'] :
-                                                                $html .= "<img src='img/pvp-loss.gif'/>" ) :
-                                $html .= "<img src='img/blue-question-mark.gif'/>";
-                $html .= "         </td>";
-    
-                $html .= "     <td class=\"membersRowCell\">";
-                            isset ($member['reputation_info']) ?
-                                ( $member['reputation_info'] >= 1 ?   $html .= $member['reputation_info'] :
-                                                                    $html .= "<img src='img/pvp-loss.gif'/>" ) :
-                                $html .= "<img src='img/blue-question-mark.gif'/>";
-                $html .= "         </td>";
-    
-                $html .= "     <td class=\"membersRowCell\">";
-                            isset ($member['equipment_info']) ?
-                                ( $member['equipment_info'] >= 1 ?  $html .= $member['equipment_info'] :
-                                                                    $html .= "<img src='img/pvp-loss.gif'/>" ) :
-                                $html .= "<img src='img/blue-question-mark.gif'/>";
-                $html .= "         </td>";
-    
-                $html .= "     <td class=\"membersRowCell\">";
-                            isset ($member['talent_info']) ?
-                                ($member['talent_info'] >= 1 ?   $html .= $member['talent_info'] :
-                                                                $html .= "<img src='img/pvp-loss.gif'/>" ) :
-                                $html .= "<img src='img/blue-question-mark.gif'/>";
-                $html .= "         </td>";
-            }
-    
-            $html .= "     <td class=\"membersRowCell\">";
-                            isset ($member['starttimeutc']) ?
-                                $html .= $this->_getLocalisedTime($member['starttimeutc']) :
-                                $html .= "<img src='img/blue-question-mark.gif'/>";
-            $html .= "         </td>";
-    
-            $html .= "     <td class=\"membersRowCell\">";
-                            isset ($member['stoptimeutc']) ?
-                                $html .= $this->_getLocalisedTime($member['stoptimeutc']) :
-                                $html .= "<img src='img/blue-question-mark.gif'/>";
-            $html .= "         </td>";
-            
-            if (  ! $memberlist ) {
-                $html .= "     <td class=\"membersRowCell\">";
-                                if ( isset ($member['log']) ) {
-                                    $tooltip = $member['log'];
-                                    $html .= "<img src='img/note.gif'". makeOverlib( $tooltip , $roster->locale->act['update_log'] , '' ,0 , '' , ',WRAP' ). "/>";
-                                } else {
-                                    $html .= "<img src='img/no_note.gif'/>";
-                                }
-            } else {
-                $html .= "     <td class=\"membersRowCell\">";
-                                if ( isset ($member['log']) ) {
-                                    $tooltip = $member['log'];
-                                    $html .= '<a href="javascript:popup(\'logPopup\');">';
-                                    $html .= "<img src='img/note.gif'/></a>";
-                                    $html .= '<div id="logPopup" class="popup">';
-                                    $html .= scrollbox($member['log'], $roster->locale->act['update_log'], $style = 'sgray', $width = '550px', $height = '300px');
-                                    $html .= '</div>';
-                                } else {
-                                    $html .= "<img src='img/no_note.gif'/>";
-                                }
-                $html .= "         </td>";
-            }
-            $html .= " </tr>";
-            
-            $i *= -1;
-            $l++;
-        }
-        
-        
-        $html .= " </table>\n";
-        $html .= "</td></tr></table>";
-        $html .= "</div>";
-        
-        print messagebox( $html , $title , 'syellow' , "800px" );
-        
-        $roster->tpl->assign_var('ARMORYSYNC_VERSION',$addon['version']);
-        $roster->tpl->set_filenames(array('footer' => '../../addons/armorysync/templates/footer.html'));
-        $roster->tpl->display('footer');
-    }
-    
     /**
      * statusbox Memberlist output
      *
      * @param int $jobid
      */
-    function show_statusMemberlist( $jobid = 0 ) {
+    function _ruletable_head( $style , $title , $type , $mode )
+    {
+            global $roster;
+    
+            $output = border($style,'start',$title) . '
+    <table class="bodyline" cellspacing="0">
+            <thead>
+                    <tr>
+    ';
+    
+            $name = $roster->locale->act['guildname'];
+    
+            $output .= '
+                            <th class="membersHeader" ' . makeOverlib($name) . '> ' . $roster->locale->act['guildname'] . '</th>
+                            <th class="membersHeader" ' . makeOverlib($roster->locale->act['realmname']) . '> ' . $roster->locale->act['server'] . '</th>
+                            <th class="membersHeader" ' . makeOverlib($roster->locale->act['regionname']) . '> ' . $roster->locale->act['region'] . '</th>
+                            <th class="membersHeaderRight">&nbsp;</th>
+                    </tr>
+            </thead>
+            <tbody>' . "\n";
+            return $output;
+    }
+
+
+    /**
+     * statusbox Memberlist output
+     *
+     * @param int $jobid
+     */
+    function _ruletable_foot( $style , $type , $mode )
+    {
+            global $roster;
+    
+            $output = "\n\t\t<tr>\n";
+    
+            $output .= '
+                            <td class="membersRow2"><input class="wowinput128" type="text" name="name" value="" /></td>
+                            <td class="membersRow2"><input class="wowinput128" type="text" name="server" value="" /></td>
+                            <td class="membersRow2"><input class="wowinput64" type="text" name="region" value="" /></td>
+                            <td class="membersRowRight2"><button type="submit" class="input" onclick="setvalue(\'' . $type . '\',\'add\');">' . $roster->locale->act['add'] . '</button></td>
+                    </tr>
+            </tbody>
+    </table>
+    ' . border($style,'end');
+            return $output;
+    }
+
+    /**
+     * statusbox Memberlist output
+     *
+     * @param int $jobid
+     */
+    function _show_statusMemberlist( $jobid = 0 ) {
         global $roster;
         
-        $this->show_status( $jobid, 1 );
+        $this->_show_status( $jobid, 1 );
     }
     
     /**
@@ -464,7 +557,7 @@ function popup(\$arg) {
      *
      * @param int $jobid
      */
-    function update_status( $jobid = 0 ) {
+    function _update_status( $jobid = 0 ) {
         global $roster;
         
         $this->_init();
@@ -509,7 +602,7 @@ function popup(\$arg) {
         }
     }
     
-    function update_statusMemberlist( $jobid = 0 ) {
+    function _update_statusMemberlist( $jobid = 0 ) {
         global $roster;
         
         $this->_init();
@@ -551,6 +644,20 @@ function popup(\$arg) {
     
     // Helper functions
 
+    /**
+     * Create localised time based on utc + offset;
+     *
+     * @param string $time
+     * @return string
+     */
+    function _check_guild_exist( $name, $server, $region ) {
+        global $addon;
+        
+        require_once ($addon['dir'] . 'inc/armorysync.class.php');
+        
+        $as = new ArmorySync;
+        return $as->checkGuildInfo( $name, $server, $region );
+    }
     /**
      * Create localised time based on utc + offset;
      *
@@ -602,41 +709,82 @@ function popup(\$arg) {
 
 
     /**
+     * scope based __link call
+     * 
+     */
+    function _checkAuth( $scope = false ) {
+        global $roster, $addon;
+        
+        if ( !$scope ) {
+            return false;
+        }
+        
+        $roster_login = new RosterLogin();
+        if( $roster_login->getAuthorized() < $addon['config'][$scope] )
+        {
+            print
+            '<span class="title_text">'. $this->title. '</span><br />'.
+            $roster_login->getMessage().
+            $roster_login->getLoginForm($addon['config'][$scope]);
+            return false;
+        } else {
+            return true;
+        }
+
+        
+    }
+    
+    /**
+     * scope based __link call
+     * 
+     */
+    function _link() {
+        global $roster;
+        
+        if ( $roster->scope == 'char' ) {
+            $this->_link_char();
+        } elseif ( $roster->scope == 'guild' ) {
+            $this->_link_guild();
+        } elseif ( $roster->scope == 'realm' ) {
+            $this->_link_realm();
+        }
+    }
+    /**
      * Create java reload code for guildsync
      * 
      */
-    function link_char() {
+    function _link_char() {
         global $roster;
         
         $link = makelink('char-armorysync&amp;job_id='. $this->jobid);
-        $this->_link( $link );
+        $this->__link( $link );
     }
     
     /**
      * Create java reload code for guilds
      * 
      */
-    function link_guild() {
+    function _link_guild() {
         global $roster;
         $link = makelink('guild-armorysync&amp;job_id='. $this->jobid);
-        $this->_link( $link );
+        $this->__link( $link );
     }
     
     /**
      * Create java reload code for guilds
      * 
      */
-    function link_realm() {
+    function _link_realm() {
         global $roster;
         $link = makelink('guild-armorysync&amp;job_id='. $this->jobid);
-        $this->_link( $link );
+        $this->__link( $link );
     }
 
     /**
      * Create java reload code for guild memberlists
      * 
      */
-    function link_guildMemberlist( $id = 0 ) {
+    function _link_guildMemberlist( $id = 0 ) {
         global $roster;
         
         if ( ! $id ) {
@@ -644,7 +792,7 @@ function popup(\$arg) {
         }
         
         $link = makelink('guild-armorysync-memberlist&amp;job_id='. $this->jobid);
-        $this->_link( $link );
+        $this->__link( $link );
     }
     
     /**
@@ -652,7 +800,8 @@ function popup(\$arg) {
      *
      * @param string $link
      */
-    function _link ( $link = '' ) {
+    
+    function __link ( $link = '' ) {
         global $addon;
         
         $link = str_replace( '&amp;', '&', $link );
@@ -666,6 +815,37 @@ function popup(\$arg) {
         Print '}';
         Print "self.setTimeout('nextMember()', ". $reloadTime. ");";
         Print '</script>';
+    }
+    
+    /**
+     * Create java reload code
+     *
+     * @param string $link
+     */
+    
+    function _showStartPage () {
+        global $roster;
+        
+        $message = '<br>';
+        if ( $roster->scope == 'char' ) {
+            $message .= sprintf( $roster->locale->act['start_message'], $roster->locale->act['start_message_the_char'], $roster->data['name'], $roster->locale->act['start_message_the_char']);
+        } elseif ( $roster->scope == 'guild' ) {
+            $message .= sprintf( $roster->locale->act['start_message'], $roster->locale->act['start_message_the_guild'], $roster->data['guild_name'], $roster->locale->act['start_message_this_guild']);
+        } elseif ( $roster->scope == 'realm' ) {
+            $message .= sprintf( $roster->locale->act['start_message'], $roster->locale->act['start_message_the_realm'], $roster->data['region'].'-'.$roster->data['server'], $roster->locale->act['start_message_this_realm']);
+        }
+
+        $message .= '<img src="' . $roster->config['img_url'] . 'blue-question-mark.gif" alt="?" />
+                    <br><br>
+                    <form action="' . makelink() . '" method="post" id="allow">
+                    <input type="hidden" id="start" name="action" value="" />
+                    <input type="hidden" name="job_id" value="" />
+                    <button type="submit" class="input" onclick="setvalue(\'job_id\',\'0\');setvalue(\'start\',\'start\');">' . $roster->locale->act['start'] . '</button>
+                    </form>
+                    <br>';
+                    
+                    
+        print messagebox( $message, $this->title,'sred');
     }
     
     // DB functions
@@ -1052,6 +1232,59 @@ function popup(\$arg) {
                     "WHERE job_id=". $jobid. ";";
         $result = $roster->db->query($query);
         
+    }
+
+    /**
+     * Inserts UploadRule
+     *
+     * @param string $name
+     * @param string $server
+     * @param string $region
+     */
+    function _insert_uploadRule( $name, $server, $region ) {
+        global $roster;
+        
+        $query =    "INSERT ".
+                    "INTO `". $roster->db->table('upload'). "` ".
+                    "(`name`,`server`,`region`,`type`,`default`) VALUES ".
+                    "('" . $roster->db->escape($name) . "','" . $roster->db->escape($server) . "','" . strtoupper($region) . "','0','0');";
+                    
+        if( !$roster->db->query($query) )
+        {
+                die_quietly($roster->db->error(),'Database Error',__FILE__,__LINE__,$query);
+        }
+    }
+    
+    /**
+     * Inserts new guild
+     *
+     * @param string $name
+     * @param string $server
+     * @param string $region
+     */
+    function _insert_guild( $name, $server, $region ) {
+        global $roster;
+        
+        $query =    "INSERT ".
+                    "INTO `". $roster->db->table('guild'). "` ".
+                    "SET ".
+                    "`guild_name`='". $roster->db->escape($name). "', ".
+                    "`server`='". $roster->db->escape($server). "', ".
+                    "`region`='". $roster->db->escape($region). "';";
+                    
+        if( !$roster->db->query($query) )
+        {
+            die_quietly($roster->db->error(),'Database Error',__FILE__,__LINE__,$query);
+        } else {
+            $query = "SELECT LAST_INSERT_ID();";
+            $jobid = $roster->db->query_first($query);
+            if ( $jobid ) {
+                return $jobid;
+            } else {
+                print "Error fetching id <br>\n";
+                return false;
+            }
+        }
     }
 
 }

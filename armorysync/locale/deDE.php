@@ -27,6 +27,13 @@ $lang['admin']['armorysync_minlevel']		= 'Minimum Level|Minimum level der Charac
 $lang['admin']['armorysync_synchcutofftime']	= 'Sync cutoff time|Zeit in tagen.<br>Alle Charactere die nicht in den letzten (x) Tagen aktualisiert wurden werden syncronisiert.';
 $lang['admin']['armorysync_reloadwaittime']	= 'Reload wait time|Zeit in Sekunden.<br>Zeit in Sekunden bevor die nächste Syncronisierung angestossen wird.';
 $lang['admin']['armorysync_fetch_timeout'] = 'Armory Fetch timeout|Zeit in Sekunden bis das Herunterladen<br>einer einzelnen XML Datei abgebrochen wird.';
+$lang['admin']['armorysync_skip_start'] = 'Skip start page|Skip start page on ArmorySync updates.';
+$lang['admin']['armorysync_char_update_access'] = 'Char Update Access Level|Wer ist in der Lage Charakter zu aktualisieren';
+$lang['admin']['armorysync_guild_update_access'] = 'Guild Update Access Level|Wer ist in der Lage Gilden zu aktualisieren';
+$lang['admin']['armorysync_guild_memberlist_update_access'] = 'Guild Memberlist Update Access Level|Wer ist in der Lage Gilden Mitgliederlisten zu aktualisieren';
+$lang['admin']['armorysync_realm_update_access'] = 'Realm Update Access Level|Wer ist in der Lage Realms zu aktualisieren';
+$lang['admin']['armorysync_guild_add_access'] = 'Guild Add Access Level|Wer ist in der Lage neue Gilden einzufügen';
+
 //$lang['admin']['armorysync_usecurl']		= 'Use Curl|Auf false setzen wenn du die original FileSocket function benutzen möchtest.';
 //$lang['admin']['armorysync_debuglevel']		= 'Debug level';
 //$lang['admin']['armorysync_updateroster']	= "Update Roster|Das Roster aktualisieren oder nicht.<br>Sinnvoll fürs Debuggen.";
@@ -124,9 +131,9 @@ $lang['error_guild_insert'] = "Fehler beim anlegen der Gilde.";
 $lang['error_guild_notexist'] = "Die angegebene Gilde existiert nicht in der Armory.";
 $lang['error_missing_params'] = "Fehlende Angaben. Bitte versuch es erneut.";
 $lang['error_wrong_region'] = "Ungültige Region. Nur EU und US sind gültige Regionen.";
-$lang['armorysync_guildadd'] = "Guilde hinzufügen und Mitgliederliste<br>mit der Armory syncronisieren.";
+$lang['armorysync_guildadd'] = "Gilde hinzufügen und Mitgliederliste<br>mit der Armory synchronisieren.";
 $lang['armorysync_guildadd_help'] = "Hinweis";
-$lang['armorysync_guildadd_helpText'] = "Schreibe die Gilde und den Server exakt so wie sie, bzw. er, bei Blizzard geführt werden.<br>Die Region ist EU für europäische Gilden und US für amerikanische. Es wird zuerst<br>überprüft ob die Gilde existiert. Anschließend wird eine Syncronisierung der<br>Mitgliederliste angestoßen.";
+$lang['armorysync_guildadd_helpText'] = "Schreibe die Gilde und den Server exakt so wie sie, bzw. er, bei Blizzard geführt werden.<br>Die Region ist EU für europäische Gilden und US für amerikanische. Es wird zuerst<br>überprüft ob die Gilde existiert. Anschließend wird eine Synchronisierung der<br>Mitgliederliste angestoßen.";
 
 $lang['guildleader'] = "Gildenmeister";
 
@@ -134,4 +141,15 @@ $lang['rage'] = "Wut";
 $lang['energy'] = "Energie";
 $lang['focus'] = "Focus";
 
-$lang['armorysync_credits'] = 'Danke an <a target="_blank" href="http://www.papy-team.fr">tuigii</a>, <a target="_blank" href="http://xent.homeip.net">zanix</a>, <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=1126.html">ds</a> and <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=711.html">Subxero</a> fürs Testen, Übersetzen und Unterstützen.<br>Besonderen Dank an <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=13101.html">kristoff22</a> für den originalen Code von ArmorySync.';
+$lang['armorysync_credits'] = 'Danke an <a target="_blank" href="http://www.papy-team.fr">tuigii</a>, <a target="_blank" href="http://xent.homeip.net">zanix</a>, <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=1126.html">ds</a> und <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=711.html">Subxero</a> fürs Testen, Übersetzen und Unterstützen.<br>Besonderen Dank an <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=13101.html">kristoff22</a> für den originalen Code von ArmorySync und <a target="_blank" href="http://www.iceguild.org.uk/forum">Pugro</a> für seine Änderungen daran.';
+
+$lang['start'] = "Start";
+$lang['start_message'] = "Du bist dabei ArmorySync für %s %s auzuführen.<br><br>Hierdurch werden die Daten für %s mit den Angaben<br>aus Blizzards Armory überschrieben. Dieser Vorgang kann nur rückgängig<br>gemacht werden, in dem eine aktuelle CharakterProfiler.lua<br>hochgeladen wird.<br><br>Willst diesen Vorgang jetzt starten";
+
+$lang['start_message_the_char'] = "den Charakter";
+$lang['start_message_this_char'] = "diesen Charakter";
+$lang['start_message_the_guild'] = "die Gilde";
+$lang['start_message_this_guild'] = "alle Charaktere dieser Gilde";
+$lang['start_message_the_realm'] = "den Realm";
+$lang['start_message_this_realm'] = "alle Charaktere dieses Realms";
+

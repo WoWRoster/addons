@@ -1,3 +1,14 @@
+$Id:
+
+svn[232]
+- added more _checkContent
+- added credits to enUS, esES and frFR
+- brought all code logic from idex.php's, meberlist.php and guildadd.php back to armorysyncjob.php
+- fixed unurldecoded strings in guildadd
+- added config options for diffrent acces levels
+- added start page before syncing
+- added pugro to credits
+
 svn[230]
 - added armory fetch timeout to config
 - added credits to footer

@@ -28,6 +28,12 @@ $lang['admin']['armorysync_minlevel']		= 'Minimum Level|Minimum level of charact
 $lang['admin']['armorysync_synchcutofftime']	= 'Sync cutoff time|Time in days<br />All characters not updated in last (x) days will be synchronized';
 $lang['admin']['armorysync_reloadwaittime']	= 'Reload wait time|Time in seconds<br />Time in seconds before next synchronization during a sync job';
 $lang['admin']['armorysync_fetch_timeout'] = 'Armory Fetch timeout|Time in seconds till a fetch of a single XML file is aborted.';
+$lang['admin']['armorysync_skip_start'] = 'Skip start page|Skip start page on ArmorySync updates.';
+$lang['admin']['armorysync_char_update_access'] = 'Char Update Access Level|Who ia able to do character updates';
+$lang['admin']['armorysync_guild_update_access'] = 'Guild Update Access Level|Who ia able to do guild updates';
+$lang['admin']['armorysync_guild_memberlist_update_access'] = 'Guild Memberlist Update Access Level|Who ia able to do guild memberlist updates';
+$lang['admin']['armorysync_realm_update_access'] = 'Realm Update Access Level|Who ia able to do realm updates';
+$lang['admin']['armorysync_guild_add_access'] = 'Guild Add Access Level|Who ia able to add new guilds';
 //$lang['admin']['armorysync_usecurl']		= 'Use Curl|Auf false setzen wenn du die original FileSocket function benutzen möchtest.';
 //$lang['admin']['armorysync_debuglevel']		= 'Debug level';
 //$lang['admin']['armorysync_updateroster']	= "Update Roster|Das Roster aktualisieren oder nicht.<br />Sinnvoll fürs Debuggen.";
@@ -135,3 +141,4 @@ $lang['rage'] = "Rage";
 $lang['energy'] = "Energy";
 $lang['focus'] = "Focus";
 
+$lang['armorysync_credits'] = 'Thanks to <a target="_blank" href="http://www.papy-team.fr">tuigii</a>, <a target="_blank" href="http://xent.homeip.net">zanix</a>, <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=1126.html">ds</a> and <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=711.html">Subxero</a> for testing, translating and supporting.<br>Spezial thanks to <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=13101.html">kristoff22</a> for the original code of ArmorySync and <a target="_blank" href="http://www.iceguild.org.uk/forum">Pugro</a> for his changes to it.';
