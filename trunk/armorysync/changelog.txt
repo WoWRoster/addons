@@ -1,4 +1,7 @@
 $Id:
+svn[233]
+- added diffrent locales to enUS frFR and esES
+
 
 svn[232]
 - added more _checkContent
