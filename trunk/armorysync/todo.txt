@@ -1,6 +1,20 @@
-zanix: http://wowroster.net/Forums/viewtopic/p=26775.html#26775
-Also, each page seems to automatically start the updating process
-I think there should be a button that starts it, and not make it automatic
+vblars: http://www.wowroster.net/Forums/viewtopic/p=27064.html#27064
+ I'm using SVN(230) and I'm getting some new error.
+
+Quote::
+addons\armorysync\inc\armorysync.class.php
+Notice line 470: Undefined property: SimpleClass::$item
+Warning line 484: Invalid argument supplied for foreach()
+lib\update.lib.php
+Notice line 2991: Undefined index: MainHand
+addons\armorysync\inc\armorysyncjob.class.php
+Notice line 266: Undefined index: armorysync_credits
+
+addons\armorysync\inc\armorysyncjob.class.php
+Notice line 266: Undefined index: armorysync_credits
+
+Hope it can help you. Razz
+
 
 leusent: http://www.wowroster.net/Forums/viewtopic/p=26832.html#26832
 lib/update.lib.php
@@ -25,6 +39,10 @@ poetter:
 cache cleanup
 
 
+
+zanix: http://wowroster.net/Forums/viewtopic/p=26775.html#26775
+Also, each page seems to automatically start the updating process
+I think there should be a button that starts it, and not make it automatic [done]
 
 poetter:
 version forth digit back to svn revision [done]

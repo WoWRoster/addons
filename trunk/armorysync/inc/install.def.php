@@ -29,7 +29,7 @@ class armorysync
 	var $active = true;
 	var $icon = 'inv_misc_enggizmos_02';
         
-	var $version = '2.6.0.229';
+	var $version = '2.6.0.232';
 
 	var $fullname = 'Armory Sync';
 	var $description = 'Syncronizes chars with Blizzards Armory';
@@ -66,7 +66,13 @@ class armorysync
 		$installer->add_config("'1200', 'armorysync_synchcutofftime', '10', 'text{4|4', 'armorysync_conf'");
                 $installer->add_config("'1300', 'armorysync_reloadwaittime', '5', 'text{4|4', 'armorysync_conf'");
                 $installer->add_config("'1350', 'armorysync_fetch_timeout', '8', 'text{2|2', 'armorysync_conf'");
+                $installer->add_config("'1360', 'armorysync_skip_start', '0', 'radio{On^1|Off^0', 'armorysync_conf'");
                 $installer->add_config("'1400', 'armorysync_protectedtitle', 'Banker', 'text{30|64', 'armorysync_conf'");
+                $installer->add_config("'1440', 'armorysync_char_update_access', '1', 'radio{Admin^3|Officer^2|Guild^1|Everyone^0', 'armorysync_conf'");
+                $installer->add_config("'1450', 'armorysync_guild_update_access', '2', 'radio{Admin^3|Officer^2|Guild^1|Everyone^0', 'armorysync_conf'");
+                $installer->add_config("'1460', 'armorysync_guild_memberlist_update_access', '2', 'radio{Admin^3|Officer^2|Guild^1|Everyone^0', 'armorysync_conf'");
+                $installer->add_config("'1470', 'armorysync_realm_update_access', '3', 'radio{Admin^3|Officer^2|Guild^1|Everyone^0', 'armorysync_conf'");
+                $installer->add_config("'1480', 'armorysync_guild_add_access', '3', 'radio{Admin^3|Officer^2|Guild^1|Everyone^0', 'armorysync_conf'");
 //		$installer->add_config("'1500', 'armorysync_debuglevel', '2', 'radio{more verbose^2|verbose^1|quiet^0', 'armorysync_conf'");
 //		$installer->add_config("'1600', 'armorysync_updateroster', '1', 'radio{yes^1|no^0', 'armorysync_conf'");
 //		$installer->add_config("'1700', 'armorysync_ismysqllower411', '0', 'radio{yes^1|no^0', 'armorysync_conf'");
@@ -118,7 +124,13 @@ class armorysync
 	function upgrade($oldversion)
 	{
             global $installer;
-            $installer->add_config("'1350', 'armorysync_fetch_timeout', '8', 'text{2|2', 'armorysync_conf'");
+            //$installer->update_config("'1350', 'armorysync_fetch_timeout', '8', 'text{2|2', 'armorysync_conf'");
+            //$installer->update_config("'1360', 'armorysync_skip_start', '0', 'radio{On^1|Off^0', 'armorysync_conf'");
+            //$installer->update_config("'1440', 'armorysync_char_update_access', '1', 'radio{Admin^3|Officer^2|Guild^1|Everyone^0', 'armorysync_conf'");
+            //$installer->update_config("'1450', 'armorysync_guild_update_access', '2', 'radio{Admin^3|Officer^2|Guild^1|Everyone^0', 'armorysync_conf'");
+            //$installer->update_config("'1460', 'armorysync_guild_memberlist_update_access', '2', 'radio{Admin^3|Officer^2|Guild^1|Everyone^0', 'armorysync_conf'");
+            //$installer->update_config("'1470', 'armorysync_realm_update_access', '3', 'radio{Admin^3|Officer^2|Guild^1|Everyone^0', 'armorysync_conf'");
+            //$installer->update_config("'1480', 'armorysync_guild_add_access', '3', 'radio{Admin^3|Officer^2|Guild^1|Everyone^0', 'armorysync_conf'");
             return true;
 	}
 

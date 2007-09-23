@@ -143,7 +143,7 @@ class ArmorySync {
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
         
         $content = $this->_parseData( $armory->fetchGuild( $this->memberName, $roster->config['locale'], $this->server ) );
-        if ( $content->guildInfo->hasProp( 'guild' ) ) {
+        if ( $this->_checkContent( $content, array( 'guildInfo', 'guild' ) ) ) {
             $guild = $content->guildInfo->guild;
             
             $this->data['Ranks'] = $this->_getGuildRanks( $roster->data['guild_id'] );
@@ -467,8 +467,10 @@ class ArmorySync {
             $this->status['characterInfo'] = 1;
             $this->status['guildInfo'] = 1;
             
-            $equip = $tab->items->item;
-            $this->_getEquipmentInfo( $equip );
+            if ( $this->_checkContent( $tab, array( 'items', 'item' ) ) ) {
+                $equip = $tab->items->item;
+                $this->_getEquipmentInfo( $equip );
+            }
         }
     }
 

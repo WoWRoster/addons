@@ -19,55 +19,7 @@ if ( !defined('IN_ROSTER') )
     exit('Detected invalid access to this file!');
 }
 
-$title = "<h3>". $roster->locale->act['armorySyncTitle_Guild']. "</h3>\n";
+require_once ($addon['dir'] . 'inc/armorysyncjob.class.php');
 
-// ----[ Check log-in ]-------------------------------------
-$roster_login = new RosterLogin();
-// Disallow viewing of the page
-if( $roster_login->getAuthorized() < 2 )
-{
-
-    print
-    '<span class="title_text">'. $title. '</span><br />'.
-    $roster_login->getMessage().
-    $roster_login->getLoginForm(2);
-
-} else {
-// ----[ Check log-in ]-------------------------------------
-
-    require_once ($addon['dir'] . 'inc/armorysyncjob.class.php');
-    
-    if ( isset($roster->data['guild_id']) && !isset($_GET['job_id'])) {
-        
-        $job = new ArmorySyncJob();
-        $job->title = $title;
-        if ( $job->prepare_update() ) {
-            $ret = $job->update_status();
-            $job->show_status();
-            if ( $ret ) {
-                $job->link_guild();
-            }
-        } else {
-            $job->nothing_to_do();
-        }
-    
-    } elseif ( isset($roster->data['guild_id']) && isset($_GET['job_id'])) {
-    
-        $job = new ArmorySyncJob();
-        $job->title = $title;
-        $job->jobid = $_GET['job_id'];
-        $ret = $job->update_status();
-        if ( $ret ) {
-            $ret = $job->update_status();
-        }
-        $job->show_status();
-        if ( $ret ) {
-            $job->link_guild();
-        }
-    
-    } else {
-        $html = $roster->locale->act['error_no_guild']. "<br>&nbsp;&nbsp;".
-                $roster->locale->act['error_use_menu']. "&nbsp;&nbsp;";
-        print messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
-    }
-}
+$job = new ArmorySyncJob();
+$job->start();
