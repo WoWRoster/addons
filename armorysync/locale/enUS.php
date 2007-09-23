@@ -142,3 +142,14 @@ $lang['energy'] = "Energy";
 $lang['focus'] = "Focus";
 
 $lang['armorysync_credits'] = 'Thanks to <a target="_blank" href="http://www.papy-team.fr">tuigii</a>, <a target="_blank" href="http://xent.homeip.net">zanix</a>, <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=1126.html">ds</a> and <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=711.html">Subxero</a> for testing, translating and supporting.<br>Spezial thanks to <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=13101.html">kristoff22</a> for the original code of ArmorySync and <a target="_blank" href="http://www.iceguild.org.uk/forum">Pugro</a> for his changes to it.';
+
+$lang['start'] = "Start";
+$lang['start_message'] = "Your about to start ArmorySync for %s %s.<br><br>By this all data for %s will be overwritten<br>with details from Blizzards Armory. This can only be undone<br>by uploading a current CharacterProfiler.lua.<br><br>Do you want to start this process yet";
+
+$lang['start_message_the_char'] = "the character";
+$lang['start_message_this_char'] = "this character";
+$lang['start_message_the_guild'] = "the guild";
+$lang['start_message_this_guild'] = "all characters of this guild";
+$lang['start_message_the_realm'] = "the realm";
+$lang['start_message_this_realm'] = "all characters of this realm";
+

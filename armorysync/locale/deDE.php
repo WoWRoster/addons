@@ -144,7 +144,7 @@ $lang['focus'] = "Focus";
 $lang['armorysync_credits'] = 'Danke an <a target="_blank" href="http://www.papy-team.fr">tuigii</a>, <a target="_blank" href="http://xent.homeip.net">zanix</a>, <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=1126.html">ds</a> und <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=711.html">Subxero</a> fürs Testen, Übersetzen und Unterstützen.<br>Besonderen Dank an <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=13101.html">kristoff22</a> für den originalen Code von ArmorySync und <a target="_blank" href="http://www.iceguild.org.uk/forum">Pugro</a> für seine Änderungen daran.';
 
 $lang['start'] = "Start";
-$lang['start_message'] = "Du bist dabei ArmorySync für %s %s auzuführen.<br><br>Hierdurch werden die Daten für %s mit den Angaben<br>aus Blizzards Armory überschrieben. Dieser Vorgang kann nur rückgängig<br>gemacht werden, in dem eine aktuelle CharakterProfiler.lua<br>hochgeladen wird.<br><br>Willst diesen Vorgang jetzt starten";
+$lang['start_message'] = "Du bist dabei ArmorySync für %s %s auszuführen.<br><br>Hierdurch werden die Daten für %s mit den Angaben<br>aus Blizzards Armory überschrieben. Dieser Vorgang kann nur rückgängig<br>gemacht werden, in dem eine aktuelle CharacterProfiler.lua<br>hochgeladen wird.<br><br>Willst du diesen Vorgang jetzt starten";
 
 $lang['start_message_the_char'] = "den Charakter";
 $lang['start_message_this_char'] = "diesen Charakter";

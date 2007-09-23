@@ -828,7 +828,7 @@ function popup(\$arg) {
         
         $message = '<br>';
         if ( $roster->scope == 'char' ) {
-            $message .= sprintf( $roster->locale->act['start_message'], $roster->locale->act['start_message_the_char'], $roster->data['name'], $roster->locale->act['start_message_the_char']);
+            $message .= sprintf( $roster->locale->act['start_message'], $roster->locale->act['start_message_the_char'], $roster->data['name'], $roster->locale->act['start_message_this_char']);
         } elseif ( $roster->scope == 'guild' ) {
             $message .= sprintf( $roster->locale->act['start_message'], $roster->locale->act['start_message_the_guild'], $roster->data['guild_name'], $roster->locale->act['start_message_this_guild']);
         } elseif ( $roster->scope == 'realm' ) {
