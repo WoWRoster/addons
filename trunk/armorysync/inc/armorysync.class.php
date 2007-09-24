@@ -419,7 +419,10 @@ class ArmorySync {
             // This is an ugly workaround for an encoding error in the armory
 
             $this->data["ClassId"] = $char->classId;
-            $this->data["ClassEn"] = $roster->locale->act['class_to_en'][$this->data["Class"]];
+            $this->data["ClassEn"] = preg_replace( "/\s/", "", $roster->locale->act['class_to_en'][$this->data["Class"]] );
+            if ( $this->data["ClassEn"] == "Undead" ) {
+                $this->data["ClassEn"] = "Scourge";
+            }
             $this->data["Health"] = $tab->characterBars->health->effective;
             $this->data["Mana"] = $tab->characterBars->secondBar->effective;
             if ( $tab->characterBars->secondBar->type == "m" ) {
@@ -724,7 +727,7 @@ class ArmorySync {
                 if ( $subobject->hasProp($key) ) {
                     $subobject = $subobject->$key;
                 } else {
-                    return $false;
+                    return false;
                 }
             }
             return true;

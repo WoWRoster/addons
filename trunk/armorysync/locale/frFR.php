@@ -16,33 +16,30 @@
 */
 
 // -[ frFR Localization ]-
-
 // Button names
-$lang['async_button']			= 'Armory Sync|Syncronise your characters with Blizzards Armory';
-$lang['async_button2']			= 'Armory Memberlist Sync|Syncronise your memberlist with Blizzards Armory';
-$lang['async_button3']			= 'Armory Memberlist Sync for a new guild|Add a new guild and syncronize<br>the meberlist with Blizzards Armory';
+$lang['async_button']= 'Armory Sync|Synchronise  vos personnages avec Blizzards Armory';
+$lang['async_button2']= 'Armory Memberlist Sync|Synchronise  vos liste des membres avec Blizzards Armory';
+$lang['async_button3']= 'Armory Memberlist Sync pour une nouvelle Guilde|Ajoute un nouvelle Guilde et synchronise<br>le avec la liste de ces membres chez Blizzards Armory';
 
 // Config strings
-$lang['admin']['armorysync_conf']			= 'ArmorySync Configuration';
-$lang['admin']['armorysync_host']			= 'Host|Host to syncronise with.';
-$lang['admin']['armorysync_minlevel']		= 'Minimum Level|Minimum level of characters to syncronise.';
-$lang['admin']['armorysync_synchcutofftime']	= 'Sync cutoff time|Time in days.<br>All characters not beeing updated in last (x) days will be syncronised.';
-$lang['admin']['armorysync_reloadwaittime']	= 'Reload wait time|Time in seconds.<br>Time in seconds befor next syncronisation will be done.';
-$lang['admin']['armorysync_fetch_timeout'] = 'Armory Fetch timeout|Time in seconds till a fetch of a single XML file is aborted.';
-$lang['admin']['armorysync_skip_start'] = 'Skip start page|Skip start page on ArmorySync updates.';
-$lang['admin']['armorysync_char_update_access'] = 'Char Update Access Level|Who ia able to do character updates';
-$lang['admin']['armorysync_guild_update_access'] = 'Guild Update Access Level|Who ia able to do guild updates';
-$lang['admin']['armorysync_guild_memberlist_update_access'] = 'Guild Memberlist Update Access Level|Who ia able to do guild memberlist updates';
-$lang['admin']['armorysync_realm_update_access'] = 'Realm Update Access Level|Who ia able to do realm updates';
-$lang['admin']['armorysync_guild_add_access'] = 'Guild Add Access Level|Who ia able to add new guilds';
-//$lang['admin']['armorysync_usecurl']		= 'Use Curl|Auf false setzen wenn du die original FileSocket function benutzen möchtest.';
+$lang['admin']['armorysync_conf']= 'ArmorySync Configuration';
+$lang['admin']['armorysync_host']= 'Host|Host to syncronise with.';
+$lang['admin']['armorysync_minlevel']= 'Minimum Level|Minimum level pour la shynco des personnages.';
+$lang['admin']['armorysync_synchcutofftime']= "Sync. temps de coupure|Le temps en jours.<br>Toutes personnages n étant pas mis à jour durant (x) jours seront synchronisé.";
+$lang['admin']['armorysync_reloadwaittime']= "Temps de rechargement |Le temps en secondes.<br>Le temps avant une prochaine synchronisation sera effectuée.";
+$lang['admin']['armorysync_fetch_timeout'] = "Armory chargement arrêt|Temps en secondes jusqu à ce un fichier XML sera avorté.";
+$lang['admin']['armorysync_skip_start'] = "Saute page de démarrage|Saute la page de démarrage des ArmorySync chargements.";
+$lang['admin']['armorysync_char_update_access'] = "Pers. niveau d'accès|Qui pourrait effectuer des chargements niveau personnage";
+$lang['admin']['armorysync_guild_update_access'] = "Guild niveau d'accès|Qui pourrait effectuer des chargements niveau Guilde";
+$lang['admin']['armorysync_guild_memberlist_update_access'] = "Guild Memberlist niveau d'accès|Qui pourrait effectuer des chargements niveau memberlist";
+$lang['admin']['armorysync_realm_update_access'] ="Realm niveau d'accès|Qui pourrait effectuer des chargements niveau realm";
+$lang['admin']['armorysync_guild_add_access'] = "Guild ajouter - niveau d'accès|Qui pourrait ajouter d'autres Guilds";
+//$lang['admin']['armorysync_usecurl']		= 'Utilisation de Curl|A désactiver si la fonction FileSocket devrait être utilisée.';
 //$lang['admin']['armorysync_debuglevel']		= 'Debug level';
-//$lang['admin']['armorysync_updateroster']	= "Update Roster|Das Roster aktualisieren oder nicht.<br>Sinnvoll fürs Debuggen.";
-//$lang['admin']['armorysync_ismysqllower411']	= "MySQL < 4.1.1|Auf True setzen wenn deine MySQL Version kleiner als 4.1.1 ist.";
-$lang['admin']['armorysync_protectedtitle']	= "Protected Guild Title|Characters with this guild titles are protected<br>from beeing deleted by a syncronisation off the meberlist against the armory.<br>The problem often occours with bank characters.<br>Multivalue possible with seperation by \",\". F.e. Banker,Stock";
+//$lang['admin']['armorysync_updateroster']	= "A la mise à jour du Roster|Actualisation du Roster.<br>Utile pour le débogage.";
+//$lang['admin']['armorysync_ismysqllower411']	= "MySQL < 4.1.1|A activer si votre version MySQL est plus bas que 4.1.1.";
+$lang['admin']['armorysync_protectedtitle']	= "Guild titres protégé|Les personnages avec ce titre seront protégé<br>contre l'effacement de la Guilde pendant un synchronisation de la liste des membres auprès Armory de Blizzard.<br>Ce problème peut arriver avec des personnages 'banquiers'.<br>Plusieurs valeurs ont possible, avec la séparation \",\". i.e. Banquier,Stock";
 
-
-// [done]
 $lang['bindings']['bind_on_pickup'] = "Lié quand ramassé"; //"Binds when picked up";
 $lang['bindings']['bind_on_equip'] = "Lié quand équipé"; //"Binds when equiped";
 $lang['bindings']['bind'] = "Lié"; // "Soulbound";
@@ -57,7 +54,6 @@ $lang['RepStanding']['Unfriendly'] = 'Inamical';
 $lang['RepStanding']['Hostile'] = 'Hostile';
 $lang['RepStanding']['Hated'] = 'Détesté';
 
-// [done]
 $lang['Skills']['Class Skills'] = "Compétences de classe";
 $lang['Skills']['Professions'] = "Métiers";
 $lang['Skills']['Secondary Skills'] = "Compétences secondaires";
@@ -65,7 +61,6 @@ $lang['Skills']['Weapon Skills'] = "Compétences d'armes";
 $lang['Skills']['Armor Proficiencies'] = "Armures utilisables";
 $lang['Skills']['Languages'] = "Langues";
 
-// [done]
 $lang['Classes']['Druid'] = 'Druide';
 $lang['Classes']['Hunter'] = 'Chasseur';
 $lang['Classes']['Mage'] = 'Mage';
@@ -76,12 +71,11 @@ $lang['Classes']['Shaman'] = 'Chaman';
 $lang['Classes']['Warlock'] = 'Démoniste';
 $lang['Classes']['Warrior'] = 'Guerrier';
 
-// [done]
 $lang['Talenttrees']['Druid']['Balance'] = "Equilibre";
 $lang['Talenttrees']['Druid']['Feral Combat'] = "Combat farouche";
 $lang['Talenttrees']['Druid']['Restoration'] = "Restauration";
 $lang['Talenttrees']['Hunter']['Beast Mastery'] = "Maîtrise des bêtes";
-$lang['Talenttrees']['Hunter']['Marksmanship'] = "Précision ";
+$lang['Talenttrees']['Hunter']['Marksmanship'] = "Précision";
 $lang['Talenttrees']['Hunter']['Survival'] = "Survie";
 $lang['Talenttrees']['Mage']['Arcane'] = "Arcanes";
 $lang['Talenttrees']['Mage']['Fire'] = "Fue";
@@ -125,35 +119,34 @@ $lang['armorySyncTitle_Realm'] = "ArmorySync pour Realms";
 $lang['next_to_update'] = "Prochaine mise à jour : ";
 $lang['nothing_to_do'] = "Rien à faire en ce moment";
 
-$lang['error'] = "Error";
-$lang['error_no_character'] = "No Charakter referred.";
-$lang['error_no_guild'] = "No Guild referred.";
-$lang['error_no_realm'] = "No Realm referred.";
-$lang['error_use_menu'] = "Use menue to syncronize.";
+$lang['error'] = "Erreur";
+$lang['error_no_character'] = "Aucun personnage référé.";
+$lang['error_no_guild'] = "Aucune Guild référé.";
+$lang['error_no_realm'] = "Aucun Realm référé.";
+$lang['error_use_menu'] = "Utilise Menu pour la synchronisation.";
 
-$lang['error_guild_insert'] = "Error creating guild.";
-$lang['error_guild_notexist'] = "The guild given does not exist in the Armory.";
-$lang['error_missing_params'] = "Missing parameters. Plaese try again";
-$lang['error_wrong_region'] = "Invalid region. Only EU and US are valid regions.";
-$lang['armorysync_guildadd'] = "Adding Guild and syncronize<br>memberlist with the Armory.";
+$lang['error_guild_insert'] = "Erreur creation de la guilde.";
+$lang['error_guild_notexist'] = "La guilde donnée n'existe pas dans Armory.";
+$lang['error_missing_params'] = "Paramètre(s) absent(s). Essaie encore une fois.";
+$lang['error_wrong_region'] = "Region invalide. Seulement EU ou US sont des regions valable.";
+$lang['armorysync_guildadd'] = "Ajoute la Guild and synchronise<br>la liste des membres avec Armory.";
 $lang['armorysync_guildadd_help'] = "Information";
-$lang['armorysync_guildadd_helpText'] = "Spell the guild and the server exactly how they are listed at Blizzards Armory.<br>Region is EU for european and US for american guilds. In the first place<br>the guild will be checked for existenz. Afterwards a syncronization of the<br>meberlist will be started.";
+$lang['armorysync_guildadd_helpText'] = "<br>Orthographier <b>la guilde</b> et <b>le serveur</b> <b>exactement</b> <br>comme ils sont connues chez Blizzards Armory. <br>Region est <b>EU</b> pour l'Europe et <b>US</b> pour des guildes Américaines.<br><br> En premier lieu la guilde sera examinée<br> pour assurer l'existence.<br><br> Après une synchronisation de la liste des membres commencera.<br><br>";
 
-$lang['guildleader'] = "Guildleader";
+$lang['guildleader'] = "Maître de Guild";
 
 $lang['rage'] = "Rage";
-$lang['energy'] = "Energy";
+$lang['energy'] = "Énergie";
 $lang['focus'] = "Focus";
 
 $lang['armorysync_credits'] = 'Thanks to <a target="_blank" href="http://www.papy-team.fr">tuigii</a>, <a target="_blank" href="http://xent.homeip.net">zanix</a>, <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=1126.html">ds</a> and <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=711.html">Subxero</a> for testing, translating and supporting.<br>Spezial thanks to <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=13101.html">kristoff22</a> for the original code of ArmorySync and <a target="_blank" href="http://www.iceguild.org.uk/forum">Pugro</a> for his changes to it.';
 
-$lang['start'] = "Start";
-$lang['start_message'] = "Your about to start ArmorySync for %s %s.<br><br>By this all data for %s will be overwritten<br>with details from Blizzards Armory. This can only be undone<br>by uploading a current CharacterProfiler.lua.<br><br>Do you want to start this process yet";
+$lang['start'] = "Démarrage";
+$lang['start_message'] = "Vous êtes prêt pour démarrer <b>ArmorySync</b> pour la Guilde %s %s.<br><br>Avec cette démarche, toutes les données de %s <br>seront remplacé(s) avec les détails de Blizzards Armory.<br>  Ceci pourrait être annulé après par le téléchargement d'un CharacterProfiler.lua <b>récent</b> de chaque membre.  <br>Voulez-vous démarrer la synchronisation ";
 
-$lang['start_message_the_char'] = "the character";
-$lang['start_message_this_char'] = "this character";
-$lang['start_message_the_guild'] = "the guild";
-$lang['start_message_this_guild'] = "all characters of this guild";
-$lang['start_message_the_realm'] = "the realm";
-$lang['start_message_this_realm'] = "all characters of this realm";
-
+$lang['start_message_the_char'] = "le personnage";
+$lang['start_message_this_char'] = "ce personnage";
+$lang['start_message_the_guild'] = "la guilde";
+$lang['start_message_this_guild'] = "toutes les personnages de cette guilde";
+$lang['start_message_the_realm'] = "le realm";
+$lang['start_message_this_realm'] = "toutes les personnages de ce realm";

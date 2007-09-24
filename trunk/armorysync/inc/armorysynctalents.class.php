@@ -131,8 +131,8 @@ class ArmorySyncTalents {
     function _makeURL ( $class = false ) {
         global $roster;
         
-        $host;
-        $url;
+        $host = '';
+        $url = '';
         
         $locale = substr($roster->config['locale'], 0, 2);
 

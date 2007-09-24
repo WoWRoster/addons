@@ -131,7 +131,6 @@ class ArmorySyncJob {
         if ( isset($_GET['job_id']) ) {
             $this->jobid = $_GET['job_id'];
         }
-        $ret;
         $functions = $this->functions[$this->isMemberList];
         if ( $this->jobid == 0 ) {
             if ( $this->$functions['prepare_update']() ) {
@@ -1232,6 +1231,23 @@ function popup(\$arg) {
                     "WHERE job_id=". $jobid. ";";
         $result = $roster->db->query($query);
         
+        $query =    "SELECT job_id ".
+                    "FROM `". $roster->db->table('jobs',$addon['basename']). "` ".
+                    "WHERE starttimeutc <= DATE_SUB(UTC_TIMESTAMP(), INTERVAL 3 HOUR);";
+        $result = $roster->db->query($query);
+        if( $roster->db->num_rows($result) > 0 ) {
+            $array = $roster->db->fetch_all();
+            foreach ( $array as $job ) {
+                $job_id = $job['job_id'];
+                $query =    "DELETE FROM `". $roster->db->table('jobqueue',$addon['basename']). "` ".
+                            "WHERE job_id=". $job_id. ";";
+                $result = $roster->db->query($query);
+                
+                $query =    "DELETE FROM `". $roster->db->table('jobs',$addon['basename']). "` ".
+                            "WHERE job_id=". $job_id. ";";
+                $result = $roster->db->query($query);
+            }
+        }
     }
 
     /**

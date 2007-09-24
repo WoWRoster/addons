@@ -21,13 +21,7 @@ lib/update.lib.php
 Notice line 389: strtotime(): Called with empty time parameter
 
 poetter:
-processtime in footer
-
-poetter:
 memberlistsync for realms
-
-poetter:
-job cleanup for interupted jobs
 
 poetter:
 own updatetimeutc check cause player.updatetimeutc = armory update time
@@ -39,6 +33,12 @@ poetter:
 cache cleanup
 
 
+
+poetter:
+processtime in footer [no need]
+
+poetter:
+job cleanup for interupted jobs [done]
 
 zanix: http://wowroster.net/Forums/viewtopic/p=26775.html#26775
 Also, each page seems to automatically start the updating process
