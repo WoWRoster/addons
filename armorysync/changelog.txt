@@ -1,14 +1,19 @@
 $Id:
-svn[233]
-- added diffrent locales to enUS frFR and esES
+svn[234]
+- fixed typo with false in armorysync.class.php line 727
+- added cleanup for aborted jobs older than 3 hours
+- fixed whitespaces and "Undead" in raceEN
+- added frFR locales - thx again to tuigii 
 
+svn[233]
+- added different locales to enUS frFR and esES
 
 svn[232]
 - added more _checkContent
 - added credits to enUS, esES and frFR
-- brought all code logic from idex.php's, meberlist.php and guildadd.php back to armorysyncjob.php
+- brought all code logic from index.php's, memberlist.php and guildadd.php back to armorysyncjob.class.php
 - fixed unurldecoded strings in guildadd
-- added config options for diffrent acces levels
+- added config options for diffrent access levels
 - added start page before syncing
 - added pugro to credits
 
