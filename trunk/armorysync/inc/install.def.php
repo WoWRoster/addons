@@ -27,9 +27,9 @@ if ( !defined('IN_ROSTER') )
 class armorysync
 {
 	var $active = true;
-	var $icon = 'inv_misc_enggizmos_02';
+	var $icon = 'inv_misc_missilesmall_blue';
         
-	var $version = '2.6.0.234';
+	var $version = '2.6.0.235';
 
 	var $fullname = 'Armory Sync';
 	var $description = 'Syncronizes chars with Blizzards Armory';
@@ -77,22 +77,22 @@ class armorysync
 //		$installer->add_config("'1600', 'armorysync_updateroster', '1', 'radio{yes^1|no^0', 'armorysync_conf'");
 //		$installer->add_config("'1700', 'armorysync_ismysqllower411', '0', 'radio{yes^1|no^0', 'armorysync_conf'");
 		
-		$installer->add_menu_button('async_button','realm');
-		$installer->add_menu_button('async_button','guild');
-		$installer->add_menu_button('async_button2','guild', 'memberlist', 'inv_misc_enggizmos_01');
-		$installer->add_menu_button('async_button','char');
-		$installer->add_menu_button('async_button3','util', 'guildadd', 'inv_misc_enggizmos_01');
+		$installer->add_menu_button('async_button','char', false, 'inv_misc_missilesmall_blue');
+		$installer->add_menu_button('async_button','realm', false, 'inv_misc_missilesmall_blue');
+		$installer->add_menu_button('async_button','guild', false, 'inv_misc_missilesmall_blue');
+		$installer->add_menu_button('async_button2','guild', 'memberlist', 'inv_misc_missilesmall_green');
+		$installer->add_menu_button('async_button3','util', 'guildadd', 'inv_misc_missilesmall_red');
                 
-                $installer->add_query("
-                        CREATE TABLE `". $installer->table('jobs') ."`
-                            (                                       
+                $installer->create_table(
+                        $installer->table('jobs'),
+                            "(                                       
                                 `job_id` int(11) unsigned NOT NULL auto_increment,                                 
                                 `starttimeutc` datetime NOT NULL,                                                  
                                 PRIMARY KEY  (`job_id`)                                                            
-                            ) ENGINE=MyISAM;");
-                $installer->add_query("
-                        CREATE TABLE `". $installer->table('jobqueue') ."`
-                                    (
+                            )" );
+                $installer->create_table(
+                        $installer->table('jobqueue'),
+                                    "(
                                      `job_id` int(11) unsigned NOT NULL,               
                                      `member_id` int(11) unsigned NOT NULL,            
                                      `name` varchar(64) NOT NULL,                      
@@ -110,8 +110,14 @@ class armorysync
                                      `stoptimeutc` datetime default NULL,              
                                      `log` text,                 
                                      PRIMARY KEY  (`job_id`,`member_id`)               
-                                   ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ;");
-                
+                                   )" );
+                $installer->create_table(
+                        $installer->table('updates'),
+                                    "(                 
+                                    `member_id` int(11) NOT NULL,                                   
+                                    `dateupdatedutc` datetime default NULL,                         
+                                    PRIMARY KEY  (`member_id`)                                      
+                                  )" );
 		return true;
 	}
 
@@ -124,6 +130,28 @@ class armorysync
 	function upgrade($oldversion)
 	{
             global $installer;
+            if ( version_compare('2.6.0.232', $oldversion,'>') == true ) {
+                $installer->add_config("'1440', 'armorysync_char_update_access', '1', 'radio{Admin^3|Officer^2|Guild^1|Everyone^0', 'armorysync_conf'");
+                $installer->add_config("'1450', 'armorysync_guild_update_access', '2', 'radio{Admin^3|Officer^2|Guild^1|Everyone^0', 'armorysync_conf'");
+                $installer->add_config("'1460', 'armorysync_guild_memberlist_update_access', '2', 'radio{Admin^3|Officer^2|Guild^1|Everyone^0', 'armorysync_conf'");
+                $installer->add_config("'1470', 'armorysync_realm_update_access', '3', 'radio{Admin^3|Officer^2|Guild^1|Everyone^0', 'armorysync_conf'");
+                $installer->add_config("'1480', 'armorysync_guild_add_access', '3', 'radio{Admin^3|Officer^2|Guild^1|Everyone^0', 'armorysync_conf'");
+            }
+            
+            if ( version_compare('2.6.0.235', $oldversion,'>') == true ) {
+		$installer->update_menu_button('async_button', false, 'inv_misc_missilesmall_blue');
+		$installer->update_menu_button('async_button', false, 'inv_misc_missilesmall_blue');
+		$installer->update_menu_button('async_button', false, 'inv_misc_missilesmall_blue');
+		$installer->update_menu_button('async_button2', 'memberlist', 'inv_misc_missilesmall_green');
+		$installer->update_menu_button('async_button3', 'guildadd', 'inv_misc_missilesmall_red');
+                $installer->create_table(
+                        $installer->table('updates'),
+                                    "(                 
+                                    `member_id` int(11) NOT NULL,                                   
+                                    `dateupdatedutc` datetime default NULL,                         
+                                    PRIMARY KEY  (`member_id`)                                      
+                                  )" );
+	    }
             return true;
 	}
 
@@ -138,8 +166,9 @@ class armorysync
             
             $installer->remove_all_config();
             $installer->remove_all_menu_button();
-            $installer->add_query("DROP TABLE IF EXISTS `" . $installer->table('jobs') . "`;");
-            $installer->add_query("DROP TABLE IF EXISTS `" . $installer->table('jobqueue') . "`;");
+            $installer->drop_table( $installer->table('jobs') );
+            $installer->drop_table( $installer->table('jobqueue') );
+            $installer->drop_table( $installer->table('updates') );
             return true;
 	}
 }

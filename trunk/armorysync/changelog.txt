@@ -1,4 +1,16 @@
-$Id:
+ArmorySync v2.6.0
+Package updated Month DD, YYYY
+$Id$
+
+svn[235]
+- realy fixed whitespaces and "Undead" in raceEN
+- updated frFR locales - thx to diggler@wowroster.net
+- changed installer methods
+- check if guild already exists in roster_guild table on guildadd
+- check if upload rule already exists in roster_upload table on guildadd
+- added own dateupdatedutc check cause player.dateupdatedutc = armory update time
+- changed buttons - may be i create my own, once a time
+
 svn[234]
 - fixed typo with false in armorysync.class.php line 727
 - added cleanup for aborted jobs older than 3 hours

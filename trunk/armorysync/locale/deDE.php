@@ -128,6 +128,7 @@ $lang['error_no_realm'] = "Es wurde kein Realm übergeben.";
 $lang['error_use_menu'] = "Benutze das Menü zum syncronisieren.";
 
 $lang['error_guild_insert'] = "Fehler beim anlegen der Gilde.";
+$lang['error_uploadrule_insert'] = "Fehler beim anlegen der Upload Rule.";
 $lang['error_guild_notexist'] = "Die angegebene Gilde existiert nicht in der Armory.";
 $lang['error_missing_params'] = "Fehlende Angaben. Bitte versuch es erneut.";
 $lang['error_wrong_region'] = "Ungültige Region. Nur EU und US sind gültige Regionen.";

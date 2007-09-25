@@ -171,17 +171,23 @@ class ArmorySyncJob {
                 if ( $region == "EU" || $region == "US" ) {
                     if ( $this->_check_guild_exist( $name, $server, $region ) ) {
     
-                        $this->_insert_uploadRule( $name, $server, $region );
                         if ( $id = $this->_insert_guild( $name, $server, $region ) ) {
                             
-                            if ( $this->_prepare_updateMemberlist( $id, $name, $server, $region ) ) {
-                                $ret = $this->_update_statusMemberlist();
-                                $this->_show_statusMemberlist();
-                                if ( $ret ) {
-                                    $this->_link_guildMemberlist( $id );
+                            if ( $this->_insert_uploadRule( $name, $server, $region ) ) {
+                                if ( $this->_prepare_updateMemberlist( $id, $name, $server, $region ) ) {
+                                    $ret = $this->_update_statusMemberlist();
+                                    $this->_show_statusMemberlist();
+                                    if ( $ret ) {
+                                        $this->_link_guildMemberlist( $id );
+                                    }
+                                } else {
+                                    $this->_nothing_to_do();
                                 }
                             } else {
-                                $this->_nothing_to_do();
+                                $html = "&nbsp;&nbsp;".
+                                        $roster->locale->act['error_uploadrule_insert'].
+                                        "&nbsp;&nbsp;";
+                                print messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
                             }
                         } else {
                             $html = "&nbsp;&nbsp;".
@@ -882,16 +888,16 @@ function popup(\$arg) {
         $query =    "SELECT members.member_id, members.name, " .
                     "guild.guild_id, guild.guild_name, guild.server, guild.region ".
                     "FROM `".$roster->db->table('members')."` members ". 
-                    "LEFT JOIN `".$roster->db->table('players')."` players " .
-                    "ON members.name = players.name " .
                     "LEFT JOIN `".$roster->db->table('guild')."` guild " .
                     "ON members.guild_id = guild.guild_id " .
+                    "LEFT JOIN `". $roster->db->table('updates',$addon['basename']). "` updates ".
+                    "ON members.member_id = updates.member_id ".
                     "WHERE ". $where.
                     "members.level >= " . $addon['config']['armorysync_minlevel'] . " " .
                     "AND ( ".
-                    "   ISNULL(players.name) ".
+                    "   ISNULL(updates.dateupdatedutc) ".
                     "   OR ".
-                    "   players.dateupdatedutc <= DATE_SUB(UTC_TIMESTAMP(), INTERVAL " . $addon['config']['armorysync_synchcutofftime'] . " DAY) ".
+                    "   updates.dateupdatedutc <= DATE_SUB(UTC_TIMESTAMP(), INTERVAL " . $addon['config']['armorysync_synchcutofftime'] . " DAY) ".
                     " ) ".
                     "ORDER BY members.member_id;";
                     //"ORDER BY members.member_id ".
@@ -1209,6 +1215,17 @@ function popup(\$arg) {
         
         $result = $roster->db->query($query);
         if ( $result ) {
+            if ( isset ( $member['stoptimeutc'] ) && $field == 'member_id' ) {
+                $query =    "INSERT INTO `". $roster->db->table('updates',$addon['basename']). "` ".
+                            "SET ".
+                            "member_id=". $member[$field].", ".
+                            "dateupdatedutc='". $roster->db->escape(gmdate('Y-m-d H:i:s')). "' ".
+                            "ON DUPLICATE KEY UPDATE ".
+                            "dateupdatedutc='". $roster->db->escape(gmdate('Y-m-d H:i:s')). "';";
+                if ( !$roster->db->query($query) ) {
+                    die_quietly($roster->db->error(),'Database Error',__FILE__,__LINE__,$query);
+                }
+            }
             return true;
         } else {
             return false;
@@ -1260,15 +1277,30 @@ function popup(\$arg) {
     function _insert_uploadRule( $name, $server, $region ) {
         global $roster;
         
-        $query =    "INSERT ".
-                    "INTO `". $roster->db->table('upload'). "` ".
-                    "(`name`,`server`,`region`,`type`,`default`) VALUES ".
-                    "('" . $roster->db->escape($name) . "','" . $roster->db->escape($server) . "','" . strtoupper($region) . "','0','0');";
-                    
-        if( !$roster->db->query($query) )
-        {
-                die_quietly($roster->db->error(),'Database Error',__FILE__,__LINE__,$query);
+        $query =    "SELECT ".
+                    "rule_id ".
+                    "FROM `". $roster->db->table('upload'). "` ".
+                    "WHERE ".
+                    "name='". $roster->db->escape($name). "' ".
+                    "AND server='". $roster->db->escape($server). "' ".
+                    "AND region='". strtoupper($region). "';";
+        $id = $roster->db->query_first($query);
+        
+        if ( ! $id ) {
+            $query =    "INSERT ".
+                        "INTO `". $roster->db->table('upload'). "` ".
+                        "(`name`,`server`,`region`,`type`,`default`) VALUES ".
+                        "('" . $roster->db->escape($name) . "','" . $roster->db->escape($server) . "','" . strtoupper($region) . "','0','0');";
+                        
+            if ( !$roster->db->query($query) ) {
+                    die_quietly($roster->db->error(),'Database Error',__FILE__,__LINE__,$query);
+            } else {
+                return true;
+            }
+        } else {
+            return true;
         }
+        
     }
     
     /**
@@ -1281,6 +1313,19 @@ function popup(\$arg) {
     function _insert_guild( $name, $server, $region ) {
         global $roster;
         
+        $query =    "SELECT ".
+                    "guild_id ".
+                    "FROM `". $roster->db->table('guild'). "` ".
+                    "WHERE ".
+                    "`guild_name`='". $roster->db->escape($name). "' ".
+                    "AND `server`='". $roster->db->escape($server). "' ".
+                    "AND `region`='". $roster->db->escape($region). "';";
+        $id = $roster->db->query_first($query);
+        
+        if ( $id ) {
+            return $id;
+        }
+        
         $query =    "INSERT ".
                     "INTO `". $roster->db->table('guild'). "` ".
                     "SET ".
@@ -1288,8 +1333,7 @@ function popup(\$arg) {
                     "`server`='". $roster->db->escape($server). "', ".
                     "`region`='". $roster->db->escape($region). "';";
                     
-        if( !$roster->db->query($query) )
-        {
+        if ( !$roster->db->query($query) ) {
             die_quietly($roster->db->error(),'Database Error',__FILE__,__LINE__,$query);
         } else {
             $query = "SELECT LAST_INSERT_ID();";
@@ -1297,7 +1341,6 @@ function popup(\$arg) {
             if ( $jobid ) {
                 return $jobid;
             } else {
-                print "Error fetching id <br>\n";
                 return false;
             }
         }

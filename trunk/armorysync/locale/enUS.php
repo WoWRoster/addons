@@ -128,6 +128,7 @@ $lang['error_no_realm'] = "No Realm referred.";
 $lang['error_use_menu'] = "Use menu to Synchronize.";
 
 $lang['error_guild_insert'] = "Error creating guild.";
+$lang['error_uploadrule_insert'] = "Error creating upload rule.";
 $lang['error_guild_notexist'] = "The guild given does not exist in the Armory.";
 $lang['error_missing_params'] = "Missing parameters. Plaese try again";
 $lang['error_wrong_region'] = "Invalid region. Only EU and US are valid regions.";
