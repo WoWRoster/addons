@@ -1,3 +1,26 @@
+ArmorySync v2.6.0
+Package updated Month DD, YYYY
+$Id$
+
+[Todo]
+
+poetter:
+memberlistsync for realms
+
+
+
+[Done]
+
+poetter:
+upgrade handling (buttons, tables) [done]
+
+poetter:
+own updatetimeutc check cause player.updatetimeutc = armory update time [done]
+
+leusent: http://www.wowroster.net/Forums/viewtopic/p=26832.html#26832
+lib/update.lib.php
+Notice line 389: strtotime(): Called with empty time parameter [fixed with roster2 svn[1355]]
+
 vblars: http://www.wowroster.net/Forums/viewtopic/p=27064.html#27064
  I'm using SVN(230) and I'm getting some new error.
 
@@ -13,26 +36,19 @@ Notice line 266: Undefined index: armorysync_credits
 addons\armorysync\inc\armorysyncjob.class.php
 Notice line 266: Undefined index: armorysync_credits
 
-Hope it can help you. Razz
-
-
-leusent: http://www.wowroster.net/Forums/viewtopic/p=26832.html#26832
-lib/update.lib.php
-Notice line 389: strtotime(): Called with empty time parameter
+Hope it can help you. Razz [fixed with more _checkContent and increaing timeouts]
 
 poetter:
-memberlistsync for realms
+cache cleanup [submitted pruposal]
+
+I uploaded my charprofiler.lua file to upload my guild then not thinking 
+straight i went and did armorysync for new guild 3 times before i realized 
+that i was supposed to sync the one that i uploaded the .lua to ..
+
+so 
 
 poetter:
-own updatetimeutc check cause player.updatetimeutc = armory update time
-
-poetter:
-upgrade handling (buttons, tables)
-
-poetter:
-cache cleanup
-
-
+Add check if Uploadrule or guild allready exists [done]
 
 poetter:
 processtime in footer [no need]

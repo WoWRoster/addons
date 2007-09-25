@@ -409,7 +409,10 @@ class ArmorySync {
             $this->data["TalentPoints"] = ($char->level > 0) ? $char->level - $tab->talentSpec->treeOne - $tab->talentSpec->treeTwo - $tab->talentSpec->treeThree - 9 : 0;
             $this->data["Race"] = $char->race;
             $this->data["RaceId"] = $char->raceId;
-            $this->data["RaceEn"] = $roster->locale->act['race_to_en'][$char->race];
+            $this->data["RaceEn"] = preg_replace( "/\s/", "", $roster->locale->act['race_to_en'][$char->race] );
+            if ( $this->data["RaceEn"] == "Undead" ) {
+                $this->data["RaceEn"] = "Scourge";
+            }
             $this->data["Class"] = $char->class;
             
             // This is an ugly workaround for an encoding error in the armory
@@ -419,10 +422,7 @@ class ArmorySync {
             // This is an ugly workaround for an encoding error in the armory
 
             $this->data["ClassId"] = $char->classId;
-            $this->data["ClassEn"] = preg_replace( "/\s/", "", $roster->locale->act['class_to_en'][$this->data["Class"]] );
-            if ( $this->data["ClassEn"] == "Undead" ) {
-                $this->data["ClassEn"] = "Scourge";
-            }
+            $this->data["ClassEn"] = $roster->locale->act['class_to_en'][$this->data["Class"]];
             $this->data["Health"] = $tab->characterBars->health->effective;
             $this->data["Mana"] = $tab->characterBars->secondBar->effective;
             if ( $tab->characterBars->secondBar->type == "m" ) {
