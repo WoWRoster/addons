@@ -29,7 +29,7 @@ class armorysync
 	var $active = true;
 	var $icon = 'inv_misc_missilesmall_blue';
         
-	var $version = '2.6.0.235';
+	var $version = '2.6.0.236';
 
 	var $fullname = 'Armory Sync';
 	var $description = 'Syncronizes chars with Blizzards Armory';
@@ -67,6 +67,7 @@ class armorysync
                 $installer->add_config("'1300', 'armorysync_reloadwaittime', '5', 'text{4|4', 'armorysync_conf'");
                 $installer->add_config("'1350', 'armorysync_fetch_timeout', '8', 'text{2|2', 'armorysync_conf'");
                 $installer->add_config("'1360', 'armorysync_skip_start', '0', 'radio{On^1|Off^0', 'armorysync_conf'");
+                $installer->add_config("'1370', 'armorysync_status_hide', '1', 'radio{On^1|Off^0', 'armorysync_conf'");
                 $installer->add_config("'1400', 'armorysync_protectedtitle', 'Banker', 'text{30|64', 'armorysync_conf'");
                 $installer->add_config("'1440', 'armorysync_char_update_access', '1', 'radio{Admin^3|Officer^2|Guild^1|Everyone^0', 'armorysync_conf'");
                 $installer->add_config("'1450', 'armorysync_guild_update_access', '2', 'radio{Admin^3|Officer^2|Guild^1|Everyone^0', 'armorysync_conf'");
@@ -85,14 +86,14 @@ class armorysync
                 
                 $installer->create_table(
                         $installer->table('jobs'),
-                            "(                                       
+                            "                                        
                                 `job_id` int(11) unsigned NOT NULL auto_increment,                                 
                                 `starttimeutc` datetime NOT NULL,                                                  
                                 PRIMARY KEY  (`job_id`)                                                            
-                            )" );
+                            " );
                 $installer->create_table(
                         $installer->table('jobqueue'),
-                                    "(
+                                    "
                                      `job_id` int(11) unsigned NOT NULL,               
                                      `member_id` int(11) unsigned NOT NULL,            
                                      `name` varchar(64) NOT NULL,                      
@@ -110,14 +111,14 @@ class armorysync
                                      `stoptimeutc` datetime default NULL,              
                                      `log` text,                 
                                      PRIMARY KEY  (`job_id`,`member_id`)               
-                                   )" );
+                                    " );
                 $installer->create_table(
                         $installer->table('updates'),
-                                    "(                 
+                                    "                 
                                     `member_id` int(11) NOT NULL,                                   
                                     `dateupdatedutc` datetime default NULL,                         
                                     PRIMARY KEY  (`member_id`)                                      
-                                  )" );
+                                    " );
 		return true;
 	}
 
@@ -139,19 +140,24 @@ class armorysync
             }
             
             if ( version_compare('2.6.0.235', $oldversion,'>') == true ) {
-		$installer->update_menu_button('async_button', false, 'inv_misc_missilesmall_blue');
-		$installer->update_menu_button('async_button', false, 'inv_misc_missilesmall_blue');
-		$installer->update_menu_button('async_button', false, 'inv_misc_missilesmall_blue');
-		$installer->update_menu_button('async_button2', 'memberlist', 'inv_misc_missilesmall_green');
-		$installer->update_menu_button('async_button3', 'guildadd', 'inv_misc_missilesmall_red');
+		$installer->update_menu_button('async_button','char', false, 'inv_misc_missilesmall_blue');
+		$installer->update_menu_button('async_button','realm', false, 'inv_misc_missilesmall_blue');
+		$installer->update_menu_button('async_button','guild', false, 'inv_misc_missilesmall_blue');
+		$installer->update_menu_button('async_button2','guild', 'memberlist', 'inv_misc_missilesmall_green');
+		$installer->update_menu_button('async_button3','util', 'guildadd', 'inv_misc_missilesmall_red');
                 $installer->create_table(
                         $installer->table('updates'),
-                                    "(                 
+                                    "                 
                                     `member_id` int(11) NOT NULL,                                   
                                     `dateupdatedutc` datetime default NULL,                         
                                     PRIMARY KEY  (`member_id`)                                      
-                                  )" );
+                                    " );
 	    }
+            
+            if ( version_compare('2.6.0.236', $oldversion,'>') == true ) {
+                $installer->add_config("'1370', 'armorysync_status_hide', '1', 'radio{On^1|Off^0', 'armorysync_conf'");
+            }
+
             return true;
 	}
 

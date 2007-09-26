@@ -28,6 +28,7 @@ $lang['admin']['armorysync_synchcutofftime']	= 'Sync cutoff time|Zeit in tagen.<
 $lang['admin']['armorysync_reloadwaittime']	= 'Reload wait time|Zeit in Sekunden.<br>Zeit in Sekunden bevor die nächste Syncronisierung angestossen wird.';
 $lang['admin']['armorysync_fetch_timeout'] = 'Armory Fetch timeout|Zeit in Sekunden bis das Herunterladen<br>einer einzelnen XML Datei abgebrochen wird.';
 $lang['admin']['armorysync_skip_start'] = 'Skip start page|Skip start page on ArmorySync updates.';
+$lang['admin']['armorysync_status_hide'] = 'Hide status windows initialy|Versteckt das Status Fenster von ArmorySync beim ersten Laden.';
 $lang['admin']['armorysync_char_update_access'] = 'Char Update Access Level|Wer ist in der Lage Charakter zu aktualisieren';
 $lang['admin']['armorysync_guild_update_access'] = 'Guild Update Access Level|Wer ist in der Lage Gilden zu aktualisieren';
 $lang['admin']['armorysync_guild_memberlist_update_access'] = 'Guild Memberlist Update Access Level|Wer ist in der Lage Gilden Mitgliederlisten zu aktualisieren';

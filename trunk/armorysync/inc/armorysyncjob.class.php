@@ -46,7 +46,7 @@ class ArmorySyncJob {
                             'show_status' => '_show_status',
                         ),
                         array(
-                            'link' => '_link_guildMemberlist',
+                            'link' => '_link',
                             'prepare_update' => '_prepare_updateMemberlist',
                             'update_status' => '_update_statusMemberlist',
                             'show_status' => '_show_statusMemberlist',
@@ -130,6 +130,9 @@ class ArmorySyncJob {
         
         if ( isset($_GET['job_id']) ) {
             $this->jobid = $_GET['job_id'];
+        }
+        if ( isset($_POST['job_id']) ) {
+            $this->jobid = $_POST['job_id'];
         }
         $functions = $this->functions[$this->isMemberList];
         if ( $this->jobid == 0 ) {
@@ -345,24 +348,31 @@ class ArmorySyncJob {
     function _show_status( $jobid = 0, $memberlist = false ) {
         global $roster, $addon;
         
-        $members = $this->members;
         $jscript = "
 <script type=\"text/javascript\">
-function popup(\$arg) {
-	var formID = document.getElementById(\$arg);
-
-	formID.style.display=(formID.style.display=='block'?'none':'block');
+function toggleStatus() {
+    showHide('update_details','update_details_img','img/minus.gif','img/plus.gif');
+    document.linker.StatusHidden.value=(document.linker.StatusHidden.value='ON'?'OFF':'ON');
 }
 </script>
 ";
-
+        $roster->output['html_head'] = $jscript;
+        $members = $this->members;
+        $status = isset($_POST['StatusHidden']) ? $_POST['StatusHidden'] :
+                    ( $addon['config']['armorysync_status_hide'] ? 'ON' : 'OFF' );
+        $display = ( $status == 'ON' ) ? 'none' : '';
+        $icon = ( $status == 'ON' ) ? 'img/plus.gif' : 'img/minus.gif';
         $style = 'syellow';
         
         $roster->tpl->assign_vars(array(
-                'J_SCRIPT' => $jscript,
-                'START_BORDER'     => border( $style, 'start', '', '800px' ),
+                'LINK' => makelink(),
+                'STATUSHIDDEN' => $status,
+                'JOB_ID' => $this->jobid,
+                'DISPLAY' => $display,
+                'ICON' => $icon,
+                'START_BORDER' => border( $style, 'start', '', '800px' ),
                 'STYLE' => $style,
-                'TITLE'  => $this->title,
+                'TITLE' => $this->title,
                 'PROGRESSBAR' => $this->_getProgressBar($this->done, $this->total),
                 )
                                  );
@@ -740,86 +750,22 @@ function popup(\$arg) {
     }
     
     /**
-     * scope based __link call
-     * 
-     */
-    function _link() {
-        global $roster;
-        
-        if ( $roster->scope == 'char' ) {
-            $this->_link_char();
-        } elseif ( $roster->scope == 'guild' ) {
-            $this->_link_guild();
-        } elseif ( $roster->scope == 'realm' ) {
-            $this->_link_realm();
-        }
-    }
-    /**
-     * Create java reload code for guildsync
-     * 
-     */
-    function _link_char() {
-        global $roster;
-        
-        $link = makelink('char-armorysync&amp;job_id='. $this->jobid);
-        $this->__link( $link );
-    }
-    
-    /**
-     * Create java reload code for guilds
-     * 
-     */
-    function _link_guild() {
-        global $roster;
-        $link = makelink('guild-armorysync&amp;job_id='. $this->jobid);
-        $this->__link( $link );
-    }
-    
-    /**
-     * Create java reload code for guilds
-     * 
-     */
-    function _link_realm() {
-        global $roster;
-        $link = makelink('guild-armorysync&amp;job_id='. $this->jobid);
-        $this->__link( $link );
-    }
-
-    /**
-     * Create java reload code for guild memberlists
-     * 
-     */
-    function _link_guildMemberlist( $id = 0 ) {
-        global $roster;
-        
-        if ( ! $id ) {
-            $id = $roster->data['guild_id'];
-        }
-        
-        $link = makelink('guild-armorysync-memberlist&amp;job_id='. $this->jobid);
-        $this->__link( $link );
-    }
-    
-    /**
      * Create java reload code
      *
      * @param string $link
      */
     
-    function __link ( $link = '' ) {
+    function _link ( $link = '' ) {
         global $addon;
         
-        $link = str_replace( '&amp;', '&', $link );
-
-        //Link to next job step
         $reloadTime = $addon['config']['armorysync_reloadwaittime'] * 1000;
-
-        Print '<script LANGUAGE="JavaScript">';
-        Print 'function nextMember() {';
-        Print '	window.location="' . $link . '";';
-        Print '}';
-        Print "self.setTimeout('nextMember()', ". $reloadTime. ");";
-        Print '</script>';
+        
+        print '<script LANGUAGE="JavaScript">';
+        print 'function nextMember() {';
+        print 'document.linker.submit();';
+        print '}';
+        print "self.setTimeout('nextMember()', ". $reloadTime. ");";
+        print '</script>';
     }
     
     /**

@@ -1,8 +1,8 @@
-<?php
+﻿<?php
 /**
  * WoWRoster.net WoWRoster
  *
- * spanish localisaton
+ * spanish localisaton - thx to Subxero
  *
  * LICENSE: Licensed under the Creative Commons
  *          "Attribution-NonCommercial-ShareAlike 2.5" license
@@ -14,143 +14,144 @@
  * @package    ArmorySync
 */
 
-// -[ deDE Localization ]-
+// -[ esES Localization ]-
 
 // Button names
-$lang['async_button']			= 'Armory Sync|Syncronise your characters with Blizzards Armory';
-$lang['async_button2']			= 'Armory Memberlist Sync|Syncronise your memberlist with Blizzards Armory';
-$lang['async_button3']			= 'Armory Memberlist Sync for a new guild|Add a new guild and syncronize<br>the meberlist with Blizzards Armory';
+$lang['async_button']			= 'ArmorySync Personaje|Sincroniza el personaje con la Armería de Blizzard';
+$lang['async_button2']			= 'ArmorySync Miembros|Sincroniza el listado de miembros con la Armería de Blizzard';
+$lang['async_button3']			= 'ArmorySync nueva Hermandad|Añade una nueva Hermandad y sincroniza<br>la lista de miembros con la Armería de Blizzard';
 
 // Config strings
-$lang['admin']['armorysync_conf']			= 'ArmorySync Configuration';
-$lang['admin']['armorysync_host']			= 'Host|Host to syncronise with.';
-$lang['admin']['armorysync_minlevel']		= 'Minimum Level|Minimum level of characters to syncronise.';
-$lang['admin']['armorysync_synchcutofftime']	= 'Sync cutoff time|Time in days.<br>All characters not beeing updated in last (x) days will be syncronised.';
-$lang['admin']['armorysync_reloadwaittime']	= 'Reload wait time|Time in seconds.<br>Time in seconds befor next syncronisation will be done.';
-$lang['admin']['armorysync_fetch_timeout'] = 'Armory Fetch timeout|Time in seconds till a fetch of a single XML file is aborted.';
-$lang['admin']['armorysync_skip_start'] = 'Skip start page|Skip start page on ArmorySync updates.';
-$lang['admin']['armorysync_char_update_access'] = 'Char Update Access Level|Who ia able to do character updates';
-$lang['admin']['armorysync_guild_update_access'] = 'Guild Update Access Level|Who ia able to do guild updates';
-$lang['admin']['armorysync_guild_memberlist_update_access'] = 'Guild Memberlist Update Access Level|Who ia able to do guild memberlist updates';
-$lang['admin']['armorysync_realm_update_access'] = 'Realm Update Access Level|Who ia able to do realm updates';
-$lang['admin']['armorysync_guild_add_access'] = 'Guild Add Access Level|Who ia able to add new guilds';
+$lang['admin']['armorysync_conf']			= 'Configuración ArmorySync';
+$lang['admin']['armorysync_host']			= 'Servidor|Servidor con el que sincronizar.';
+$lang['admin']['armorysync_minlevel']		= 'Nivel Minimo|Nivel minimo de los personajes para sincronizar.';
+$lang['admin']['armorysync_synchcutofftime']	= 'Tiempo de Sync minimo|Tiempo en dias.<br>Todos los personajes que no se hayan actualizado en los ultimos (x) dias seran sincronizados.';
+$lang['admin']['armorysync_reloadwaittime']	= 'Tiempo de espera recarga|Tiempo en segundos.<br>Tiempo que espera antes de empezar la siguiente sincronización.';
+$lang['admin']['armorysync_fetch_timeout'] = 'Tiempo de espera agotado para la Armory|Tiempo en segundos que se espera para recibir un solo archivo XML antes de ser cancelado.';
+$lang['admin']['armorysync_skip_start'] = 'Saltar pagina inicial|Saltar pagina inicial al actualizar con ArmorySync.';
+$lang['admin']['armorysync_status_hide'] = 'Hide status windows initialy|Hide the status windows of ArmorySync on the first load.';
+$lang['admin']['armorysync_char_update_access'] = 'Nivel de acceso Personajes|Quien puede hacer actualizaciones de personajes';
+$lang['admin']['armorysync_guild_update_access'] = 'Nivel de acceso Hermandad|Quien puede hacer actualizaciones de hermandades';
+$lang['admin']['armorysync_guild_memberlist_update_access'] = 'Nivel de acceso Listado de miembros|Quien puede hacer actualizaciones del listado de miembros';
+$lang['admin']['armorysync_realm_update_access'] = 'Nivel de acceso Reino|Quien puede hacer actualizaciones de reinos';
+$lang['admin']['armorysync_guild_add_access'] = 'Nivel de acceso añadir Hermandad|Quien puede añadir nuevas hermandades';
 //$lang['admin']['armorysync_usecurl']		= 'Use Curl|Auf false setzen wenn du die original FileSocket function benutzen möchtest.';
 //$lang['admin']['armorysync_debuglevel']		= 'Debug level';
 //$lang['admin']['armorysync_updateroster']	= "Update Roster|Das Roster aktualisieren oder nicht.<br>Sinnvoll fürs Debuggen.";
 //$lang['admin']['armorysync_ismysqllower411']	= "MySQL < 4.1.1|Auf True setzen wenn deine MySQL Version kleiner als 4.1.1 ist.";
-$lang['admin']['armorysync_protectedtitle']	= "Protected Guild Title|Characters with this guild titles are protected<br>from beeing deleted by a syncronisation off the meberlist against the armory.<br>The problem often occours with bank characters.<br>Multivalue possible with seperation by \",\". F.e. Banker,Stock";
+$lang['admin']['armorysync_protectedtitle']	= "Rango Hermandad protegidos|Los personajes con este rango estan protegidos<br>no podran ser borrados por una actualización del listado de miembros desde la armería.<br>Amenudo el problema suele ocurrir con los personajes banqueros.<br>Es posible añadir mas de uno separandolo con \",\". Ejem. Banco,Almacen";
 
 
-$lang['bindings']['bind_on_pickup'] = "Binds when picked up";
-$lang['bindings']['bind_on_equip'] = "Binds when equiped";
-$lang['bindings']['bind'] = "Soulbound";
+$lang['bindings']['bind_on_pickup'] = "Se liga al recogerlo";
+$lang['bindings']['bind_on_equip'] = "Se liga al equiparlo";
+$lang['bindings']['bind'] = "Ligado";
 
 // Addon strings
-$lang['RepStanding']['Exalted'] = 'Exalted';
-$lang['RepStanding']['Revered'] = 'Revered';
-$lang['RepStanding']['Honored'] = 'Honored';
-$lang['RepStanding']['Friendly'] = 'Friendly';
+$lang['RepStanding']['Exalted'] = 'Exaltado';
+$lang['RepStanding']['Revered'] = 'Venerado';
+$lang['RepStanding']['Honored'] = 'Honorable';
+$lang['RepStanding']['Friendly'] = 'Amistoso';
 $lang['RepStanding']['Neutral'] = 'Neutral';
-$lang['RepStanding']['Unfriendly'] = 'Unfriendly';
-$lang['RepStanding']['Hostile'] = 'Hostile';
-$lang['RepStanding']['Hated'] = 'Hated';
+$lang['RepStanding']['Unfriendly'] = 'Enemigo';
+$lang['RepStanding']['Hostile'] = 'Hostil';
+$lang['RepStanding']['Hated'] = 'Odiado';
 
-$lang['Skills']['Class Skills'] = "Class Skills";
-$lang['Skills']['Professions'] = "Professions";
-$lang['Skills']['Secondary Skills'] = "Secondary Skills";
-$lang['Skills']['Weapon Skills'] = "Weapon Skills";
-$lang['Skills']['Armor Proficiencies'] = "Armor Proficiencies";
-$lang['Skills']['Languages'] = "Languages";
+$lang['Skills']['Class Skills'] = "Habilidades de clase";
+$lang['Skills']['Professions'] = "Profesiones";
+$lang['Skills']['Secondary Skills'] = "Habilidades secundarias";
+$lang['Skills']['Weapon Skills'] = "Armas disponibles";
+$lang['Skills']['Armor Proficiencies'] = "Armaduras disponibles";
+$lang['Skills']['Languages'] = "Lenguas";
 
 
-$lang['Classes']['Druid'] = 'Druid';
-$lang['Classes']['Hunter'] = 'Hunter';
-$lang['Classes']['Mage'] = 'Mage';
-$lang['Classes']['Paladin'] = 'Paladin';
-$lang['Classes']['Priest'] = 'Priest';
-$lang['Classes']['Rogue'] = 'Rogue';
-$lang['Classes']['Shaman'] = 'Shaman';
-$lang['Classes']['Warlock'] = 'Warlock';
-$lang['Classes']['Warrior'] = 'Warrior';
+$lang['Classes']['Druid'] = 'Druida';
+$lang['Classes']['Hunter'] = 'Cazador';
+$lang['Classes']['Mage'] = 'Mago';
+$lang['Classes']['Paladin'] = 'Paladín';
+$lang['Classes']['Priest'] = 'Sacerdote';
+$lang['Classes']['Rogue'] = 'Pícaro';
+$lang['Classes']['Shaman'] = 'Shamán';
+$lang['Classes']['Warlock'] = 'Brujo';
+$lang['Classes']['Warrior'] = 'Guerrero';
 
-$lang['Talenttrees']['Druid']['Balance'] = "Balance";
-$lang['Talenttrees']['Druid']['Feral Combat'] = "Feral Combat";
-$lang['Talenttrees']['Druid']['Restoration'] = "Restoration";
-$lang['Talenttrees']['Hunter']['Beast Mastery'] = "Beast Mastery";
-$lang['Talenttrees']['Hunter']['Marksmanship'] = "Marksmanship";
-$lang['Talenttrees']['Hunter']['Survival'] = "Survival";
-$lang['Talenttrees']['Mage']['Arcane'] = "Arcane";
-$lang['Talenttrees']['Mage']['Fire'] = "Fire";
-$lang['Talenttrees']['Mage']['Frost'] = "Frost";
-$lang['Talenttrees']['Paladin']['Holy'] = "Holy";
-$lang['Talenttrees']['Paladin']['Protection'] = "Protection";
-$lang['Talenttrees']['Paladin']['Retribution'] = "Retribution";
-$lang['Talenttrees']['Priest']['Discipline'] = "Discipline";
-$lang['Talenttrees']['Priest']['Holy'] = "Holy";
-$lang['Talenttrees']['Priest']['Shadow'] = "Shadow";
-$lang['Talenttrees']['Rogue']['Assassination'] = "Assassination";
-$lang['Talenttrees']['Rogue']['Combat'] = "Combat";
-$lang['Talenttrees']['Rogue']['Subtlety'] = "Subtlety";
+$lang['Talenttrees']['Druid']['Balance'] = "Equilibrio";
+$lang['Talenttrees']['Druid']['Feral Combat'] = "Combate feral";
+$lang['Talenttrees']['Druid']['Restoration'] = "Restauración";
+$lang['Talenttrees']['Hunter']['Beast Mastery'] = "Dominio de bestias";
+$lang['Talenttrees']['Hunter']['Marksmanship'] = "Puntería";
+$lang['Talenttrees']['Hunter']['Survival'] = "Supervivencia";
+$lang['Talenttrees']['Mage']['Arcane'] = "Arcano";
+$lang['Talenttrees']['Mage']['Fire'] = "Fuego";
+$lang['Talenttrees']['Mage']['Frost'] = "Escarcha";
+$lang['Talenttrees']['Paladin']['Holy'] = "Sagrado";
+$lang['Talenttrees']['Paladin']['Protection'] = "Protección";
+$lang['Talenttrees']['Paladin']['Retribution'] = "Represión";
+$lang['Talenttrees']['Priest']['Discipline'] = "Disciplina";
+$lang['Talenttrees']['Priest']['Holy'] = "Sagrado";
+$lang['Talenttrees']['Priest']['Shadow'] = "Sombras";
+$lang['Talenttrees']['Rogue']['Assassination'] = "Asesinato";
+$lang['Talenttrees']['Rogue']['Combat'] = "Combate";
+$lang['Talenttrees']['Rogue']['Subtlety'] = "Sutileza";
 $lang['Talenttrees']['Shaman']['Elemental'] = "Elemental";
-$lang['Talenttrees']['Shaman']['Enhancement'] = "Enhancement";
-$lang['Talenttrees']['Shaman']['Restoration'] = "Restoration";
-$lang['Talenttrees']['Warlock']['Affliction'] = "Affliction";
-$lang['Talenttrees']['Warlock']['Demonology'] = "Demonology";
-$lang['Talenttrees']['Warlock']['Destruction'] = "Destruction";
-$lang['Talenttrees']['Warrior']['Arms'] = "Arms";
-$lang['Talenttrees']['Warrior']['Fury'] = "Fury";
-$lang['Talenttrees']['Warrior']['Protection'] = "Protection";
+$lang['Talenttrees']['Shaman']['Enhancement'] = "Mejora";
+$lang['Talenttrees']['Shaman']['Restoration'] = "Restauración";
+$lang['Talenttrees']['Warlock']['Affliction'] = "Aflicción";
+$lang['Talenttrees']['Warlock']['Demonology'] = "Demonología";
+$lang['Talenttrees']['Warlock']['Destruction'] = "Destrucción";
+$lang['Talenttrees']['Warrior']['Arms'] = "Armas";
+$lang['Talenttrees']['Warrior']['Fury'] = "Furia";
+$lang['Talenttrees']['Warrior']['Protection'] = "Protección";
 
-$lang['misc']['Rank'] = "Rank";
+$lang['misc']['Rank'] = "Rango";
 
-$lang['guild_short'] = "Guild";
-$lang['character_short'] = "Char.";
-$lang['skill_short'] = "Skill";
+$lang['guild_short'] = "Herman.";
+$lang['character_short'] = "Pers.";
+$lang['skill_short'] = "Habil.";
 $lang['reputation_short'] = "Repu.";
-$lang['equipment_short'] = "Equip";
-$lang['talents_short'] = "Talent";
+$lang['equipment_short'] = "Equipo";
+$lang['talents_short'] = "Talen.";
 
-$lang['started'] = "started";
-$lang['finished'] = "finnished";
+$lang['started'] = "empezo";
+$lang['finished'] = "acabo";
 
-$lang['armorySyncTitle_Char'] = "ArmorySync for Charakters";
-$lang['armorySyncTitle_Guild'] = "ArmorySync for Guilds";
-$lang['armorySyncTitle_Guildmembers'] = "ArmorySync for Guild Memberlists";
-$lang['armorySyncTitle_Realm'] = "ArmorySync for Realms";
+$lang['armorySyncTitle_Char'] = "ArmorySync para Personajes";
+$lang['armorySyncTitle_Guild'] = "ArmorySync para Hermandades";
+$lang['armorySyncTitle_Guildmembers'] = "ArmorySync para listado de miembros de una Hermandad";
+$lang['armorySyncTitle_Realm'] = "ArmorySync para Reinos";
 
-$lang['next_to_update'] = "Next Update: ";
-$lang['nothing_to_do'] = "Nothing to do at the moment";
+$lang['next_to_update'] = "Siguiente Actualización: ";
+$lang['nothing_to_do'] = "Nada para hacer por el momento";
 
 $lang['error'] = "Error";
-$lang['error_no_character'] = "No Charakter referred.";
-$lang['error_no_guild'] = "No Guild referred.";
-$lang['error_no_realm'] = "No Realm referred.";
-$lang['error_use_menu'] = "Use menue to syncronize.";
+$lang['error_no_character'] = "Sin referencias del personaje.";
+$lang['error_no_guild'] = "Sin referencias de la hermandad.";
+$lang['error_no_realm'] = "Sin referencias del reino.";
+$lang['error_use_menu'] = "Use el menu para sincronizar.";
 
-$lang['error_guild_insert'] = "Error creating guild.";
-$lang['error_uploadrule_insert'] = "Error creating upload rule.";
-$lang['error_guild_notexist'] = "The guild given does not exist in the Armory.";
-$lang['error_missing_params'] = "Missing parameters. Plaese try again";
-$lang['error_wrong_region'] = "Invalid region. Only EU and US are valid regions.";
-$lang['armorysync_guildadd'] = "Adding Guild and syncronize<br>memberlist with the Armory.";
-$lang['armorysync_guildadd_help'] = "Information";
-$lang['armorysync_guildadd_helpText'] = "Spell the guild and the server exactly how they are listed at Blizzards Armory.<br>Region is EU for european and US for american guilds. In the first place<br>the guild will be checked for existenz. Afterwards a syncronization of the<br>meberlist will be started.";
+$lang['error_guild_insert'] = "Error creando la hermandad.";
+$lang['error_uploadrule_insert'] = "Error creando las reglas de subida.";
+$lang['error_guild_notexist'] = "La hermandad facilitada no existe en la Armería.";
+$lang['error_missing_params'] = "Faltan parametros. Por favor vuelve a intentarlo";
+$lang['error_wrong_region'] = "Region incorrecta. Solo EU y US son regiones validas.";
+$lang['armorysync_guildadd'] = "Añadiendo Hermandad y sincronizando<br>listado de miembros con la Armería.";
+$lang['armorysync_guildadd_help'] = "Información";
+$lang['armorysync_guildadd_helpText'] = "Escribe la hermandad y el servidor exactamente como se muestran en la Armería de Blizzard.<br>Region es EU pra los europeos y US para las hermandades americanas. En primer lugar<br>se comprobara la existencia de la hermandad. Acto seguido se empezara con la<br>sincronización del listado de miembros.";
 
-$lang['guildleader'] = "Guildleader";
+$lang['guildleader'] = "Maestro de la hermandad";
 
-$lang['rage'] = "Rage";
-$lang['energy'] = "Energy";
+$lang['rage'] = "Ira";
+$lang['energy'] = "Energía";
 $lang['focus'] = "Focus";
 
-$lang['armorysync_credits'] = 'Thanks to <a target="_blank" href="http://www.papy-team.fr">tuigii</a>, <a target="_blank" href="http://xent.homeip.net">zanix</a>, <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=1126.html">ds</a> and <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=711.html">Subxero</a> for testing, translating and supporting.<br>Spezial thanks to <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=13101.html">kristoff22</a> for the original code of ArmorySync and <a target="_blank" href="http://www.iceguild.org.uk/forum">Pugro</a> for his changes to it.';
+$lang['armorysync_credits'] = 'Gracias a <a target="_blank" href="http://www.papy-team.fr">tuigii</a>, <a target="_blank" href="http://xent.homeip.net">zanix</a>, <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=1126.html">ds</a> y <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=711.html">Subxero</a> por probarlo, traducirlo y ayudar.<br>Especial gracias a <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=13101.html">kristoff22</a> por el codigo original del ArmorySync y a <a target="_blank" href="http://www.iceguild.org.uk/forum">Pugro</a> por sus cambios en el.';
 
-$lang['start'] = "Start";
-$lang['start_message'] = "Your about to start ArmorySync for %s %s.<br><br>By this all data for %s will be overwritten<br>with details from Blizzards Armory. This can only be undone<br>by uploading a current CharacterProfiler.lua.<br><br>Do you want to start this process yet";
+$lang['start'] = "Empezar";
+$lang['start_message'] = "Estas apunto de empezar a usar ArmorySync con %s %s.<br><br>Con esto toda la información de %s sera sobre escrita<br>con los detalles de la Armería de Blizzard. Solo se podra deshacer<br>subiendo de nuevo un CharacterProfiler.lua nuevo.<br><br>Estas seguro de querer empezar el proceso";
 
-$lang['start_message_the_char'] = "the character";
-$lang['start_message_this_char'] = "this character";
-$lang['start_message_the_guild'] = "the guild";
-$lang['start_message_this_guild'] = "all characters of this guild";
-$lang['start_message_the_realm'] = "the realm";
-$lang['start_message_this_realm'] = "all characters of this realm";
+$lang['start_message_the_char'] = "el personaje";
+$lang['start_message_this_char'] = "este personaje";
+$lang['start_message_the_guild'] = "la hermandad";
+$lang['start_message_this_guild'] = "todos los personajes de esta hermandad";
+$lang['start_message_the_realm'] = "el reino";
+$lang['start_message_this_realm'] = "todos los personajes de este reino";
 

@@ -2,6 +2,13 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[236]
+- replaced _link logic with a form and autosubmit java function
+  this way we put job_id in $_POST and can remeber is the status windows was
+  opened or closed.
+- adjusted install.def.php
+- added spanish locales - thx to Subxero
+
 svn[235]
 - realy fixed whitespaces and "Undead" in raceEN
 - updated frFR locales - thx to diggler@wowroster.net

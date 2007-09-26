@@ -1,7 +1,11 @@
 <!-- $Id$ -->
 
 <!-- ArmorySync Status Head -->
-{J_SCRIPT}
+<form name="linker" action="{LINK}" method="POST">
+        <input type="hidden" name="job_id" value="{JOB_ID}" />
+        <input type="hidden" name="StatusHidden" value="{STATUSHIDDEN}" />
+</form>
+
 
 {START_BORDER}
 <div class="header_text {STYLE}border">
@@ -17,9 +21,9 @@
 </table>
 </div>
 
-<img src="img/plus.gif" style="float:right;cursor:pointer;" alt="" id="update_details_img" onclick="showHide('update_details','update_details_img','img/minus.gif','img/plus.gif');">
+<img src="{ICON}" style="float:right;cursor:pointer;" alt="" id="update_details_img" onclick="toggleStatus();">
 <br>
-<div id="update_details" style="display:none;">
+<div id="update_details" style="display:{DISPLAY};">
 <table class="bodyline" cellspacing="0" align="center">
 	<tr>
 		<td>
