@@ -1,7 +1,7 @@
 <?php
 /**
  * Project: SigGen - Signature and Avatar Generator for WoWRoster
- * File: /update_hook.php
+ * File: /inc/update_hook.php
  *
  * Licensed under the Creative Commons
  * "Attribution-NonCommercial-ShareAlike 2.5" license

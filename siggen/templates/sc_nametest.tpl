@@ -37,15 +37,18 @@ if ( !defined('IN_ROSTER') )
     exit('Detected invalid access to this file!');
 }
 
+list($name, $realm) = explode('@',$name_test);
+$name_test_url = $name . '@' . urlencode($realm);
+
 $preview_image = '
 	<tr>
-		<td class="sc_row_right2" colspan="2"><img src="'.makelink('util-'.$addon['basename'].'-siggen&amp;member='.$name_test.'&amp;mode='.$config_name.'&amp;saveonly=0&amp;etag=0').'" alt="'.$name_test.' '.$config_name.' image" /></td>
+		<td class="sc_row_right2" colspan="2"><img src="'.makelink('util-'.$addon['basename'].'&amp;member='.$name_test_url.'&amp;mode='.$config_name.'&amp;saveonly=0&amp;etag=0').'" alt="'.$name_test.' '.$config_name.' image" /></td>
 	</tr>';
 
 if( $name_test != '' )
 {
 	$functions->setMessage('Link to preview image:<br />
-	[ '.makelink('util-'.$addon['basename'].'-siggen&amp;mode='.$config_name.'&amp;member='.$name_test,false,true).' ]');
+	[ '.makelink('util-'.$addon['basename'].'&amp;mode='.$config_name.'&amp;member='.$name_test,false,true).' ]');
 }
 ?>
 

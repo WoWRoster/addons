@@ -1,7 +1,7 @@
 <?php
 /**
  * Project: SigGen - Signature and Avatar Generator for WoWRoster
- * File: /inc/conf.php
+ * File: /char/index.php
  *
  * Licensed under the Creative Commons
  * "Attribution-NonCommercial-ShareAlike 2.5" license
@@ -37,44 +37,17 @@ if ( !defined('IN_ROSTER') )
     exit('Detected invalid access to this file!');
 }
 
+// Read SigGen Config data from Database
+$config_str = "SELECT `config_id`,`main_image_size_w`,`main_image_size_h` FROM `".$roster->db->table('config',$addon['basename'])."`;";
 
-
-// ----[ Update Check Service ]-----------------------------
-$siggen_update = true;
-
-
-
-
-// ----[ SigGen directory ]---------------------------------
-// This should be the path to the siggen addon directory
-// Starting from where siggen config is accessed
-define('SIGGEN_DIR', $addon['dir']);
-
-
-
-
-// ----[ Define the sig_config table ]----------------------
-if( !defined('ROSTER_SIGCONFIGTABLE') )
+$config_sql = $roster->db->query($config_str);
+if( $config_sql )
 {
-	define('ROSTER_SIGCONFIGTABLE',$roster->db->table('config',$addon['basename']));
+	while( $row = $roster->db->fetch($config_sql, SQL_ASSOC) )
+	{
+		print messagebox('<img src="'.makelink('util-siggen&amp;mode=' . $row['config_id'] . '&amp;member=' . $roster->data['member_id'] . '&amp;saveonly=0') . '" alt="" width="' . $row['main_image_size_w'] . '" height="' . $row['main_image_size_h'] . '" /><br />'
+			. makelink('util-siggen&amp;mode=' . $row['config_id'] . '&amp;member=' . $roster->data['name'] . '@' . $roster->data['region'] . '-' . $roster->data['server'],true),
+			ucfirst($row['config_id']),'sblue') . '<br />';
+	}
+	$roster->db->free_result();
 }
-
-
-//------[ END OF CONFIG ]-------------------------
-
-
-
-
-
-
-
-
-
-
-// ----[ Database version DO NOT CHANGE!! ]-----------------
-$sc_db_ver = '1.5';
-
-
-
-
-define('SIGCONFIG_CONF',true);

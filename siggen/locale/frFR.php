@@ -1,7 +1,7 @@
 <?php
 /**
  * Project: SigGen - Signature and Avatar Generator for WoWRoster
- * File: /localization.php
+ * File: /locale/frFR.php
  *
  * Licensed under the Creative Commons
  * "Attribution-NonCommercial-ShareAlike 2.5" license

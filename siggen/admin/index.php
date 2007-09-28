@@ -1,7 +1,7 @@
 <?php
 /**
  * Project: SigGen - Signature and Avatar Generator for WoWRoster
- * File: /index.php
+ * File: /admin/index.php
  *
  * Licensed under the Creative Commons
  * "Attribution-NonCommercial-ShareAlike 2.5" license
@@ -94,11 +94,8 @@ if( isset($_POST['name_test']) )
 	}
 	else
 	{
-		$name_test = $_POST['name_test'];
-		list($name, $realm) = explode('@',$name_test);
-
+		$name_test = stripslashes($_POST['name_test']);
 		setcookie( 'siggen_nametest',$name_test,0,'/' );
-		$name_test = $name.'@'.$realm;
 	}
 }
 elseif( isset($_COOKIE['siggen_nametest']) )

@@ -1,7 +1,7 @@
 <?php
 /**
  * Project: SigGen - Signature and Avatar Generator for WoWRoster
- * File: /inc/conf.php
+ * File: /index.php
  *
  * Licensed under the Creative Commons
  * "Attribution-NonCommercial-ShareAlike 2.5" license
@@ -37,44 +37,5 @@ if ( !defined('IN_ROSTER') )
     exit('Detected invalid access to this file!');
 }
 
-
-
-// ----[ Update Check Service ]-----------------------------
-$siggen_update = true;
-
-
-
-
-// ----[ SigGen directory ]---------------------------------
-// This should be the path to the siggen addon directory
-// Starting from where siggen config is accessed
-define('SIGGEN_DIR', $addon['dir']);
-
-
-
-
-// ----[ Define the sig_config table ]----------------------
-if( !defined('ROSTER_SIGCONFIGTABLE') )
-{
-	define('ROSTER_SIGCONFIGTABLE',$roster->db->table('config',$addon['basename']));
-}
-
-
-//------[ END OF CONFIG ]-------------------------
-
-
-
-
-
-
-
-
-
-
-// ----[ Database version DO NOT CHANGE!! ]-----------------
-$sc_db_ver = '1.5';
-
-
-
-
-define('SIGCONFIG_CONF',true);
+// Require sig.php (must be in the same directory)
+require (dirname(__FILE__).DIRECTORY_SEPARATOR.'siggen.php');
