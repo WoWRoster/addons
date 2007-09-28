@@ -32,36 +32,30 @@
  *
  */
 
-if ( !defined('ROSTER_INSTALLED') )
+if ( !defined('IN_ROSTER') )
 {
     exit('Detected invalid access to this file!');
 }
-?>
 
-<?php
 $preview_image = '
-    <tr>
-      '.(defined('BASEDIR') ?
-      '<td class="sc_row_right2" colspan="2"><img src="'.getlink('&amp;file=addon&amp;roster_addon_name=siggen&amp;mode='.$config_name.'&amp;member='.urlencode(utf8_decode($name_test)).'&amp;saveonly=0&amp;etag=0').'" alt="'.$name_test.' '.$config_name.' image" /></td>'
-      : '<td class="sc_row_right2" colspan="2"><img src="addons/siggen/siggen.php?member='.urlencode(utf8_decode($name_test)).'&amp;mode='.$config_name.'&amp;saveonly=0&amp;etag=0" alt="'.$name_test.' '.$config_name.' image" /></td>').'
-    </tr>';
+	<tr>
+		<td class="sc_row_right2" colspan="2"><img src="'.makelink('util-'.$addon['basename'].'-siggen&amp;member='.$name_test.'&amp;mode='.$config_name.'&amp;saveonly=0&amp;etag=0').'" alt="'.$name_test.' '.$config_name.' image" /></td>
+	</tr>';
 
 if( $name_test != '' )
 {
 	$functions->setMessage('Link to preview image:<br />
-'.(defined('BASEDIR') ?
-	'[ '.getlink('&amp;file=addon&amp;roster_addon_name=siggen&amp;mode='.$config_name.'&amp;member='.urlencode(utf8_decode($name_test)),false,true).' ]'
-	: '[ '.ROSTER_URL.'/addons/siggen/'.($config_name == 'signature' ? 'sig' : 'ava').'.php?member='.urlencode(utf8_decode($name_test)).' ]'));
+	[ '.makelink('util-'.$addon['basename'].'-siggen&amp;mode='.$config_name.'&amp;member='.$name_test,false,true).' ]');
 }
 ?>
 
 <!-- Begin Image Preview Box -->
-<form action="<?php print getlink($script_filename); ?>" method="post" enctype="multipart/form-data" name="preview_select" onsubmit="submitonce(this)">
+<form action="<?php print makelink(); ?>" method="post" enctype="multipart/form-data" name="preview_select" onsubmit="submitonce(this)">
 <?php print border('sblue','start','Test SigGen'); ?>
   <table class="sc_table" cellspacing="0" cellpadding="2">
     <tr>
       <td class="sc_row1" align="left">Select a name:
-        <?php print $functions->createOptionList($member_list,$name_test,'name_test',3 ); ?></td>
+        <?php print $functions->createMemberList($member_list,$name_test,'name_test',3 ); ?></td>
       <td class="sc_row_right1" align="right"><input type="submit" value="Preview" /></td>
     </tr><?php print ( $name_test == '' ? '' : $preview_image ); ?>
   </table>

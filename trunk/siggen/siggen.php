@@ -32,44 +32,53 @@
  *
  */
 
-// "settings.php" from WoWRoster
-$siggen_dir = dirname(__FILE__);
-$siggen_dir = explode(DIRECTORY_SEPARATOR,$siggen_dir);
-array_pop($siggen_dir);
-array_pop($siggen_dir);
-$siggen_dir = implode(DIRECTORY_SEPARATOR,$siggen_dir).DIRECTORY_SEPARATOR;
-
-require($siggen_dir.'settings.php');
-unset($siggen_dir);
-
-// Require the siggen config
-require( ROSTER_BASE.'addons/siggen/conf.php' );
-
-// Translation file
-require( SIGGEN_DIR.'localization.php' );
-
+if ( !defined('IN_ROSTER') )
+{
+    exit('Detected invalid access to this file!');
+}
 
 // Set track errors on
-if( !ereg('ini_set', ini_get('disable_functions')) )
+if( CAN_INI_SET )
 {
 	ini_set('track_errors',1);
 }
 
 
 // Get name from browser request
-// url_decode() the name, then utf-8_encode() it
-if( isset($_GET['member']) || isset($_GET['name']) )
+if( isset($_GET['member']) )
 {
-	if( $_GET['member'] != '' )
-		$char_name = utf8_encode(urldecode($_GET['member']));
+	if( is_numeric($_GET['member']) )
+	{
+		$member_where = ' `member_id` = "' . $_GET['member'] . '"';
+	}
+	elseif( strpos($_GET['member'], '@') !== false )
+	{
+		list($name, $realm) = explode('@',$_GET['member']);
+		if( strpos($realm,'-') !== false )
+		{
+			list($region, $realm) = explode('-',$realm);
+			$member_where = ' `name` = "' . $name . '" AND `server` = "' . $realm . '" AND `region` = "' . strtoupper($region) . '"';
+		}
+		else
+		{
+			$member_where = ' `name` = "' . $name . '" AND `server` = "' . $realm . '"';
+		}
+	}
 	else
-		$char_name = utf8_encode(urldecode($_GET['name']));
+	{
+		$name = $_GET['member'];
+		$member_where = ' `name` = "' . $name . '"';
+	}
 }
-elseif( isset($_SERVER['PATH_INFO']) ) // Try pulling from a "path_info" request
+/*
+elseif( isset($_SERVER['REQUEST_URI']) ) // Try pulling from a "REQUEST_URI" request
 {
-	list($char_name,$img_format) = explode( '.', utf8_encode(urldecode(substr($_SERVER['PATH_INFO'],1))) );
+	list($char_name,$img_format) = explode('.', $_SERVER['REQUEST_URI']);
 }
+print $img_format;
 
+aprint($_SERVER);die();
+*/
 
 // Get image mode ( signature | avatar | etc )
 if( isset($_GET['mode']) )
@@ -82,9 +91,9 @@ elseif( isset($config_name) )
 }
 else
 {
-	if( eregi(basename(__FILE__),$_SERVER['PHP_SELF']) )
+	if( eregi(basename(__FILE__),$roster->pages[1]).'.php' )
 	{
-		debugMode('?',"You cannot access this file directly without a 'mode' option");
+		debugMode('1',"You cannot access siggen directly without a 'mode' option");
 	}
 }
 
@@ -139,16 +148,16 @@ if( isset($_GET['format']) )
 
 	// Read SigGen Config data from Database
 	$config_str = 'SELECT * FROM `'.ROSTER_SIGCONFIGTABLE."` WHERE `config_id` LIKE '$config_name';";
-	$config_sql = $wowdb->query($config_str);
-	if( $config_sql && $wowdb->num_rows($config_sql) != 0 )
+	$config_sql = $roster->db->query($config_str);
+	if( $config_sql && $roster->db->num_rows() != 0 )
 	{
-		$configData = $wowdb->fetch_array($config_sql);
+		$configData = $roster->db->fetch($config_sql,SQL_ASSOC);
 	}
 	else
 	{
-		debugMode('DB',"Could not find config_id [$config_name] in table [".ROSTER_SIGCONFIGTABLE."]",(__FILE__),0,'MySQL said: '.$wowdb->error());
+		debugMode('DB',"Could not find config_id [$config_name] in table [".ROSTER_SIGCONFIGTABLE."]",(__FILE__),0,'MySQL said: '.$roster->db->error());
 	}
-	$wowdb->free_result($config_sql);
+	$roster->db->free_result();
 
 
 	if( $sc_db_ver != $configData['db_ver'] )
@@ -157,60 +166,70 @@ if( isset($_GET['format']) )
 	}
 
 
-	// Read guild data from Database
-	// This is so easy now that Roster gets this :D
-	$guildData = $guild_info;
-
-
 
 	// Read member list from Database
-	$members_str = 'SELECT * FROM `'.ROSTER_MEMBERSTABLE."` WHERE `name` LIKE '$char_name' AND `guild_id` = ".$guild_info['guild_id'].";";
-	$members_sql = $wowdb->query($members_str);
+	$members_str = 'SELECT * FROM `'.$roster->db->table('members').'` WHERE'.$member_where.';';
+	$members_sql = $roster->db->query($members_str);
 	if( $members_sql )
 	{
-		$membersData = $wowdb->fetch_array($members_sql);
+		$membersData = $roster->db->fetch($members_sql, SQL_ASSOC);
 		$member_id = $membersData['member_id'];		// Gets the character ID number from the database
 	}
 	else
 	{
-		debugMode('DB','Could not get Members Data','',0,"MySQL said: ".$wowdb->error());
+		debugMode('DB','Could not get Members Data','',0,"MySQL said: ".$roster->db->error());
 	}
 
 	// If the member is not found, write message to name
-	if( $wowdb->num_rows($members_sql) == 0 )
+	if( $roster->db->num_rows() == 0 )
 	{
 		$membersData['name'] = $configData['default_message'];
 	}
-	$wowdb->free_result($members_sql);
+	$roster->db->free_result();
 
 
-	// Read character data from Database
-	$players_str = 'SELECT * FROM `'.ROSTER_PLAYERSTABLE."` WHERE `member_id` = '$member_id';";
-	$players_sql = $wowdb->query($players_str);
-	if( $players_sql )
+
+	// Read guild list from Database
+	$guild_str = 'SELECT * FROM `'.$roster->db->table('guild')."` WHERE `guild_id` = '".$membersData['guild_id']."';";
+	$guild_sql = $roster->db->query($guild_str);
+	if( $guild_sql )
 	{
-		$playersData = $wowdb->fetch_array($players_sql);
+		$guildData = $roster->db->fetch($guild_sql, SQL_ASSOC);
 	}
 	else
 	{
-		debugMode('DB','Could not get Character Data','',0,"MySQL said: ".$wowdb->error());
+		debugMode('DB','Could not get Guild Data','',0,"MySQL said: ".$roster->db->error());
 	}
-	$wowdb->free_result($players_sql);
+	$roster->db->free_result();
+
+
+	// Read character data from Database
+	$players_str = 'SELECT * FROM `'.$roster->db->table('players')."` WHERE `member_id` = '$member_id';";
+	$players_sql = $roster->db->query($players_str);
+	if( $players_sql )
+	{
+		$playersData = $roster->db->fetch($players_sql, SQL_ASSOC);
+	}
+	else
+	{
+		debugMode('DB','Could not get Character Data','',0,"MySQL said: ".$roster->db->error());
+	}
+	$roster->db->free_result();
 
 
 	// Read skills_table from Database
 	if( isset($playersData['name']) )
 	{
-		$skill_str = 'SELECT * FROM `'.ROSTER_SKILLSTABLE."` WHERE `member_id` = $member_id ORDER BY `skill_order` ASC;";
-		$skill_sql = $wowdb->query($skill_str);
+		$skill_str = 'SELECT * FROM `'.$roster->db->table('skills')."` WHERE `member_id` = $member_id ORDER BY `skill_order` ASC;";
+		$skill_sql = $roster->db->query($skill_str);
 
-		$skill_rows = $wowdb->num_rows($skill_sql);
+		$skill_rows = $roster->db->num_rows();
 
 		if( $skill_rows != 0 )
 		{
 			for( $n=0; $n<$skill_rows; $n++ )
 			{
-				$tempData = $wowdb->fetch_assoc($skill_sql);
+				$tempData = $roster->db->fetch($skill_sql, SQL_ASSOC);
 
 				list($lvl,$maxlvl) = explode( ':', $tempData['skill_level'] );
 
@@ -220,16 +239,16 @@ if( isset($_GET['format']) )
 										'max' => $maxlvl);
 			}
 		}
-		$wowdb->free_result($skill_sql);
+		$roster->db->free_result();
 	}
 
 	// Get Talent Spec
 	if( isset($playersData['name']) )
 	{
-		$spec_str = 'SELECT `pointsspent`, `tree` FROM `'.ROSTER_TALENTTREETABLE."` WHERE `member_id` = '$member_id' ORDER BY `order` ASC;";
-		$spec_sql = $wowdb->query($spec_str);
+		$spec_str = 'SELECT `pointsspent`, `tree` FROM `'.$roster->db->table('talenttree')."` WHERE `member_id` = '$member_id' ORDER BY `order` ASC;";
+		$spec_sql = $roster->db->query($spec_str);
 
-		$spec_rows = $wowdb->num_rows($spec_sql);
+		$spec_rows = $roster->db->num_rows();
 
 		if( $spec_rows != 0 )
 		{
@@ -237,7 +256,7 @@ if( isset($_GET['format']) )
 			$point_holder = 0;
 			for( $n=0; $n<$spec_rows; $n++ )
 			{
-				$tempData = $wowdb->fetch_assoc($spec_sql);
+				$tempData = $roster->db->fetch($spec_sql, SQL_ASSOC);
 
 				if( $tempData['pointsspent'] > $point_holder )
 				{
@@ -248,11 +267,11 @@ if( isset($_GET['format']) )
 			}
 			$specData['points'] = implode(' / ',$specData['points']);
 		}
-		$wowdb->free_result($spec_sql);
+		$roster->db->free_result();
 	}
 
 	// Explicitly close the db
-	$wowdb->closeDb();
+	$roster->db->close_db();
 
 
 #--[ FIX SOME STUFF ]------------------------------------------------------
@@ -267,8 +286,8 @@ if( isset($_GET['format']) )
 		$configData['font_dir'] = str_replace( '/',DIR_SEP,ROSTER_BASE.$configData['font_dir'] );
 
 		$configData['save_images_dir'] = str_replace( '/',DIR_SEP,$configData['save_images_dir'] );
-		$configData['save_images_dir'] = str_replace( '%r%',ROSTER_BASE,$configData['save_images_dir'] );
-		$configData['save_images_dir'] = str_replace( '%s%',SIGGEN_DIR,$configData['save_images_dir'] );
+		$configData['save_images_dir'] = str_replace( '%r',ROSTER_BASE,$configData['save_images_dir'] );
+		$configData['save_images_dir'] = str_replace( '%s',SIGGEN_DIR,$configData['save_images_dir'] );
 
 
 	// Variable references to DB for quick changing
@@ -279,7 +298,7 @@ if( isset($_GET['format']) )
 
 
 	// Get character specific lang if set, or get the roster_lang
-		$sig_char_locale = ( empty($playersData['clientLocale']) ? $roster_conf['roster_lang'] : $playersData['clientLocale'] );
+		$sig_char_locale = ( empty($playersData['clientLocale']) ? $roster->config['locale'] : $playersData['clientLocale'] );
 
 	// Get character class from players table first to avoid translation problems
 		$sig_class = ( empty($playersData['class']) ? $membersData['class'] : $playersData['class'] );
@@ -288,6 +307,7 @@ if( isset($_GET['format']) )
 		$sig_guild_title = $membersData['guild_title'];
 		$sig_guild_name  = $guildData['guild_name'];
 		$sig_server_name = $guildData['server'];
+		$sig_region_name = $guildData['region'];
 
 		$sig_race   = str_replace( ' ','',strtolower( getEnglishValue($playersData['race'],$sig_char_locale) ) );
 		$sig_gender = strtolower( getEnglishValue($playersData['sex'],$sig_char_locale) );
@@ -330,7 +350,7 @@ if( isset($_GET['format']) )
 
 
 	// Check to remove 'http://'
-		$sig_site_name = ( $configData['text_sitename_remove'] ? str_replace('http://','',$roster_conf['website_address']) : $roster_conf['website_address'] );
+		$sig_site_name = ( $configData['text_sitename_remove'] ? str_replace('http://','',$roster->config['website_address']) : $roster->config['website_address'] );
 
 
 	// Get player level
@@ -384,10 +404,14 @@ if( isset($_GET['format']) )
 
 		// Destroy the image
 		if( isset($im) )
+		{
 			imageDestroy($im);
+		}
 
 		if( is_numeric($line) )
+		{
 			$line -= 1;
+		}
 
 		$error_text = 'Error!';
 		$line_text  = 'Line: '.$line;
@@ -790,24 +814,24 @@ if( isset($_GET['format']) )
 
 	function getEnglishValue( $keyword , $locale=null )
 	{
-		global $siggen_translate, $roster_conf;
+		global $roster;
 
 		if( !is_null($locale) )
 		{
-			$locale = $roster_conf['roster_lang'];
+			$locale = $roster->config['locale'];
 		}
 
-		if( array_key_exists($keyword,$siggen_translate[$locale]) )
+		if( array_key_exists($keyword,$roster->locale->wordings[$locale]['translate']) )
 		{
-			return $siggen_translate[$locale][$keyword];
+			return $roster->locale->wordings[$locale]['translate'][$keyword];
 		}
 		else
 		{
-			foreach( $roster_conf['multilanguages'] as $lang )
+			foreach( $roster->multilanguages as $lang )
 			{
-				if( array_key_exists($keyword,$siggen_translate[$lang]) )
+				if( array_key_exists($keyword,$roster->locale->wordings[$lang]) )
 				{
-					return $siggen_translate[$lang][$keyword];
+					return $roster->locale->wordings[$lang]['translate'][$keyword];
 				}
 			}
 		}
@@ -846,7 +870,7 @@ if( isset($_GET['format']) )
 	if( $configData['charlogo_disp'] )
 	{
 		// Check for custom/uploaded image
-		$custom_user_img = $configData['image_dir'].$configData['user_dir'].$sig_name;
+		$custom_user_img = $configData['image_dir'].$configData['user_dir'].$sig_name.'@'.$sig_region_name.'-'.$sig_server_name;
 
 		// Set custom character image, based on name in DB
 		if( file_exists($custom_user_img.'.png') )
@@ -918,7 +942,7 @@ if( isset($_GET['format']) )
 	{
 		if( $configData['backg_translate'] )
 		{
-			$key = array_search($configData['backg_search_'.$i],$siggen_translate[$sig_char_locale]);
+			$key = array_search($configData['backg_search_'.$i],$roster->locale->wordings[$sig_char_locale]['translate']);
 			$backg[$key] = $configData['backg_file_'.$i];
 		}
 		else
@@ -936,7 +960,7 @@ if( isset($_GET['format']) )
 		if( !$configData['backg_force_default'] )
 		{
 			// Check for custom/uploaded image
-			$custom_back_img = $configData['image_dir'].$configData['user_dir'].'bk-'.$sig_name;
+			$custom_back_img = $configData['image_dir'].$configData['user_dir'].'bk-'.$sig_name.'@'.$sig_region_name.'-'.$sig_server_name;
 			if( file_exists($custom_back_img.'.png') )
 			{
 				$im_back_file = $custom_back_img.'.png';
@@ -1228,7 +1252,7 @@ if( isset($_GET['format']) )
 			foreach( $skillsData as $skill )
 			{
 				// Print only professions where the max level does not equal 1
-				if( $skill['type'] == $wordings[$sig_char_locale]['professions'] && $skill['max'] != '1' )
+				if( $skill['type'] == $roster->locale->wordings[$sig_char_locale]['professions'] && $skill['max'] != '1' )
 				{
 					// Print Skill description
 					if( $configData['skills_disp_desc'] )
@@ -1274,7 +1298,7 @@ if( isset($_GET['format']) )
 			foreach( $skillsData as $skill )
 			{
 				// Print only secondary skills where the max level does not equal 1
-				if( $skill['type'] == $wordings[$sig_char_locale]['secondary'] && $skill['max'] != '1' && $skill['name'] != $wordings[$sig_char_locale]['riding'] )
+				if( $skill['type'] == $roster->locale->wordings[$sig_char_locale]['secondary'] && $skill['max'] != '1' && $skill['name'] != $roster->locale->wordings[$sig_char_locale]['riding'] )
 				{
 					// Print Skill description
 					if( $configData['skills_disp_desc'] )
@@ -1320,7 +1344,7 @@ if( isset($_GET['format']) )
 			foreach( $skillsData as $skill )
 			{
 				// Print only secondary skills where the name equals riding
-				if( $skill['type'] == $wordings[$sig_char_locale]['secondary'] && $skill['name'] == $wordings[$sig_char_locale]['riding'] )
+				if( $skill['type'] == $roster->locale->wordings[$sig_char_locale]['secondary'] && $skill['name'] == $roster->locale->wordings[$sig_char_locale]['riding'] )
 				{
 					$desc = $skill['name'];
 					// Shorten long strings based on max length in config
@@ -1364,7 +1388,8 @@ if( isset($_GET['format']) )
 	if( $configData['save_images'] && $configData['default_message'] != $sig_name )
 	{
 		$save_dir = $configData['save_images_dir'];
-		$saved_name = ( $configData['save_char_convert'] ? removeAccents($sig_name) : $sig_name );
+		$saved_name = $sig_name.'@'.$sig_region_name.'-'.$sig_server_name;
+		$saved_name = ( $configData['save_char_convert'] ? removeAccents($saved_name) : $saved_name );
 		$saved_image = $save_dir.$configData['save_prefix'].$saved_name.$configData['save_suffix'].'.'.$configData['save_images_format'];
 
 		if( file_exists($save_dir) )
@@ -1439,4 +1464,5 @@ if( isset($_GET['format']) )
 #--[ FREE MEMORY ]---------------------------------------------------------
 
 	if( isset($im) ) @imageDestroy( $im );
+	die();
 ?>

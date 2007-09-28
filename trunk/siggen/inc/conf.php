@@ -32,17 +32,10 @@
  *
  */
 
-if ( !defined('ROSTER_INSTALLED') )
+if ( !defined('IN_ROSTER') )
 {
     exit('Detected invalid access to this file!');
 }
-
-
-
-//------[ Show the SQL Queries Window? ]------------
-// This controls the display of the SQL Queries window in the SigGen config page
-$sc_show_sql_win = true;
-
 
 
 
@@ -55,20 +48,15 @@ $siggen_update = true;
 // ----[ SigGen directory ]---------------------------------
 // This should be the path to the siggen addon directory
 // Starting from where siggen config is accessed
-define('SIGGEN_DIR', dirname(__FILE__).DIR_SEP);
+define('SIGGEN_DIR', $addon['dir']);
 
 
 
 
 // ----[ Define the sig_config table ]----------------------
-if( !isset($db_prefix))
-{
-	global $db_prefix;
-}
-
 if( !defined('ROSTER_SIGCONFIGTABLE') )
 {
-	define('ROSTER_SIGCONFIGTABLE',$db_prefix.'addon_siggen');
+	define('ROSTER_SIGCONFIGTABLE',$roster->db->table('config',$addon['basename']));
 }
 
 
@@ -85,18 +73,8 @@ if( !defined('ROSTER_SIGCONFIGTABLE') )
 
 // ----[ Database version DO NOT CHANGE!! ]-----------------
 $sc_db_ver = '1.5';
-$sc_file_ver = '0.2.7';
 
 
 
 
 define('SIGCONFIG_CONF',true);
-
-
-if( !function_exists('getlink') )
-{
-	function getlink( $url='' , $null1=true , $null2=false )
-	{
-		return $url;
-	}
-}

@@ -1,4 +1,4 @@
- * $Id:$
+ * $Id$
 
 You are free:
   -to Share -- to copy, distribute, display, and perform the work
