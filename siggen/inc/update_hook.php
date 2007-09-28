@@ -1,7 +1,7 @@
 <?php
 /**
  * Project: SigGen - Signature and Avatar Generator for WoWRoster
- * File: /trigger.php
+ * File: /update_hook.php
  *
  * Licensed under the Creative Commons
  * "Attribution-NonCommercial-ShareAlike 2.5" license
@@ -32,100 +32,124 @@
  *
  */
 
-if ( !defined('ROSTER_INSTALLED') )
+if ( !defined('IN_ROSTER') )
 {
     exit('Detected invalid access to this file!');
 }
 
+
 /**
- * Start the following scripts when "update.php" is called
- *
- * Available variables
- *   - $wowdb       = roster's db layer
- *   - $member_id   = character id from the database ( ex. 24 )
- *   - $member_name = character's name ( ex. 'Jonny Grey' )
- *   - $roster_conf = The entire roster config array
- *   - $mode        = when you want to run the trigger
- *      = 'char'  - during a character update
- *      = 'guild' - during a guild update
- *
- * You may need to do some fancy coding if you need more variables
- *
- * You can just print any needed output
+ * Addon Update class
+ * This MUST be the same name as the addon basename
  */
-//----------[ INSERT UPDATE TRIGGER BELOW ]-----------------------
-
-
-// The following is an example "trigger.php" file from zanix's SigGen
-
-//------[ Get DB settings ]-----------------------
-
-$siggen_sql_str = "SHOW TABLES LIKE '".ROSTER_SIGCONFIGTABLE."';";
-$siggen_result = $wowdb->query($siggen_sql_str);
-$siggen_set = $wowdb->fetch_assoc($siggen_result);
-
-// Use Roster's detection of UniUploader
-if( !isset($htmlout) );
-	global $htmlout;
-
-
-if( !empty($siggen_set) )
+class siggenUpdate
 {
-	// Read SigGen Config data from Database
-	$config_str = "SELECT `config_id`,`trigger`,`guild_trigger`,`uniup_compat`,`main_image_size_w`,`main_image_size_h` FROM `".ROSTER_SIGCONFIGTABLE."`;";
-	$config_sql = $wowdb->query($config_str);
-	if( $config_sql )
+	var $messages = '';	    // Update messages
+	var $data = array();	// Addon config data automatically pulled from the addon_config table
+	var $gendata = array(); // SigGen specific data since the port doesn't use Roster's Config API
+	var $files = array();
+
+
+	/**
+	 * Class instantiation
+	 * The name of this function MUST be the same name as the class name
+	 *
+	 * @param array $data	| Addon data
+	 * @return recipe
+	 */
+	function siggenUpdate($data)
 	{
-		while( $siggen_row = $wowdb->fetch_assoc($config_sql) )
+		global $roster;
+
+		$this->data = $data;
+
+		// Read SigGen Config data from Database
+		$config_str = "SELECT `config_id`,`trigger`,`guild_trigger`,`uniup_compat`,`main_image_size_w`,`main_image_size_h` FROM `".$roster->db->table('config',$this->data['basename'])."`;";
+
+		$config_sql = $roster->db->query($config_str);
+		if( $config_sql )
 		{
-			$SigGenConfig[$siggen_row['config_id']]['id'] = $siggen_row['config_id'];
-			$SigGenConfig[$siggen_row['config_id']]['trigger'] = $siggen_row['trigger'];
-			$SigGenConfig[$siggen_row['config_id']]['guild_trigger'] = $siggen_row['guild_trigger'];
-			$SigGenConfig[$siggen_row['config_id']]['uniup'] = $siggen_row['uniup_compat'];
-			$SigGenConfig[$siggen_row['config_id']]['w'] = ($siggen_row['main_image_size_w']*0.2);
-			$SigGenConfig[$siggen_row['config_id']]['h'] = ($siggen_row['main_image_size_h']*0.2);
+			while( $row = $roster->db->fetch($config_sql, SQL_ASSOC) )
+			{
+				$this->gendata[$row['config_id']]['trigger'] = $row['trigger'];
+				$this->gendata[$row['config_id']]['guild_trigger'] = $row['guild_trigger'];
+				$this->gendata[$row['config_id']]['uniup'] = $row['uniup_compat'];
+				$this->gendata[$row['config_id']]['w'] = ($row['main_image_size_w']*0.2);
+				$this->gendata[$row['config_id']]['h'] = ($row['main_image_size_h']*0.2);
+			}
+			$roster->db->free_result();
 		}
-		$wowdb->free_result($config_sql);
 	}
-	unset($siggen_row,$config_str,$config_sql,$siggen_sql_str,$siggen_result);
-}
 
-if( !isset($SigGenConfig) || !is_array($SigGenConfig) ) { return; }
-
-foreach( $SigGenConfig as $single_config )
-{
-	if( ($mode == 'char' && $single_config['trigger']) || ($mode == 'guild' && $single_config['guild_trigger']) )
+	/**
+	 * Resets addon messages
+	 */
+	function reset_messages()
 	{
-		if( $htmlout == 1 )
+		$this->messages = '';
+	}
+
+
+	function guild( $data , $memberid )
+	{
+		global $roster;
+
+		foreach( $this->gendata as $config => $sigdata )
 		{
-			if( defined('BASEDIR') )
-				print 'Saving '.ucfirst($single_config['id']).'-[ <img src="'.getlink('&amp;file=addon&amp;roster_addon_name=siggen&amp;mode='.$single_config['id'].'&amp;etag=0&amp;member='.urlencode(utf8_decode($member_name)),false,true).'" width="'.$single_config['w'].'" height="'.$single_config['h'].'" alt="" /> ]<br />'."\n";
-			else
-				print 'Saving '.ucfirst($single_config['id']).'-[ <img src="'.$roster_conf['roster_dir'].'/addons/siggen/siggen.php?mode='.$single_config['id'].'&amp;etag=0&amp;member='.urlencode(utf8_decode($member_name)).'" width="'.$single_config['w'].'" height="'.$single_config['h'].'" alt="" /> ]<br />'."\n";
+			if( $sigdata['guild_trigger'] )
+			{
+				$this->generate($memberid, $config, $sigdata);
+			}
 		}
-		elseif( $single_config['uniup'] && $htmlout == 0 )
+
+		return true;
+	}
+
+	function char( $data , $memberid )
+	{
+		global $roster;
+
+		foreach( $this->gendata as $config => $sigdata )
+		{
+			if( $sigdata['trigger'] )
+			{
+				$this->generate($memberid, $config, $sigdata);
+			}
+		}
+
+		return true;
+	}
+
+	function generate( $member_id , $config , $data )
+	{
+		global $update;
+
+		if( $update->textmode == false )
+		{
+			$this->messages .= 'Saving '.$config.'-[ <img src="'.makelink('util-siggen-siggen&amp;mode='.$config.'&amp;etag=0&amp;member='.$member_id,false,true).'" width="'.$data['w'].'" height="'.$data['h'].'" alt="" /> ]<br />'."\n";
+		}
+		elseif( $data['uniup'] && $update->textmode == true )
 		{
 			if( ini_get('allow_url_fopen') )
 			{
-				if( defined('BASEDIR') )
-					$temp = @readfile(getlink('&amp;file=addon&amp;roster_addon_name=siggen&amp;mode='.$single_config['id'].'&etag=0&saveonly=1&member='.urlencode(utf8_decode($member_name))),false,true);
-				else
-					$temp = @readfile(ROSTER_URL.'/addons/siggen/siggen.php?mode='.$single_config['id'].'&etag=0&saveonly=1&member='.urlencode(utf8_decode($member_name)));
+				$temp = @readfile(makelink('util-siggen-siggen&amp;mode='.$config.'&etag=0&saveonly=1&member='.$member_id),false,true);
 
 				if( $temp != false )
-					print '- Saving '.ucfirst($single_config['id'])."\n";
+				{
+					$this->messages .= '- Saving '.$config."\n";
+				}
 				else
-					print '- Could not save '.ucfirst($single_config['id']).": function readfile() failed\n";
+				{
+					$this->messages .= '- Could not save '.$config.": function readfile() failed\n";
+				}
 
 				unset($temp);
 			}
 			else
 			{
-				print 'Cannot save '.ucfirst($single_config['id']).", &quot;allow_url_fopen&quot; is disabled on your server\n".
-					"Disable &quot;UniUploader Fix&quot; in SigGen Config\n";
+				$this->messages .= 'Cannot save '.$config.", &quot;allow_url_fopen&quot; is disabled on your server\n".
+					"Disable &quot;UniUploader Fix&quot; in RosterCP->SigGen\n";
 			}
 		}
 	}
 }
-
-unset($SigGenConfig,$single_config);

@@ -25,14 +25,14 @@
  * @link http://www.wowroster.net
  * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
  * @author Joshua Clark
- * @version $Id:$
+ * @version $Id$
  * @copyright 2005-2007 Joshua Clark
  * @package SigGen
  * @filesource
  *
  */
 
-if ( !defined('ROSTER_INSTALLED') )
+if ( !defined('IN_ROSTER') )
 {
     exit('Detected invalid access to this file!');
 }
@@ -44,6 +44,5 @@ if ( !defined('ROSTER_INSTALLED') )
 	initializetabcontent("siggen_menu")
 //-->
 </script>
-<script type="text/javascript" src="<?php echo $roster_conf['roster_dir'] ?>/addons/siggen/inc/color/color_functions.js"></script>
-<script type="text/javascript" src="<?php echo $roster_conf['roster_dir'] ?>/addons/siggen/inc/color/js_color_picker_v2.js"></script>
+<script type="text/javascript" src="<?php echo ROSTER_PATH; ?>js/color_functions.js"></script>
 <!-- End Java Link -->

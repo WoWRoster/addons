@@ -32,24 +32,21 @@
  *
  */
 
-if ( !defined('ROSTER_INSTALLED') )
+if ( !defined('IN_ROSTER') )
 {
     exit('Detected invalid access to this file!');
 }
 ?>
 
 <!-- Begin Config Select Box -->
-  <form action="<?php print getlink($script_filename); ?>" method="post" enctype="multipart/form-data" name="config_select" onsubmit="submitonce(this)">
+  <form action="<?php print makelink(); ?>" method="post" enctype="multipart/form-data" name="config_select" onsubmit="submitonce(this)">
 <?php print border('sgreen','start','Select Config Mode'); ?>
     <table width="145" class="sc_table" cellspacing="0" cellpadding="2">
       <tr>
-        <td class="sc_row_right2" colspan="2">Current Mode: <span class="sc_titletext"><?php print ucwords($config_name); ?></span></td>
+        <td class="sc_row_right2" colspan="2">Current Mode: <span class="titletext"><?php print $config_name; ?></span></td>
       </tr>
       <tr>
-        <td class="sc_row1"><select class="sc_select" name="config_name">
-            <option value="signature"<?php print ( $config_name == 'signature' ? ' selected="selected"' : '' ); ?>>Signature</option>
-            <option value="avatar"<?php print ( $config_name == 'avatar' ? ' selected="selected"' : '' ); ?>>Avatar</option>
-          </select></td>
+        <td class="sc_row1"><?php print $functions->createOptionList($config_list,$config_name,'config_name',3,'',false); ?></td>
         <td class="sc_row_right1" align="right"><input type="submit" value="Go" /></td>
       </tr>
     </table>

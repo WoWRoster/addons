@@ -32,7 +32,7 @@
  *
  */
 
-if ( !defined('ROSTER_INSTALLED') )
+if ( !defined('IN_ROSTER') )
 {
     exit('Detected invalid access to this file!');
 }
@@ -51,16 +51,16 @@ class SigConfigClass
 	 * Check directory status
 	 *
 	 * @param string $dir | directory to check
-	 * @param bool $check | check writable
+	 * @param bool $writeable | check writable
 	 * @param bool $chmod | chmod directory
 	 * @return bool | ( TRUE{dir exists} | FALSE{dir does not exist} )
 	 */
-	function checkDir( $dir , $check=0 , $chmod=0 )
+	function checkDir( $dir , $writeable=0 , $chmod=0 )
 	{
 		// See if it exists
 		if( file_exists($dir) )
 		{
-			if( $check )
+			if( $writeable )
 			{
 				if( !is_writable($dir) )
 				{
@@ -129,7 +129,7 @@ class SigConfigClass
 	 */
 	function getMessage()
 	{
-		global $roster_conf, $siggen_locale;
+		global $roster;
 
 		$message = $this->message;
 
@@ -153,49 +153,7 @@ class SigConfigClass
 
 $output .= "\n</table>";
 
-			return messagebox($output,$siggen_locale[$roster_conf['roster_lang']]['sql_messages'],'syellow');
-		}
-		else
-		{
-			return '';
-		}
-	}
-
-
-	/**
-	 * Set SQL Messages
-	 *
-	 * @param string | add string to the sql messages
-	 */
-	function setSqlDebug( $message )
-	{
-		$this->sql_debug .= "$message\n";
-	}
-
-
-	/**
-	 * Get the SQL Messages
-	 *
-	 * @return string | Full HTML table with SQL statements
-	 */
-	function getSqlDebug()
-	{
-		global $roster_conf, $siggen_locale;
-
-		$message = $this->sql_debug;
-
-		if( !empty($message) )
-		{
-			// Colorize SQL string
-			$message = sql_highlight($message);
-
-
-			// Replace '<!-- ' with color tag
-			$message = nl2br($message);
-
-			$message = scrollboxtoggle($message,$siggen_locale[$roster_conf['roster_lang']]['sql_queries'],'sgray',false,'450px','200px');
-
-			return $message;
+			return messagebox($output,$roster->locale->act['sql_messages'],'syellow');
 		}
 		else
 		{
@@ -218,14 +176,68 @@ $output .= "\n</table>";
 	 * @param string $param    additional crap for <select> field
 	 * @return string          an html option list
 	 */
-	function createOptionList( $values , $selected , $id , $type='' , $param='' )
+	function createMemberList( $values , $selected , $id , $type='' , $param='' )
 	{
 		if( !empty($selected) )
 		{
 			$select_one = true;
 		}
 
-		$option_list = "\n  <select class=\"sc_select\" name=\"{$id}\" $param>\n    <option value=\"\">--None--</option>\n";
+		$option_list = "\n\t<select name=\"{$id}\" $param>\n\t\t<option value=\"\">--None--</option>\n";
+
+		foreach( $values as $value )
+		{
+			$array[$value['server']][$value['member_id']] = $value['name'];
+		}
+
+		foreach( $array as $server => $data )
+		{
+			$option_list .= "\t\t<optgroup label=\"{$server}\">\n";
+
+			foreach( $data as $member_id => $name )
+			{
+				$value = "$name@$server";
+				if( $selected == $value && $select_one )
+				{
+					$option_list .= "\t\t\t<option value=\"{$value}\" selected=\"selected\">{$name}</option>\n";
+					$select_one = false;
+				}
+				else
+				{
+					$option_list .= "\t\t\t<option value=\"{$value}\">{$name}</option>\n";
+				}
+			}
+			$option_list .= "\t\t</optgroup>\n";
+		}
+		$option_list .= "\t</select>";
+
+		return $option_list;
+	}
+
+
+	/**
+	 * Create an HTML option list
+	 *
+	 * @param array $values    array ($name => $value)
+	 * @param string $selected what will be selected
+	 * @param string $id       what to match selected with
+	 * @param string $type     how to arrange the value/label
+	 *                         0- name value (LIST)
+	 *                         1- value name (LISTREV)
+	 *                         2- name name (NAME)
+	 *                         3- value value (VALUE)
+	 * @param string $param    additional crap for <select> field
+	 * @return string          an html option list
+	 */
+	function createOptionList( $values , $selected , $id , $type='' , $param='' , $none=true )
+	{
+		if( !empty($selected) )
+		{
+			$select_one = true;
+		}
+
+		$option_list = "\n\t<select name=\"{$id}\" $param>\n";
+		$option_list .= ($none ? "\t\t<option value=\"\">--None--</option>\n" : '');
 
 		foreach( $values as $Aname => $Avalue )
 		{
@@ -263,15 +275,15 @@ $output .= "\n</table>";
 
 			if( $selected == $value && $select_one )
 			{
-				$option_list .= "    <option value=\"{$value}\" selected=\"selected\">{$name}</option>\n";
+				$option_list .= "\t\t<option value=\"{$value}\" selected=\"selected\">{$name}</option>\n";
 				$select_one = false;
 			}
 			else
 			{
-				$option_list .= "    <option value=\"{$value}\">{$name}</option>\n";
+				$option_list .= "\t\t<option value=\"{$value}\">{$name}</option>\n";
 			}
 		}
-		$option_list .= "  </select>";
+		$option_list .= "\t</select>";
 
 		return $option_list;
 	}
@@ -366,15 +378,13 @@ $output .= "\n</table>";
 	 */
 	function checkDb( $table )
 	{
-		global $wowdb;
+		global $roster;
 
 		$sql_str = "SHOW TABLES LIKE '$table';";
 
-		$this->setSqlDebug("checkDb: $sql_str");
+		$result = $roster->db->query($sql_str);
 
-		$result = $wowdb->query($sql_str);
-
-		$r = $wowdb->fetch_assoc($result);
+		$r = $roster->db->fetch($result, SQL_ASSOC);
 
 		if( empty($r) )
 		{
@@ -393,31 +403,52 @@ $output .= "\n</table>";
 	 * @param string $table | table to get data from
 	 * @param string $field | field to get data from ( default *{all} )
 	 * @param string $where | where statement ( default ''{blank} )
+	 * @param string $order | order by statement ( default ''{blank} )
 	 * @return array ( $name => $value )
 	 */
-	function getDbData( $table , $field , $where )
+	function getDbData( $table , $field , $where='', $order='' )
 	{
-		global $wowdb;
+		global $roster;
 
 		if( !empty($table) )
 		{
 			if( !empty($where) )
-				$where = 'WHERE '.$where;
+			{
+				$where = ' WHERE '.$where;
+			}
+
+			if( !empty($order) )
+			{
+				$order = ' ORDER BY '.$order;
+			}
 
 			if( empty($field) )
+			{
 				$field = '*';
+			}
 
 			// SQL String
-			$sql_str = "SELECT $field FROM `$table` $where;";
+			$sql_str = "SELECT $field FROM `$table`$where$order;";
 
-			$this->setSqlDebug("getDbData: $sql_str");
-
-			$result = $wowdb->query($sql_str);
+			$result = $roster->db->query($sql_str);
 
 			if ( $result )
 			{
-				$data = $wowdb->fetch_assoc($result);
-				return $data;
+				if( $roster->db->num_rows() > 1 )
+				{
+					$data = array();
+					for( $i=0; $i<$roster->db->num_rows(); $i++)
+					{
+						$row = $roster->db->fetch($result, SQL_ASSOC);
+						$data[] = $row;
+					}
+					return $data;
+				}
+				else
+				{
+					$data = $roster->db->fetch($result, SQL_ASSOC);
+					return $data;
+				}
 			}
 		}
 	}
@@ -429,30 +460,40 @@ $output .= "\n</table>";
 	 * @param string $table | table to get data from
 	 * @param string $field | field to get data from ( default *{all} )
 	 * @param string $where | where statement ( default ''{blank} )
+	 * @param string $order | order by statement ( default ''{blank} )
 	 * @return array ( $name => $value )
 	 */
-	function getDbList( $table , $field , $where )
+	function getDbList( $table , $field , $where='', $order='' )
 	{
-		global $wowdb;
+		global $roster;
 
 		if( !empty($table) )
 		{
 			if( !empty($where) )
-				$where = 'WHERE '.$where;
+			{
+				$where = ' WHERE '.$where;
+			}
+
+			if( !empty($order) )
+			{
+				$order = ' ORDER BY '.$order;
+			}
 
 			if( empty($field) )
+			{
 				$field = '*';
+			}
 			else
+			{
 				$field = "`$field`";
+			}
 
 			// SQL String
-			$sql_str = "SELECT $field FROM `$table` $where;";
+			$sql_str = "SELECT $field FROM `$table`$where$order;";
 
-			$this->setSqlDebug("getDbList: $sql_str");
+			$result = $roster->db->query($sql_str);
 
-			$result = $wowdb->query($sql_str);
-
-			while( $r = $wowdb->fetch_assoc($result) )
+			while( $r = $roster->db->fetch($result, SQL_ASSOC) )
 			{
 				$list[] = $r[trim($field,'`')];
 			}
@@ -469,18 +510,16 @@ $output .= "\n</table>";
 	 */
 	function getDbColumns( $table )
 	{
-		global $wowdb;
+		global $roster;
 
 		if( !empty($table) )
 		{
 			// SQL String
 			$sql_str = "SHOW COLUMNS FROM `$table`";
 
-			$this->setSqlDebug("getDbColumns: $sql_str");
+			$result = $roster->db->query($sql_str);
 
-			$result = $wowdb->query($sql_str);
-
-			while( $row = $wowdb->fetch_array($result) )
+			while( $row = $roster->db->fetch($result,SQL_NUM) )
 			{
 				$col_names[] = $row[0];
 			}
@@ -498,7 +537,7 @@ $output .= "\n</table>";
 	 */
 	function uploadImage( $dir , $filename )
 	{
-		global $roster_conf, $siggen_locale;
+		global $roster;
 
 		$accepted_files = array('png','gif','jpg','jpeg');
 
@@ -511,12 +550,12 @@ $output .= "\n</table>";
 		{
 			if( empty($_FILES['userfile']['name']) )
 			{
-				$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['select_image_upload']);
+				$this->setMessage($roster->locale->act['select_image_upload']);
 				return FALSE;
 			}
 			elseif( empty( $filename ) )
 			{
-				$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['select_name_upload']);
+				$this->setMessage($roster->locale->act['select_name_upload']);
 				return FALSE;
 			}
 			else
@@ -525,7 +564,7 @@ $output .= "\n</table>";
 
 				if( !in_array( $uploaded_fileext,$accepted_files ) )
 				{
-					$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['image_mustbe_right']);
+					$this->setMessage($roster->locale->act['image_mustbe_right']);
 					return FALSE;
 				}
 
@@ -533,19 +572,19 @@ $output .= "\n</table>";
 				{
 					if( md5_file($dir.$userfile_name) == md5_file($_FILES['userfile']['tmp_name']) )
 					{
-						$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['image_a_copy']);
+						$this->setMessage($roster->locale->act['image_a_copy']);
 						return FALSE;
 					}
 				}
 
 				if( !move_uploaded_file( $_FILES['userfile']['tmp_name'],$dir.$userfile_name ) || !chmod( $dir.$userfile_name,0777 ) )
 				{
-					$this->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['image_upload_failed'],$userfile_name,str_replace( '\\','/',$dir )));
+					$this->setMessage(sprintf($roster->locale->act['image_upload_failed'],$userfile_name,str_replace( '\\','/',$dir )));
 					return FALSE;
 				}
 				else
 				{
-					$this->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['image_upload_success'],$userfile_name,str_replace( '\\','/',$dir )));
+					$this->setMessage(sprintf($roster->locale->act['image_upload_success'],$userfile_name,str_replace( '\\','/',$dir )));
 					return TRUE;
 				}
 			}
@@ -566,11 +605,11 @@ $output .= "\n</table>";
 	 */
 	function deleteImage( $dir , $filename )
 	{
-		global $roster_conf, $siggen_locale;
+		global $roster;
 
 		if( empty($filename) )
 		{
-			$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['select_image_delete']);
+			$this->setMessage($roster->locale->act['select_image_delete']);
 			return FALSE;
 		}
 		else
@@ -579,12 +618,12 @@ $output .= "\n</table>";
 			{
 				if( unlink($dir.$filename) )
 				{
-					$this->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['image_deleted'],str_replace( '\\','/',$dir ).$filename));
+					$this->setMessage(sprintf($roster->locale->act['image_deleted'],str_replace( '\\','/',$dir ).$filename));
 					return TRUE;
 				}
 				else
 				{
-					$this->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['image_delete_failed'],str_replace( '\\','/',$dir ).$filename));
+					$this->setMessage(sprintf($roster->locale->act['image_delete_failed'],str_replace( '\\','/',$dir ).$filename));
 					return FALSE;
 				}
 			}
@@ -600,11 +639,9 @@ $output .= "\n</table>";
 	 */
 	function processData( $post , $config_name, $data )
 	{
-		global $wowdb, $roster_conf, $siggen_locale;
+		global $roster;
 
 		$configData = $data;
-
-		$wowdb->reset_values();
 
 		// Array for color fixing
 		$color_fix = array(
@@ -633,10 +670,13 @@ $output .= "\n</table>";
 			'text_servername_shadow',
 			'text_sitename_font_color',
 			'text_sitename_shadow',
+			'text_talpoints_font_color',
+			'text_talpoints_shadow',
 			'text_custom_font_color',
 			'text_custom_shadow',
 		);
 		// Update only the changed fields
+		$sqlarray = array();
 		foreach( $post as $settingName => $settingValue )
 		{
 			// Fix colors
@@ -662,25 +702,29 @@ $output .= "\n</table>";
 				// Check for directories defined with no '/' at the end
 				// and with a '/' at the beginning
 				if( substr($settingValue, -1, 1) != '/' )
+				{
 					$settingValue .= '/';
+				}
 				if( substr($settingValue, 0, 1) == '/' && $settingName != 'save_images_dir' )
+				{
 					$settingValue = substr($settingValue, 1);
+				}
 			}
 
-			if( $settingValue != $configData[$settingName] && $settingName != 'sc_op' )
-				$wowdb->add_value($settingName, $settingValue );
+			if( $settingName != 'sc_op' && $settingValue != $configData[$settingName] )
+			{
+				$sqlarray += array($settingName => $settingValue);
+			}
 		}
 
 		// Update DataBase
-		if( !empty($wowdb->assignstr) )
+		if( count($sqlarray) > 0 )
 		{
-			$update_sql = 'UPDATE `'.ROSTER_SIGCONFIGTABLE."` SET ".$wowdb->assignstr." WHERE `config_id` = '".$config_name."'";
-			$this->setSqlDebug("processData: $update_sql");
+			$update_sql = 'UPDATE `'.ROSTER_SIGCONFIGTABLE."` SET ".$roster->db->build_query('UPDATE',$sqlarray)." WHERE `config_id` = '".$config_name."'";
 
-			$wowdb->query($update_sql)
-				or errorMode( 'processData: '.$wowdb->error() );
+			$roster->db->query($update_sql) or errorMode( 'processData: '.$roster->db->error() );
 
-			$this->setMessage( $siggen_locale[$roster_conf['roster_lang']]['settings_changed'] );
+			$this->setMessage( $roster->locale->act['settings_changed'] );
 		}
 	}
 
@@ -693,7 +737,7 @@ $output .= "\n</table>";
 	 */
 	function resetDefaults( $confirm , $config_id )
 	{
-		global $wowdb, $roster_conf, $siggen_locale;
+		global $roster;
 
 		$sql_file = SIGGEN_DIR.'inc/sql.inc';
 
@@ -705,21 +749,18 @@ $output .= "\n</table>";
 
 				$sql = $create_sql['reset'][$config_id];
 
-				$this->setSqlDebug("resetDefaults: $sql");
+				$roster->db->query($sql) or errorMode( 'resetDefaults: '.$roster->db->error() );
 
-				$wowdb->query($sql)
-					or errorMode( 'resetDefaults: '.$wowdb->error() );
-
-				$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['settings_reset']);
+				$this->setMessage($roster->locale->act['settings_reset']);
 			}
 			else
 			{
-				$this->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['cannot_find_file'],$reset_file));
+				$this->setMessage(sprintf($roster->locale->act['cannot_find_file'],$sql_file));
 			}
 		}
 		else
 		{
-			$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['reset_checkbox']);
+			$this->setMessage($roster->locale->act['reset_checkbox']);
 		}
 	}
 
@@ -733,7 +774,7 @@ $output .= "\n</table>";
 	 */
 	function importSettings( $checkData , $config_id )
 	{
-		global $roster_conf, $siggen_locale, $sc_db_ver;
+		global $roster, $sc_db_ver;
 
 		$accepted_file = "siggen_$config_id.txt";
 
@@ -746,14 +787,14 @@ $output .= "\n</table>";
 		{
 			if( empty($_FILES['userfile']['name']) )
 			{
-				$this->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['select_import_file'],$accepted_file));
+				$this->setMessage(sprintf($roster->locale->act['select_import_file'],$accepted_file));
 				return FALSE;
 			}
 			else
 			{
-				if( $uploaded_fileext != $accepted_files )
+				if( $accepted_file != $uploaded_filename )
 				{
-					$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['import_mustbe_right']);
+					$this->setMessage($roster->locale->act['import_mustbe_right']);
 					return false;
 				}
 
@@ -770,9 +811,9 @@ $output .= "\n</table>";
 
 						if( $firstline )
 						{
-							if( $sc_db_ver != $value )
+							if( version_compare($sc_db_ver, $value, '<') )
 							{
-								$this->setMessage(sprintf($siggen_locale[$roster_conf['roster_lang']]['import_upload_failed_ver'],$value,$sc_db_ver));
+								$this->setMessage(sprintf($roster->locale->act['import_upload_failed_ver'],$value,$sc_db_ver));
 								return false;
 							}
 							$firstline = false;
@@ -784,13 +825,13 @@ $output .= "\n</table>";
 					}
 					$this->processData($settingsArray,$config_id,$checkData);
 
-					$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['import_upload_success']);
+					$this->setMessage($roster->locale->act['import_upload_success']);
 
 					return true;
 				}
 				else
 				{
-					$this->setMessage($siggen_locale[$roster_conf['roster_lang']]['import_upload_failed']);
+					$this->setMessage($roster->locale->act['import_upload_failed']);
 					return false;
 				}
 			}
@@ -830,76 +871,6 @@ $output .= "\n</table>";
 	}
 
 
-
-	/**
-	 * Creates or Upgrades the sig_config table
-	 *
-	 * @param string $mode | install/upgrade
-	 * @return string
-	 */
-	function installDb( $mode )
-	{
-		global $wowdb, $sc_db_ver, $roster_conf, $siggen_locale, $script_filename;
-
-		$sql_file = SIGGEN_DIR.'inc/sql.inc';
-
-		if( file_exists($sql_file) )
-		{
-			$sql = array();
-			switch( $mode )
-			{
-				case 'upgrade':
-					include_once( $sql_file );
-
-					$reset = $_GET['reset'];
-					$ver = $_GET['ver'];
-
-					if( is_array($create_sql['upgrade_'.$ver]) )
-					{
-						foreach( $create_sql['upgrade_'.$ver] as $upg_sql )
-							$sql[] = $upg_sql;
-					}
-					else
-					{
-						$sql[] = $create_sql['upgrade_'.$ver];
-					}
-
-					if( $reset == '1' )
-					{
-						$sql[] = $create_sql['reset']['avatar'];
-						$sql[] = $create_sql['reset']['signature'];
-					}
-
-					break;
-
-				case 'install':
-					include_once( $sql_file );
-
-					foreach( $create_sql['install'] as $inst_sql )
-						$sql[] = $inst_sql;
-
-					$sql[] = $create_sql['insert']['avatar'];
-					$sql[] = $create_sql['insert']['signature'];
-
-					break;
-			}
-
-			foreach( $sql as $sql_load )
-			{
-				$this->setSqlDebug("installDb[$mode]: $sql_load");
-
-				$wowdb->query($sql_load)
-					or errorMode( 'installDb: '.$wowdb->error() );
-			}
-			return sprintf($siggen_locale[$roster_conf['roster_lang']]['install_success'],ucwords($mode),getlink($script_filename));
-		}
-		else
-		{
-			return sprintf($siggen_locale[$roster_conf['roster_lang']]['cannot_find_file'],$sql_file);
-		}
-	}
-
-
 	/**
 	 * Create a tooltip
 	 *
@@ -912,40 +883,11 @@ $output .= "\n</table>";
 		$tipsettings = ",WRAP";
 
 		if( !empty($caption) )
-			$caption2 = ",CAPTION,'$caption'";
-
-		$tip = "<div style=\"cursor:help;\" onmouseover=\"overlib('$content'$caption2$tipsettings);\" onmouseout=\"return nd();\">$caption</div>";
-
-		return $tip;
-	}
-
-
-	/**
-	 * Create a tooltip for colors
-	 *
-	 * @param string $selected | currently selected color
-	 * @param array $configData | Data from the database
-	 * @return string ( Overlib styled tooltip )
-	 */
-	function createColorTip( $selected,$configData )
-	{
-
-		$tipsettings = ",RIGHT,WRAP";
-
-
-		for($n=1;$n<=10;$n++)
 		{
-			if( $selected == ('color'.$n) )
-				$current = '<span class=&quot;red&quot;>&nbsp;&nbsp;&lt;&lt;&lt;&lt;&lt;</span>';
-			else
-				$current = '';
-
-			$content .= '<tr><td>[<span style=&quot;font-size:10px; color:#FFFFFF; background-color:'.$configData['color'.$n].';&quot;>&nbsp;'.$n.'&nbsp;</span>]</td><td>'.$configData['color'.$n].'</td><td>'.$current.'</td></tr>';
+			$caption2 = ",CAPTION,'$caption'";
 		}
 
-		$content = "<table class=&quot;sc_table&quot; cellspacing=&quot;0&quot;><tr><td colspan=&quot;2&quot;><strong>Available</strong></td><td><strong>Selected</strong></td></tr>$content";
-
-		$tip = "[<span style=\"cursor:help; font-size:10px; color:#FFFFFF; background-color:".$configData[$selected].";\" onMouseover=\"return overlib('$content',CAPTION,'Color Menu'$tipsettings);\" onMouseout=\"return nd();\">colors</span>]";
+		$tip = "<span style=\"cursor:help;\" onmouseover=\"overlib('$content'$caption2$tipsettings);\" onmouseout=\"return nd();\">$caption</span>";
 
 		return $tip;
 	}
@@ -958,12 +900,12 @@ $output .= "\n</table>";
 	 */
 	function imagePreview($dir)
 	{
-		global $roster_config;
+		global $roster, $addon;
 
 		$return = '<table cellpadding="0" cellspacing="0" style="font-size:10px;">';
 
 		$dirname = '.';
-		$pattern = "(\.png$)"; // valid image extensions
+		$pattern = "(\\.png$)"; // valid image extensions
 		$columns = 2;
 		$drawIndex = 0;
 
@@ -978,7 +920,7 @@ $output .= "\n</table>";
 						$return .= '<tr>';
 					}
 
-					$return .= '<td align="center"><img src="'.$roster_config['roster_dir'].'siggen/img/'.'/'.$file.'" style="border:0;"><br />'.$file.'</td>';
+					$return .= '<td align="center"><img src="'.$addon['url_path'].'img/'.$file.'" style="border:0;"><br />'.$file.'</td>';
 					$drawIndex++;
 
 					if($drawIndex == $columns)

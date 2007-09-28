@@ -32,6 +32,11 @@
  *
  */
 
+if ( !defined('IN_ROSTER') )
+{
+    exit('Detected invalid access to this file!');
+}
+
 $config_name = 'avatar'; // Avatar config name
 
 // Require sig.php (must be in the same directory)

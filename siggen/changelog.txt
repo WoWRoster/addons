@@ -3,6 +3,32 @@
 SigGen Change Log
 
 
+0.3.0 - 09.27.07
+Ported to Roster 2.0
+Supports multi guild and public abilities in Roster
+Accessing an image uses member= with either a member id, name, name@realm, or name@RC-realm
+	name= access is now gone for good. Don't bother me about it, Roster uses member= now as well
+Images for auto save are now saved as Charname@RC-Realm.ext (ext is the chosen image extention)
+Had to re-format the layout due to the layout in RosterCP
+Access to siggen image generator now uses the roster addon framework
+	I may put back in direct access to siggen.php but for now you must use the framework
+	roster/index.php?p=char-siggen&member=##
+	(SEO) roster/char/siggen/member=##.ext
+	This also means the path access sig.php/Name.png does not currently work, use mod_rewrite to bypass forum image restrictions
+
+Settings Import will now show the correct error message instead of %1$s
+Settings Import will no longer reject older db exports, but it will reject newer ones
+Updated some tooltips that havn't been updated in some time
+Removed the sql query window
+Config Select will now show all available configs in the siggen table
+	In other words for those that figured out that multiple display designs can be made this way, all the configs will show in the config select box
+Save directory replacement changes
+	%s% is now %s
+	%r% is now %r
+	Seems that encasing something in % makes it a wild card in SQL
+Cleaned up functions class of all unused code
+
+
 0.2.6 - 06.17.07
  * SigGen
    o Fixed: SQL is now correct again
