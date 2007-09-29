@@ -30,13 +30,14 @@ class ArmorySyncJob {
     
     var $done;
     var $total;
-    
+        
     var $message;
     
     var $ArmorySync;
     var $id = 0;
     var $isMemberList = 0;
     var $isAuth = 0;
+    var $link;
     
     var $functions = array(
                         array(
@@ -179,9 +180,10 @@ class ArmorySyncJob {
                             if ( $this->_insert_uploadRule( $name, $server, $region ) ) {
                                 if ( $this->_prepare_updateMemberlist( $id, $name, $server, $region ) ) {
                                     $ret = $this->_update_statusMemberlist();
+                                    $link = makelink('guild-armorysync-memberlist&guild='. $id);
                                     $this->_show_statusMemberlist();
                                     if ( $ret ) {
-                                        $this->_link_guildMemberlist( $id );
+                                        $this->_link();//_guildMemberlist( $id )
                                     }
                                 } else {
                                     $this->_nothing_to_do();
@@ -350,10 +352,12 @@ class ArmorySyncJob {
         
         $jscript = "
 <script type=\"text/javascript\">
-function toggleStatus() {
-    showHide('update_details','update_details_img','img/minus.gif','img/plus.gif');
-    document.linker.StatusHidden.value=(document.linker.StatusHidden.value='ON'?'OFF':'ON');
-}
+<!--
+    function toggleStatus() {
+        showHide('update_details','update_details_img','img/minus.gif','img/plus.gif');
+        document.linker.StatusHidden.value=(document.linker.StatusHidden.value=='OFF'?'ON':'OFF');
+    }
+//-->
 </script>
 ";
         $roster->output['html_head'] = $jscript;
@@ -365,7 +369,7 @@ function toggleStatus() {
         $style = 'syellow';
         
         $roster->tpl->assign_vars(array(
-                'LINK' => makelink(),
+                'LINK' => ( $this->link ? $this->link : makelink() ),
                 'STATUSHIDDEN' => $status,
                 'JOB_ID' => $this->jobid,
                 'DISPLAY' => $display,
