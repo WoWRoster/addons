@@ -85,7 +85,7 @@ class smfsyncUpdate
 				$row = $roster->db->fetch ( $result );
 
 				if ($roster->db->affected_rows() == 0){ //Player is not in forum
-					$this->messages .= "<span class=\"red\">{$roster->locale->act['PlayerNotInForum']} {$roster->locale->act['MemberGroupNotUpdated']}</span><br />\n";
+					$this->messages .= "<li><span class=\"red\">{$roster->locale->act['PlayerNotInForum']} {$roster->locale->act['MemberGroupNotUpdated']}</span><br />\n";
 
 				}else{ //Player is in forum, check forum group to guild title.
 					//Dont forget to check if forum group is 1(admin) and set it to additional groups when changing
@@ -104,7 +104,7 @@ class smfsyncUpdate
 						$row3 = $roster->db->fetch ( $result3 );
 
 						if ($roster->db->affected_rows() == 0){//The players rank does not exist as a group.
-							$this->messages .= "<span class=\"red\">{$roster->locale->act['NoSuchGroup']}</span><br />\n";
+							$this->messages .= "<li><span class=\"red\">{$roster->locale->act['NoSuchGroup']}</span><br />\n";
 						}else{
 							$query4 = "UPDATE `{$this->data['config']['forum_prefix']}members` SET `ID_GROUP` = '{$row3['ID_GROUP']}' WHERE `memberName` = '{$row2['name']}' LIMIT 1";
 							$result4 = $roster->db->query ( $query4 );
@@ -113,11 +113,11 @@ class smfsyncUpdate
 								$query5 = "UPDATE `{$this->data['config']['forum_prefix']}members` SET `additionalGroups` = '1' WHERE `memberName` = '{$row2['name']}' LIMIT 1";
 								$result5 = $roster->db->query ( $query5 );
 							}
-							$this->messages .= "<span class=\"yellow\">{$roster->locale->act['MemberGroupUpdated']} {$row2['guild_title']}</span><br />\n";
+							$this->messages .= "<li><span class=\"yellow\">{$roster->locale->act['MemberGroupUpdated']} {$row2['guild_title']}</span><br />\n";
 						}
 
 					}else{
-						$this->messages .= "<span class=\"green\">{$roster->locale->act['MemberGroupCurrent']}</span><br />\n";
+						$this->messages .= "<li><span class=\"green\">{$roster->locale->act['MemberGroupCurrent']}</span><br />\n";
 					}
 				}
 			}
@@ -181,8 +181,6 @@ class smfsyncUpdate
 
 			//Change SMF's personal text to the players guild note.
 			if ($this->data['config']['guild_enable_personaltext'] == true){
-				//smf_members - personalText
-
 				if (isset($data['Note']) == true){
 					$query = "UPDATE `{$this->data['config']['forum_prefix']}members` SET `personalText` = '{$roster->db->escape($data['Note'])}' WHERE `memberName` = '{$data['Name']}' LIMIT 1 ;";
 					$result = $roster->db->query ( $query );

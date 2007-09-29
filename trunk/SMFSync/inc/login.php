@@ -132,7 +132,7 @@ class RosterLogin
 		return '
 			<!--Begin Login Box -->
 			<form action="http://localhost/forum/index.php?action=login2" method="post" accept-charset="UTF-8">
-			'.border('sred','start','Login').'
+			'.border('sred','start','Login level '.$level.' required').'
 			 <table class=bodyline" cellspacing="0" cellpadding"0" width="100%">
 			  <tr>
 			   <td class="membersRowRight1">'.$roster->locale->act['username'].':
@@ -153,37 +153,6 @@ class RosterLogin
 			<!--End Login Box -->
 
 		';
-
-	}
-	function getLoginForm2( $level = 3 )
-	{
-		global $roster;
-
-		return '
-			<!--Begin Login Box -->
-			<form action="'.$this->script_filename.'" method="post" enctype="multipart/form-data" onsubmit="submitonce(this)">
-			'.border('sred','start','Login').'
-			 <table class=bodyline" cellspacing="0" cellpadding"0" width="100%">
-			  <tr>
-			   <td class="membersRowRight1">'.$roster->locale->act['username'].':
-			    <input name="username" class="wowinput192" type="text" size="30" maxlength="30" /></td>
-			  </tr>
-			  <tr>
-			   <td class="membersRowRight1">'.$roster->locale->act['password'].':
-			    <input name="password" class="wowinput192" type="password" size="30" maxlength="30" /></td>
-			  </tr>
-			  <tr>
-			   <td class="membersRowRight2" valign="bottom">
-			   <div align="right"><input type="submit" value="Go" /></div></td>
-			  </tr>
-			 </table>
-			'.border('sred','end').'
-			</form>
-			<!--End Login Box -->
-
-		';
-
-
 
 	}
 
