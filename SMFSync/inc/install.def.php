@@ -28,7 +28,7 @@ class smfsync
 	var $active = true;
 	var $icon = 'smf.gif';
 
-	var $version = '1.9.9.233';
+	var $version = '1.9.9.245';
 
 	var $fullname = 'smfsync';
 	var $description = 'smfsync_desc';
@@ -103,9 +103,10 @@ class smfsync
 	function uninstall()
 	{
 		global $installer;
+		global $roster;
 
 		//This is used only until I can get integration with Roster.
-		$installer->add_query ("DELETE FROM `{$roster->db->perfix}config` WHERE `id` = '1080' LIMIT 1");
+		$installer->add_query ("DELETE FROM `{$roster->db->prefix}config` WHERE `id` = '1180' LIMIT 1");
 
 		$installer->remove_all_config();
 		$installer->remove_all_menu_button();
