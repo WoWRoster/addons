@@ -78,7 +78,6 @@ class smfsyncUpdate
 
 			//Manage user groups here.
 			if ($this->data['config']['guild_groups'] == true){
-				//$data = Array ( [Zone] => Thunder Bluff [Class] => Druid [Name] => Druce [LastOnline] => 0:1:23:4 [Level] => 10 [Rank] => 9 )
 				//This "should" be safe here, from looking in roster/lib/update.lib.php
 				//it looks like this function is run AFTER the guild is updated.
 				$query = "SELECT * FROM `{$this->data['config']['forum_prefix']}members` WHERE `memberName` = '{$data['Name']}' ";
@@ -86,7 +85,7 @@ class smfsyncUpdate
 				$row = $roster->db->fetch ( $result );
 
 				if ($roster->db->affected_rows() == 0){ //Player is not in forum
-					$this->messages .= "<span class=\"red\">{$roster->locale->act['PlayerNotInForum']}</span><br />\n";
+					$this->messages .= "<span class=\"red\">{$roster->locale->act['PlayerNotInForum']} {$roster->locale->act['MemberGroupNotUpdated']}</span><br />\n";
 
 				}else{ //Player is in forum, check forum group to guild title.
 					//Dont forget to check if forum group is 1(admin) and set it to additional groups when changing
@@ -122,6 +121,64 @@ class smfsyncUpdate
 					}
 				}
 			}
+
+			//Update Forum signature. Check to make sure it's enabled and that the default setting isn't blank.
+ 			if ( ($this->data['config']['player_enable_signature'] == true ) && ($this->data['config']['player_signature'] != "") ){
+ 				$query = "SELECT `signature` FROM `{$this->data['config']['forum_prefix']}members` WHERE `memberName` = '{$data['Name']}' LIMIT 1";
+ 				$result = $roster->db->query( $query );
+ 				$row = $roster->db->fetch ( $result );
+
+ 				//Make sure player is a member of the forum before trying to write to the database.
+ 				if ($roster->db->affected_rows() == 0){
+ 					$this->messages .= "<li><span class=\"red\">{$roster->locale->act['PlayerNotInForum']} {$roster->locale->act['SigNotUpdated']}</span><br />\n";
+ 				}else{
+	 				$SetSigAs = preg_replace("/%name%/",$data['Name'],$this->data['config']['player_signature']);
+	 				if ($row['signature'] != $SetSigAs){
+	 					//Update Signature
+	 					$query = "UPDATE `{$this->data['config']['forum_prefix']}members` SET `signature` = '$SetSigAs' WHERE `memberName` = '{$data['Name']}' LIMIT 1";
+	 					$result = $roster->db->query ( $query );
+	 					if ($roster->db->affected_rows() == 1){
+	 						$this->messages .= "<li><span class=\"green\">{$roster->locale->act['SigUpdated']}</span><br />\n";
+	 					}else{
+	 						$this->messages .= "<li><span class=\"red\">{$roster->locale->act['SigNotUpdated']}</span><br />\n";
+	 					}
+
+	 				}else{
+	 					//Signature is already set.
+	 					$this->messages .= "<li><span class=\"green\">{$roster->locale->act['SigCurrent']}</span><br />\n";
+	 				}
+ 				}
+ 			}
+
+ 			//Update Forum avatar. Check to make sure it's enabled and that the default setting isn't blank.
+ 			if ( ($this->data['config']['player_enable_avatar'] == true ) && ($this->data['config']['player_avatar'] != "")){
+ 				$query = "SELECT `avatar` FROM `{$this->data['config']['forum_prefix']}members` WHERE `memberName` = '{$data['Name']}' LIMIT 1";
+ 				$result = $roster->db->query( $query );
+ 				$row = $roster->db->fetch ( $result );
+
+ 				//Make sure player is a member of the forum before trying to write to the database.
+ 				if ($roster->db->affected_rows() == 0){
+ 					$this->messages .= "<li><span class=\"red\">{$roster->locale->act['PlayerNotInForum']} {$roster->locale->act['AvNotUpdated']}</span><br />\n";
+ 				}else{
+	 				$SetAvAs = preg_replace("/%name%/",$data['Name'],$this->data['config']['player_avatar']);
+	 				if ($row['avatar'] != $SetAvAs){
+	 					//Update Signature
+	 					$query = "UPDATE `{$this->data['config']['forum_prefix']}members` SET `avatar` = '$SetAvAs' WHERE `memberName` = '{$data['Name']}' LIMIT 1";
+	 					$result = $roster->db->query ( $query );
+	 					if ($roster->db->affected_rows() == 1){
+	 						$this->messages .= "<li><span class=\"green\">{$roster->locale->act['AvUpdated']}</span><br />\n";
+	 					}else{
+	 						$this->messages .= "<li><span class=\"red\">{$roster->locale->act['AvNotUpdated']}</span><br />\n";
+	 					}
+
+	 				}else{
+	 					//Signature is already set.
+	 					$this->messages .= "<li><span class=\"green\">{$roster->locale->act['AvCurrent']}</span><br />\n";
+	 				}
+ 				}
+
+ 			}
+
 			//Change SMF's personal text to the players guild note.
 			if ($this->data['config']['guild_enable_personaltext'] == true){
 				//smf_members - personalText
@@ -291,62 +348,6 @@ class smfsyncUpdate
  				}
 
  			}//End of Player Update Location
-
- 			//Update Forum signature. Check to make sure it's enabled and that the default setting isn't blank.
- 			if ( ($this->data['config']['player_enable_signature'] == true ) && ($this->data['config']['player_signature'] != "") ){
- 				$query = "SELECT `signature` FROM `{$this->data['config']['forum_prefix']}members` WHERE `memberName` = '{$data['Name']}' LIMIT 1";
- 				$result = $roster->db->query( $query );
- 				$row = $roster->db->fetch ( $result );
-
- 				//Make sure player is a member of the forum before trying to write to the database.
- 				if ($roster->db->affected_rows() == 0){
- 					$this->messages .= "<span class=\"red\">{$roster->locale->act['PlayerNotInForum']} {$roster->locale->act['SigNotUpdated']}</span><br />\n";
- 				}else{
-	 				$SetSigAs = preg_replace("/%name%/",$data['Name'],$this->data['config']['player_signature']);
-	 				if ($row['signature'] != $SetSigAs){
-	 					//Update Signature
-	 					$query = "UPDATE `{$this->data['config']['forum_prefix']}members` SET `signature` = '$SetSigAs' WHERE `memberName` = '{$data['Name']}' LIMIT 1";
-	 					$result = $roster->db->query ( $query );
-	 					if ($roster->db->affected_rows() == 1){
-	 						$this->messages .= "<span class=\"green\">{$roster->locale->act['SigUpdated']}</span><br />\n";
-	 					}else{
-	 						$this->messages .= "<span class=\"red\">{$roster->locale->act['SigNotUpdated']}</span><br />\n";
-	 					}
-
-	 				}else{
-	 					//Signature is already set.
-	 					$this->messages .= "<span class=\"green\">{$roster->locale->act['SigCurrent']}</span><br />\n";
-	 				}
- 				}
- 			}
- 			//Update Forum avatar. Check to make sure it's enabled and that the default setting isn't blank.
- 			if ( ($this->data['config']['player_enable_avatar'] == true ) && ($this->data['config']['player_avatar'] != "")){
- 				$query = "SELECT `avatar` FROM `{$this->data['config']['forum_prefix']}members` WHERE `memberName` = '{$data['Name']}' LIMIT 1";
- 				$result = $roster->db->query( $query );
- 				$row = $roster->db->fetch ( $result );
-
- 				//Make sure player is a member of the forum before trying to write to the database.
- 				if ($roster->db->affected_rows() == 0){
- 					$this->messages .= "<span class=\"red\">{$roster->locale->act['PlayerNotInForum']} {$roster->locale->act['AvNotUpdated']}</span><br />\n";
- 				}else{
-	 				$SetAvAs = preg_replace("/%name%/",$data['Name'],$this->data['config']['player_avatar']);
-	 				if ($row['avatar'] != $SetAvAs){
-	 					//Update Signature
-	 					$query = "UPDATE `{$this->data['config']['forum_prefix']}members` SET `avatar` = '$SetAvAs' WHERE `memberName` = '{$data['Name']}' LIMIT 1";
-	 					$result = $roster->db->query ( $query );
-	 					if ($roster->db->affected_rows() == 1){
-	 						$this->messages .= "<span class=\"green\">{$roster->locale->act['AvUpdated']}</span><br />\n";
-	 					}else{
-	 						$this->messages .= "<span class=\"red\">{$roster->locale->act['AvNotUpdated']}</span><br />\n";
-	 					}
-
-	 				}else{
-	 					//Signature is already set.
-	 					$this->messages .= "<span class=\"green\">{$roster->locale->act['AvCurrent']}</span><br />\n";
-	 				}
- 				}
-
- 			}
  		}
 		//$this->messages .= "<span class=\"yellow\">This is a char hook</span><br />\n";
 

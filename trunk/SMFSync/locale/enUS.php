@@ -69,7 +69,7 @@ $lang['to']='to';
 $lang['MemberGroupCurrent']='Membergroup is current.';
 $lang['MemberGroupUpdated']='Membergroup has been updated to';
 $lang['NoSuchGroup']='Membergroup has not been created yet.';
-
+$lang['MemberGroupNotUpdated'] = 'Membergroup not updated.';
 $lang['PersonalTextUpdated']='Personal text updated to';
 $lang['PersonalTextNotUpdated']='Personal text <span class=red>not</span> updated. May be current or user not found.';
 $lang['PersonalTextNone']='No guild note set.';
