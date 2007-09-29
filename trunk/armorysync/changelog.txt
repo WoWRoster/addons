@@ -2,7 +2,10 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
-svn[237]
+svn[247]
+- updated version in install.def.php
+
+svn[246]
 - fixed guildadd
 - changed encoding of esES.php
 
