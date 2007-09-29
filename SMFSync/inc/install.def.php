@@ -77,7 +77,8 @@ class smfsync
 		$installer->add_config("'1303','guild_groups_create','0','radio{yes^1|no^0','smf_menu_guild'");
 		$installer->add_config("'1304','guild_enable_personaltext','0','radio{yes^1|no^0','smf_menu_guild'");
 
-		$installer->add_query ("INSERT INTO `{$roster->db->prefix}config` (`id` ,`config_name` ,`config_value` ,`form_type` ,`config_type` )VALUES ('1180', 'use_external_auth', '0', 'radio{on^1|off^0', 'main_conf'");
+		//This is used only until I can get integration with Roster.
+		$installer->add_query ("INSERT INTO `{$roster->db->prefix}config` (`id` ,`config_name` ,`config_value` ,`form_type` ,`config_type` )VALUES ('1180', 'use_external_auth', '0', 'radio{on^1|off^0', 'main_conf' )");
 
 		return true;
 	}
@@ -103,8 +104,12 @@ class smfsync
 	{
 		global $installer;
 
+		//This is used only until I can get integration with Roster.
+		$installer->add_query ("DELETE FROM `{$roster->db->perfix}config` WHERE `id` = '1080' LIMIT 1");
+
 		$installer->remove_all_config();
 		$installer->remove_all_menu_button();
+
 
 		return true;
 	}
