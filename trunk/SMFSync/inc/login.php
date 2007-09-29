@@ -15,6 +15,7 @@
 * @package    SMFSync
 * @subpackage User
 */
+
 class RosterLogin
 {
 	var $allow_login;
@@ -47,6 +48,30 @@ class RosterLogin
 	function RosterLogin( $script_filename='' )
 	{
 		global $roster;
+
+		if( isset( $_POST['logout'] ) && $_POST['logout'] == '1' )
+		{
+			setcookie( $this->getCookieName(),'',time()-86400,'/' );
+			setcookie( 'PHPSESSID','',time()-86400,'/');
+			$this->allow_login = 0;
+			$this->message = '<span style="font-size:10px;color:red;">Logged out</span><br />';
+		}
+		elseif( isset($_COOKIE[$this->getCookieName()]) ){
+			$this->checkCookie();
+		}
+		else
+		{
+			$this->allow_login = 0;
+			$this->message = '<span style="font-size:10px;color:red;">Not logged in</span><br />';
+		}
+	}
+
+	function checkPass( $user, $pass){
+		//
+	}
+	function checkCookie(){
+		global $roster;
+
 		$cookiename = $this->getCookieName();
 		if (isset($_COOKIE[$cookiename])){
 			$serialized = $_COOKIE[$cookiename];
@@ -54,8 +79,8 @@ class RosterLogin
 			$serialized = '';
 		}
 		list ($c_userid, $c_passwd) = unserialize(stripslashes($serialized));
-		//sql queries here to read the members table for userid $userid
 
+		//sql queries here to read the members table for userid $userid
 		$query = "SELECT * FROM `{$roster->db->prefix}addon_config` WHERE `addon_id` = '{$roster->addon_data['smfsync']['addon_id']}' AND `config_name` = 'forum_prefix' LIMIT 1";
 		$result = $roster->db->query ( $query );
 		$row = $roster->db->fetch ( $result );
@@ -83,7 +108,7 @@ class RosterLogin
 				rsort($rosterGroup);
 				$this->allow_login = $rosterGroup[0];
 				$this->message = border('sgold','start');
-				$this->message .= '<span style="font-size:10px;color:green;">Logged in at level '.$rosterGroup[0].'</span><br />';
+				$this->message .= '<span style="font-size:10px;color:green;">Logged in at level '.$rosterGroup[0].' <form style="display:inline;" name="roster_logout" action="'.$this->script_filename.'" method="post"><span style="font-size:10px;color:#FFFFFF"><input type="hidden" name="logout" value="1" />[<a href="javascript:document.roster_logout.submit();">Logout</a>]</span></form><br />';
 				$this->message .= border('sgold','end');
 
 		}else{
@@ -91,7 +116,6 @@ class RosterLogin
 			$this->message = '<span style="font-size:10px;color:red;">Not logged in</span><br />';
 		}
 	}
-
 	function getAuthorized()
 	{
 		return $this->allow_login;
@@ -102,45 +126,65 @@ class RosterLogin
 		return $this->message;
 	}
 
-	function getLoginForm( $level = 3 )
-	{
-		/*global $roster;
-		//$a =  sha1(strtolower($name) . $pass);
-		$query = "SELECT * FROM `".$roster->db->table('account')."` WHERE `account_id` = '".$level."';";
-		$result = $roster->db->query($query);
-
-		if( !$result )
-		{
-			die_quietly($roster->db->error, 'Roster Auth', __FILE__,__LINE__,$query);
-		}
-
-		if( $roster->db->num_rows($result) != 1 )
-		{
-			die_quietly('Invalid required login level specified', 'Roster Auth');
-		}
-
-		$row = $roster->db->fetch($result);
-		$roster->db->free_result($result);
-
-		$log_word = $row['name'];
+	function getLoginForm ( $level = 3){
+		global $roster;
 
 		return '
-			<!-- Begin Password Input Box -->
-			<form action="'.$this->script_filename.'" method="post" enctype="multipart/form-data" onsubmit="submitonce(this)">
-			'.border('sred','start',$log_word .' '. $roster->locale->act['auth_req']).'
-			  <table class="bodyline" cellspacing="0" cellpadding="0" width="100%">
-			    <tr>
-			      <td class="membersRowRight1">'.$roster->locale->act['password'].':<br />
-			        <input name="password" class="wowinput192" type="password" size="30" maxlength="30" /></td>
-			    </tr>
-			    <tr>
-			      <td class="membersRowRight2" valign="bottom">
-			        <div align="right"><input type="submit" value="Go" /></div></td>
-			    </tr>
-			  </table>
+			<!--Begin Login Box -->
+			<form action="http://localhost/forum/index.php?action=login2" method="post" accept-charset="UTF-8">
+			'.border('sred','start','Login').'
+			 <table class=bodyline" cellspacing="0" cellpadding"0" width="100%">
+			  <tr>
+			   <td class="membersRowRight1">'.$roster->locale->act['username'].':
+			    <input name="user" class="wowinput192" type="text" size="30" maxlength="30" /></td>
+			  </tr>
+			  <tr>
+			   <td class="membersRowRight1">'.$roster->locale->act['password'].':
+			    <input name="passwrd" class="wowinput192" type="password" size="30" maxlength="30" /></td>
+			  </tr>
+			  <tr>
+			   <td class="membersRowRight2" valign="bottom">
+			   <input type="hidden" name="cookielength" value="-1" />
+			   <div align="right"><input type="submit" value="Go" /></div></td>
+			  </tr>
+			 </table>
 			'.border('sred','end').'
 			</form>
-			<!-- End Password Input Box -->';*/
+			<!--End Login Box -->
+
+		';
+
+	}
+	function getLoginForm2( $level = 3 )
+	{
+		global $roster;
+
+		return '
+			<!--Begin Login Box -->
+			<form action="'.$this->script_filename.'" method="post" enctype="multipart/form-data" onsubmit="submitonce(this)">
+			'.border('sred','start','Login').'
+			 <table class=bodyline" cellspacing="0" cellpadding"0" width="100%">
+			  <tr>
+			   <td class="membersRowRight1">'.$roster->locale->act['username'].':
+			    <input name="username" class="wowinput192" type="text" size="30" maxlength="30" /></td>
+			  </tr>
+			  <tr>
+			   <td class="membersRowRight1">'.$roster->locale->act['password'].':
+			    <input name="password" class="wowinput192" type="password" size="30" maxlength="30" /></td>
+			  </tr>
+			  <tr>
+			   <td class="membersRowRight2" valign="bottom">
+			   <div align="right"><input type="submit" value="Go" /></div></td>
+			  </tr>
+			 </table>
+			'.border('sred','end').'
+			</form>
+			<!--End Login Box -->
+
+		';
+
+
+
 	}
 
 	function rosterAccess( $values )

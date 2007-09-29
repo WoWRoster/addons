@@ -59,5 +59,7 @@ addons/smfsync/inc/update_hook.php
   Notice line 130: Undefined index: Name
 On every user updated - Personal text not updated. May be current or user not found.
 
+Even with SMF disabled, it will use the login script. It shouldn't.
+
 addons/smfsync/inc/update_hook.php
   Notice line 273: Undefined index: Zone
