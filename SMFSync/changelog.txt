@@ -1,3 +1,10 @@
+[244]
+-Moved signature and avatar update from playerupdate to guildupdate
+[243]
+-Fixed installer issue.
+-Added/changed functions in custom login.php
+-Locale changes.
+-Not sure why the version number jump
 [233]
 -Code changes to accommodate for /lib/login.php
 [232]
