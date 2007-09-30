@@ -19,14 +19,14 @@
 // Button names
 $lang['async_button']			= 'ArmorySync Personaje|Sincroniza el personaje con la Armería de Blizzard';
 $lang['async_button2']			= 'ArmorySync Miembros|Sincroniza el listado de miembros con la Armería de Blizzard';
-$lang['async_button3']			= 'ArmorySync nueva Hermandad|Añade una nueva Hermandad y sincroniza<br>la lista de miembros con la Armería de Blizzard';
+$lang['async_button3']			= 'ArmorySync nueva Hermandad|Añade una nueva Hermandad y sincroniza<br />la lista de miembros con la Armería de Blizzard';
 
 // Config strings
 $lang['admin']['armorysync_conf']			= 'Configuración ArmorySync';
 $lang['admin']['armorysync_host']			= 'Servidor|Servidor con el que sincronizar.';
 $lang['admin']['armorysync_minlevel']		= 'Nivel Minimo|Nivel minimo de los personajes para sincronizar.';
-$lang['admin']['armorysync_synchcutofftime']	= 'Tiempo de Sync minimo|Tiempo en dias.<br>Todos los personajes que no se hayan actualizado en los ultimos (x) dias seran sincronizados.';
-$lang['admin']['armorysync_reloadwaittime']	= 'Tiempo de espera recarga|Tiempo en segundos.<br>Tiempo que espera antes de empezar la siguiente sincronización.';
+$lang['admin']['armorysync_synchcutofftime']	= 'Tiempo de Sync minimo|Tiempo en dias.<br />Todos los personajes que no se hayan actualizado en los ultimos (x) dias seran sincronizados.';
+$lang['admin']['armorysync_reloadwaittime']	= 'Tiempo de espera recarga|Tiempo en segundos.<br />Tiempo que espera antes de empezar la siguiente sincronización.';
 $lang['admin']['armorysync_fetch_timeout'] = 'Tiempo de espera agotado para la Armory|Tiempo en segundos que se espera para recibir un solo archivo XML antes de ser cancelado.';
 $lang['admin']['armorysync_skip_start'] = 'Saltar pagina inicial|Saltar pagina inicial al actualizar con ArmorySync.';
 $lang['admin']['armorysync_status_hide'] = 'Hide status windows initialy|Hide the status windows of ArmorySync on the first load.';
@@ -37,9 +37,9 @@ $lang['admin']['armorysync_realm_update_access'] = 'Nivel de acceso Reino|Quien 
 $lang['admin']['armorysync_guild_add_access'] = 'Nivel de acceso añadir Hermandad|Quien puede añadir nuevas hermandades';
 //$lang['admin']['armorysync_usecurl']		= 'Use Curl|Auf false setzen wenn du die original FileSocket function benutzen möchtest.';
 //$lang['admin']['armorysync_debuglevel']		= 'Debug level';
-//$lang['admin']['armorysync_updateroster']	= "Update Roster|Das Roster aktualisieren oder nicht.<br>Sinnvoll fürs Debuggen.";
+//$lang['admin']['armorysync_updateroster']	= "Update Roster|Das Roster aktualisieren oder nicht.<br />Sinnvoll fürs Debuggen.";
 //$lang['admin']['armorysync_ismysqllower411']	= "MySQL < 4.1.1|Auf True setzen wenn deine MySQL Version kleiner als 4.1.1 ist.";
-$lang['admin']['armorysync_protectedtitle']	= "Rango Hermandad protegidos|Los personajes con este rango estan protegidos<br>no podran ser borrados por una actualización del listado de miembros desde la armería.<br>Amenudo el problema suele ocurrir con los personajes banqueros.<br>Es posible añadir mas de uno separandolo con \",\". Ejem. Banco,Almacen";
+$lang['admin']['armorysync_protectedtitle']	= "Rango Hermandad protegidos|Los personajes con este rango estan protegidos<br />no podran ser borrados por una actualización del listado de miembros desde la armería.<br />Amenudo el problema suele ocurrir con los personajes banqueros.<br />Es posible añadir mas de uno separandolo con \",\". Ejem. Banco,Almacen";
 
 
 $lang['bindings']['bind_on_pickup'] = "Se liga al recogerlo";
@@ -133,9 +133,9 @@ $lang['error_uploadrule_insert'] = "Error creando las reglas de subida.";
 $lang['error_guild_notexist'] = "La hermandad facilitada no existe en la Armería.";
 $lang['error_missing_params'] = "Faltan parametros. Por favor vuelve a intentarlo";
 $lang['error_wrong_region'] = "Region incorrecta. Solo EU y US son regiones validas.";
-$lang['armorysync_guildadd'] = "Añadiendo Hermandad y sincronizando<br>listado de miembros con la Armería.";
+$lang['armorysync_guildadd'] = "Añadiendo Hermandad y sincronizando<br />listado de miembros con la Armería.";
 $lang['armorysync_guildadd_help'] = "Información";
-$lang['armorysync_guildadd_helpText'] = "Escribe la hermandad y el servidor exactamente como se muestran en la Armería de Blizzard.<br>Region es EU pra los europeos y US para las hermandades americanas. En primer lugar<br>se comprobara la existencia de la hermandad. Acto seguido se empezara con la<br>sincronización del listado de miembros.";
+$lang['armorysync_guildadd_helpText'] = "Escribe la hermandad y el servidor exactamente como se muestran en la Armería de Blizzard.<br />Region es EU pra los europeos y US para las hermandades americanas. En primer lugar<br />se comprobara la existencia de la hermandad. Acto seguido se empezara con la<br />sincronización del listado de miembros.";
 
 $lang['guildleader'] = "Maestro de la hermandad";
 
@@ -143,10 +143,10 @@ $lang['rage'] = "Ira";
 $lang['energy'] = "Energía";
 $lang['focus'] = "Focus";
 
-$lang['armorysync_credits'] = 'Gracias a <a target="_blank" href="http://www.papy-team.fr">tuigii</a>, <a target="_blank" href="http://xent.homeip.net">zanix</a>, <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=1126.html">ds</a> y <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=711.html">Subxero</a> por probarlo, traducirlo y ayudar.<br>Especial gracias a <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=13101.html">kristoff22</a> por el codigo original del ArmorySync y a <a target="_blank" href="http://www.iceguild.org.uk/forum">Pugro</a> por sus cambios en el.';
+$lang['armorysync_credits'] = 'Gracias a <a target="_blank" href="http://www.papy-team.fr">tuigii</a>, <a target="_blank" href="http://xent.homeip.net">zanix</a>, <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=1126.html">ds</a> y <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=711.html">Subxero</a> por probarlo, traducirlo y ayudar.<br />Especial gracias a <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=13101.html">kristoff22</a> por el codigo original del ArmorySync y a <a target="_blank" href="http://www.iceguild.org.uk/forum">Pugro</a> por sus cambios en el.';
 
 $lang['start'] = "Empezar";
-$lang['start_message'] = "Estas apunto de empezar a usar ArmorySync con %s %s.<br><br>Con esto toda la información de %s sera sobre escrita<br>con los detalles de la Armería de Blizzard. Solo se podra deshacer<br>subiendo de nuevo un CharacterProfiler.lua nuevo.<br><br>Estas seguro de querer empezar el proceso";
+$lang['start_message'] = "Estas apunto de empezar a usar ArmorySync con %s %s.<br /><br />Con esto toda la información de %s sera sobre escrita<br />con los detalles de la Armería de Blizzard. Solo se podra deshacer<br />subiendo de nuevo un CharacterProfiler.lua nuevo.<br /><br />Estas seguro de querer empezar el proceso";
 
 $lang['start_message_the_char'] = "el personaje";
 $lang['start_message_this_char'] = "este personaje";
