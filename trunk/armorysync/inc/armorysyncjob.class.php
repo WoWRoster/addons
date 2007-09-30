@@ -435,7 +435,7 @@ class ArmorySyncJob {
             $array['STOPTIMEUTC'] = isset( $member['stoptimeutc'] ) ? $member['stoptimeutc'] : "<img src=\"img/blue-question-mark.gif\" alt=\"?\"/>";
 
             if ( !$memberlist && $member['log'] ) {
-                $array['LOG'] = "<img src='img/note.gif'". makeOverlib( $member['log'] , $roster->locale->act['update_log'] , '' ,0 , '' , ',WRAP' ). "/>";
+                $array['LOG'] = "<img src=\"img/note.gif\"". makeOverlib( $member['log'] , $roster->locale->act['update_log'] , '' ,0 , '' , ',WRAP' ). " alt=\"\" />";
             } elseif( $member['log'] ) {
                 //$array['LOG'] = "<a href=\"javascript:popup('logPopup');\">
                 //                <img src='img/note.gif'/></a>
