@@ -456,8 +456,8 @@ class ArmorySyncJob {
 
 
         $roster->tpl->set_filenames(array(
-                'status_head' => 'armorysync/status_head.html',
-                'status_body' => 'armorysync/status_body.html',
+                'status_head' => $addon['basename'] . '/status_head.html',
+                'status_body' => $addon['basename'] . '/status_body.html',
                 ));
 
         $roster->tpl->display('status_head');
@@ -475,7 +475,7 @@ class ArmorySyncJob {
         $roster->tpl->assign_var('ARMORYSYNC_VERSION',$addon['version']. ' by poetter');
         $roster->tpl->assign_var('ARMORYSYNC_CREDITS',$roster->locale->act['armorysync_credits']);
         $roster->tpl->set_filenames(array(
-                'footer' => 'armorysync/footer.html',
+                'footer' => $addon['basename'] . '/footer.html',
                 ));
         $roster->tpl->display('footer');
     }
