@@ -1,3 +1,9 @@
+[247]
+-Changed inc/login.php to load IFrame for inc/loginForm.php
+--This stopped the problem of when logging in, being redirected
+--to the forum instead of to the page you wanted. 
+[246]
+-Added inc/loginForm.php
 [245]
 -Cleanup
 [244]

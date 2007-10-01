@@ -15,13 +15,14 @@
 * @package    SMFSync
 * @subpackage User
 */
-
 class RosterLogin
 {
+
 	var $allow_login;
 	var $message;
 	var $script_filename;
 	var $levels = array();
+
 
 	/**
 	 * Constructor for Roster Login class
@@ -55,6 +56,7 @@ class RosterLogin
 			setcookie( 'PHPSESSID','',time()-86400,'/');
 			$this->allow_login = 0;
 			$this->message = '<span style="font-size:10px;color:red;">Logged out</span><br />';
+			header ("Location: .");
 		}
 		elseif( isset($_COOKIE[$this->getCookieName()]) ){
 			$this->checkCookie();
@@ -108,7 +110,7 @@ class RosterLogin
 				rsort($rosterGroup);
 				$this->allow_login = $rosterGroup[0];
 				$this->message = border('sgold','start');
-				$this->message .= '<span style="font-size:10px;color:green;">Logged in at level '.$rosterGroup[0].' <form style="display:inline;" name="roster_logout" action="'.$this->script_filename.'" method="post"><span style="font-size:10px;color:#FFFFFF"><input type="hidden" name="logout" value="1" />[<a href="javascript:document.roster_logout.submit();">Logout</a>]</span></form><br />';
+				$this->message .= '<span style="font-size:10px;color:green;">Logged in as '.$this->translateLevel($rosterGroup[0]).' <form style="display:inline;" name="roster_logout" action="'.$this->script_filename.'" method="post"><span style="font-size:10px;color:#FFFFFF"><input type="hidden" name="logout" value="1" />[<a href="javascript:document.roster_logout.submit();">Logout</a>]</span></form><br />';
 				$this->message .= border('sgold','end');
 
 		}else{
@@ -126,13 +128,27 @@ class RosterLogin
 		return $this->message;
 	}
 
-	function getLoginForm ( $level = 3){
+	function getLoginForm ($level = 3){
+		$level = $this->translateLevel ($level);
+		$return = "";
+		$return .= border('sred','start',$level. ' login required');
+		$return .= '<iframe src="http://localhost/roster20/addons/smfsync/inc/loginForm.php" width=100%></iframe>';
+		$return .= border('sred','end');
+
+		return $return;
+
+	}
+	function getLoginForm2 ( $level = 3){
 		global $roster;
+
+		$level = $this->translateLevel ($level);
+
+		$forumPath = $roster->db->fetch($roster->db->query("SELECT * FROM `{$roster->db->prefix}addon_config` WHERE `addon_id` = '{$roster->addon_data['smfsync']['addon_id']}' AND `config_name` = 'forum_path' LIMIT 1"));
 
 		return '
 			<!--Begin Login Box -->
-			<form action="http://localhost/forum/index.php?action=login2" method="post" accept-charset="UTF-8">
-			'.border('sred','start','Login level '.$level.' required').'
+			<form action="'.$roster->config['website_address'].DIR_SEP.$forumPath['config_value'].'index.php?action=login2" method="post" accept-charset="UTF-8">
+			'.border('sred','start',$level.' login required').'
 			 <table class=bodyline" cellspacing="0" cellpadding"0" width="100%">
 			  <tr>
 			   <td class="membersRowRight1">'.$roster->locale->act['username'].':
@@ -199,5 +215,23 @@ class RosterLogin
 	function getCookieName(){
 		include (ROSTER_BASE.'../forum/Settings.php');
 		return $cookiename;
+	}
+
+	function translateLevel($level = 3){
+		switch ($level) {
+			case 3:
+				$level = "Admin";
+				break;
+			case 2:
+				$level = "Officer";
+				break;
+			case 1:
+				$level = "Guild";
+				break;
+			case 0:
+				$level = "Public";
+				break;
+		}
+		return $level;
 	}
 }
