@@ -52,7 +52,7 @@ self.parent.location.reload(true);
 	$sqlqueryarray = mysql_fetch_array($sqlqueryresult);
 	$rosterTemplate = $sqlqueryarray['config_value'];
 
-	require ("../../../../{$forumPath}ssi.php");
+	require ("../../../../{$forumPath}SSI.php");
 
 	echo '<link REL="STYLESHEET" TYPE="text/css" HREF="../../../templates/'.$rosterTemplate.'/style.css"><center>';
 	$redirect = "http://{$_SERVER['SERVER_NAME']}{$_SERVER['SCRIPT_NAME']}?login=true";
