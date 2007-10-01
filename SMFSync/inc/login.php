@@ -129,10 +129,12 @@ class RosterLogin
 	}
 
 	function getLoginForm ($level = 3){
+		global $roster;
+
 		$level = $this->translateLevel ($level);
 		$return = "";
 		$return .= border('sred','start',$level. ' login required');
-		$return .= '<iframe src="http://localhost/roster20/addons/smfsync/inc/loginForm.php" width=100%></iframe>';
+		$return .= '<iframe src="'.$roster->tpl->_tpldata['.']['0']['ROSTER_URL'].'addons/smfsync/inc/loginForm.php" ></iframe>';
 		$return .= border('sred','end');
 
 		return $return;

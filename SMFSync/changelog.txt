@@ -1,7 +1,10 @@
-[247]
+[252]
+-Oops. Forgot about a hardcoded path in login.php
+[251]
 -Changed inc/login.php to load IFrame for inc/loginForm.php
 --This stopped the problem of when logging in, being redirected
 --to the forum instead of to the page you wanted. 
+-Again, a jump in the version number.
 [246]
 -Added inc/loginForm.php
 [245]
