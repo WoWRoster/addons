@@ -17,15 +17,18 @@
 // -[ deDE Localization ]-
 
 // Button names
-$lang['async_button']			= 'Armory Sync|Syncronisiere deine Charactere mit Blizzards Armory';
-$lang['async_button2']			= 'Armory Memberlist Sync|Syncronisiere deine Mitgliederliste mit Blizzards Armory';
-$lang['async_button3']			= 'Armory Memberlist Sync für neue Gilde|Füge eine neue Gilde ein und syncronisiere<br />die Mitgliederliste mit Blizzards Armory';
+$lang['async_button1']			= 'ArmorySync Charakter|Synchronisiere deinen Charactere mit Blizzards Armory';
+$lang['async_button2']			= 'ArmorySync Charakters|Synchronisiere die Charactere deiner Gilde mit Blizzards Armory';
+$lang['async_button3']			= 'ArmorySync Charakters|Synchronisiere die Charactere deines Realms mit Blizzards Armory';
+$lang['async_button4']			= 'ArmorySync Memberlist|Synchronisiere deine Mitgliederliste mit Blizzards Armory';
+$lang['async_button5']			= 'ArmorySync Memberlist für eine neue Gilde|Füge eine neue Gilde ein und syncronisiere<br />die Mitgliederliste mit Blizzards Armory';
 // Config strings
 $lang['admin']['armorysync_conf']			= 'ArmorySync Konfiguration';
 $lang['admin']['armorysync_host']			= 'Host|Host mit dem syncronisiert werden soll.';
 $lang['admin']['armorysync_minlevel']		= 'Minimum Level|Minimum level der Charactere die syncronisiert werden.';
 $lang['admin']['armorysync_synchcutofftime']	= 'Sync cutoff time|Zeit in tagen.<br />Alle Charactere die nicht in den letzten (x) Tagen aktualisiert wurden werden syncronisiert.';
-$lang['admin']['armorysync_reloadwaittime']	= 'Reload wait time|Zeit in Sekunden.<br />Zeit in Sekunden bevor die nächste Syncronisierung angestossen wird.';
+$lang['admin']['armorysync_use_ajax']	= 'Benutze AJAX|Benutze AJAX für Status Updates oder nicht.';
+$lang['admin']['armorysync_reloadwaittime']	= 'Reload wait time|Zeit in Sekunden.<br />Zeit in Sekunden bevor die nächste Synchronisierung angestossen wird.';
 $lang['admin']['armorysync_fetch_timeout'] = 'Armory Fetch timeout|Zeit in Sekunden bis das Herunterladen<br />einer einzelnen XML Datei abgebrochen wird.';
 $lang['admin']['armorysync_skip_start'] = 'Skip start page|Skip start page on ArmorySync updates.';
 $lang['admin']['armorysync_status_hide'] = 'Hide status windows initialy|Versteckt das Status Fenster von ArmorySync beim ersten Laden.';
@@ -155,3 +158,17 @@ $lang['start_message_this_guild'] = "alle Charaktere dieser Gilde";
 $lang['start_message_the_realm'] = "den Realm";
 $lang['start_message_this_realm'] = "alle Charaktere dieses Realms";
 
+$lang['month_to_en'] = array(
+    "Januar" => "January",
+    "Februar" => "February",
+    "März" => "March",
+    "April" => "April",
+    "Mai" => "May",
+    "Juni" => "June",
+    "Juli" => "July",
+    "August" => "August",
+    "September" => "September",
+    "Oktober" => "October",
+    "November" => "November",
+    "Dezember" => "December"
+);

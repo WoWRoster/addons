@@ -26,6 +26,7 @@ class ArmorySync {
 
     var $memberName = '';
     var $memberId = 0;
+    var $guildId = 0;
     var $server = '';
     var $region = '';
 
@@ -52,14 +53,14 @@ class ArmorySync {
      * @param int $memberId
      * @return bool
      */
-    function synchMemberByID( $server, $memberId = 0, $memberName = false ) {
+    function synchMemberByID( $server, $memberId = 0, $memberName = false, $region = false, $guildId = 0 ) {
         global $addon, $roster;
 
         $this->server = $server;
         $this->memberId = $memberId;
-
-
         $this->memberName = $memberName;
+        $this->region = $region;
+        $this->guildId = $guildId;
 
         $this->_getRosterData();
         if ( $this->status['characterInfo'] ) {
@@ -69,15 +70,14 @@ class ArmorySync {
             $update->uploadData['characterprofiler']['myProfile'][$this->server]['Character'][$this->data['Name']] = $this->data;
             $this->message = $update->processMyProfile();
             $tmp = explode( "\n", $this->message);
-            array_pop( $tmp );
-            array_pop( $tmp );
-            array_pop( $tmp );
-            array_pop( $tmp );
             $this->message = implode( '', $tmp);
-
-            return true;
+            if ( strpos( $this->message, sprintf($roster->locale->act['upload_data'],$roster->locale->act['char'],$memberName,$server,$region)) ) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            $this->message = "No infos for ". $this->memberName. "<br />Character has probalby not been updated for a while";
+            $this->message = "No infos for ". $this->memberName. "<br>Character has probalby not been updated for a while";
         }
         return false;
     }
@@ -89,15 +89,13 @@ class ArmorySync {
      * @param int $memberId
      * @return bool
      */
-    function synchGuildByID( $server, $memberId = 0 ) {
+    function synchGuildByID( $server, $memberId = 0, $memberName = false, $region = false ) {
         global $addon, $roster;
 
         $this->server = $server;
-        $this->memberId = $memberId;
-
-
-        $this->memberName = $roster->data['guild_name'];
-
+        $this->guildId = $memberId;
+        $this->region = $region;
+        $this->memberName = $memberName;
         $this->_getGuildInfo();
         if ( $this->status['guildInfo'] ) {
             include_once(ROSTER_LIB . 'update.lib.php');
@@ -107,10 +105,6 @@ class ArmorySync {
             $update->uploadData['characterprofiler']['myProfile'][$this->server]['Guild'][$this->data['name']] = $this->data;
             $this->message = $update->processGuildRoster();
             $tmp = explode( "\n", $this->message);
-            array_pop( $tmp );
-            array_pop( $tmp );
-            array_pop( $tmp );
-            array_pop( $tmp );
             $this->message = implode( '', $tmp);
 
             return true;
@@ -139,25 +133,30 @@ class ArmorySync {
 
         include_once(ROSTER_LIB . 'armory.class.php');
         $armory = new RosterArmory;
-        $armory->region = $roster->data['region'];
+        //$armory->region = $roster->data['region'];
+        $armory->region = $this->region;
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
         $content = $this->_parseData( $armory->fetchGuild( $this->memberName, $roster->config['locale'], $this->server ) );
         if ( $this->_checkContent( $content, array( 'guildInfo', 'guild' ) ) ) {
             $guild = $content->guildInfo->guild;
 
-            $this->data['Ranks'] = $this->_getGuildRanks( $roster->data['guild_id'] );
-            $this->data['timestamp']['init']['datakey'] = $roster->data['region'];
+            //$this->data['Ranks'] = $this->_getGuildRanks( $roster->data['guild_id'] );
+            //$this->data['timestamp']['init']['datakey'] = $roster->data['region'];
+            $this->data['Ranks'] = $this->_getGuildRanks( $this->guildId );
+            $this->data['timestamp']['init']['datakey'] = $this->region;
             $this->data['timestamp']['init']['TimeStamp'] = time();
             $this->data['timestamp']['init']['Date'] = date('Y-m-d H:i:s');
             $this->data['timestamp']['init']['DateUTC'] = gmdate('Y-m-d H:i:s');
 
             $this->data['GPprovider'] = "armorysync";
-            $this->data['GPversion'] = "2.1.0";
-            $this->data['name'] = $roster->data['guild_name'];
-            $this->data['Info'] = $roster->data['guild_info_text'];
+            $this->data['GPversion'] = "2.6.0";
+            //$this->data['name'] = $roster->data['guild_name'];
+            $this->data['name'] = $this->memberName;
+            //$this->data['Info'] = $roster->data['guild_info_text'];
 
-            $members = $this->_getGuildMembers( $roster->data['guild_id'] );
+            //$members = $this->_getGuildMembers( $roster->data['guild_id'] );
+            $members = $this->_getGuildMembers( $this->guildId );
 
             $min = 60;
             $hour = 60 * $min;
@@ -261,7 +260,8 @@ class ArmorySync {
 
         include_once(ROSTER_LIB . 'armory.class.php');
         $armory = new RosterArmory;
-        $armory->region = $roster->data['region'];
+        //$armory->region = $roster->data['region'];
+        $armory->region = $this->region;
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
         $content = $this->_parseData( $armory->fetchCharacter( $this->memberName, $roster->config['locale'], $this->server ) );
@@ -283,7 +283,7 @@ class ArmorySync {
             $this->data["Guild"]["Title"] = $rank['guild_title'];
             $this->data["Guild"]["Rank"] = $rank['guild_rank'];
             $this->data["CPprovider"] = 'armorysync';
-            $this->data["CPversion"] = '2.1.1';
+            $this->data["CPversion"] = '2.6.0';
 
             $this->data["Honor"]["Lifetime"]["HK"] = $tab->pvp->lifetimehonorablekills->value;
             $this->data["Honor"]["Lifetime"]["Name"] = $char->title;
@@ -451,8 +451,9 @@ class ArmorySync {
 
             //$this->data["Hearth"] = "";
 
-            $this->data["timestamp"]["init"]["DateUTC"] = date('Y/m/d/ H:i:s', strtotime($char->lastModified));
-            $this->data['timestamp']['init']['datakey'] = $roster->data['region']. ":";
+            $this->data["timestamp"]["init"]["DateUTC"] = $this->_get_date($char->lastModified);
+            //$this->data['timestamp']['init']['datakey'] = $roster->data['region']. ":";
+            $this->data['timestamp']['init']['datakey'] = $this->region. ":";
             // $this->data["TimePlayed"] = 0; //Needed, otherwise WoWDB will kick out this character
             // $this->data["TimeLevelPlayed"] = 0; //Needed, otherwise WoWDB will kick out this character
 
@@ -497,7 +498,8 @@ class ArmorySync {
 
 
             $armory = new RosterArmory;
-            $armory->region = $roster->data['region'];
+            //$armory->region = $roster->data['region'];
+            $armory->region = $this->region;
             $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
             $content = $this->_parseData( $armory->fetchItemTooltip( $item->id, $roster->config['locale'], $this->memberName, $this->server ) );
@@ -558,7 +560,8 @@ class ArmorySync {
 
         include_once(ROSTER_LIB . 'armory.class.php');
         $armory = new RosterArmory;
-        $armory->region = $roster->data['region'];
+        //$armory->region = $roster->data['region'];
+        $armory->region = $this->region;
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
         $content = $this->_parseData( $armory->fetchCharacterSkills( $this->memberName, $roster->config['locale'], $this->server ) );
@@ -602,7 +605,8 @@ class ArmorySync {
 
         include_once(ROSTER_LIB . 'armory.class.php');
         $armory = new RosterArmory;
-        $armory->region = $roster->data['region'];
+        //$armory->region = $roster->data['region'];
+        $armory->region = $this->region;
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
         $content = $this->_parseData( $armory->fetchCharacterReputation( $this->memberName, $roster->config['locale'], $this->server ) );
@@ -648,7 +652,8 @@ class ArmorySync {
 
         include_once(ROSTER_LIB . 'armory.class.php');
         $armory = new RosterArmory;
-        $armory->region = $roster->data['region'];
+        //$armory->region = $roster->data['region'];
+        $armory->region = $this->region;
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
         $content = $this->_parseData( $armory->fetchCharacterTalents( $this->memberName, $roster->config['locale'], $this->server ) );
@@ -695,7 +700,7 @@ class ArmorySync {
 
                     $talent = array(
                             "Location" => $talentY . ":" . $talentX,
-                            "Tooltip" => $talentName . "<br />". $roster->locale->act['misc']['Rank']. " " . $talentRank ."/" . $talentMax . "<br />" . $talentDesc,
+                            "Tooltip" => $talentName . "<br>". $roster->locale->act['misc']['Rank']. " " . $talentRank ."/" . $talentMax . "<br>" . $talentDesc,
                             "Icon" => $talentPic,
                             "Rank" => $talentRank . ":" . $talentMax
                     );
@@ -910,14 +915,15 @@ class ArmorySync {
         include_once(ROSTER_LIB . 'armory.class.php');
 
         $armory = new RosterArmory;
-        $armory->region = $roster->data['region'];
+        //$armory->region = $roster->data['region'];
+        $armory->region = $this->region;
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
         if ( $content = $armory->fetchItemTooltipHTML( $itemId, $roster->config['locale'], $this->memberName, $this->server ) ) {
 
             $content = str_replace("\n", "", $content );
             $content = str_replace('<span class="tooltipRight">', "\t", $content );
-            $content = str_replace("<br />", "%__BRTAG%", $content );
+            $content = str_replace("<br>", "%__BRTAG%", $content );
 
             $content = strip_tags( $content );
 
@@ -943,7 +949,8 @@ class ArmorySync {
         include_once(ROSTER_LIB . 'armory.class.php');
 
         $armory = new RosterArmory;
-        $armory->region = $roster->data['region'];
+        //$armory->region = $roster->data['region'];
+        $armory->region = $this->region;
         if ( $content = $armory->fetchItemInfoHTML( $itemId, $roster->config['locale'] ) ) {
 
             //$pos = $this->_stripos_b($content, '<div class="displayTable">');
@@ -963,7 +970,7 @@ class ArmorySync {
             }
 
             $content = str_replace("\n", "", $content );
-            $content = str_replace("<br />", "%__BRTAG%", $content );
+            $content = str_replace("<br>", "%__BRTAG%", $content );
 
             $content = strip_tags( $content );
 
@@ -1137,7 +1144,26 @@ class ArmorySync {
         return strtr($string, $trans_tbl);
     }
 
+    /**
+     * helper function for non enUS strtodate
+     *
+     * @param string $string
+     * @return string date
+     */
+    function _get_date($string)
+    {
+        global $roster;
 
+        if ( $roster->locale->curlocale == 'esES') {
+            $string = str_replace( 'de ', '', $string );
+        }
+        if ( ! $roster->locale->curlocale == 'enUS') {
+            $array = explode(" ", $string );
+            $array[1] = $roster->locale->act['month_to_en'][$array[1]];
+            $string = implode( " ", $array );
+        }
+        return date('Y/m/d/ H:i:s', strtotime($string));
+    }
 
     // DB functions
 

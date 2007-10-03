@@ -17,15 +17,18 @@
 
 // -[ frFR Localization ]-
 // Button names
-$lang['async_button']= 'Armory Sync|Synchronise  vos personnages avec Blizzards Armory';
-$lang['async_button2']= 'Armory Memberlist Sync|Synchronise  vos liste des membres avec Blizzards Armory';
-$lang['async_button3']= 'Armory Memberlist Sync pour une nouvelle Guilde|Ajoute un nouvelle Guilde et synchronise<br />le avec la liste de ces membres chez Blizzards Armory';
+$lang['async_button1']= 'ArmorySync Character|Synchronise vos personnages avec Blizzards Armory';
+$lang['async_button2']= 'ArmorySync Characters|Synchronise vos personnages avec Blizzards Armory';
+$lang['async_button3']= 'ArmorySync Characters|Synchronise vos personnages avec Blizzards Armory';
+$lang['async_button4']= 'ArmorySync Memberlist|Synchronise vos liste des membres avec Blizzards Armory';
+$lang['async_button5']= 'ArmorySync Memberlist pour une nouvelle Guilde|Ajoute un nouvelle Guilde et synchronise<br />le avec la liste de ces membres chez Blizzards Armory';
 
 // Config strings
 $lang['admin']['armorysync_conf']= 'ArmorySync Configuration';
 $lang['admin']['armorysync_host']= 'Host|Host to syncronise with.';
 $lang['admin']['armorysync_minlevel']= 'Minimum Level|Minimum level pour la shynco des personnages.';
 $lang['admin']['armorysync_synchcutofftime']= "Sync. temps de coupure|Le temps en jours.<br />Toutes personnages n étant pas mis à jour durant (x) jours seront synchronisé.";
+$lang['admin']['armorysync_use_ajax']	= 'Use AJAX|Wether to use AJAX for status update or not.';
 $lang['admin']['armorysync_reloadwaittime']= "Temps de rechargement |Le temps en secondes.<br />Le temps avant une prochaine synchronisation sera effectuée.";
 $lang['admin']['armorysync_fetch_timeout'] = "Armory chargement arrêt|Temps en secondes jusqu à ce un fichier XML sera avorté.";
 $lang['admin']['armorysync_skip_start'] = "Saute page de démarrage|Saute la page de démarrage des ArmorySync chargements.";
@@ -152,3 +155,18 @@ $lang['start_message_the_guild'] = "la guilde";
 $lang['start_message_this_guild'] = "toutes les personnages de cette guilde";
 $lang['start_message_the_realm'] = "le realm";
 $lang['start_message_this_realm'] = "toutes les personnages de ce realm";
+
+$lang['month_to_en'] = array(
+    "Januar" => "January",
+    "Februar" => "February",
+    "März" => "March",
+    "April" => "April",
+    "Mai" => "May",
+    "Juni" => "June",
+    "Juli" => "July",
+    "August" => "August",
+    "September" => "September",
+    "octobre" => "October",
+    "November" => "November",
+    "Dezember" => "December"
+);
