@@ -172,3 +172,9 @@ $lang['month_to_en'] = array(
     "November" => "November",
     "Dezember" => "December"
 );
+
+$lang['roster_deprecated'] = "WoWRoster veraltet";
+$lang['roster_deprecated_message'] = "<br />Du benutzt <b>WoWRoster</b><br /><br />Version: <strong style=\"color:red;\" >%s</strong><br /><br />Um <b>ArmorySync</b> Version <strong style=\"color:yellow;\" >%s</strong><br />benutzen zu können brauchst du mindestens <b>WoWRoster</b><br /><br />Version <strong style=\"color:green;\" >%s</strong><br /><br />Bitte aktualisiere dein <b>WoWRoster</b><br />&nbsp;";
+
+$lang['armorysync_not_upgraded'] = "ArmorySync nicht aktualisiert";
+$lang['armorysync_not_upgraded_message'] = "<br />Du hast <b>ArmorySync</b><br /><br />Version: <strong style=\"color:green;\" >%s</strong><br /><br />installiert. Zur Zeit ist noch <b>ArmorySync</b><br /><br />Version <strong style=\"color:red;\" >%s</strong><br /><br />im <b>WoWRoster</b> registriert.<br /><br />Bitte gehe in die <b>WoWRoster</b> Konfiguration<br />und aktualisiere dein <b>ArmorySync</b><br />&nbsp;";

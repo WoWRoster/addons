@@ -19,7 +19,6 @@ if( !defined('IN_ROSTER') )
     exit('Detected invalid access to this file!');
 }
 
-
 class ArmorySyncJob {
 
     var $jobid;
@@ -73,16 +72,66 @@ class ArmorySyncJob {
     }
 
     /**
+     * Show error on deprecated Roster
+     *
+     */
+    function _showErrorRosterDeprecated() {
+        global $roster, $addon;
+
+        $html = sprintf( $roster->locale->act['roster_deprecated_message'], ROSTER_VERSION, ARMORYSYNC_VERSION, ARMORYSYNC_REQUIRED_ROSTER_VERSION);
+        print messagebox( $html , "<h3>". $roster->locale->act['roster_deprecated']."</h3>" , $style='sred' , '400px' );
+    }
+
+    /**
+     * Check if Roster is new enough
+     *
+     */
+    function _isRequiredRosterVersion() {
+        return version_compare( ARMORYSYNC_REQUIRED_ROSTER_VERSION, ROSTER_VERSION, '<=');
+    }
+
+    /**
+     * Show error on deprecated Roster
+     *
+     */
+    function _showErrorArmorySyncNotUpgraded() {
+        global $roster, $addon;
+
+        $html = sprintf( $roster->locale->act['armorysync_not_upgraded_message'], ARMORYSYNC_VERSION, $addon['version']);
+        print messagebox( $html , "<h3>". $roster->locale->act['armorysync_not_upgraded']."</h3>" , $style='sred' , '400px' );
+    }
+
+    /**
+     * Check if ArmorySync is new enough
+     *
+     */
+    function _isRequiredArmorySyncVersion() {
+        global $addon;
+        return version_compare( ARMORYSYNC_VERSION, $addon['version'], '<=');
+    }
+
+    /**
      * fetch insert jobid, fill jobqueue
      *
      */
     function start() {
         global $roster, $addon;
 
+        require_once ($addon['dir'] . 'inc/constants.php');
+
         $this->_check_env();
 
         if ( ! $this->isAuth ) {
             $this->_showFooter();
+            return;
+        }
+        if ( ! $this->_isRequiredRosterVersion() ) {
+            $this->_showErrorRosterDeprecated();
+            return;
+        }
+
+        if ( ! $this->_isRequiredArmorySyncVersion() ) {
+            $this->_showErrorArmorySyncNotUpgraded();
             return;
         }
 
@@ -998,7 +1047,7 @@ class ArmorySyncJob {
         print '<div style="height:1px; width:1px; overflow:visible;">';
         print '<img src="'. $addon['image_path']. 'as_logo.png" style="position: relative; left:420px; bottom:125px; height:250px;">';
         print '</div>';
-        print messagebox( $message, $this->title,'sred');
+        print messagebox( $message, $this->title,'sred', '500px');
     }
 
     // DB functions

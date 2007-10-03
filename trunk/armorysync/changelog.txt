@@ -2,6 +2,10 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[255]
+- added RosterVersionRequired check
+- added ArmorySyncNotUpgraded check
+
 svn[254]
 - implemented ajax status updates
     optional using from config menu (on by default)
