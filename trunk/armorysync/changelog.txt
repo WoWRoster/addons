@@ -2,6 +2,30 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[254]
+- implemented ajax status updates
+    optional using from config menu (on by default)
+- fixed date handling with strtodate in non enUS environment
+- fixed button updates
+- changed ArmorySync Icons
+- Added nice grafic to ArmorySync pages (thx Bliz)
+- fixed updates of roster_addons_armorysync_updates so that it is updated only if roster accepted data
+
+svn[250]
+- Changed 'armorysync/filename.html' to $addon['basename'] . '/filename.html' for $roster->tpl->set_filenames()
+
+svn[249]
+- One more small fix
+
+svn[248]
+- A note about my edits, my editor removes trailing spaces form files
+- Made quite a few changes for xhtml 1.0 compliance
+- Changed CPprovider and GPprovider from rpgo to armorysync
+-- Roster might use this someday to determine where the update came from
+- Change the row coloring to use $roster->switch_row_class() in function _show_status()
+- Changed $roster->tpl->set_filenames() to just armorysync/filename.hml
+-- The next roster build tonight will have fixes to the template engine to allow this
+
 svn[247]
 - updated version in install.def.php
 
@@ -29,7 +53,7 @@ svn[234]
 - fixed typo with false in armorysync.class.php line 727
 - added cleanup for aborted jobs older than 3 hours
 - fixed whitespaces and "Undead" in raceEN
-- added frFR locales - thx again to tuigii 
+- added frFR locales - thx again to tuigii
 
 svn[233]
 - added different locales to enUS frFR and esES
@@ -97,4 +121,4 @@ svn[716]
 - added meberlist.php to archive
 
 svn[714]
-- fixed case problem in ArmorySync.class.php 
+- fixed case problem in ArmorySync.class.php

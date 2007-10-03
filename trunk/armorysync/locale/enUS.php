@@ -17,15 +17,18 @@
 // -[ enUS Localization ]-
 
 // Button names
-$lang['async_button']			= 'Armory Sync|Synchronize your characters with Blizzard\'s Armory';
-$lang['async_button2']			= 'Armory Memberlist Sync|Synchronize your memberlist with Blizzard\'s Armory';
-$lang['async_button3']			= 'Armory Memberlist Sync for a new guild|Add a new guild and Synchronize<br />the meberlist with Blizzard\'s Armory';
+$lang['async_button1']			= 'ArmorySync Character|Synchronize your character with Blizzard\'s Armory';
+$lang['async_button2']			= 'ArmorySync Character|Synchronize your guilds characters with Blizzard\'s Armory';
+$lang['async_button3']			= 'ArmorySync Character|Synchronize your realms character with Blizzard\'s Armory';
+$lang['async_button4']			= 'ArmorySync Memberlist|Synchronize your memberlist with Blizzard\'s Armory';
+$lang['async_button5']			= 'ArmorySync Memberlist for a new guild|Add a new guild and aynchronize<br />the memberlist with Blizzard\'s Armory';
 
 // Config strings
 $lang['admin']['armorysync_conf']			= 'ArmorySync Configuration|Configure base settings for armorysync';
 $lang['admin']['armorysync_host']			= 'Host|Host to Synchronize with';
 $lang['admin']['armorysync_minlevel']		= 'Minimum Level|Minimum level of characters to synchronize<br />Currently this should be no lower than 10 since<br />the armory doesn\'t list characters lower than level 10';
 $lang['admin']['armorysync_synchcutofftime']	= 'Sync cutoff time|Time in days<br />All characters not updated in last (x) days will be synchronized';
+$lang['admin']['armorysync_use_ajax']	= 'Use AJAX|Wether to use AJAX for status update or not.';
 $lang['admin']['armorysync_reloadwaittime']	= 'Reload wait time|Time in seconds<br />Time in seconds before next synchronization during a sync job';
 $lang['admin']['armorysync_fetch_timeout'] = 'Armory Fetch timeout|Time in seconds till a fetch of a single XML file is aborted.';
 $lang['admin']['armorysync_skip_start'] = 'Skip start page|Skip start page on ArmorySync updates.';
@@ -155,3 +158,17 @@ $lang['start_message_this_guild'] = "all characters of this guild";
 $lang['start_message_the_realm'] = "the realm";
 $lang['start_message_this_realm'] = "all characters of this realm";
 
+$lang['month_to_en'] = array(
+    "January" => "January",
+    "February" => "February",
+    "March" => "March",
+    "April" => "April",
+    "May" => "May",
+    "June" => "June",
+    "July" => "July",
+    "August" => "August",
+    "September" => "September",
+    "October" => "October",
+    "November" => "November",
+    "December" => "December"
+);

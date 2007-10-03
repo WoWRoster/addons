@@ -5,11 +5,20 @@ $Id$
 [Todo]
 
 poetter:
+add use ajax to config
+
+poetter:
 memberlistsync for realms
 
 
 
 [Done]
+
+poetter:
+month_to_en: check positions of months in datestr [done]
+
+poetter:
+ajax memberlist overlib: check why log is cut off [done]
 
 poetter:
 upgrade handling (buttons, tables) [done]
