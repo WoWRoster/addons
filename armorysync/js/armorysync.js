@@ -20,21 +20,21 @@ function toggleStatus() {
 }
 
 function doUpdateStatus(result) {
-    
+
     if ( result.hasChildNodes() ) {
         var perc = result.getElementsByTagName('progress_perc')[0].firstChild.data;
         var perc_left = result.getElementsByTagName('progress_perc_left')[0].firstChild.data;
         var progress_text = decode(result.getElementsByTagName('progress_text')[0].firstChild.data);
-        
+
         var newProgressText = document.createTextNode(progress_text);
         document.getElementById('progress_text').replaceChild(newProgressText, document.getElementById('progress_text').firstChild);
-    
-    
+
+
         while ( document.getElementById('progress_bar').hasChildNodes() ) {
             var firstChild = document.getElementById('progress_bar').firstChild
             document.getElementById('progress_bar').removeChild(firstChild);
         }
-        
+
         if ( perc ) {
             var newTD = document.createElement("td");
             newTD.bgColor = "#660000";
@@ -42,7 +42,7 @@ function doUpdateStatus(result) {
             newTD.setAttribute('width', perc+'%');
             document.getElementById('progress_bar').appendChild(newTD);
         }
-    
+
         if ( perc_left ) {
             var newTD = document.createElement("td");
             newTD.bgColor = "#FFF7CE";
@@ -50,13 +50,14 @@ function doUpdateStatus(result) {
             newTD.setAttribute('width', perc_left+'%');
             document.getElementById('progress_bar').appendChild(newTD);
         }
-        
-        
+
+
         var status = result.getElementsByTagName('armorysync_status')[0];
         var childCount = status.childNodes.length;
         for (var i = 0; i <= childCount-1; i++) {
             var child = status.childNodes[i];
             var childName = child.nodeName;
+
             //alert('Child: '+childName);
             var element;
             if ( child.childNodes[0] && child.childNodes[0].nodeName == 'image' ) {
@@ -64,26 +65,26 @@ function doUpdateStatus(result) {
                 element = document.createElement("img");
                 element.src = url;
                 if ( child.childNodes[1] && child.childNodes[1].nodeName == 'overlib' ) {
-                    
+
                     var libChild = child.childNodes[1];
                     var libType = libChild.firstChild.nodeName;
                     var libData = '';
-                    
+
                     var libChildCount = libChild.childNodes.length;
                     //alert('libChildCount: '+ libChildCount);
-                    
+
                     for ( var j = 0; j < libChildCount; j++ ) {
                         //alert(libChild.childNodes[j].nodeName);
                         libData = libData+ libChild.childNodes[j].firstChild.data;
                     }
-                    
+
                     libData = decode( libData );
-                    
+
                     if ( libType == 'char' ) {
                         element.setAttribute('onmouseover', 'return overlib(\''+libData+'\',CAPTION,\'Update Log\',WRAP);');
                         element.setAttribute('onmouseout', 'return nd();');
                     }
-                    
+
                     if ( libType == 'memberlist' ) {
                         element.setAttribute('onclick', "return overlib('<div style=\"height:300px;width:500px;overflow:auto;\">"+ libData+ "</div>',CAPTION,'Update Log',STICKY, OFFSETX, 250, CLOSECLICK);");
                         element.setAttribute('onmouseover', 'return overlib(\'Click me\',CAPTION,\'Update Log\',WRAP);');
@@ -100,10 +101,10 @@ function doUpdateStatus(result) {
             }
             document.getElementById(childName).replaceChild(element, document.getElementById(childName).firstChild);
         }
-        
+
         if ( result.getElementsByTagName('reload')[0] ) {
             var reload = result.getElementsByTagName('reload')[0].firstChild.data || 5000;
-            
+
             if ( reload ) {
                 self.setTimeout('nextStep()', reload);
             }
@@ -140,8 +141,8 @@ function decode(text) {
 //		} else {
 //		    var charCode = ch.charCodeAt(0);
 //			if (charCode > 255) {
-//			    alert( "Unicode Character '" 
-//                        + ch 
+//			    alert( "Unicode Character '"
+//                        + ch
 //                        + "' cannot be encoded using standard URL encoding.\n" +
 //				          "(URL encoding only supports 8-bit characters.)\n" +
 //						  "A space (+) will be substituted." );
@@ -162,7 +163,7 @@ function URLDecode(encoded)
    // Replace + with ' '
    // Replace %xx with equivalent character
    // Put [ERROR] in output if %xx is invalid.
-   var HEXCHARS = "0123456789ABCDEFabcdef"; 
+   var HEXCHARS = "0123456789ABCDEFabcdef";
    var plaintext = "";
    var i = 0;
    while (i < encoded.length) {
@@ -171,8 +172,8 @@ function URLDecode(encoded)
 	       plaintext += " ";
 		   i++;
 	   } else if (ch == "%") {
-			if (i < (encoded.length-2) 
-					&& HEXCHARS.indexOf(encoded.charAt(i+1)) != -1 
+			if (i < (encoded.length-2)
+					&& HEXCHARS.indexOf(encoded.charAt(i+1)) != -1
 					&& HEXCHARS.indexOf(encoded.charAt(i+2)) != -1 ) {
 				plaintext += unescape( encoded.substr(i,3) );
 				i += 3;

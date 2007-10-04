@@ -79,7 +79,7 @@ class ArmorySyncJob {
         global $roster, $addon;
 
         $html = sprintf( $roster->locale->act['roster_deprecated_message'], ROSTER_VERSION, ARMORYSYNC_VERSION, ARMORYSYNC_REQUIRED_ROSTER_VERSION);
-        print messagebox( $html , "<h3>". $roster->locale->act['roster_deprecated']."</h3>" , $style='sred' , '400px' );
+        print messagebox( $html , "<span class=\"title_text\">". $roster->locale->act['roster_deprecated']."</span>" , $style='sred' , '400px' );
     }
 
     /**
@@ -98,7 +98,7 @@ class ArmorySyncJob {
         global $roster, $addon;
 
         $html = sprintf( $roster->locale->act['armorysync_not_upgraded_message'], ARMORYSYNC_VERSION, $addon['version']);
-        print messagebox( $html , "<h3>". $roster->locale->act['armorysync_not_upgraded']."</h3>" , $style='sred' , '400px' );
+        print messagebox( $html , "<span class=\"title_text\">". $roster->locale->act['armorysync_not_upgraded']."</span>" , $style='sred' , '400px' );
     }
 
     /**
@@ -340,23 +340,23 @@ class ArmorySyncJob {
             }
         } elseif ( $roster->scope == 'char' ) {
             $this->id = $roster->data['member_id'];
-            $this->title = "<h3>". $roster->locale->act['armorySyncTitle_Char']. "</h3>\n";
+            $this->title = "<span class=\"title_text\">". $roster->locale->act['armorySyncTitle_Char']. "</span>\n";
             $this->isAuth = $this->_checkAuth('armorysync_char_update_access');
         } elseif ( $roster->scope == 'guild' && isset( $roster->pages[2] ) && $roster->pages[2] == 'memberlist' ) {
             $this->id = $roster->data['guild_id'];
-            $this->title = "<h3>". $roster->locale->act['armorySyncTitle_Guildmembers']. "</h3>\n";
+            $this->title = "<span class=\"title_text\">". $roster->locale->act['armorySyncTitle_Guildmembers']. "</span>\n";
             $this->isMemberList = 1;
             $this->isAuth = $this->_checkAuth('armorysync_guild_update_access');
         } elseif ( $roster->scope == 'guild' ) {
             $this->id = $roster->data['guild_id'];
-            $this->title = "<h3>". $roster->locale->act['armorySyncTitle_Guild']. "</h3>\n";
+            $this->title = "<span class=\"title_text\">". $roster->locale->act['armorySyncTitle_Guild']. "</span>\n";
             $this->isAuth = $this->_checkAuth('armorysync_guild_memberlist_update_access');
         } elseif ( $roster->scope == 'realm' ) {
             $this->id = $roster->data['server'];
-            $this->title = "<h3>". $roster->locale->act['armorySyncTitle_Realm']. "</h3>\n";
+            $this->title = "<span class=\"title_text\">". $roster->locale->act['armorySyncTitle_Realm']. "</span>\n";
             $this->isAuth = $this->_checkAuth('armorysync_realm_update_access');
         } elseif ( $roster->scope == 'util' ) {
-            $this->title = "<h3>". $roster->locale->act['armorySyncTitle_Guildmembers']. "</h3>\n";
+            $this->title = "<span class=\"title_text\">". $roster->locale->act['armorySyncTitle_Guildmembers']. "</span>\n";
             $this->isMemberList = 1;
             $this->isAuth = $this->_checkAuth('armorysync_guild_add_access');
         }
@@ -447,7 +447,7 @@ class ArmorySyncJob {
     function _nothing_to_do() {
         global $roster;
 
-        $html = '<h3>&nbsp;&nbsp;'. $roster->locale->act['nothing_to_do']. '&nbsp;&nbsp;</h3>';
+        $html = '<span class="title_text">&nbsp;&nbsp;'. $roster->locale->act['nothing_to_do']. '&nbsp;&nbsp;</span>';
 
         print messagebox( $html , $title=$this->title , $style='syellow' , $width='' );
     }
@@ -461,7 +461,7 @@ class ArmorySyncJob {
     function _show_status( $jobid = 0, $memberlist = false ) {
         global $roster, $addon;
 
-        $jscript = "<script type=\"text/javascript\" src=\"/". $addon['url']. "js/armorysync.js\"></script>\n";
+        $jscript = "<script type=\"text/javascript\" src=\"". $addon['url_path']. "js/armorysync.js\"></script>\n";
         $this->header .= $jscript;
 
         $members = $this->members;
@@ -547,7 +547,7 @@ class ArmorySyncJob {
             if ( !$memberlist && $member['log'] ) {
                 $array['LOG'] = "<img src=\"img/note.gif\"". makeOverlib( $member['log'] , $roster->locale->act['update_log'] , '' ,0 , '' , ',WRAP' ). " alt=\"\" />";
             } elseif( $member['log'] ) {
-                $array['LOG'] = "<img src=\"img/note.gif\"". makeOverlib( "<div style=\"height:300px;width:500px;overflow:auto;\">". $member['log']. "</div>", $roster->locale->act['update_log'] , '' ,0 , '' , ',STICKY, OFFSETX, 250, CLOSECLICK' ). " alt=\"\"/>";
+                $array['LOG'] = "<img src=\"img/note.gif\"". makeOverlib( "<div style=\"height:300px;width:500px;overflow:auto;\">". $member['log']. "</div>", $roster->locale->act['update_log'] , '' ,0 , '' , ',STICKY, OFFSETX, 250, CLOSECLICK' ). " alt=\"\" />";
             } else {
                 $array['LOG'] = "<img src=\"img/no_note.gif\" alt=\"\" />";
             }
@@ -599,18 +599,18 @@ class ArmorySyncJob {
 
         $perc_left = 100 - $perc;
 
-        $result .= "<progress_perc>". $perc. "</progress_perc>";
-        $result .= "<progress_perc_left>". $perc_left. "</progress_perc_left>";
+        $result .= "<progress_perc>". $perc. "</progress_perc>\n";
+        $result .= "<progress_perc_left>". $perc_left. "</progress_perc_left>\n";
         $result .= "<progress_text>";
         $result .= urlencode("$perc% ". $roster->locale->act['complete']. " ($this->done / $this->total)");
-        $result .= "</progress_text>";
+        $result .= "</progress_text>\n";
 
-        $result .= "<armorysync_status>";
+        $result .= "<armorysync_status>\n";
 
         if ($this->active_member['name']) {
-            $result .= "<progress_next>". urlencode($roster->locale->act['next_to_update']. $this->active_member['name']). "</progress_next>";
+            $result .= "<progress_next>". urlencode($roster->locale->act['next_to_update']. $this->active_member['name']). "</progress_next>\n";
         } else {
-            $result .= "<progress_next></progress_next>";
+            $result .= "<progress_next></progress_next>\n";
         }
 
         $member = $this->active_member;
@@ -622,40 +622,40 @@ class ArmorySyncJob {
                 if ( $memberlist && $key !== 'guild_info' ) {
                     continue;
                 }
-                $result .= "<as_status_". $key. "_". $id. ">";
+                $result .= "<as_status_". $key. "_". $id. ">\n";
                 if ( isset( $member[$key] ) && $member[$key] == 1 ) {
-                    $result .= "<image>". urlencode("img/pvp-win.gif"). "</image>";
+                    $result .= "<image>". urlencode("img/pvp-win.gif"). "</image>\n";
                 } elseif ( isset( $member[$key] ) && $member[$key] >= 1 ) {
                     $result .= $member[$key];
                 } elseif ( isset( $member[$key] ) ) {
-                    $result .= "<image>". urlencode("img/pvp-loss.gif"). "</image>";
+                    $result .= "<image>". urlencode("img/pvp-loss.gif"). "</image>\n";
                 } else {
-                    $result .= "<image>". urlencode("img/blue-question-mark.gif"). "</image>";
+                    $result .= "<image>". urlencode("img/blue-question-mark.gif"). "</image>\n";
                 }
-                $result .= "</as_status_". $key. "_". $id. ">";
+                $result .= "</as_status_". $key. "_". $id. ">\n";
             }
 
-            $result .= "<as_status_starttimeutc_". $id. ">". ( isset( $member['starttimeutc'] ) ? $this->_getLocalisedTime($member['starttimeutc']) : "<image>". urlencode('img/blue-question-mark.gif'). "</image>" ). "</as_status_starttimeutc_". $id. ">";
-            $result .= "<as_status_stoptimeutc_". $id. ">". ( isset( $member['stoptimeutc'] ) ? $this->_getLocalisedTime($member['stoptimeutc']) : "<image>". urlencode('img/blue-question-mark.gif'). "</image>"  ). "</as_status_stoptimeutc_". $id. ">";
+            $result .= "<as_status_starttimeutc_". $id. ">". ( isset( $member['starttimeutc'] ) ? $this->_getLocalisedTime($member['starttimeutc']) : "<image>". urlencode('img/blue-question-mark.gif'). "</image>" ). "</as_status_starttimeutc_". $id. ">\n";
+            $result .= "<as_status_stoptimeutc_". $id. ">". ( isset( $member['stoptimeutc'] ) ? $this->_getLocalisedTime($member['stoptimeutc']) : "<image>". urlencode('img/blue-question-mark.gif'). "</image>"  ). "</as_status_stoptimeutc_". $id. ">\n";
 
             if ( !$memberlist && $member['log'] ) {
-                $result .= "<as_status_log_". $id. ">";
+                $result .= "<as_status_log_". $id. ">\n";
                 $result .= $this->_xmlEncode("image", 'img/note.gif');
                 $result .= "<overlib>";
                 $result .= $this->_xmlEncode( "char", str_replace("'", '"', $member['log'] ) );
-                $result .= "</overlib>";
-                $result .= "</as_status_log_". $id. ">";
+                $result .= "</overlib>\n";
+                $result .= "</as_status_log_". $id. ">\n";
             } elseif( $member['log'] ) {
-                $result .= "<as_status_log_". $id. ">";
+                $result .= "<as_status_log_". $id. ">\n";
                 $result .= $this->_xmlEncode("image", 'img/note.gif');
                 $result .= "<overlib>";
                 $result .= $this->_xmlEncode( "memberlist", str_replace("'", '"', $member['log'] ) );
-                $result .= "</overlib>";
-                $result .= "</as_status_log_". $id. ">";
+                $result .= "</overlib>\n";
+                $result .= "</as_status_log_". $id. ">\n";
             }
         }
 
-        $result .= "</armorysync_status>";
+        $result .= "</armorysync_status>\n";
         return $result;
     }
 
@@ -721,7 +721,7 @@ class ArmorySyncJob {
         $body .= "<br />\n";
 
         print '<div style="height:1px; width:1px; overflow:visible;">';
-        print '<img src="'. $addon['image_path']. 'as_logo.png" style="position: relative; left:420px; bottom:125px; height:250px;">';
+        print '<img src="'. $addon['image_path']. 'as_logo.png" style="position: relative; left:420px; bottom:125px; height:250px;" alt="" />';
         print '</div>';
         print $body;
     }
@@ -931,17 +931,17 @@ class ArmorySyncJob {
         $per_left = 100 - $perc;
         $pb = "<table class=\"main_roster_menu\" cellspacing=\"0\" cellpadding=\"0\" border=\"1\" align=\"center\" width=\"200\" id=\"Table1\">";
         $pb .= "<tr>";
-        $pb .= "    <td id=\"progress_text\" class=\"header\" colspan = 2 align=\"center\">";
+        $pb .= "    <td id=\"progress_text\" class=\"header\" colspan=\"2\" align=\"center\">";
         $pb .= "        $perc% ". $roster->locale->act['complete']. " ($step / $total)";
         $pb .= "    </td>";
         $pb .= "</tr>";
         $pb .= "<tr id=\"progress_bar\">";
         if ( $perc ) {
-            $pb .= "	<td bgcolor=#660000 height=12px width=$perc%>" ;
+            $pb .= "	<td bgcolor=\"#660000\" height=\"12px\" width=\"$perc%\">" ;
             $pb .= "	</td>";
         }
         if ( $per_left ) {
-            $pb .= "	<td bgcolor=#FFF7CE height=12px width=$per_left%>";
+            $pb .= "	<td bgcolor=\"#FFF7CE\" height=\"12px\" width=\"$per_left%\">";
             $pb .= "        </td>";
         }
         $pb .= "</tr>";
@@ -1049,7 +1049,7 @@ class ArmorySyncJob {
 
 
         print '<div style="height:1px; width:1px; overflow:visible;">';
-        print '<img src="'. $addon['image_path']. 'as_logo.png" style="position: relative; left:420px; bottom:125px; height:250px;">';
+        print '<img src="'. $addon['image_path']. 'as_logo.png" style="position: relative; left:420px; bottom:125px; height:250px;" alt="" />';
         print '</div>';
         print messagebox( $message, $this->title,'sred', '500px');
     }
