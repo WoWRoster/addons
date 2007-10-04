@@ -4,7 +4,7 @@
 
 <div style="height:1px; width:1px; overflow:visible;">
         <!-- IF PICLOGO -->
-        <img src="{IMAGE_PATH}/as_logo.png" style="position: relative; left:410px; bottom:150px; height:250px;">
+        <img src="{IMAGE_PATH}/as_logo.png" style="position: relative; left:410px; bottom:150px; height:250px;" alt="" />
         <!-- ENDIF -->
 </div>
 <form name="linker" action="{LINK}" method="post">
@@ -16,36 +16,36 @@
 {START_BORDER}
 <div class="header_text {STYLE}border">
 <table align="center" width="100%" cellspacing="0" cellpadding="0">
-    <tr>
-	<td id="progress_next" width="33%" align="center">{NEXT}</td>
-	<td id="progress_title" width="33%" align="center">{TITLE}</td>
-	<td width="33%" align="right">
-		{PROGRESSBAR}
-	</td>
-    </tr>
+	<tr>
+		<td id="progress_next" width="33%" align="center">{NEXT}</td>
+		<td id="progress_title" width="33%" align="center">{TITLE}</td>
+		<td width="33%" align="right">
+			{PROGRESSBAR}
+		</td>
+	</tr>
 </table>
 </div>
 
-<img src="{ICON}" style="float:right;cursor:pointer;" alt="" id="update_details_img" onclick="toggleStatus();" >
-<br>
-<div id="update_details" style="display:{DISPLAY};">
-<div style="height:1px; width:1px; overflow:visible;">
-        <!-- IF PIC1 -->
-        <img src="{IMAGE_PATH}/as_pic1.png" style="position: relative; right:120px; top:150px; height:250px;">
-        <!-- ENDIF -->
-        <!-- IF PIC2 -->
-        <img src="{IMAGE_PATH}/as_pic2.png" style="position: relative; left:800px; top:400px; height:250px;">
-        <!-- ENDIF -->
-        <!-- IF PIC3 -->
-        <img src="{IMAGE_PATH}/as_pic3.png" style="position: relative; right:150px; top:650px; height:250px;">
-        <!-- ENDIF -->
-</div>
-<table class="bodyline" cellspacing="0" cellpadding="0" align="center">
-	<tr>
-		<td>
-			<table class="border_frame" cellspacing="0" cellpadding="0">
-				<tr>
+<img src="{ICON}" style="float:right;cursor:pointer;" id="update_details_img" onclick="toggleStatus();" alt="" />
+<br />
+<div id="update_details"<!-- IF DISPLAY neq "" --> style="display:{DISPLAY};"<!-- ENDIF -->>
+	<div style="height:1px; width:1px; overflow:visible;">
+		<!-- IF PIC1 -->
+		<img src="{IMAGE_PATH}/as_pic1.png" style="position: relative; right:120px; top:150px; height:250px;" alt="" />
+		<!-- ENDIF -->
+		<!-- IF PIC2 -->
+		<img src="{IMAGE_PATH}/as_pic2.png" style="position: relative; left:800px; top:400px; height:250px;" alt="" />
+		<!-- ENDIF -->
+		<!-- IF PIC3 -->
+		<img src="{IMAGE_PATH}/as_pic3.png" style="position: relative; right:150px; top:650px; height:250px;" alt="" />
+		<!-- ENDIF -->
+	</div>
+	<table class="bodyline" cellspacing="0" cellpadding="0" align="center">
+		<tr>
+			<td>
+				<table class="border_frame" cellspacing="0" cellpadding="0">
+					<tr>
 <!-- BEGIN head_col -->
-					<th class="membersHeader ts_string">{head_col.HEAD_TITLE}</th>
+						<th class="membersHeader ts_string">{head_col.HEAD_TITLE}</th>
 <!-- END head_col -->
-				</tr>
+					</tr>
