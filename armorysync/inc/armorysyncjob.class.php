@@ -474,6 +474,10 @@ class ArmorySyncJob {
 
         $roster->tpl->assign_vars(array(
                 'IMAGE_PATH' => $addon['image_path'],
+                'PICLOGO' => 1,
+                'PIC1' => $this->total >= 20 ? true: false,
+                'PIC2' => $this->total >= 40 ? true: false,
+                'PIC3' => $this->total >= 60 ? true: false,
                 'LINK' => ( $this->link ? $this->link : makelink() ),
                 'STATUSHIDDEN' => $status,
                 'JOB_ID' => $this->jobid,
