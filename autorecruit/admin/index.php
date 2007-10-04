@@ -25,6 +25,8 @@ if( isset($_POST['process']) && $_POST['process'] != '' )
 
 $menu_select = array();
 
+$guildset = (isset($_GET['guild']) ? $_GET['guild'] : '');
+
 // Get the scope select data
 $query = "SELECT `guild_name`, CONCAT(`region`,'-',`server`), `guild_id` FROM `" . $roster->db->table('guild') . "`"
 	   . " ORDER BY `region` ASC, `server` ASC, `guild_name` ASC;";
@@ -52,25 +54,24 @@ if( $guilds > 1 )
 		$options .= '		<optgroup label="' . $realm . '">'. "\n";
 		foreach( $guild as $id => $name )
 		{
-			$options .= '			<option value="' . makelink("&amp;guild=$id") . '"' . ( $id == $_GET['guild'] ? ' selected="selected"' : '' ) . '>' . $name . '</option>' . "\n";
+			$options .= '			<option value="' . makelink("&amp;guild=$id",true) . '"' . ( $id == $guildset ? ' selected="selected"' : '' ) . '>' . $name . '</option>' . "\n";
 		}
 		$options .= '		</optgroup>';
 	}
 }
 
-$body = '<form action="' . makelink() . '" name="realm_select" method="post">
-	<select name="guild" onchange="window.location.href=this.options[this.selectedIndex].value;" style="margin: 5px;">
+$body = 'Select A Guild
+<form action="' . makelink() . '" name="realm_select" method="post">
+	<select name="guild" onchange="window.location.href=this.options[this.selectedIndex].value;">
 	<option>----------</option>
 ' . $options . '
 	</select>
 </form>';
 
-$body = messagebox($body,'Select a Guild','sgreen');
-
-$guildset = $_GET['guild'];
+$body = messagebox($body,'','sgreen');
 
 // Build the AutoRecruit controls
-if( $guildset )
+if( $guildset != '' )
 {
 	$sqlstring = 'SELECT * FROM ' . $roster->db->table('recruitment',$addon['basename']) . ' WHERE `guild_id` = ' . $guildset ;
 	$result = $roster->db->query($sqlstring);
@@ -137,9 +138,9 @@ if( $guildset )
 		roster_die('There was an error in the query','ERROR');
 	}
 
-	$body .= "<br /><div id=\"ar_disp\">\n" . border('sblue','start',$roster->locale->act['admin']['autorecruit_title'] ) . "\n<table cellspacing=\"0\" cellpadding=\"0\" class=\"bodyline\">\n";
+	$formbody = "<br /><div id=\"ar_disp\">\n" . border('sblue','start',$roster->locale->act['admin']['autorecruit_title'] ) . "\n<table cellspacing=\"0\" cellpadding=\"0\" class=\"bodyline\">\n";
 
-	$body .= '
+	$formbody .= '
 	<tr>
 		<th class="membersHeader">' . $roster->locale->act['admin']['setting'] . '</th>
 		<th class="membersHeaderRight" colspan="2">' . $roster->locale->act['admin']['threshold'] . '</th>
@@ -158,67 +159,70 @@ if( $guildset )
 		<th class="membersHeaderRight">' . $roster->locale->act['admin']['threshold'] . '</th>
 	</tr>
 	<tr>
-		<td class="membersRow1">' . $roster->locale->act['Druid'] . '</td>
-		<td class="membersRow1">' . $druid_count . '</td>
-		<td class="membersRowRight1"><input name="ar_max_druid" type="text" size="5" maxlength="2" value="' . $alldata[0]['max_druid'] . '"/></td>
+		<td class="membersRow2">' . $roster->locale->act['Druid'] . '</td>
+		<td class="membersRow2">' . $druid_count . '</td>
+		<td class="membersRowRight2"><input name="ar_max_druid" type="text" size="5" maxlength="2" value="' . $alldata[0]['max_druid'] . '"/></td>
 	</tr>
 	<tr>
-		<td class="membersRow2">' . $roster->locale->act['Hunter'] . '</td>
-		<td class="membersRow2">' . $hunter_count . '</td>
+		<td class="membersRow1">' . $roster->locale->act['Hunter'] . '</td>
+		<td class="membersRow1">' . $hunter_count . '</td>
 		<td class="membersRowRight2"><input name="ar_max_hunter" type="text" size="5" maxlength="2" value="' . $alldata[0]['max_hunter'] . '"/></td>
 	</tr>
 	<tr>
-		<td class="membersRow1">' . $roster->locale->act['Mage'] . '</td>
-		<td class="membersRow1">' . $mage_count . '</td>
-		<td class="membersRowRight1"><input name="ar_max_mage" type="text" size="5" maxlength="2" value="' . $alldata[0]['max_mage'] . '"/></td>
+		<td class="membersRow2">' . $roster->locale->act['Mage'] . '</td>
+		<td class="membersRow2">' . $mage_count . '</td>
+		<td class="membersRowRight2"><input name="ar_max_mage" type="text" size="5" maxlength="2" value="' . $alldata[0]['max_mage'] . '"/></td>
 	</tr>
 	<tr>
-		<td class="membersRow2">' . $roster->locale->act['Paladin'] . '</td>
-		<td class="membersRow2">' . $paladin_count . '</td>
+		<td class="membersRow1">' . $roster->locale->act['Paladin'] . '</td>
+		<td class="membersRow1">' . $paladin_count . '</td>
 		<td class="membersRowRight2"><input name="ar_max_paladin" type="text" size="5" maxlength="2" value="' . $alldata[0]['max_paladin'] . '"/></td>
 	</tr>
 	<tr>
-		<td class="membersRow1">' . $roster->locale->act['Priest'] . '</td>
-		<td class="membersRow1">' . $priest_count . '</td>
-		<td class="membersRowRight1"><input name="ar_max_priest" type="text" size="5" maxlength="2" value="' . $alldata[0]['max_priest'] . '"/></td>
+		<td class="membersRow2">' . $roster->locale->act['Priest'] . '</td>
+		<td class="membersRow2">' . $priest_count . '</td>
+		<td class="membersRowRight2"><input name="ar_max_priest" type="text" size="5" maxlength="2" value="' . $alldata[0]['max_priest'] . '"/></td>
 	</tr>
 	<tr>
-		<td class="membersRow2">' . $roster->locale->act['Rogue'] . '</td>
-		<td class="membersRow2">' . $rogue_count . '</td>
+		<td class="membersRow1">' . $roster->locale->act['Rogue'] . '</td>
+		<td class="membersRow1">' . $rogue_count . '</td>
 		<td class="membersRowRight2"><input name="ar_max_rogue" type="text" size="5" maxlength="2" value="' . $alldata[0]['max_rogue'] . '"/></td>
 	</tr>
 	<tr>
-		<td class="membersRow1">' . $roster->locale->act['Shaman'] . '</td>
-		<td class="membersRow1">' . $shaman_count . '</td>
-		<td class="membersRowRight1"><input name="ar_max_shaman" type="text" size="5" maxlength="2" value="' . $alldata[0]['max_shaman'] . '"/></td>
+		<td class="membersRow2">' . $roster->locale->act['Shaman'] . '</td>
+		<td class="membersRow2">' . $shaman_count . '</td>
+		<td class="membersRowRight2"><input name="ar_max_shaman" type="text" size="5" maxlength="2" value="' . $alldata[0]['max_shaman'] . '"/></td>
 	</tr>
 	<tr>
-		<td class="membersRow2">' . $roster->locale->act['Warlock'] . '</td>
-		<td class="membersRow2">' . $warlock_count . '</td>
+		<td class="membersRow1">' . $roster->locale->act['Warlock'] . '</td>
+		<td class="membersRow1">' . $warlock_count . '</td>
 		<td class="membersRowRight2"><input name="ar_max_warlock" type="text" size="5" maxlength="2" value="' . $alldata[0]['max_warlock'] . '"/></td>
 	</tr>
 	<tr>
-		<td class="membersRow1">' . $roster->locale->act['Warrior'] . '</td>
-		<td class="membersRow1">' . $warrior_count . '</td>
-		<td class="membersRowRight1"><input name="ar_max_warrior" type="text" size="5" maxlength="2" value="' . $alldata[0]['max_warrior'] . '"/></td>
+		<td class="membersRow2">' . $roster->locale->act['Warrior'] . '</td>
+		<td class="membersRow2">' . $warrior_count . '</td>
+		<td class="membersRowRight2"><input name="ar_max_warrior" type="text" size="5" maxlength="2" value="' . $alldata[0]['max_warrior'] . '"/></td>
 	</tr>
 ';
-	$body .= "</table>\n" . border('sblue','end') . "\n</div>\n";
+	$formbody .= "</table>\n" . border('sblue','end') . "\n</div>\n";
 }
 else
 {
-	$body .= 'No Data';
+	$formbody = 'No Data';
 }
 
-		$body = $roster_login->getMessage() . "<br />
-<form action=\"" . makelink('&amp;guild=' . $guildset) . "\" method=\"post\" enctype=\"multipart/form-data\" id=\"config\" onsubmit=\"return confirm('" . $roster->locale->act['confirm_config_submit'] . "');submitonce(this);\">
-	$body
+$roster->output['body_onload'] .= 'initARC(\'config\',\'radioOn\',\'radioOff\',\'checkboxOn\',\'checkboxOff\');';
+
+$body .= $roster_login->getMessage() . "<br />
+<form action=\"\" method=\"post\" enctype=\"multipart/form-data\" id=\"config\" onsubmit=\"return confirm('".$roster->locale->act['confirm_config_submit']."') &amp;&amp; submitonce(this);\">
+	$formbody
 <br /><br />
-<input type=\"submit\" value=\"" . $roster->locale->act['config_submit_button'] . "\" />
-<input type=\"reset\" name=\"Reset\" value=\"" . $roster->locale->act['config_reset_button'] . "\" onclick=\"return confirm('" . $roster->locale->act['confirm_config_reset'] . "')\"/>
+<input type=\"submit\" value=\"".$roster->locale->act['config_submit_button']."\" />
+<input type=\"reset\" name=\"Reset\" value=\"".$roster->locale->act['config_reset_button']."\" onclick=\"return confirm('".$roster->locale->act['confirm_config_reset']."')\"/>
 <input type=\"hidden\" name=\"process\" value=\"process\" />
-<input type=\"hidden\" name=\"guild\" value=\"$guildset\" />
+<input type=\"hidden\" name=\"guild_id\" value=\"$guildset\" />
 </form>";
+
 
 /**
  * Process Data for entry to the database
@@ -247,7 +251,7 @@ function processData( )
 
 	$update_sql = "UPDATE `" . $roster->db->table('recruitment',$addon['basename']) . "`"
 				. " SET " . $roster->db->build_query('UPDATE',$update_sql)
-				. " WHERE `guild_id` = '" . $_POST['guild'] . "';";
+				. " WHERE `guild_id` = '" . $_POST['guild_id'] . "';";
 
 	// Update DataBase
 	if( count($update_sql) > 0 )
