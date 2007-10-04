@@ -2,6 +2,10 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[256]
+- added more images
+- fixed some typos in deDE
+
 svn[255]
 - added RosterVersionRequired check
 - added ArmorySyncNotUpgraded check

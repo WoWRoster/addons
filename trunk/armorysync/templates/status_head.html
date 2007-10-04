@@ -3,7 +3,9 @@
 <!-- ArmorySync Status Head -->
 
 <div style="height:1px; width:1px; overflow:visible;">
-<img src="{IMAGE_PATH}/as_logo.png" style="position: relative; left:420px; bottom:125px; height:250px;">
+        <!-- IF PICLOGO -->
+        <img src="{IMAGE_PATH}/as_logo.png" style="position: relative; left:410px; bottom:150px; height:250px;">
+        <!-- ENDIF -->
 </div>
 <form name="linker" action="{LINK}" method="post">
         <input type="hidden" name="job_id" value="{JOB_ID}" />
@@ -27,6 +29,17 @@
 <img src="{ICON}" style="float:right;cursor:pointer;" alt="" id="update_details_img" onclick="toggleStatus();" >
 <br>
 <div id="update_details" style="display:{DISPLAY};">
+<div style="height:1px; width:1px; overflow:visible;">
+        <!-- IF PIC1 -->
+        <img src="{IMAGE_PATH}/as_pic1.png" style="position: relative; right:120px; top:150px; height:250px;">
+        <!-- ENDIF -->
+        <!-- IF PIC2 -->
+        <img src="{IMAGE_PATH}/as_pic2.png" style="position: relative; left:800px; top:400px; height:250px;">
+        <!-- ENDIF -->
+        <!-- IF PIC3 -->
+        <img src="{IMAGE_PATH}/as_pic3.png" style="position: relative; right:150px; top:650px; height:250px;">
+        <!-- ENDIF -->
+</div>
 <table class="bodyline" cellspacing="0" cellpadding="0" align="center">
 	<tr>
 		<td>
