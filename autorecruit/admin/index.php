@@ -58,15 +58,14 @@ if( $guilds > 1 )
 	}
 }
 
-$body = 'Select A Guild
-<form action="' . makelink() . '" name="realm_select" method="post">
-	<select name="guild" onchange="window.location.href=this.options[this.selectedIndex].value;">
+$body = '<form action="' . makelink() . '" name="realm_select" method="post">
+	<select name="guild" onchange="window.location.href=this.options[this.selectedIndex].value;" style="margin: 5px;">
 	<option>----------</option>
 ' . $options . '
 	</select>
 </form>';
 
-$body = messagebox($body,'','sgreen');
+$body = messagebox($body,'Select a Guild','sgreen');
 
 $guildset = $_GET['guild'];
 
