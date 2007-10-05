@@ -2,6 +2,9 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[262]
+- forgot an image
+
 svn[261]
 - rewrite of doUpdateStatus in armorysync.js
 - restructured XML Data
