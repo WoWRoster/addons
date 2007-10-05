@@ -22,96 +22,130 @@ function toggleStatus() {
 function doUpdateStatus(result) {
 
     if ( result.hasChildNodes() ) {
-        var perc = result.getElementsByTagName('progress_perc')[0].firstChild.data;
-        var perc_left = result.getElementsByTagName('progress_perc_left')[0].firstChild.data;
-        var progress_text = decode(result.getElementsByTagName('progress_text')[0].firstChild.data);
 
-        var newProgressText = document.createTextNode(progress_text);
-        document.getElementById('progress_text').replaceChild(newProgressText, document.getElementById('progress_text').firstChild);
+        var resultChild = result.firstChild;
+        var doReload = false;
+        var reloadTime = 0;
+        var safty1 = 0;  // just in case we produce a loop somehow
 
+        while ( resultChild != null ) {
 
-        while ( document.getElementById('progress_bar').hasChildNodes() ) {
-            var firstChild = document.getElementById('progress_bar').firstChild
-            document.getElementById('progress_bar').removeChild(firstChild);
-        }
+            var resultChildName = resultChild.nodeName;
+            var resultChildType = resultChild.getAttribute('type');
 
-        if ( perc ) {
-            var newTD = document.createElement("td");
-            newTD.bgColor = "#660000";
-            newTD.height = "12px";
-            newTD.setAttribute('width', perc+'%');
-            document.getElementById('progress_bar').appendChild(newTD);
-        }
+            switch ( resultChildType ) {
 
-        if ( perc_left ) {
-            var newTD = document.createElement("td");
-            newTD.bgColor = "#FFF7CE";
-            newTD.height = "12px";
-            newTD.setAttribute('width', perc_left+'%');
-            document.getElementById('progress_bar').appendChild(newTD);
-        }
+                case 'text' :
+                    var newElement;
 
-
-        var status = result.getElementsByTagName('armorysync_status')[0];
-        var childCount = status.childNodes.length;
-        for (var i = 0; i <= childCount-1; i++) {
-            var child = status.childNodes[i];
-            var childName = child.nodeName;
-
-            //alert('Child: '+childName);
-            var element;
-            if ( child.childNodes[0] && child.childNodes[0].nodeName == 'image' ) {
-                var url = decode(child.childNodes[0].firstChild.data);
-                element = document.createElement("img");
-                element.src = url;
-                if ( child.childNodes[1] && child.childNodes[1].nodeName == 'overlib' ) {
-
-                    var libChild = child.childNodes[1];
-                    var libType = libChild.firstChild.nodeName;
-                    var libData = '';
-
-                    var libChildCount = libChild.childNodes.length;
-                    //alert('libChildCount: '+ libChildCount);
-
-                    for ( var j = 0; j < libChildCount; j++ ) {
-                        //alert(libChild.childNodes[j].nodeName);
-                        libData = libData+ libChild.childNodes[j].firstChild.data;
+                    if ( resultChild.childNodes.length != 0 ){
+                        var newText = decode(resultChild.firstChild.data);
+                        newElement = document.createTextNode(newText);
+                    } else {
+                        newElement = document.createTextNode('');
                     }
-
-                    libData = decode( libData );
-
-                    if ( libType == 'char' ) {
-                        element.setAttribute('onmouseover', 'return overlib(\''+libData+'\',CAPTION,\'Update Log\',WRAP);');
-                        element.setAttribute('onmouseout', 'return nd();');
+                    var docElement = document.getElementById(resultChildName);
+                    if ( docElement != null ) {
+                        docElement.replaceChild(newElement, docElement.firstChild);
                     }
+                    break;
 
-                    if ( libType == 'memberlist' ) {
-                        element.setAttribute('onclick', "return overlib('<div style=\"height:300px;width:500px;overflow:auto;\">"+ libData+ "</div>',CAPTION,'Update Log',STICKY, OFFSETX, 250, CLOSECLICK);");
-                        element.setAttribute('onmouseover', 'return overlib(\'Click me\',CAPTION,\'Update Log\',WRAP);');
-                        element.setAttribute('onmouseout', 'return nd();');
+                case 'image' :
+                    var newElement;
+                    var newImage = resultChild.getAttribute('src');
+                    var isCharLog = resultChild.getAttribute('isCharLog');
+                    var isMemberlistLog = resultChild.getAttribute('isMemberlistLog');
+
+                    if ( newImage != null ){
+                        newImage = decode(newImage);
+                        newElement = document.createElement("img");
+                        newElement.setAttribute( 'src', newImage );
+                    } else {
+                        newElement = document.createElement("img");
                     }
-                }
-            } else {
-                if ( child.hasChildNodes() ) {
-                    var text = decode(child.firstChild.data);
-                    element = document.createTextNode(text);
-                } else {
-                    element = document.createTextNode('');
-                }
+                    if ( isCharLog != null || isMemberlistLog != null ) {
+                        var overlibChild = resultChild.firstChild;
+                        var overlibData = '';
+                        var safty2 = 0; // just in case we produce a loop somehow
+                        while ( overlibChild != null ) {
+                            overlibData += overlibChild.firstChild.data;
+                            overlibChild = overlibChild.nextSibling;
+                            if ( safty2++ > 50 ) break; // just in case we produce a loop somehow
+                        }
+                        overlibData = decode(overlibData);
+
+                        if ( isCharLog != null ) {
+                            newElement.onmouseover = function() {
+                                return overlib(overlibData,CAPTION,'Update Log',WRAP);
+                            }
+                            newElement.onmouseout = function() { return nd(); }
+                        }
+                        if ( isMemberlistLog != null ) {
+                            newElement.onclick = function() {
+                                return overlib('<div style="height:300px;width:500px;overflow:auto;">'+ overlibData+ '</div>',CAPTION,'Update Log',STICKY, OFFSETX, 250, CLOSECLICK);
+                            }
+                            newElement.onmouseover = function() {
+                                return overlib('Click me',CAPTION,'Update Log',WRAP);
+                            }
+                            newElement.onmouseout = function() { return nd(); }
+                        }
+                    }
+                    var docElement = document.getElementById(resultChildName);
+                    if ( docElement != null ) {
+                        docElement.replaceChild(newElement, docElement.firstChild);
+                    }
+                    break;
+
+                case 'bar' :
+                    var perc = resultChild.getAttribute('perc');
+                    var perc_left = resultChild.getAttribute('perc_left');
+
+                    if ( perc != null && perc_left != null ) {
+                        var progBar = document.getElementById('progress_bar');
+                        if ( progBar != null ) {
+                            while ( progBar.hasChildNodes() ) {
+                                var firstChild = progBar.firstChild
+                                progBar.removeChild(firstChild);
+                            }
+
+                            if ( perc && perc != 0 ) {
+                                var newTD = document.createElement("td");
+                                newTD.setAttribute('bgColor', '#660000');
+                                newTD.setAttribute('height', '12px');
+                                newTD.setAttribute('width', perc+'%');
+                                progBar.appendChild(newTD);
+                            }
+
+                            if ( perc_left && perc_left != 0 ) {
+                                var newTD = document.createElement("td");
+                                newTD.setAttribute('bgColor', '#FFF7CE');
+                                newTD.setAttribute('height', '12px');
+                                newTD.setAttribute('width', perc_left+'%');
+                                progBar.appendChild(newTD);
+                            }
+                        }
+                    }
+                    break;
+
+                case 'control' :
+                    var reloadTime = resultChild.getAttribute('reloadTime');
+
+                    if ( reloadTime != null ) {
+                        doReload = true;
+                    }
+                    break;
             }
-            document.getElementById(childName).replaceChild(element, document.getElementById(childName).firstChild);
+
+            resultChild = resultChild.nextSibling;
+
+            if ( safty1++ > 15 ) break; // just in case we produce a loop somehow
         }
 
-        if ( result.getElementsByTagName('reload')[0] ) {
-            var reload = result.getElementsByTagName('reload')[0].firstChild.data || 5000;
-
-            if ( reload ) {
-                self.setTimeout('nextStep()', reload);
-            }
+        if ( doReload == true ) {
+            self.setTimeout('nextStep()', reloadTime);
         }
     }
 }
-
 
 function decode(text) {
     return decode_utf8(URLDecode(text));

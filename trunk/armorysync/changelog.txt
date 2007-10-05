@@ -2,6 +2,16 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[261]
+- rewrite of doUpdateStatus in armorysync.js
+- restructured XML Data
+
+svn[260]
+- xhtml fixes again
+- changed <h3> to <span class="title_text">
+-- It doesnt have the huge padding that h3 does
+- in the link to armorysync.js, $addon['url'] should be $addon['url_path']
+
 svn[256]
 - added more images
 - fixed some typos in deDE
