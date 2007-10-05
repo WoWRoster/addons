@@ -243,7 +243,7 @@ class ArmorySyncJob {
         if ( $ret ) {
             $reloadTime = $addon['config']['armorysync_reloadwaittime'] * 500;
             return array(   'result' => $this->$functions['get_ajax_status']().
-                            '<reload>'. $reloadTime. '</reload>',
+                            '<reload type="control" reloadTime="'. $reloadTime. '"></reload>',
                             'status' => 0 );
         } else {
             return array(   'result' => $this->$functions['get_ajax_status'](),
@@ -599,18 +599,19 @@ class ArmorySyncJob {
 
         $perc_left = 100 - $perc;
 
-        $result .= "<progress_perc>". $perc. "</progress_perc>\n";
-        $result .= "<progress_perc_left>". $perc_left. "</progress_perc_left>\n";
-        $result .= "<progress_text>";
-        $result .= urlencode("$perc% ". $roster->locale->act['complete']. " ($this->done / $this->total)");
-        $result .= "</progress_text>\n";
+        $result .= "<progress_bar type=\"bar\" ";
+		$result .= "perc=\"". $perc. "\" ";
+        $result .= "perc_left=\"". $perc_left. "\" >";
+		$result .= "</progress_bar>";
 
-        $result .= "<armorysync_status>\n";
+        $result .= "<progress_text type=\"text\" >";
+        $result .= urlencode("$perc% ". $roster->locale->act['complete']. " ($this->done / $this->total)");
+        $result .= "</progress_text>";
 
         if ($this->active_member['name']) {
-            $result .= "<progress_next>". urlencode($roster->locale->act['next_to_update']. $this->active_member['name']). "</progress_next>\n";
+            $result .= "<progress_next type=\"text\" >". urlencode($roster->locale->act['next_to_update']. $this->active_member['name']). "</progress_next>";
         } else {
-            $result .= "<progress_next></progress_next>\n";
+            $result .= "<progress_next type=\"text\" ></progress_next>";
         }
 
         $member = $this->active_member;
@@ -622,40 +623,49 @@ class ArmorySyncJob {
                 if ( $memberlist && $key !== 'guild_info' ) {
                     continue;
                 }
-                $result .= "<as_status_". $key. "_". $id. ">\n";
+                $result .= "<as_status_". $key. "_". $id;
                 if ( isset( $member[$key] ) && $member[$key] == 1 ) {
-                    $result .= "<image>". urlencode("img/pvp-win.gif"). "</image>\n";
+                    $result .= " type=\"image\" src=\"". urlencode("img/pvp-win.gif"). "\" >";
                 } elseif ( isset( $member[$key] ) && $member[$key] >= 1 ) {
-                    $result .= $member[$key];
+                    $result .= " type=\"text\" >". $member[$key];
                 } elseif ( isset( $member[$key] ) ) {
-                    $result .= "<image>". urlencode("img/pvp-loss.gif"). "</image>\n";
+                    $result .= " type=\"image\" src=\"". urlencode("img/pvp-loss.gif"). "\" >";
                 } else {
-                    $result .= "<image>". urlencode("img/blue-question-mark.gif"). "</image>\n";
+                    $result .= " type=\"image\" src=\"". urlencode("img/blue-question-mark.gif"). "\" >";
                 }
-                $result .= "</as_status_". $key. "_". $id. ">\n";
+                $result .= "</as_status_". $key. "_". $id. ">";
             }
 
-            $result .= "<as_status_starttimeutc_". $id. ">". ( isset( $member['starttimeutc'] ) ? $this->_getLocalisedTime($member['starttimeutc']) : "<image>". urlencode('img/blue-question-mark.gif'). "</image>" ). "</as_status_starttimeutc_". $id. ">\n";
-            $result .= "<as_status_stoptimeutc_". $id. ">". ( isset( $member['stoptimeutc'] ) ? $this->_getLocalisedTime($member['stoptimeutc']) : "<image>". urlencode('img/blue-question-mark.gif'). "</image>"  ). "</as_status_stoptimeutc_". $id. ">\n";
+			if ( isset( $member['starttimeutc'] ) ) {
+				$result .= "<as_status_starttimeutc_". $id. " type=\"text\" >";
+				$result .= $this->_getLocalisedTime($member['starttimeutc']);
+				$result .= "</as_status_starttimeutc_". $id. ">";
+			}
+
+			if (isset( $member['stoptimeutc'] ) ) {
+				$result .= "<as_status_stoptimeutc_". $id. " type=\"text\" >";
+				$result .= $this->_getLocalisedTime($member['stoptimeutc']);
+				$result .= "</as_status_stoptimeutc_". $id. ">";
+
+			}
 
             if ( !$memberlist && $member['log'] ) {
-                $result .= "<as_status_log_". $id. ">\n";
-                $result .= $this->_xmlEncode("image", 'img/note.gif');
-                $result .= "<overlib>";
-                $result .= $this->_xmlEncode( "char", str_replace("'", '"', $member['log'] ) );
-                $result .= "</overlib>\n";
-                $result .= "</as_status_log_". $id. ">\n";
+                $result .= "<as_status_log_". $id. " type=\"image\" ";
+				$result .= "isCharLog=\"1\" ";
+                $result .= "src=\"". urlencode('img/note.gif'). "\"";
+				$result .= " >";
+                $result .= $this->_xmlEncode( "overlib", str_replace("'", '"', $member['log'] ) );
+                $result .= "</as_status_log_". $id. ">";
             } elseif( $member['log'] ) {
-                $result .= "<as_status_log_". $id. ">\n";
-                $result .= $this->_xmlEncode("image", 'img/note.gif');
-                $result .= "<overlib>";
-                $result .= $this->_xmlEncode( "memberlist", str_replace("'", '"', $member['log'] ) );
-                $result .= "</overlib>\n";
-                $result .= "</as_status_log_". $id. ">\n";
+                $result .= "<as_status_log_". $id. " type=\"image\" ";
+				$result .= "isMemberlistLog=\"1\" ";
+                $result .= "src=\"". urlencode('img/note.gif'). "\"";
+				$result .= " >";
+                $result .= $this->_xmlEncode( "overlib", str_replace("'", '"', $member['log'] ) );
+                $result .= "</as_status_log_". $id. ">";
             }
         }
 
-        $result .= "</armorysync_status>\n";
         return $result;
     }
 
@@ -687,6 +697,7 @@ class ArmorySyncJob {
     function _showFooter() {
         global $roster, $addon;
 
+        $roster->tpl->assign_var('IMAGE_PATH', $addon['image_path']);
         $roster->tpl->assign_var('ARMORYSYNC_VERSION',$addon['version']. ' by poetter');
         $roster->tpl->assign_var('ARMORYSYNC_CREDITS',$roster->locale->act['armorysync_credits']);
         $roster->tpl->set_filenames(array(
