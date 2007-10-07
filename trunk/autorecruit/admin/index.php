@@ -47,7 +47,7 @@ while( $data = $roster->db->fetch($result,SQL_NUM) )
 
 $options='';
 
-if( $guilds > 1 )
+if( $guilds > 0 )
 {
 	foreach( $menu_select as $realm => $guild )
 	{
@@ -58,6 +58,10 @@ if( $guilds > 1 )
 		}
 		$options .= '		</optgroup>';
 	}
+}
+else
+{
+	
 }
 
 $body = 'Select A Guild

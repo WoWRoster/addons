@@ -22,7 +22,7 @@ if( !defined('IN_ROSTER') )
 $roster->output['title'] = $roster->locale->act['autorecruit'];
 
 // Get Current Guild ID
-$guildset = $_GET['guild'];
+$guildset = $roster->data['guild_id'];
 
 // Get Guilds Recruitment Settings 
 
