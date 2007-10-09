@@ -24,7 +24,11 @@ $lang['async_button4']= 'ArmorySync Memberlist|Synchronise vos liste des membres
 $lang['async_button5']= 'ArmorySync Memberlist pour une nouvelle Guilde|Ajoute un nouvelle Guilde et synchronise<br />le avec la liste de ces membres chez Blizzards Armory';
 
 // Config strings
-$lang['admin']['armorysync_conf']= 'ArmorySync Configuration';
+$lang['admin']['armorysync_conf']			= 'General|Configure base settings for armorysync';
+$lang['admin']['armorysync_images']			= 'Images|Configure image displaying for armorysync';
+$lang['admin']['armorysync_access']			= 'Access Rights|Configure access rights for armorysync';
+$lang['admin']['armorysync_debug']			= 'Debugging|Configure debug settings for armorysync';
+
 $lang['admin']['armorysync_host']= 'Host|Host to syncronise with.';
 $lang['admin']['armorysync_minlevel']= 'Minimum Level|Minimum level pour la shynco des personnages.';
 $lang['admin']['armorysync_synchcutofftime']= "Sync. temps de coupure|Le temps en jours.<br />Toutes personnages n étant pas mis à jour durant (x) jours seront synchronisé.";
@@ -33,16 +37,35 @@ $lang['admin']['armorysync_reloadwaittime']= "Temps de rechargement |Le temps en
 $lang['admin']['armorysync_fetch_timeout'] = "Armory chargement arrêt|Temps en secondes jusqu à ce un fichier XML sera avorté.";
 $lang['admin']['armorysync_skip_start'] = "Saute page de démarrage|Saute la page de démarrage des ArmorySync chargements.";
 $lang['admin']['armorysync_status_hide'] = 'Hide status windows initialy|Hide the status windows of ArmorySync on the first load.';
+$lang['admin']['armorysync_protectedtitle']	= "Guild titres protégé|Les personnages avec ce titre seront protégé<br />contre l'effacement de la Guilde pendant un synchronisation de la liste des membres auprès Armory de Blizzard.<br />Ce problème peut arriver avec des personnages 'banquiers'.<br />Plusieurs valeurs ont possible, avec la séparation \",\". i.e. Banquier,Stock";
+
 $lang['admin']['armorysync_char_update_access'] = "Pers. niveau d'accès|Qui pourrait effectuer des chargements niveau personnage";
 $lang['admin']['armorysync_guild_update_access'] = "Guild niveau d'accès|Qui pourrait effectuer des chargements niveau Guilde";
 $lang['admin']['armorysync_guild_memberlist_update_access'] = "Guild Memberlist niveau d'accès|Qui pourrait effectuer des chargements niveau memberlist";
 $lang['admin']['armorysync_realm_update_access'] ="Realm niveau d'accès|Qui pourrait effectuer des chargements niveau realm";
 $lang['admin']['armorysync_guild_add_access'] = "Guild ajouter - niveau d'accès|Qui pourrait ajouter d'autres Guilds";
-//$lang['admin']['armorysync_usecurl']		= 'Utilisation de Curl|A désactiver si la fonction FileSocket devrait être utilisée.';
-//$lang['admin']['armorysync_debuglevel']		= 'Debug level';
-//$lang['admin']['armorysync_updateroster']	= "A la mise à jour du Roster|Actualisation du Roster.<br />Utile pour le débogage.";
-//$lang['admin']['armorysync_ismysqllower411']	= "MySQL < 4.1.1|A activer si votre version MySQL est plus bas que 4.1.1.";
-$lang['admin']['armorysync_protectedtitle']	= "Guild titres protégé|Les personnages avec ce titre seront protégé<br />contre l'effacement de la Guilde pendant un synchronisation de la liste des membres auprès Armory de Blizzard.<br />Ce problème peut arriver avec des personnages 'banquiers'.<br />Plusieurs valeurs ont possible, avec la séparation \",\". i.e. Banquier,Stock";
+
+$lang['admin']['armorysync_logo'] = 'ArmorySync Logo|';
+$lang['admin']['armorysync_pic1'] = 'ArmorySync Image 1|';
+$lang['admin']['armorysync_pic2'] = 'ArmorySync Image 2|';
+$lang['admin']['armorysync_pic3'] = 'ArmorySync Image 3|';
+$lang['admin']['armorysync_effects'] = 'ArmorySync Image Effects|';
+$lang['admin']['armorysync_logo_show'] = 'Show Logo|';
+$lang['admin']['armorysync_pic1_show'] = $lang['admin']['armorysync_pic2_show'] = $lang['admin']['armorysync_pic3_show'] = 'Show Image|';
+$lang['admin']['armorysync_pic_effects'] = 'Activated|Use JavaScript effects for images.';
+$lang['admin']['armorysync_logo_pos_left'] = $lang['admin']['armorysync_pic1_pos_left'] = $lang['admin']['armorysync_pic2_pos_left'] = $lang['admin']['armorysync_pic3_pos_left'] = 'Image position horizontal|';
+$lang['admin']['armorysync_logo_pos_top'] = $lang['admin']['armorysync_pic1_pos_top'] = $lang['admin']['armorysync_pic2_pos_top'] = $lang['admin']['armorysync_pic3_pos_top'] = 'Image position vertikal|';
+$lang['admin']['armorysync_logo_size'] = $lang['admin']['armorysync_pic1_size'] = $lang['admin']['armorysync_pic2_size'] = $lang['admin']['armorysync_pic3_size'] = 'Image size|';
+$lang['admin']['armorysync_pic1_min_rows'] = $lang['admin']['armorysync_pic2_min_rows'] = $lang['admin']['armorysync_pic3_min_rows'] = 'Minimun Rows|Minimum number of rows in the status display<br />to display the image.';
+
+$lang['admin']['armorysync_debuglevel']		= 'Debug Level|Adjust the debug level for ArmorySync.<br /><br />Quiete - No Messages<br />Base Infos - Base messages<br />Armory & Job Method Infos - All messages of Armory and Job methods<br />All Methods Info - Messages of all Methods  <b style="color:red;">(Be careful - very much data)</b>';
+$lang['admin']['armorysync_debugdata']		= 'Debug Data|Raise debug output by methods arguments and returns<br /><b style="color:red;">(Be careful - much more infos on high debug level)</b>';
+$lang['admin']['armorysync_javadebug']		= 'Debug Java|Enable JavaScript debugging.<br />Not implemented yet.';
+$lang['admin']['armorysync_xdebug_php']		= 'XDebug Session PHP|Enable sending XDEBUG variable with POST.';
+$lang['admin']['armorysync_xdebug_ajax']	= 'XDebug Session AJAX|Enable sending XDEBUG variable  with Ajax POST.';
+$lang['admin']['armorysync_xdebug_idekey']	= 'XDebug Session IDEKEY|Define IDEKEY for Xdebug sessions.';
+$lang['admin']['armorysync_sqldebug']		= 'SQL Debug|Enable SQL debugging for ArmorySync.<br />Not useful in combination with roster SQL debugging / duplicate data.';
+$lang['admin']['armorysync_updateroster']	= "Update Roster|Enable roster updates.<br />Good for debugging<br />Not implemented yet.";
 
 $lang['bindings']['bind_on_pickup'] = "Lié quand ramassé"; //"Binds when picked up";
 $lang['bindings']['bind_on_equip'] = "Lié quand équipé"; //"Binds when equiped";

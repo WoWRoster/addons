@@ -2,6 +2,15 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[264]
+- once again a rewrite of doUpdateStatus in armorysync.js
+- once again restructured XML Data
+- implemented debugging infos for all methods
+- implemented sql debugging
+- restructured config menu
+- added java effects for images
+- made images configurable from menu
+
 svn[262]
 - forgot an image
 

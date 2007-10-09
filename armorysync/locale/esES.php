@@ -24,7 +24,11 @@ $lang['async_button4']			= 'ArmorySync Miembros|Sincroniza el listado de miembro
 $lang['async_button5']			= 'ArmorySync nueva Hermandad|Añade una nueva Hermandad y sincroniza<br />la lista de miembros con la Armería de Blizzard';
 
 // Config strings
-$lang['admin']['armorysync_conf']			= 'Configuración ArmorySync';
+$lang['admin']['armorysync_conf']			= 'Configuración ArmorySync|Configure base settings for armorysync';
+$lang['admin']['armorysync_images']			= 'Images|Configure image displaying for armorysync';
+$lang['admin']['armorysync_access']			= 'Access Rights|Configure access rights for armorysync';
+$lang['admin']['armorysync_debug']			= 'Debugging|Configure debug settings for armorysync';
+
 $lang['admin']['armorysync_host']			= 'Servidor|Servidor con el que sincronizar.';
 $lang['admin']['armorysync_minlevel']		= 'Nivel Minimo|Nivel minimo de los personajes para sincronizar.';
 $lang['admin']['armorysync_synchcutofftime']	= 'Tiempo de Sync minimo|Tiempo en dias.<br />Todos los personajes que no se hayan actualizado en los ultimos (x) dias seran sincronizados.';
@@ -33,16 +37,35 @@ $lang['admin']['armorysync_reloadwaittime']	= 'Tiempo de espera recarga|Tiempo e
 $lang['admin']['armorysync_fetch_timeout'] = 'Tiempo de espera agotado para la Armory|Tiempo en segundos que se espera para recibir un solo archivo XML antes de ser cancelado.';
 $lang['admin']['armorysync_skip_start'] = 'Saltar pagina inicial|Saltar pagina inicial al actualizar con ArmorySync.';
 $lang['admin']['armorysync_status_hide'] = 'Hide status windows initialy|Hide the status windows of ArmorySync on the first load.';
+$lang['admin']['armorysync_protectedtitle']	= "Rango Hermandad protegidos|Los personajes con este rango estan protegidos<br />no podran ser borrados por una actualización del listado de miembros desde la armería.<br />Amenudo el problema suele ocurrir con los personajes banqueros.<br />Es posible añadir mas de uno separandolo con \",\". Ejem. Banco,Almacen";
+
 $lang['admin']['armorysync_char_update_access'] = 'Nivel de acceso Personajes|Quien puede hacer actualizaciones de personajes';
 $lang['admin']['armorysync_guild_update_access'] = 'Nivel de acceso Hermandad|Quien puede hacer actualizaciones de hermandades';
 $lang['admin']['armorysync_guild_memberlist_update_access'] = 'Nivel de acceso Listado de miembros|Quien puede hacer actualizaciones del listado de miembros';
 $lang['admin']['armorysync_realm_update_access'] = 'Nivel de acceso Reino|Quien puede hacer actualizaciones de reinos';
 $lang['admin']['armorysync_guild_add_access'] = 'Nivel de acceso añadir Hermandad|Quien puede añadir nuevas hermandades';
-//$lang['admin']['armorysync_usecurl']		= 'Use Curl|Auf false setzen wenn du die original FileSocket function benutzen möchtest.';
-//$lang['admin']['armorysync_debuglevel']		= 'Debug level';
-//$lang['admin']['armorysync_updateroster']	= "Update Roster|Das Roster aktualisieren oder nicht.<br />Sinnvoll fürs Debuggen.";
-//$lang['admin']['armorysync_ismysqllower411']	= "MySQL < 4.1.1|Auf True setzen wenn deine MySQL Version kleiner als 4.1.1 ist.";
-$lang['admin']['armorysync_protectedtitle']	= "Rango Hermandad protegidos|Los personajes con este rango estan protegidos<br />no podran ser borrados por una actualización del listado de miembros desde la armería.<br />Amenudo el problema suele ocurrir con los personajes banqueros.<br />Es posible añadir mas de uno separandolo con \",\". Ejem. Banco,Almacen";
+
+$lang['admin']['armorysync_logo'] = 'ArmorySync Logo|';
+$lang['admin']['armorysync_pic1'] = 'ArmorySync Image 1|';
+$lang['admin']['armorysync_pic2'] = 'ArmorySync Image 2|';
+$lang['admin']['armorysync_pic3'] = 'ArmorySync Image 3|';
+$lang['admin']['armorysync_effects'] = 'ArmorySync Image Effects|';
+$lang['admin']['armorysync_logo_show'] = 'Show Logo|';
+$lang['admin']['armorysync_pic1_show'] = $lang['admin']['armorysync_pic2_show'] = $lang['admin']['armorysync_pic3_show'] = 'Show Image|';
+$lang['admin']['armorysync_pic_effects'] = 'Activated|Use JavaScript effects for images.';
+$lang['admin']['armorysync_logo_pos_left'] = $lang['admin']['armorysync_pic1_pos_left'] = $lang['admin']['armorysync_pic2_pos_left'] = $lang['admin']['armorysync_pic3_pos_left'] = 'Image position horizontal|';
+$lang['admin']['armorysync_logo_pos_top'] = $lang['admin']['armorysync_pic1_pos_top'] = $lang['admin']['armorysync_pic2_pos_top'] = $lang['admin']['armorysync_pic3_pos_top'] = 'Image position vertikal|';
+$lang['admin']['armorysync_logo_size'] = $lang['admin']['armorysync_pic1_size'] = $lang['admin']['armorysync_pic2_size'] = $lang['admin']['armorysync_pic3_size'] = 'Image size|';
+$lang['admin']['armorysync_pic1_min_rows'] = $lang['admin']['armorysync_pic2_min_rows'] = $lang['admin']['armorysync_pic3_min_rows'] = 'Minimun Rows|Minimum number of rows in the status display<br />to display the image.';
+
+$lang['admin']['armorysync_debuglevel']		= 'Debug Level|Adjust the debug level for ArmorySync.<br /><br />Quiete - No Messages<br />Base Infos - Base messages<br />Armory & Job Method Infos - All messages of Armory and Job methods<br />All Methods Info - Messages of all Methods  <b style="color:red;">(Be careful - very much data)</b>';
+$lang['admin']['armorysync_debugdata']		= 'Debug Data|Raise debug output by methods arguments and returns<br /><b style="color:red;">(Be careful - much more infos on high debug level)</b>';
+$lang['admin']['armorysync_javadebug']		= 'Debug Java|Enable JavaScript debugging.<br />Not implemented yet.';
+$lang['admin']['armorysync_xdebug_php']		= 'XDebug Session PHP|Enable sending XDEBUG variable with POST.';
+$lang['admin']['armorysync_xdebug_ajax']	= 'XDebug Session AJAX|Enable sending XDEBUG variable  with Ajax POST.';
+$lang['admin']['armorysync_xdebug_idekey']	= 'XDebug Session IDEKEY|Define IDEKEY for Xdebug sessions.';
+$lang['admin']['armorysync_sqldebug']		= 'SQL Debug|Enable SQL debugging for ArmorySync.<br />Not useful in combination with roster SQL debugging / duplicate data.';
+$lang['admin']['armorysync_updateroster']	= "Update Roster|Enable roster updates.<br />Good for debugging<br />Not implemented yet.";
 
 
 $lang['bindings']['bind_on_pickup'] = "Se liga al recogerlo";

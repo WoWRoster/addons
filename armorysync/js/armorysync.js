@@ -23,129 +23,334 @@ function doUpdateStatus(result) {
 
     if ( result.hasChildNodes() ) {
 
-        var resultChild = result.firstChild;
-        var doReload = false;
-        var reloadTime = 0;
-        var safty1 = 0;  // just in case we produce a loop somehow
+        var statusInfo = result.getElementsByTagName('statusInfo');
+        if ( statusInfo != null ) _doUpdateStatusInfo(statusInfo);
 
-        while ( resultChild != null ) {
+        var errorMessages = result.getElementsByTagName('errormessage');
+        if ( errorMessages != null ) _doUpdateErrorMessages(errorMessages);
 
-            var resultChildName = resultChild.nodeName;
-            var resultChildType = resultChild.getAttribute('type');
+        var debugMessages = result.getElementsByTagName('debugmessage');
+        if ( debugMessages != null ) _doUpdateDebugMessages(debugMessages);
 
-            switch ( resultChildType ) {
+    }
+}
 
-                case 'text' :
-                    var newElement;
+function _doUpdateStatusInfo(statusInfo) {
 
-                    if ( resultChild.childNodes.length != 0 ){
-                        var newText = decode(resultChild.firstChild.data);
-                        newElement = document.createTextNode(newText);
-                    } else {
-                        newElement = document.createTextNode('');
-                    }
-                    var docElement = document.getElementById(resultChildName);
-                    if ( docElement != null ) {
-                        docElement.replaceChild(newElement, docElement.firstChild);
-                    }
-                    break;
+    var statusInfoCount = statusInfo.length;
 
-                case 'image' :
-                    var newElement;
-                    var newImage = resultChild.getAttribute('src');
-                    var isCharLog = resultChild.getAttribute('isCharLog');
-                    var isMemberlistLog = resultChild.getAttribute('isMemberlistLog');
+    for ( var i = 0; i < statusInfoCount; i++ ) {
+        var infoChild = statusInfo[i];
+        var infoType = infoChild.getAttribute('type');
 
-                    if ( newImage != null ){
-                        newImage = decode(newImage);
-                        newElement = document.createElement("img");
-                        newElement.setAttribute( 'src', newImage );
-                    } else {
-                        newElement = document.createElement("img");
-                    }
-                    if ( isCharLog != null || isMemberlistLog != null ) {
-                        var overlibChild = resultChild.firstChild;
-                        var overlibData = '';
-                        var safty2 = 0; // just in case we produce a loop somehow
-                        while ( overlibChild != null ) {
-                            overlibData += overlibChild.firstChild.data;
-                            overlibChild = overlibChild.nextSibling;
-                            if ( safty2++ > 50 ) break; // just in case we produce a loop somehow
-                        }
-                        overlibData = decode(overlibData);
+        switch ( infoType ) {
+            case 'text' :
+                _doUpdateStatusText(infoChild);
+                break;
 
-                        if ( isCharLog != null ) {
-                            newElement.onmouseover = function() {
-                                return overlib(overlibData,CAPTION,'Update Log',WRAP);
-                            }
-                            newElement.onmouseout = function() { return nd(); }
-                        }
-                        if ( isMemberlistLog != null ) {
-                            newElement.onclick = function() {
-                                return overlib('<div style="height:300px;width:500px;overflow:auto;">'+ overlibData+ '</div>',CAPTION,'Update Log',STICKY, OFFSETX, 250, CLOSECLICK);
-                            }
-                            newElement.onmouseover = function() {
-                                return overlib('Click me',CAPTION,'Update Log',WRAP);
-                            }
-                            newElement.onmouseout = function() { return nd(); }
-                        }
-                    }
-                    var docElement = document.getElementById(resultChildName);
-                    if ( docElement != null ) {
-                        docElement.replaceChild(newElement, docElement.firstChild);
-                    }
-                    break;
+            case 'image' :
+                _doUpdateStatusImage(infoChild);
+                break;
 
-                case 'bar' :
-                    var perc = resultChild.getAttribute('perc');
-                    var perc_left = resultChild.getAttribute('perc_left');
+            case 'bar' :
+                _doUpdateStatusBar(infoChild);
+                break;
 
-                    if ( perc != null && perc_left != null ) {
-                        var progBar = document.getElementById('progress_bar');
-                        if ( progBar != null ) {
-                            while ( progBar.hasChildNodes() ) {
-                                var firstChild = progBar.firstChild
-                                progBar.removeChild(firstChild);
-                            }
-
-                            if ( perc && perc != 0 ) {
-                                var newTD = document.createElement("td");
-                                newTD.setAttribute('bgColor', '#660000');
-                                newTD.setAttribute('height', '12px');
-                                newTD.setAttribute('width', perc+'%');
-                                progBar.appendChild(newTD);
-                            }
-
-                            if ( perc_left && perc_left != 0 ) {
-                                var newTD = document.createElement("td");
-                                newTD.setAttribute('bgColor', '#FFF7CE');
-                                newTD.setAttribute('height', '12px');
-                                newTD.setAttribute('width', perc_left+'%');
-                                progBar.appendChild(newTD);
-                            }
-                        }
-                    }
-                    break;
-
-                case 'control' :
-                    var reloadTime = resultChild.getAttribute('reloadTime');
-
-                    if ( reloadTime != null ) {
-                        doReload = true;
-                    }
-                    break;
-            }
-
-            resultChild = resultChild.nextSibling;
-
-            if ( safty1++ > 15 ) break; // just in case we produce a loop somehow
-        }
-
-        if ( doReload == true ) {
-            self.setTimeout('nextStep()', reloadTime);
+            case 'overlib' :
+                _doUpdateStatusOverlib(infoChild);
+                break;
         }
     }
 }
+
+function _doUpdateStatusText(info) {
+
+    var targetId = info.getAttribute('targetId');
+    var content = _getContent(info);
+    var newElement;
+
+    if ( content != null ){
+        newElement = document.createTextNode(content);
+    } else {
+        newElement = document.createTextNode('');
+    }
+    var docElement = document.getElementById(targetId);
+    if ( docElement != null ) {
+        docElement.replaceChild(newElement, docElement.firstChild);
+    }
+}
+
+function _doUpdateStatusImage(info) {
+
+    var targetId = info.getAttribute('targetId');
+    var content = _getContent(info);
+    var newElement;
+
+    if ( content != null ){
+        newElement = document.createElement("img");
+        newElement.setAttribute( 'src', content );
+        var docElement = document.getElementById(targetId);
+        if ( docElement != null ) {
+            docElement.replaceChild(newElement, docElement.firstChild);
+        }
+    }
+}
+
+function _doUpdateStatusBar(info) {
+
+    var targetId = info.getAttribute('targetId');
+    var perc = _getContent(info);
+
+    if ( perc != null ) {
+        var percLeft = 100 - perc;
+        var progBar = document.getElementById(targetId);
+        if ( progBar != null ) {
+            while ( progBar.hasChildNodes() ) {
+                var firstChild = progBar.firstChild
+                progBar.removeChild(firstChild);
+            }
+
+            if ( perc && perc != 0 ) {
+                var newTD = document.createElement("td");
+                newTD.setAttribute('bgColor', '#660000');
+                newTD.setAttribute('height', '12px');
+                newTD.setAttribute('width', perc+'%');
+                progBar.appendChild(newTD);
+            }
+
+            if ( percLeft && percLeft != 0 ) {
+                var newTD = document.createElement("td");
+                newTD.setAttribute('bgColor', '#FFF7CE');
+                newTD.setAttribute('height', '12px');
+                newTD.setAttribute('width', percLeft+'%');
+                progBar.appendChild(newTD);
+            }
+        }
+    }
+}
+
+function _doUpdateStatusOverlib(info) {
+
+    var targetId = info.getAttribute('targetId');
+    var overlibType = info.getAttribute('overlibType');
+    var content = _getContent(info);
+
+    var image = document.getElementById(targetId).firstChild;
+
+    if ( image != null && overlibType != null && overlibType == 'charLog' ) {
+        image.onmouseover = function() {
+            return overlib(content,CAPTION,'Update Log',WRAP);
+        }
+        image.onmouseout = function() { return nd(); }
+    }
+    if ( image != null && overlibType != null && overlibType == 'memberlistLog' ) {
+        image.onclick = function() {
+            return overlib('<div style="height:300px;width:500px;overflow:auto;">'+ content+ '</div>',CAPTION,'Update Log',STICKY, OFFSETX, 250, CLOSECLICK);
+        }
+        image.onmouseover = function() {
+            return overlib('Click to see update log',WRAP);
+        }
+        image.onmouseout = function() { return nd(); }
+    }
+}
+
+function _doUpdateDebugMessages(infoDebug) {
+
+    var infoCount = infoDebug.length;
+    if ( infoCount > 0 ) {
+
+        var target = infoDebug[0].getAttribute('target');
+        var debugTable = document.getElementById(target);
+
+        if ( debugTable != null ) {
+
+            var debugTableTrs = debugTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            var k = debugTableTrs.length - 1;
+            rowClass = debugTableTrs[k].getElementsByTagName('td')[0].getAttribute('class').substr(10,1);
+
+            for (var i = 0; i < infoCount; i++) {
+
+                var r = switch_row_class();
+                var infoDebugMessage = infoDebug[i];
+                var messages = infoDebugMessage.getElementsByTagName('dmesg');
+                var messagesCount = messages.length;
+                var newTr = document.createElement("tr");
+
+                for ( var j = 0; j < messagesCount; j++) {
+
+                    var message = messages[j];
+                    var content = _getContent(message);
+                    var newTd = document.createElement("td");
+                    var newTdClass = 'membersRow';
+                    if ( j == messagesCount - 1 ) {
+                        newTdClass += 'Right';
+                    }
+                    newTd.setAttribute( 'class', newTdClass+ r );
+                    var newTextNode = document.createTextNode(content);
+                    newTd.appendChild(newTextNode);
+                    newTr.appendChild(newTd);
+                }
+                debugTable.appendChild(newTr);
+            }
+        }
+    }
+}
+
+function _doUpdateErrorMessages(infoError) {
+
+    var infoCount = infoError.length;
+    if ( infoCount > 0 ) {
+
+        var target = infoError[0].getAttribute('target');
+        var errorTable = document.getElementById(target);
+
+        if ( errorTable == null ) {
+
+            errorTable = _ceateErrorTable();
+            rowClass = 1;
+        }
+
+        if ( errorTable != null ) {
+
+            var errorTableTBody = errorTable.getElementsByTagName('tbody')[0];
+
+            if ( errorTableTBody != null ) {
+
+                var errorTableTrs = errorTableTBody.getElementsByTagName('tr');
+                var k = errorTableTrs.length - 1;
+                rowClass = errorTableTrs[k].getElementsByTagName('td')[0].getAttribute('class').substr(10,1);
+
+            } else {
+
+                rowClass = 2;
+            }
+
+            for (var i = 0; i < infoCount; i++) {
+
+                var r = switch_row_class();
+                var infoErrorMessage = infoError[i];
+                var messages = infoErrorMessage.getElementsByTagName('emesg');
+                var messagesCount = messages.length;
+                var newTr = document.createElement("tr");
+
+                for ( var j = 0; j < messagesCount; j++) {
+
+                    var message = messages[j];
+                    var content = _getContent(message);
+                    var newTd = document.createElement("td");
+                    var newTdClass = 'membersRow';
+                    if ( j == messagesCount - 1 ) {
+                        newTdClass += 'Right';
+                    }
+                    newTd.setAttribute( 'class', newTdClass+ r );
+                    var newTextNode = document.createTextNode(content);
+                    newTd.appendChild(newTextNode);
+                    newTr.appendChild(newTd);
+                }
+                errorTable.appendChild(newTr);
+            }
+        }
+    }
+}
+
+function _ceateErrorTable() {
+
+    var headers = new Array('Line', 'Time', 'File', 'Class', 'Function', 'Info', 'Status');
+    var newTr = document.createElement('tr');
+    for ( var i = 0; i < headers.length; i++ ) {
+        var newTh = document.createElement('th');
+        if ( i < headers.length -1 ) {
+            newTh.setAttribute('class', 'membersHeader');
+        } else {
+            newTh.setAttribute('class', 'membersHeaderRight');
+        }
+        newTh.appendChild(document.createTextNode(headers[i]));
+        newTr.appendChild(newTh);
+    }
+
+    //var newTBody = document.createElement('tbody');
+    //newTBody.appendChild('newTr')
+
+    var newTable = document.createElement('table');
+    newTable.setAttribute('id', 'armorysync_error_table');
+    newTable.setAttribute('width', '100%');
+    newTable.setAttribute('cellspacing', '0');
+    newTable.setAttribute('cellpadding', '0');
+    newTable.setAttribute('align', 'center');
+    newTable.appendChild(newTr);
+
+    var newDiv = document.createElement('div');
+    newDiv.setAttribute('class', 'armorysync_error');
+    newDiv.appendChild(newTable);
+
+
+    var borderDiv = document.createElement('div');
+    borderDiv.setAttribute('class', 'header_text sredborder');
+    borderDiv.appendChild(document.createTextNode('ArmorySync Error Infos'))
+
+    var borderTd = document.createElement('td');
+    borderTd.setAttribute('class', 'border_color sredborder');
+    borderTd.appendChild(borderDiv);
+    borderTd.appendChild(newDiv);
+
+    var borderTr = document.createElement('tr');
+    borderTr.appendChild(borderTd);
+
+    var borderTable = document.createElement('table');
+    borderTable.setAttribute('class', 'border_frame')
+    borderTable.setAttribute('cellspacing', '0');
+    borderTable.setAttribute('cellpadding', '0');
+    borderTable.setAttribute('style', 'width:100%;');
+    borderTable.appendChild(borderTr);
+
+    var newBr = document.createElement('br');
+
+    var errorDiv = document.getElementById('armorysync_error');
+    errorDiv.appendChild(newBr);
+    errorDiv.appendChild(borderTable);
+
+    return document.getElementById('armorysync_error_table');
+}
+
+var rowClass = 1;
+
+function switch_row_class(setNew) {
+    row_class = ( rowClass == 1 ) ? 2 : 1;
+
+    if( setNew == null && setNew != false )
+    {
+        rowClass = row_class;
+    }
+
+    return row_class;
+}
+
+function _getContent(node) {
+
+    var multiPart = node.getAttribute('multipart');
+    var content = '';
+    if ( multiPart == null ) {
+        if ( node.childNodes.length > 0 ) {
+            content = node.firstChild.data;
+        } else {
+            return '';
+        }
+    } else {
+        var parts = node.getElementsByTagName('multi');
+        var partCount = parts.length;
+        for ( var i = 0; i < partCount; i++ ) {
+            var part = parts[i];
+            content += part.firstChild.data;
+        }
+    }
+    return decode(content);
+}
+
+
+//
+//        if ( doReload == true ) {
+//            self.setTimeout('nextStep()', reloadTime);
+//        }
 
 function decode(text) {
     return decode_utf8(URLDecode(text));

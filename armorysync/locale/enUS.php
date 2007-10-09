@@ -24,7 +24,11 @@ $lang['async_button4']			= 'ArmorySync Memberlist|Synchronize your memberlist wi
 $lang['async_button5']			= 'ArmorySync Memberlist for a new guild|Add a new guild and aynchronize<br />the memberlist with Blizzard\'s Armory';
 
 // Config strings
-$lang['admin']['armorysync_conf']			= 'ArmorySync Configuration|Configure base settings for armorysync';
+$lang['admin']['armorysync_conf']			= 'General|Configure base settings for armorysync';
+$lang['admin']['armorysync_images']			= 'Images|Configure image displaying for armorysync';
+$lang['admin']['armorysync_access']			= 'Access Rights|Configure access rights for armorysync';
+$lang['admin']['armorysync_debug']			= 'Debugging|Configure debug settings for armorysync';
+
 $lang['admin']['armorysync_host']			= 'Host|Host to Synchronize with';
 $lang['admin']['armorysync_minlevel']		= 'Minimum Level|Minimum level of characters to synchronize<br />Currently this should be no lower than 10 since<br />the armory doesn\'t list characters lower than level 10';
 $lang['admin']['armorysync_synchcutofftime']	= 'Sync cutoff time|Time in days<br />All characters not updated in last (x) days will be synchronized';
@@ -33,16 +37,35 @@ $lang['admin']['armorysync_reloadwaittime']	= 'Reload wait time|Time in seconds<
 $lang['admin']['armorysync_fetch_timeout'] = 'Armory Fetch timeout|Time in seconds till a fetch of a single XML file is aborted.';
 $lang['admin']['armorysync_skip_start'] = 'Skip start page|Skip start page on ArmorySync updates.';
 $lang['admin']['armorysync_status_hide'] = 'Hide status windows initialy|Hide the status windows of ArmorySync on the first load.';
+$lang['admin']['armorysync_protectedtitle']	= 'Protected Guild Title|Characters with these guild titles are protected<br />from being deleted by a synchronization against the armory.<br />This problem often occours with bank characters.<br />Multiple values seperated by a comma (,) \"Banker,Stock\"';
+
 $lang['admin']['armorysync_char_update_access'] = 'Char Update Access Level|Who ia able to do character updates';
 $lang['admin']['armorysync_guild_update_access'] = 'Guild Update Access Level|Who ia able to do guild updates';
 $lang['admin']['armorysync_guild_memberlist_update_access'] = 'Guild Memberlist Update Access Level|Who ia able to do guild memberlist updates';
 $lang['admin']['armorysync_realm_update_access'] = 'Realm Update Access Level|Who ia able to do realm updates';
 $lang['admin']['armorysync_guild_add_access'] = 'Guild Add Access Level|Who ia able to add new guilds';
-//$lang['admin']['armorysync_usecurl']		= 'Use Curl|Auf false setzen wenn du die original FileSocket function benutzen möchtest.';
-//$lang['admin']['armorysync_debuglevel']		= 'Debug level';
-//$lang['admin']['armorysync_updateroster']	= "Update Roster|Das Roster aktualisieren oder nicht.<br />Sinnvoll fürs Debuggen.";
-//$lang['admin']['armorysync_ismysqllower411']	= "MySQL < 4.1.1|Auf True setzen wenn deine MySQL Version kleiner als 4.1.1 ist.";
-$lang['admin']['armorysync_protectedtitle']	= 'Protected Guild Title|Characters with these guild titles are protected<br />from being deleted by a synchronization against the armory.<br />This problem often occours with bank characters.<br />Multiple values seperated by a comma (,) \"Banker,Stock\"';
+
+$lang['admin']['armorysync_logo'] = 'ArmorySync Logo|';
+$lang['admin']['armorysync_pic1'] = 'ArmorySync Image 1|';
+$lang['admin']['armorysync_pic2'] = 'ArmorySync Image 2|';
+$lang['admin']['armorysync_pic3'] = 'ArmorySync Image 3|';
+$lang['admin']['armorysync_effects'] = 'ArmorySync Image Effects|';
+$lang['admin']['armorysync_logo_show'] = 'Show Logo|';
+$lang['admin']['armorysync_pic1_show'] = $lang['admin']['armorysync_pic2_show'] = $lang['admin']['armorysync_pic3_show'] = 'Show Image|';
+$lang['admin']['armorysync_pic_effects'] = 'Activated|Use JavaScript effects for images.';
+$lang['admin']['armorysync_logo_pos_left'] = $lang['admin']['armorysync_pic1_pos_left'] = $lang['admin']['armorysync_pic2_pos_left'] = $lang['admin']['armorysync_pic3_pos_left'] = 'Image position horizontal|';
+$lang['admin']['armorysync_logo_pos_top'] = $lang['admin']['armorysync_pic1_pos_top'] = $lang['admin']['armorysync_pic2_pos_top'] = $lang['admin']['armorysync_pic3_pos_top'] = 'Image position vertikal|';
+$lang['admin']['armorysync_logo_size'] = $lang['admin']['armorysync_pic1_size'] = $lang['admin']['armorysync_pic2_size'] = $lang['admin']['armorysync_pic3_size'] = 'Image size|';
+$lang['admin']['armorysync_pic1_min_rows'] = $lang['admin']['armorysync_pic2_min_rows'] = $lang['admin']['armorysync_pic3_min_rows'] = 'Minimun Rows|Minimum number of rows in the status display<br />to display the image.';
+
+$lang['admin']['armorysync_debuglevel']		= 'Debug Level|Adjust the debug level for ArmorySync.<br /><br />Quiete - No Messages<br />Base Infos - Base messages<br />Armory & Job Method Infos - All messages of Armory and Job methods<br />All Methods Info - Messages of all Methods  <b style="color:red;">(Be careful - very much data)</b>';
+$lang['admin']['armorysync_debugdata']		= 'Debug Data|Raise debug output by methods arguments and returns<br /><b style="color:red;">(Be careful - much more infos on high debug level)</b>';
+$lang['admin']['armorysync_javadebug']		= 'Debug Java|Enable JavaScript debugging.<br />Not implemented yet.';
+$lang['admin']['armorysync_xdebug_php']		= 'XDebug Session PHP|Enable sending XDEBUG variable with POST.';
+$lang['admin']['armorysync_xdebug_ajax']	= 'XDebug Session AJAX|Enable sending XDEBUG variable  with Ajax POST.';
+$lang['admin']['armorysync_xdebug_idekey']	= 'XDebug Session IDEKEY|Define IDEKEY for Xdebug sessions.';
+$lang['admin']['armorysync_sqldebug']		= 'SQL Debug|Enable SQL debugging for ArmorySync.<br />Not useful in combination with roster SQL debugging / duplicate data.';
+$lang['admin']['armorysync_updateroster']	= "Update Roster|Enable roster updates.<br />Good for debugging<br />Not implemented yet.";
 
 
 $lang['bindings']['bind_on_pickup'] = "Binds when picked up";

@@ -19,7 +19,10 @@ if( !defined('IN_ROSTER') )
     exit('Detected invalid access to this file!');
 }
 
-class ArmorySyncJob {
+require_once ($addon['dir'] . 'inc/constants.php');
+require_once ($addon['dir'] . 'inc/armorysyncbase.class.php');
+
+class ArmorySyncJob extends ArmorySyncBase {
 
     var $jobid;
     var $members = array();
@@ -41,8 +44,10 @@ class ArmorySyncJob {
 
     var $header;
 
-    var $ajax = 1;
-    var $ajaxDebug = 1;
+    var $debugmessages = array();
+    var $errormessages = array();
+
+	var $xmlIndent = 1;
 
     var $functions = array(
                         array(
@@ -61,14 +66,16 @@ class ArmorySyncJob {
                         ),
                     );
 
-
     function _init() {
         global $addon;
 
         if ( ! is_object( $this->ArmorySync ) ) {
             require_once ($addon['dir'] . 'inc/armorysync.class.php');
             $this->ArmorySync = new ArmorySync();
+            $this->ArmorySync->debugmessages = &$this->debugmessages;
+            $this->ArmorySync->errormessages = &$this->errormessages;
         }
+        $this->_debug( 3, null, 'Get ArmorySync object', 'OK');
     }
 
     /**
@@ -79,7 +86,9 @@ class ArmorySyncJob {
         global $roster, $addon;
 
         $html = sprintf( $roster->locale->act['roster_deprecated_message'], ROSTER_VERSION, ARMORYSYNC_VERSION, ARMORYSYNC_REQUIRED_ROSTER_VERSION);
-        print messagebox( $html , "<span class=\"title_text\">". $roster->locale->act['roster_deprecated']."</span>" , $style='sred' , '400px' );
+        $out = messagebox( $html , "<span class=\"title_text\">". $roster->locale->act['roster_deprecated']."</span>" , $style='sred' , '400px' );
+        print $out;
+        $this->_debug( 3, $out, 'Printed error message', 'OK');
     }
 
     /**
@@ -87,7 +96,9 @@ class ArmorySyncJob {
      *
      */
     function _isRequiredRosterVersion() {
-        return version_compare( ARMORYSYNC_REQUIRED_ROSTER_VERSION, ROSTER_VERSION, '<=');
+        $ret = version_compare( ARMORYSYNC_REQUIRED_ROSTER_VERSION, ROSTER_VERSION, '<=');
+        $this->_debug( 1, $ret, 'Check required Roster version', $ret ? 'OK': 'Failed' );
+        return $ret;
     }
 
     /**
@@ -98,7 +109,9 @@ class ArmorySyncJob {
         global $roster, $addon;
 
         $html = sprintf( $roster->locale->act['armorysync_not_upgraded_message'], ARMORYSYNC_VERSION, $addon['version']);
-        print messagebox( $html , "<span class=\"title_text\">". $roster->locale->act['armorysync_not_upgraded']."</span>" , $style='sred' , '400px' );
+        $out = messagebox( $html , "<span class=\"title_text\">". $roster->locale->act['armorysync_not_upgraded']."</span>" , $style='sred' , '400px' );
+        $this->_debug( 3, $out, 'Printed error message', 'OK');
+        print $out;
     }
 
     /**
@@ -107,7 +120,9 @@ class ArmorySyncJob {
      */
     function _isRequiredArmorySyncVersion() {
         global $addon;
-        return version_compare( ARMORYSYNC_VERSION, $addon['version'], '<=');
+        $ret =  version_compare( ARMORYSYNC_VERSION, $addon['version'], '<=');
+        $this->_debug( 1, $ret, 'Check required ArmorySync version', $ret ? 'OK': 'Failed' );
+        return $ret;
     }
 
     /**
@@ -117,8 +132,7 @@ class ArmorySyncJob {
     function start() {
         global $roster, $addon;
 
-        require_once ($addon['dir'] . 'inc/constants.php');
-
+        $this->_showHeader();
         $this->_check_env();
 
         if ( ! $this->isAuth ) {
@@ -155,8 +169,9 @@ class ArmorySyncJob {
 
             $this->_showErrors();
         }
-        $roster->output['html_head'] = $this->header;
         $this->_showFooter();
+        $roster->output['html_head'] = $this->header;
+        $this->_debug( 1, null, 'Job done', 'OK');
     }
 
 
@@ -176,7 +191,9 @@ class ArmorySyncJob {
             $html = $roster->locale->act['error_no_realm']. "<br />&nbsp;&nbsp;".
                     $roster->locale->act['error_use_menu']. "&nbsp;&nbsp;";
         }
-        print messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
+        $out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
+        $this->_debug( 3, $out, 'Printed error message', 'OK');
+        print $out;
     }
 
 
@@ -214,6 +231,7 @@ class ArmorySyncJob {
                 $this->$functions['link']();
             }
         }
+        $this->_debug( 1, null, 'Finnished sync job', 'OK');
     }
 
     /**
@@ -239,17 +257,79 @@ class ArmorySyncJob {
 
         $functions = $this->functions[$this->isMemberList];
         $ret = $this->$functions['update_status']();
+        $this->_debug( 1, null, 'Started ajax status update', 'OK');
+
+        $result = "\n";
+        $status = $this->$functions['get_ajax_status']();
+
+        if ( count( $this->errormessages ) > 0 ) {
+            foreach ( $this->errormessages as $message ) {
+
+				$result .= $this->_xmlEncode(
+					'errormessage', array( 'target' => 'armorysync_error_table'), null,
+					array(
+						array('emesg', array( 'type' => 'line' ), $message['line']),
+						array('emesg', array( 'type' => 'time' ), $message['time']),
+						array('emesg', array( 'type' => 'file' ), $message['file']),
+						array('emesg', array( 'type' => 'class' ), $message['class']),
+						array('emesg', array( 'type' => 'function' ), $message['function']),
+						array('emesg', array( 'type' => 'info' ), $message['info']),
+						array('emesg', array( 'type' => 'as_status' ), $message['status']),
+						array('edata', array( 'type' => 'arg' ), $message['arg']),
+						array('edata', array( 'type' => 'ret' ), $message['ret']),
+					)
+				 );
+            }
+            //foreach ( $this->errormessages as $message ) {
+            //    $result .= "<message type=\"error\" >";
+            //    $result .= "<infos>";
+            //    $result .= $this->_xmlEncode('line', $message['line']);
+            //    $result .= $this->_xmlEncode('time', $message['time']);
+            //    $result .= $this->_xmlEncode('file', $message['file']);
+            //    $result .= $this->_xmlEncode('class', $message['class']);
+            //    $result .= $this->_xmlEncode('function', $message['function']);
+            //    $result .= $this->_xmlEncode('info', $message['info']);
+            //    $result .= $this->_xmlEncode('as_status', $message['status']);
+            //    $result .= "</infos>";
+            //    $result .= "<arguments>";
+            //    $result .= $this->_xmlEncode('arg', $message['arg']);
+            //    $result .= "</arguments>";
+            //    $result .= "<returns>";
+            //    $result .= $this->_xmlEncode('ret', $message['ret']);
+            //    $result .= "</returns>";
+            //    $result .= "</message>";
+            //}
+        }
+
+        if ( $addon['config']['armorysync_debuglevel'] > 0 && count( $this->debugmessages ) > 0 ) {
+            foreach ( $this->debugmessages as $message ) {
+
+				$result .= $this->_xmlEncode(
+					'debugmessage', array( 'target' => 'armorysync_debug_table'), null,
+					array(
+						array('dmesg', array( 'type' => 'line' ), $message['line']),
+						array('dmesg', array( 'type' => 'time' ), $message['time']),
+						array('dmesg', array( 'type' => 'file' ), $message['file']),
+						array('dmesg', array( 'type' => 'class' ), $message['class']),
+						array('dmesg', array( 'type' => 'function' ), $message['function']),
+						array('dmesg', array( 'type' => 'info' ), $message['info']),
+						array('dmesg', array( 'type' => 'as_status' ), $message['status']),
+						array('ddata', array( 'type' => 'arg' ), $message['arg']),
+						array('ddata', array( 'type' => 'ret' ), $message['ret']),
+					)
+				 );
+            }
+        }
+
+        $result .= $status;
 
         if ( $ret ) {
             $reloadTime = $addon['config']['armorysync_reloadwaittime'] * 500;
-            return array(   'result' => $this->$functions['get_ajax_status']().
-                            '<reload type="control" reloadTime="'. $reloadTime. '"></reload>',
-                            'status' => 0 );
-        } else {
-            return array(   'result' => $this->$functions['get_ajax_status'](),
-                            'status' => 0 );
-            //$this->$functions['get_ajax_status']()
+			$result .= $this->_xmlEncode('reload', array('reloadTime' => $reloadTime), '');
         }
+		$result .= "  ";
+        return array(   'result' => $result,
+                        'status' => 0 );
     }
 
     /**
@@ -258,6 +338,7 @@ class ArmorySyncJob {
      */
     function _startAddGuild() {
         global $roster;
+        $out = '';
         if ( isset($_POST['action']) && $_POST['action'] == 'add' ) {
 
             if ( isset($_POST['name']) && isset($_POST['server']) && isset($_POST['region']) ) {
@@ -279,39 +360,44 @@ class ArmorySyncJob {
                                     if ( $ret ) {
                                         $this->_link();//_guildMemberlist( $id )
                                     }
+                                    $this->_debug( 1, null, 'Added guild', 'OK');
                                 } else {
-                                    $this->_nothing_to_do();
+                                    $this->_debug( 0, null, 'Added guild', 'Failed. No job found');
                                 }
                             } else {
                                 $html = "&nbsp;&nbsp;".
                                         $roster->locale->act['error_uploadrule_insert'].
                                         "&nbsp;&nbsp;";
-                                print messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
+                                $out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
                             }
                         } else {
                             $html = "&nbsp;&nbsp;".
                                     $roster->locale->act['error_guild_insert'].
                                     "&nbsp;&nbsp;";
-                            print messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
+                            $out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
                         }
                     } else {
                         $html = "&nbsp;&nbsp;".
                                 $roster->locale->act['error_guild_notexist'].
                                 "&nbsp;&nbsp;";
-                        print messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
+                        $out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
                     }
                 } else {
                     $html = "&nbsp;&nbsp;".
                             $roster->locale->act['error_wrong_region'].
                             "&nbsp;&nbsp;";
-                    print messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
+                    $out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
                 }
             } else {
                 $html = "&nbsp;&nbsp;".
                         $roster->locale->act['error_missing_params'].
                         "&nbsp;&nbsp;";
-                print messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
+                $out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
             }
+        }
+        if ( $out ) {
+            $this->_debug( 1, $out, 'Added guild', 'Failed');
+            print $out;
         }
     }
 
@@ -359,7 +445,11 @@ class ArmorySyncJob {
             $this->title = "<span class=\"title_text\">". $roster->locale->act['armorySyncTitle_Guildmembers']. "</span>\n";
             $this->isMemberList = 1;
             $this->isAuth = $this->_checkAuth('armorysync_guild_add_access');
+        } else {
+            $this->_debug( 0, array( '$_GET' => $_GET, '$_POST' => $_POST, 'scope' => $roster->scope, 'data' => $roster->data ), 'Checking environment', 'Failed');
+            return;
         }
+        $this->_debug( 1, array( '$_GET' => $_GET, '$_POST' => $_POST, 'scope' => $roster->scope, 'data' => $roster->data ), 'Checking environment', 'OK');
     }
 
     /**
@@ -393,8 +483,10 @@ class ArmorySyncJob {
 
             $this->jobid = $this->_insertJobID($this->time_started);
             $this->_insertMembersToJobqueue($this->jobid, $this->members);
+            $this->_debug( 1, true, 'Prepared character update job', 'OK');
             return true;
         }
+        $this->_debug( 1, false, 'Prepared character update job', 'Failed');
         return false;
     }
 
@@ -434,8 +526,10 @@ class ArmorySyncJob {
 
             $this->jobid = $this->_insertJobID($this->time_started);
             $this->_insertMembersToJobqueue($this->jobid, $this->members);
+            $this->_debug( 1, true, 'Prepared memberlist update job', 'OK');
             return true;
         }
+        $this->_debug( 1, false, 'Prepared memberlist update job', 'Failed');
         return false;
     }
 
@@ -449,7 +543,9 @@ class ArmorySyncJob {
 
         $html = '<span class="title_text">&nbsp;&nbsp;'. $roster->locale->act['nothing_to_do']. '&nbsp;&nbsp;</span>';
 
-        print messagebox( $html , $title=$this->title , $style='syellow' , $width='' );
+        $out = messagebox( $html , $title=$this->title , $style='syellow' , $width='' );
+        $this->_debug( 3, $out, 'Printed error message', 'OK');
+        print $out;
     }
 
 
@@ -462,6 +558,26 @@ class ArmorySyncJob {
         global $roster, $addon;
 
         $jscript = "<script type=\"text/javascript\" src=\"". $addon['url_path']. "js/armorysync.js\"></script>\n";
+
+        if ( $addon['config']['armorysync_pic_effects'] &&
+            (   $addon['config']['armorysync_pic1_show'] ||
+                $addon['config']['armorysync_pic2_show'] ||
+                $addon['config']['armorysync_pic3_show'] ) ) {
+
+            $jscript .= "<script type=\"text/javascript\" src=\"". $addon['url_path']. "js/prototype.js\"></script>\n";
+            $jscript .= "<script type=\"text/javascript\" src=\"". $addon['url_path']. "js/scriptaculous.js\"></script>\n";
+            $jscript .= "<script type=\"text/javascript\" src=\"". $addon['url_path']. "js/effects.js\"></script>\n";
+        }
+
+        $jscript .= '
+<script type="text/javascript">
+    var armorysync_debuglevel = '. $addon['config']['armorysync_debuglevel']. ';
+    var armorysync_debugdata = '. $addon['config']['armorysync_debugdata']. ';
+</script>
+';
+    //function armorysync_debuglevel() { return '. $addon['config']['armorysync_debuglevel']. '; }
+    //function armorysync_debugdata() { return '. $addon['config']['armorysync_debugdata']. '; }
+
         $this->header .= $jscript;
 
         $members = $this->members;
@@ -474,11 +590,29 @@ class ArmorySyncJob {
 
         $roster->tpl->assign_vars(array(
                 'IMAGE_PATH' => $addon['image_path'],
-                'PICLOGO' => 1,
-                'PIC1' => $this->total >= 20 ? true: false,
-                'PIC2' => $this->total >= 40 ? true: false,
-                'PIC3' => $this->total >= 60 ? true: false,
+
+                'USE_EFFECTS' => $addon['config']['armorysync_pic_effects'],
+                'SHOW_PIC_TABLE' => (   $addon['config']['armorysync_pic1_show'] ||
+                                        $addon['config']['armorysync_pic2_show'] ||
+                                        $addon['config']['armorysync_pic3_show'] ),
+
+                'PIC1_SHOW' => ( $addon['config']['armorysync_pic1_show'] && $addon['config']['armorysync_pic1_min_rows'] <= $this->total ) ? true: false,
+                'PIC1_LEFT' => $addon['config']['armorysync_pic1_pos_left'],
+                'PIC1_TOP' => $addon['config']['armorysync_pic1_pos_top'],
+                'PIC1_HIGHT' => $addon['config']['armorysync_pic1_size'],
+
+                'PIC2_SHOW' => ( $addon['config']['armorysync_pic2_show'] && $addon['config']['armorysync_pic2_min_rows'] <= $this->total ) ? true: false,
+                'PIC2_LEFT' => $addon['config']['armorysync_pic2_pos_left'],
+                'PIC2_TOP' => $addon['config']['armorysync_pic2_pos_top'],
+                'PIC2_HIGHT' => $addon['config']['armorysync_pic2_size'],
+
+                'PIC3_SHOW' => ( $addon['config']['armorysync_pic3_show'] && $addon['config']['armorysync_pic3_min_rows'] <= $this->total ) ? true: false,
+                'PIC3_LEFT' => $addon['config']['armorysync_pic3_pos_left'],
+                'PIC3_TOP' => $addon['config']['armorysync_pic3_pos_top'],
+                'PIC3_HIGHT' => $addon['config']['armorysync_pic3_size'],
+
                 'LINK' => ( $this->link ? $this->link : makelink() ),
+                'DEBUG' => $addon['config']['armorysync_xdebug_php'] ? "<input type=\"hidden\" name=\"XDEBUG_SESSION_START\" value=\"". $addon['config']['armorysync_xdebug_idekey']. "\" />" : "",
                 'STATUSHIDDEN' => $status,
                 'JOB_ID' => $this->jobid,
                 'DISPLAY' => $display,
@@ -490,7 +624,7 @@ class ArmorySyncJob {
                 )
                                  );
 
-        if ($this->active_member['name'] || $this->active_member['guild_name']) {
+        if (isset($this->active_member['name']) || isset($this->active_member['guild_name'])) {
             $roster->tpl->assign_var( 'NEXT', $roster->locale->act['next_to_update']. ( $memberlist ? $this->active_member['guild_name'] : $this->active_member['name'] ) );
         } else {
             $roster->tpl->assign_var( 'NEXT', false );
@@ -567,6 +701,7 @@ class ArmorySyncJob {
 
         $roster->tpl->display('status_head');
         $roster->tpl->display('status_body');
+        $this->_debug( 1, null, 'Printed status window', 'OK');
     }
 
     /**
@@ -577,7 +712,9 @@ class ArmorySyncJob {
     function _get_ajax_statusMemberlist( $jobid = 0 ) {
         global $roster;
 
-        return $this->_get_ajax_status( $jobid, 1 );
+        $ret = $this->_get_ajax_status( $jobid, 1 );
+        $this->_debug( 1, $ret, 'Prepared ajax meberlist status', 'OK');
+        return $ret;
     }
 
     /**
@@ -588,7 +725,7 @@ class ArmorySyncJob {
     function _get_ajax_status( $jobid = 0, $memberlist = false ) {
         global $roster, $addon;
 
-        $result = '';
+        $result = "";
 
         $perc = 0;
         if ( $this->total == 0 ) {
@@ -597,21 +734,13 @@ class ArmorySyncJob {
             $perc = round ($this->done / $this->total * 100);
         }
 
-        $perc_left = 100 - $perc;
 
-        $result .= "<progress_bar type=\"bar\" ";
-		$result .= "perc=\"". $perc. "\" ";
-        $result .= "perc_left=\"". $perc_left. "\" >";
-		$result .= "</progress_bar>";
-
-        $result .= "<progress_text type=\"text\" >";
-        $result .= urlencode("$perc% ". $roster->locale->act['complete']. " ($this->done / $this->total)");
-        $result .= "</progress_text>";
-
-        if ($this->active_member['name']) {
-            $result .= "<progress_next type=\"text\" >". urlencode($roster->locale->act['next_to_update']. $this->active_member['name']). "</progress_next>";
+		$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'bar', 'targetId' => 'progress_bar'), $perc);
+		$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => 'progress_text'), "$perc% ". $roster->locale->act['complete']. " ($this->done / $this->total)");
+        if (isset($this->active_member['name'])) {
+			$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => 'progress_next'), $roster->locale->act['next_to_update']. $this->active_member['name']);
         } else {
-            $result .= "<progress_next type=\"text\" ></progress_next>";
+            $result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => 'progress_next') );
         }
 
         $member = $this->active_member;
@@ -623,49 +752,35 @@ class ArmorySyncJob {
                 if ( $memberlist && $key !== 'guild_info' ) {
                     continue;
                 }
-                $result .= "<as_status_". $key. "_". $id;
                 if ( isset( $member[$key] ) && $member[$key] == 1 ) {
-                    $result .= " type=\"image\" src=\"". urlencode("img/pvp-win.gif"). "\" >";
+					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), "img/pvp-win.gif" );
                 } elseif ( isset( $member[$key] ) && $member[$key] >= 1 ) {
-                    $result .= " type=\"text\" >". $member[$key];
+					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => 'as_status_'. $key. '_'. $id), $member[$key] );
                 } elseif ( isset( $member[$key] ) ) {
-                    $result .= " type=\"image\" src=\"". urlencode("img/pvp-loss.gif"). "\" >";
+					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), "img/pvp-loss.gif" );
                 } else {
-                    $result .= " type=\"image\" src=\"". urlencode("img/blue-question-mark.gif"). "\" >";
+					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), "img/blue-question-mark.gif" );
                 }
-                $result .= "</as_status_". $key. "_". $id. ">";
             }
 
 			if ( isset( $member['starttimeutc'] ) ) {
-				$result .= "<as_status_starttimeutc_". $id. " type=\"text\" >";
-				$result .= $this->_getLocalisedTime($member['starttimeutc']);
-				$result .= "</as_status_starttimeutc_". $id. ">";
+				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => "as_status_starttimeutc_". $id), $this->_getLocalisedTime($member['starttimeutc']) );
 			}
 
 			if (isset( $member['stoptimeutc'] ) ) {
-				$result .= "<as_status_stoptimeutc_". $id. " type=\"text\" >";
-				$result .= $this->_getLocalisedTime($member['stoptimeutc']);
-				$result .= "</as_status_stoptimeutc_". $id. ">";
-
+				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => "as_status_stoptimeutc_". $id), $this->_getLocalisedTime($member['stoptimeutc']) );
 			}
 
             if ( !$memberlist && $member['log'] ) {
-                $result .= "<as_status_log_". $id. " type=\"image\" ";
-				$result .= "isCharLog=\"1\" ";
-                $result .= "src=\"". urlencode('img/note.gif'). "\"";
-				$result .= " >";
-                $result .= $this->_xmlEncode( "overlib", str_replace("'", '"', $member['log'] ) );
-                $result .= "</as_status_log_". $id. ">";
+				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_log_'. $id ), "img/note.gif" );
+				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'overlib', 'overlibType' => 'charLog', 'targetId' => 'as_status_log_'. $id ), str_replace("'", '"', $member['log'] ) );
+
             } elseif( $member['log'] ) {
-                $result .= "<as_status_log_". $id. " type=\"image\" ";
-				$result .= "isMemberlistLog=\"1\" ";
-                $result .= "src=\"". urlencode('img/note.gif'). "\"";
-				$result .= " >";
-                $result .= $this->_xmlEncode( "overlib", str_replace("'", '"', $member['log'] ) );
-                $result .= "</as_status_log_". $id. ">";
+				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_log_'. $id ), "img/note.gif" );
+				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'overlib', 'overlibType' => 'memberlistLog', 'targetId' => 'as_status_log_'. $id ), str_replace("'", '"', $member['log'] ) );
             }
         }
-
+        $this->_debug( 1, $result, 'Prepared ajax status', 'OK');
         return $result;
     }
 
@@ -673,20 +788,85 @@ class ArmorySyncJob {
      * Encode for ajax XML transfer
      *
      * @param string $tagname
-     * @param string $text
+     * @param array $attributes
+     * @param string $content
+     * @param array $subs
      */
-    function _xmlEncode( $tagname, $text ) {
+    function _xmlEncode( $tagname = false, $attributes = array(), $content = '', $subs = array() ) {
 
-        $tag = '';
-        $text = urlencode( $text );
-        while ( strlen($text) > 0 ) {
-             $substr = substr($text, 0, 4000);
-             $text = substr($text, 4000);
-             $tag .= "<". $tagname. ">";
-             $tag .= $substr;
-             $tag .= "</". $tagname. ">";
-        }
-        return $tag;
+        if ( $tagname ) {
+
+			$this->xmlIndent++;
+			$indent = '';
+			for ( $i = 1; $i <= $this->xmlIndent; $i++ ) {
+				$indent .= "  ";
+			}
+			$encContent = urlencode( $content );
+			$multi = strlen( $encContent ) > 4000;
+			$tag = $indent. "<". $tagname;
+			foreach ( $attributes as $key => $value ) {
+				$tag .= " ". $key. "=\"". urlencode($value). "\"";
+			}
+			if ( $multi ) {
+				$tag .= " multipart=\"1\">\n";
+			} elseif ( count(array_keys($subs)) > 0 ) {
+				$tag .= ">\n";
+			} else {
+				$tag .= ">";
+			}
+
+			foreach ( $subs as $sub ) {
+				list( $subTag, $subAttributes, $subContent, $subSubs ) = $sub;
+				$tag .= $this->_xmlEncode( $subTag, $subAttributes, $subContent, $subSubs );
+			}
+
+			if ( $multi ) {
+				$i = 1;
+				while ( strlen($encContent) > 0 ) {
+					 $subEncContent = substr($encContent, 0, 4000);
+					 $encContent = substr($encContent, 4000);
+					 $tag .= $indent. "  <multi part=\"". $i++. "\">";
+					 $tag .= $subEncContent;
+					 $tag .= "</multi>\n";
+				}
+			} else {
+				$tag .= $encContent;
+			}
+
+			if ( $multi || count(array_keys($subs)) > 0 ) {
+				$tag .= $indent. "</". $tagname. ">\n";
+			} else {
+				$tag .= "</". $tagname. ">\n";
+			}
+			$this->xmlIndent--;
+
+			$this->_debug( 3, $tag, 'Encoded data for XML transfer', 'OK');
+			return $tag;
+		} else {
+			$this->_debug( 0, $tag, 'Encoded data for XML transfer', 'Failed');
+		}
+    }
+
+    /**
+     * create header
+     *
+     *
+     */
+    function _showHeader() {
+        global $roster, $addon;
+
+        $roster->tpl->assign_vars( array (
+            'SHOW_LOGO' => $addon['config']['armorysync_logo_show'],
+            'IMAGE_PATH' => $addon['image_path'],
+            'LEFT' => $addon['config']['armorysync_logo_pos_left'],
+            'TOP' => $addon['config']['armorysync_logo_pos_top'],
+            'HIGHT' => $addon['config']['armorysync_logo_size'],
+            ));
+        $roster->tpl->set_filenames(array(
+                'header' => $addon['basename'] . '/header.html',
+                ));
+        $roster->tpl->display('header');
+        $this->_debug( 3, null, 'Printed header', 'OK');
     }
 
     /**
@@ -697,10 +877,103 @@ class ArmorySyncJob {
     function _showFooter() {
         global $roster, $addon;
 
-        $roster->tpl->assign_var('IMAGE_PATH', $addon['image_path']);
-        $roster->tpl->assign_var('ARMORYSYNC_VERSION',$addon['version']. ' by poetter');
-        $roster->tpl->assign_var('ARMORYSYNC_CREDITS',$roster->locale->act['armorysync_credits']);
-        $roster->tpl->set_filenames(array(
+        //aprint($this->debugmessages[0]['ret']);
+
+        $roster->tpl->assign_vars( array (
+            'IMAGE_PATH' => $addon['image_path'],
+            'ARMORYSYNC_VERSION' => $addon['version']. ' by poetter',
+            'ARMORYSYNC_CREDITS' => $roster->locale->act['armorysync_credits'],
+            'ERROR' => count( $this->errormessages ) > 0,
+            'DEBUG' => $addon['config']['armorysync_debuglevel'],
+            'DEBUG_DATA' => $addon['config']['armorysync_debugdata'],
+            'D_START_BORDER' => border( 'sblue', 'start', 'ArmorySync Debugging '. ( $addon['config']['armorysync_debugdata'] ? 'Infos & Data' : 'Infos'), '100%' ),
+            'E_START_BORDER' => border( 'sred', 'start', 'ArmorySync Error '. ( $addon['config']['armorysync_debugdata'] ? 'Infos & Data' : 'Infos'), '100%' ),
+            'RUNTIME' => round((format_microtime() - ARMORYSYNC_STARTTIME), 4),
+            'S_SQL_WIN' => $addon['config']['armorysync_sqldebug'],
+            ));
+
+        $this->_debug( 3, null, 'Printed footer', 'OK');
+
+		if ($roster->switch_row_class(false) != 1 ) {
+			$roster->switch_row_class();
+		}
+
+        foreach ( $this->errormessages as $message ) {
+            $roster->tpl->assign_block_vars('e_row', array(
+                'FILE' => $message['file'],
+                'LINE' => $message['line'],
+                'TIME' => $message['time'],
+                'CLASS' => $message['class'],
+                'FUNC' => $message['function'],
+                'INFO' => $message['info'],
+                'STATUS' => $message['status'],
+                'ARGS' => aprint($message['args'], '', 1),
+                'RET'  => aprint($message['ret'], '' , 1),
+                'ROW_CLASS1' => $roster->switch_row_class(),
+                'ROW_CLASS2' => 1,
+                'ROW_CLASS3' => 1,
+                ));
+        }
+
+        $roster->tpl->assign_var( 'E_STOP_BORDER', border( 'sred', 'end', '', '' ) );
+
+		if ($roster->switch_row_class(false) != 1 ) {
+			$roster->switch_row_class();
+		}
+
+        foreach ( $this->debugmessages as $message ) {
+            $roster->tpl->assign_block_vars('d_row', array(
+                'FILE' => $message['file'],
+                'LINE' => $message['line'],
+                'TIME' => $message['time'],
+                'CLASS' => $message['class'],
+                'FUNC' => $message['function'],
+                'INFO' => $message['info'],
+                'STATUS' => $message['status'],
+                'ARGS' => aprint($message['args'], '', 1),
+                'RET'  => aprint($message['ret'], '' , 1),
+                'ROW_CLASS1' => $roster->switch_row_class(),
+                'ROW_CLASS2' => 1,
+                'ROW_CLASS3' => 1,
+                ));
+        }
+
+        $roster->tpl->assign_var( 'D_STOP_BORDER', border( 'sblue', 'end', '', '' ) );
+
+        if( $addon['config']['armorysync_sqldebug'] )
+        {
+            if( count($roster->db->queries) > 0 )
+            {
+                foreach( $roster->db->queries as $file => $queries )
+                {
+                    if (!preg_match('#[\\\/]{1}addons[\\\/]{1}armorysync[\\\/]{1}inc[\\\/]{1}[a-z_.]+.php$#', $file)) {
+                        continue;
+                    }
+                    $roster->tpl->assign_block_vars('sql_debug', array(
+                        'FILE' => substr($file, strlen(ROSTER_BASE)),
+                        )
+                    );
+                    foreach( $queries as $query )
+                    {
+                        $roster->tpl->assign_block_vars('sql_debug.row', array(
+                            'ROW_CLASS' => $roster->switch_row_class(),
+                            'LINE'      => $query['line'],
+                            'TIME'      => $query['time'],
+                            'QUERY'     => nl2br(htmlentities($query['query'])),
+                            )
+                        );
+                    }
+                }
+
+                $roster->tpl->assign_vars(array(
+                    'SQL_DEBUG_B_S' => border('sgreen','start',$roster->locale->act['sql_queries']),
+                    'SQL_DEBUG_B_E' => border('sgreen','end'),
+                    )
+                );
+            }
+        }
+
+        $roster->tpl->set_filenames( array (
                 'footer' => $addon['basename'] . '/footer.html',
                 ));
         $roster->tpl->display('footer');
@@ -728,12 +1001,9 @@ class ArmorySyncJob {
         $body .= "<br />\n";
         $body .= "<br />\n";
         $body .= "<br />\n";
-        $body .= messagebox($roster->locale->act['armorysync_guildadd_helpText'],'<img src="' . $roster->config['img_url'] . 'blue-question-mark.gif" alt="?" style="float:right;" />' . $roster->locale->act['armorysync_guildadd_help'],'sgray');
+        $body .= messagebox($roster->locale->act['armorysync_guildadd_helpText'],'<img src="' . $roster->config['img_url'] . 'blue-question-mark.gif" alt="?" style="float:right;" />' . $roster->locale->act['armorysync_guildadd_help'],'sgray', '400px');
         $body .= "<br />\n";
-
-        print '<div style="height:1px; width:1px; overflow:visible;">';
-        print '<img src="'. $addon['image_path']. 'as_logo.png" style="position: relative; left:420px; bottom:125px; height:250px;" alt="" />';
-        print '</div>';
+        $this->_debug( 1, $body, 'Printed guild add screen', 'OK');
         print $body;
     }
 
@@ -744,25 +1014,26 @@ class ArmorySyncJob {
      */
     function _ruletable_head( $style , $title , $type , $mode )
     {
-            global $roster;
+        global $roster;
 
-            $output = border($style,'start',$title) . '
-    <table class="bodyline" cellspacing="0" cellpadding="0">
-            <thead>
-                    <tr>
-    ';
+        $output = border($style,'start',$title) . '
+<table class="bodyline" cellspacing="0" cellpadding="0">
+        <thead>
+                <tr>
+';
 
-            $name = $roster->locale->act['guildname'];
+        $name = $roster->locale->act['guildname'];
 
-            $output .= '
-                            <th class="membersHeader" ' . makeOverlib($name) . '> ' . $roster->locale->act['guildname'] . '</th>
-                            <th class="membersHeader" ' . makeOverlib($roster->locale->act['realmname']) . '> ' . $roster->locale->act['server'] . '</th>
-                            <th class="membersHeader" ' . makeOverlib($roster->locale->act['regionname']) . '> ' . $roster->locale->act['region'] . '</th>
-                            <th class="membersHeaderRight">&nbsp;</th>
-                    </tr>
-            </thead>
-            <tbody>' . "\n";
-            return $output;
+        $output .= '
+                        <th class="membersHeader" ' . makeOverlib($name) . '> ' . $roster->locale->act['guildname'] . '</th>
+                        <th class="membersHeader" ' . makeOverlib($roster->locale->act['realmname']) . '> ' . $roster->locale->act['server'] . '</th>
+                        <th class="membersHeader" ' . makeOverlib($roster->locale->act['regionname']) . '> ' . $roster->locale->act['region'] . '</th>
+                        <th class="membersHeaderRight">&nbsp;</th>
+                </tr>
+        </thead>
+        <tbody>' . "\n";
+        $this->_debug( 3, $output, 'Fetched header of rule table', 'OK');
+        return $output;
     }
 
 
@@ -773,20 +1044,21 @@ class ArmorySyncJob {
      */
     function _ruletable_foot( $style , $type , $mode )
     {
-            global $roster;
+        global $roster;
 
-            $output = "\n\t\t<tr>\n";
+        $output = "\n\t\t<tr>\n";
 
-            $output .= '
-                            <td class="membersRow2"><input class="wowinput128" type="text" name="name" value="" /></td>
-                            <td class="membersRow2"><input class="wowinput128" type="text" name="server" value="" /></td>
-                            <td class="membersRow2"><input class="wowinput64" type="text" name="region" value="" /></td>
-                            <td class="membersRowRight2"><button type="submit" class="input" onclick="setvalue(\'' . $type . '\',\'add\');">' . $roster->locale->act['add'] . '</button></td>
-                    </tr>
-            </tbody>
-    </table>
-    ' . border($style,'end');
-            return $output;
+        $output .= '
+                        <td class="membersRow2"><input class="wowinput128" type="text" name="name" value="" /></td>
+                        <td class="membersRow2"><input class="wowinput128" type="text" name="server" value="" /></td>
+                        <td class="membersRow2"><input class="wowinput64" type="text" name="region" value="" /></td>
+                        <td class="membersRowRight2"><button type="submit" class="input" onclick="setvalue(\'' . $type . '\',\'add\');">' . $roster->locale->act['add'] . '</button></td>
+                </tr>
+        </tbody>
+</table>
+' . border($style,'end');
+        $this->_debug( 3, $output, 'Fetched footer of rule table', 'OK');
+        return $output;
     }
 
     /**
@@ -798,6 +1070,7 @@ class ArmorySyncJob {
         global $roster;
 
         $this->_show_status( $jobid, 1 );
+        $this->_debug( 1, null, 'Printed memberlist status', 'OK');
     }
 
     /**
@@ -831,6 +1104,7 @@ class ArmorySyncJob {
             if ( $cleanup ) {
                 $this->_cleanUpJob( $this->jobid );
             }
+            $this->_debug( 1, $ret, 'Updated charcter job status', $ret ? 'OK': 'FINISHED');
             return $ret;
         } else {
             if ( ! $this->ArmorySync->synchMemberByID( $active_member['server'], $active_member['member_id'], $active_member['name'], $active_member['region'], $active_member['guild_id']) ) {
@@ -848,7 +1122,11 @@ class ArmorySyncJob {
             if ( $this->_updateMemberJobStatus( $this->jobid, $this->active_member ) ) {
                 $this->members = $this->_getMembersFromJobqueue( $this->jobid );
                 list ( $this->done, $this->total ) = $this->_getJobProgress($this->jobid);
+                $this->_debug( 1, true, 'Updated charcter job status', 'OK');
                 return true;
+            } else {
+                $this->_debug( 0, false, 'Updated charcter job status', 'Failed');
+                return false;
             }
         }
     }
@@ -878,6 +1156,7 @@ class ArmorySyncJob {
             if ( $cleanup ) {
                 $this->_cleanUpJob( $this->jobid );
             }
+            $this->_debug( 1, $ret, 'Updated memberlist job status', $ret ? 'OK': 'FINISHED');
             return $ret;
         } else {
             if ( ! $this->ArmorySync->synchGuildByID( $active_member['server'], $active_member['guild_id'], $active_member['guild_name'], $active_member['region']) ) {
@@ -890,7 +1169,11 @@ class ArmorySyncJob {
             if ( $this->_updateGuildJobStatus( $this->jobid, $this->active_member ) ) {
                 $this->members = $this->_getMembersFromJobqueue( $this->jobid );
                 list ( $this->done, $this->total ) = $this->_getJobProgress($this->jobid);
+                $this->_debug( 1, true, 'Updated memberlist job status', 'OK');
                 return true;
+            } else {
+                $this->_debug( 0, false, 'Updated memberlist job status', 'Failed');
+                return false;
             }
         }
     }
@@ -908,8 +1191,10 @@ class ArmorySyncJob {
 
         require_once ($addon['dir'] . 'inc/armorysync.class.php');
 
-        $as = new ArmorySync;
-        return $as->checkGuildInfo( $name, $server, $region );
+        $this->_init();
+        $ret = $this->ArmorySync->checkGuildInfo( $name, $server, $region );
+        $this->_debug( 1, $ret, 'Checked guild on existenz', $ret ? 'OK' : 'Failed');
+        return $ret;
     }
     /**
      * Create localised time based on utc + offset;
@@ -924,6 +1209,7 @@ class ArmorySyncJob {
         $stamp = strtotime( $time );
         $stamp += $offset;
         $ret = date("d.m H:i:s", $stamp);
+        $this->_debug( $ret ? 3 : 0, $ret, 'Fetched localized time', $ret ? 'OK' : 'Failed');
         return $ret;
     }
     /**
@@ -957,6 +1243,7 @@ class ArmorySyncJob {
         }
         $pb .= "</tr>";
         $pb .= "</table>";
+        $this->_debug( 3, $pb, 'Fetched progressbar', $pb ? 'OK' : 'Failed');
         return $pb;
     }
 
@@ -979,12 +1266,12 @@ class ArmorySyncJob {
             '<span class="title_text">'. $this->title. '</span><br />'.
             $roster_login->getMessage().
             $roster_login->getLoginForm($addon['config'][$scope]);
-            return false;
+            $ret = false;
         } else {
-            return true;
+            $ret = true;
         }
-
-
+        $this->_debug( 1, $ret, 'Checked authentication', $ret ? 'OK' : 'Failed');
+        return $ret;
     }
 
     /**
@@ -998,16 +1285,17 @@ class ArmorySyncJob {
 
         $reloadTime = $addon['config']['armorysync_reloadwaittime'] * 500;
         $link = 'ajax.php?addon=armorysync&method=armorysync_status_update&cont=doUpdateStatus';
-        if ( $this->ajaxDebug ) {
-            $link .= '&XDEBUG_SESSION_START=test';
-        }
 
-        if ( $addon['config']['armorysync_use_ajax'] ) {
+		if ( $addon['config']['armorysync_use_ajax'] ) {
+	        $postadd = '';
+            if ( $addon['config']['armorysync_xdebug_ajax'] ) {
+                $postadd .= '&XDEBUG_SESSION_START='. $addon['config']['armorysync_xdebug_idekey'];
+            }
             $header = '
 <script type="text/javascript">
 <!--
     function nextStep() {
-        loadXMLDoc(\''. ROSTER_URL. $link. '\',\'job_id='. $this->jobid. '&memberlist='. $this->isMemberList. '&scope='. $roster->scope. '&page='. ( isset($roster->pages[2]) ? $roster->pages[2] : '' ). '\');
+        loadXMLDoc(\''. ROSTER_URL. $link. '\',\'job_id='. $this->jobid. '&memberlist='. $this->isMemberList. '&scope='. $roster->scope. '&page='. ( isset($roster->pages[2]) ? $roster->pages[2] : '' ). '&ARMORYSYNC_STARTTIME='. ARMORYSYNC_STARTTIME. $postadd. '\');
     }
     self.setTimeout(\'nextStep()\', '. $reloadTime. ');
 //-->
@@ -1028,6 +1316,7 @@ class ArmorySyncJob {
 </script>
 ';
         }
+        $this->_debug( 1, $header, 'Printed reload java code', $header ? 'OK' : 'Failed');
         $this->header .= $header;
     }
 
@@ -1058,11 +1347,9 @@ class ArmorySyncJob {
                     </form>
                     <br />';
 
-
-        print '<div style="height:1px; width:1px; overflow:visible;">';
-        print '<img src="'. $addon['image_path']. 'as_logo.png" style="position: relative; left:420px; bottom:125px; height:250px;" alt="" />';
-        print '</div>';
-        print messagebox( $message, $this->title,'sred', '500px');
+        $out = messagebox( $message, $this->title,'sred', '500px');
+        $this->_debug( 1, $out, 'Printed start page', $out ? 'OK' : 'Failed');
+        print $out;
     }
 
     // DB functions
@@ -1075,7 +1362,9 @@ class ArmorySyncJob {
     function _getRealmMembersToUpdate(){
         global $roster;
 
-        return $this->_getMembersToUpdate("members.server = \"". $roster->data['server']. "\" AND members.region = \"". $roster->data['region']. "\" AND NOT members.guild_id = 0 AND " );
+        $ret = $this->_getMembersToUpdate("members.server = \"". $roster->data['server']. "\" AND members.region = \"". $roster->data['region']. "\" AND NOT members.guild_id = 0 AND " );
+        $this->_debug( 3, $ret, 'Fetched realm members to update from DB', $ret ? 'OK' : 'EMPTY');
+        return $ret;
     }
 
     /**
@@ -1086,7 +1375,9 @@ class ArmorySyncJob {
     function _getGuildMembersToUpdate(){
         global $roster;
 
-        return $this->_getMembersToUpdate("members.guild_id = ". $roster->data['guild_id']. " AND " );
+        $ret = $this->_getMembersToUpdate("members.guild_id = ". $roster->data['guild_id']. " AND " );
+        $this->_debug( 3, $ret, 'Fetched guild members to update from DB', $ret ? 'OK' : 'EMPTY');
+        return $ret;
     }
 
     /**
@@ -1119,11 +1410,12 @@ class ArmorySyncJob {
 
         $result = $roster->db->query($query);
         if( $roster->db->num_rows($result) > 0 ) {
-            return $roster->db->fetch_all();
+            $ret = $roster->db->fetch_all();
         } else {
-            return array();
+            $ret = array();
         }
-
+        $this->_debug( 2, $ret, 'Fetched members to update from DB', $ret ? 'OK' : 'EMPTY');
+        return $ret;
     }
 
     /**
@@ -1139,20 +1431,16 @@ class ArmorySyncJob {
                     "SET starttimeutc=".'"'. $starttimeutc. '"'.";";
 
         $result = $roster->db->query($query);
+        $ret = false;
         if ( $result ) {
             $query = "SELECT LAST_INSERT_ID();";
             $jobid = $roster->db->query_first($query);
             if ( $jobid ) {
-                return $jobid;
-            } else {
-                print "Error fetching id <br />\n";
-                return false;
+                $ret = $jobid;
             }
-        } else {
-            print "Error inserting jobid<br />\n";
-            return false;
         }
-
+        $this->_debug( $ret ? 2 : 0, $ret, 'Fetched job id from DB', $ret ? 'OK' : 'Failed');
+        return $ret;
     }
 
     /**
@@ -1167,12 +1455,9 @@ class ArmorySyncJob {
         $query =    "SELECT starttimeutc ".
                     "FROM `". $roster->db->table('jobqueue',$addon['basename']). "` ".
                     "WHERE job_id=". $jobid;
-        $starttime = $roster->db->query_first($query);
-        if ( $starttime ) {
-            return $starttime;
-        } else {
-            return false;
-        }
+        $ret = $roster->db->query_first($query);
+        $this->_debug( $ret ? 2 : 0, $ret, 'Fetched job start time from DB', $ret ? 'OK' : 'Failed');
+        return $ret;
     }
 
     /**
@@ -1185,6 +1470,7 @@ class ArmorySyncJob {
     function _insertMembersToJobqueue( $jobid = 0, $members = array() ) {
         global $roster, $addon;
 
+        $ret = false;
         if ( array_keys( $members ) ) {
 
             $query =    "INSERT INTO ". $roster->db->table('jobqueue',$addon['basename']). " ".
@@ -1203,10 +1489,11 @@ class ArmorySyncJob {
             $query = preg_replace('/, $/', ';', $query);
             $result = $roster->db->query($query);
             if ( $result ) {
-                return true;
+                $ret = true;
             }
         }
-        return false;
+        $this->_debug( $ret ? 2 : 0, $ret, 'Inserted members to jobqueue table', $ret ? 'OK' : 'Failed');
+        return $ret;
     }
 
     /**
@@ -1218,6 +1505,7 @@ class ArmorySyncJob {
     function _getMembersFromJobqueue( $jobid = 0 ) {
         global $roster, $addon;
 
+        $ret = array();
         $query =    "SELECT * ".
                     "FROM `". $roster->db->table('jobqueue',$addon['basename']). "` ".
                     "WHERE job_id=". $jobid. " ".
@@ -1226,11 +1514,10 @@ class ArmorySyncJob {
 
         $result = $roster->db->query($query);
         if( $roster->db->num_rows($result) > 0 ) {
-            return $roster->db->fetch_all();
-        } else {
-            return array();
+            $ret = $roster->db->fetch_all();
         }
-
+        $this->_debug( $ret ? 2 : 0, $ret, 'Fetched members in jobqueue table from DB', $ret ? 'OK' : 'Failed');
+        return $ret;
     }
 
     /**
@@ -1242,6 +1529,7 @@ class ArmorySyncJob {
     function _isPostSyncStatus ( $jobid = 0 ) {
         global $roster, $addon;
 
+        $ret = false;
         $query =    "SELECT * ".
                     "FROM `". $roster->db->table('jobqueue',$addon['basename']). "` ".
                     "WHERE job_id=". $jobid. " ".
@@ -1250,10 +1538,10 @@ class ArmorySyncJob {
         $result = $roster->db->query($query);
         if( $roster->db->num_rows($result) > 0 ) {
             $member = $roster->db->fetch_all();
-            return $member[0];
-        } else {
-            return false;
+            $ret = $member[0];
         }
+        $this->_debug( 2, $ret, 'Check if post sync status from DB', $ret ? 'YES' : 'NO');
+        return $ret;
     }
 
     /**
@@ -1263,7 +1551,9 @@ class ArmorySyncJob {
      * @return array $progress
      */
     function _getJobProgress ( $jobid = 0 ) {
-        return array($this->_getJobDone($jobid), $this->_getJobTotal($jobid));
+        $ret = array($this->_getJobDone($jobid), $this->_getJobTotal($jobid));
+        $this->_debug( 3, $ret, 'Created job progress array', $ret ? 'OK' : 'Failed');
+        return $ret;
     }
 
     /**
@@ -1275,6 +1565,7 @@ class ArmorySyncJob {
     function _getJobTotal ( $jobid = 0 ) {
         global $roster, $addon;
 
+        $ret = 0;
         $query =    "SELECT ".
                     "COUNT(member_id) as total ".
                     "FROM `". $roster->db->table('jobqueue',$addon['basename']). "` ".
@@ -1282,10 +1573,10 @@ class ArmorySyncJob {
 
         $result = $roster->db->query_first($query);
         if( $result ) {
-            return $result;
-        } else {
-            return 0;
+            $ret = $result;
         }
+        $this->_debug( $ret ? 3 : 0, $ret, 'Fetched total members to update from DB', $ret ? 'OK' : 'Failed');
+        return $ret;
     }
 
     /**
@@ -1297,6 +1588,7 @@ class ArmorySyncJob {
     function _getJobDone ( $jobid = 0 ) {
         global $roster, $addon;
 
+        $ret = 0;
         $query =    "SELECT ".
                     "COUNT(member_id) as done ".
                     "FROM `". $roster->db->table('jobqueue',$addon['basename']). "` ".
@@ -1306,10 +1598,10 @@ class ArmorySyncJob {
 
         $result = $roster->db->query_first($query);
         if( $result ) {
-            return $result;
-        } else {
-            return 0;
+            $ret = $result;
         }
+        $this->_debug( $ret !== false ? 3 : 0, $ret, 'Fetched total members updated from DB', $ret ? 'OK' : 'Failed');
+        return $ret;
     }
 
     /**
@@ -1319,7 +1611,9 @@ class ArmorySyncJob {
      * @return array $member
      */
     function _getNextMemberToUpdate ( $jobid = 0 ) {
-        return $this->_getNextToUpdate( $jobid, 'member_id' );
+        $ret = $this->_getNextToUpdate( $jobid, 'member_id' );
+        $this->_debug( 3, $ret, 'Fetched next member to update from DB', $ret ? 'OK' : 'Failed');
+        return $ret;
     }
 
     /**
@@ -1329,7 +1623,9 @@ class ArmorySyncJob {
      * @return array $member
      */
     function _getNextGuildToUpdate ( $jobid = 0 ) {
-        return $this->_getNextToUpdate( $jobid, 'guild_id' );
+        $ret = $this->_getNextToUpdate( $jobid, 'guild_id' );
+        $this->_debug( 3, $ret, 'Fetched next guild to update from DB', $ret ? 'OK' : 'Failed');
+        return $ret;
     }
 
     /**
@@ -1346,6 +1642,7 @@ class ArmorySyncJob {
             return false;
         }
 
+        $ret = array();
         $query =    "SELECT MIN(". $field. ") ". $field. " ".
                     "FROM `". $roster->db->table('jobqueue',$addon['basename']). "` ".
                     "WHERE job_id=". $jobid. " ".
@@ -1360,13 +1657,11 @@ class ArmorySyncJob {
             $result = $roster->db->query($query);
             if( $roster->db->num_rows($result) > 0 ) {
                 $next = $roster->db->fetch_all();
-                return $next[0];
-            } else {
-                return false;
+                $ret = $next[0];
             }
-        } else {
-            return false;
         }
+        $this->_debug( 3, $ret, 'Fetched next to update from DB', $ret ? 'OK' : 'Failed');
+        return $ret;
     }
 
     /**
@@ -1377,7 +1672,9 @@ class ArmorySyncJob {
      * @return bool
      */
     function _updateMemberJobStatus ( $jobid = 0, $member = array() ) {
-        return $this->_updateJobStatus( $jobid, $member, 'member_id' );
+        $ret = $this->_updateJobStatus( $jobid, $member, 'member_id' );
+        $this->_debug( 3, $ret, 'Updated character job status in DB', $ret ? 'OK' : 'Failed');
+        return $ret;
     }
 
     /**
@@ -1388,7 +1685,9 @@ class ArmorySyncJob {
      * @return bool
      */
     function _updateGuildJobStatus ( $jobid = 0, $member = array() ) {
-        return $this->_updateJobStatus( $jobid, $member, 'guild_id' );
+        $ret = $this->_updateJobStatus( $jobid, $member, 'guild_id' );
+        $this->_debug( 3, $ret, 'Updated memberlist job status in DB', $ret ? 'OK' : 'Failed');
+        return $ret;
     }
 
     /**
@@ -1438,10 +1737,12 @@ class ArmorySyncJob {
                     die_quietly($roster->db->error(),'Database Error',__FILE__,__LINE__,$query);
                 }
             }
-            return true;
+            $ret = true;
         } else {
-            return false;
+            $ret = false;
         }
+        $this->_debug( 2, $ret, 'Updated job status in DB', $ret ? 'OK' : 'Failed');
+        return $ret;
     }
 
     /**
@@ -1477,6 +1778,7 @@ class ArmorySyncJob {
                 $result = $roster->db->query($query);
             }
         }
+        $this->_debug( 2, true, 'Deleted old jobs from DB', true ? 'OK' : 'Failed');
     }
 
     /**
@@ -1507,12 +1809,13 @@ class ArmorySyncJob {
             if ( !$roster->db->query($query) ) {
                     die_quietly($roster->db->error(),'Database Error',__FILE__,__LINE__,$query);
             } else {
-                return true;
+                $ret = true;
             }
         } else {
-            return true;
+            $ret = true;
         }
-
+        $this->_debug( 2, $ret, 'Inserted upload rule to DB', $ret ? 'OK' : 'Failed');
+        return $ret;
     }
 
     /**
@@ -1532,30 +1835,25 @@ class ArmorySyncJob {
                     "`guild_name`='". $roster->db->escape($name). "' ".
                     "AND `server`='". $roster->db->escape($server). "' ".
                     "AND `region`='". $roster->db->escape($region). "';";
-        $id = $roster->db->query_first($query);
+        $ret = $roster->db->query_first($query);
 
-        if ( $id ) {
-            return $id;
-        }
+        if ( ! $ret ) {
 
-        $query =    "INSERT ".
-                    "INTO `". $roster->db->table('guild'). "` ".
-                    "SET ".
-                    "`guild_name`='". $roster->db->escape($name). "', ".
-                    "`server`='". $roster->db->escape($server). "', ".
-                    "`region`='". $roster->db->escape($region). "';";
+            $query =    "INSERT ".
+                        "INTO `". $roster->db->table('guild'). "` ".
+                        "SET ".
+                        "`guild_name`='". $roster->db->escape($name). "', ".
+                        "`server`='". $roster->db->escape($server). "', ".
+                        "`region`='". $roster->db->escape($region). "';";
 
-        if ( !$roster->db->query($query) ) {
-            die_quietly($roster->db->error(),'Database Error',__FILE__,__LINE__,$query);
-        } else {
-            $query = "SELECT LAST_INSERT_ID();";
-            $jobid = $roster->db->query_first($query);
-            if ( $jobid ) {
-                return $jobid;
+            if ( !$roster->db->query($query) ) {
+                die_quietly($roster->db->error(),'Database Error',__FILE__,__LINE__,$query);
             } else {
-                return false;
+                $query = "SELECT LAST_INSERT_ID();";
+                $ret = $roster->db->query_first($query);
             }
         }
+        $this->_debug( 2, $ret, 'Inserted guild to DB', $ret ? 'OK' : 'Failed');
+        return $ret;
     }
-
 }

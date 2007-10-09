@@ -20,6 +20,8 @@ if( !defined('IN_ROSTER') )
     exit('Detected invalid access to this file!');
 }
 
-define('ARMORYSYNC_VERSION','2.6.0.256');
+define('ARMORYSYNC_STARTTIME', isset($_POST['ARMORYSYNC_STARTTIME']) ? $_POST['ARMORYSYNC_STARTTIME']: format_microtime());
+
+define('ARMORYSYNC_VERSION','2.6.0.264');
 
 define('ARMORYSYNC_REQUIRED_ROSTER_VERSION','1.9.9.1377');

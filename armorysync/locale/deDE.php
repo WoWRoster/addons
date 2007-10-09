@@ -23,7 +23,11 @@ $lang['async_button3']			= 'ArmorySync Charakters|Synchronisiere die Charaktere 
 $lang['async_button4']			= 'ArmorySync Memberlist|Synchronisiere deine Mitgliederliste mit Blizzards Armory';
 $lang['async_button5']			= 'ArmorySync Memberlist für eine neue Gilde|Füge eine neue Gilde ein und synchronisiere<br />die Mitgliederliste mit Blizzards Armory';
 // Config strings
-$lang['admin']['armorysync_conf']			= 'ArmorySync Konfiguration';
+$lang['admin']['armorysync_conf']			= 'Allgemein|Konfiguriere die Grundeinstellungen für ArmorySync';
+$lang['admin']['armorysync_images']			= 'Bilder|Konfiguriere die Anzeige von Bildern für ArmorySync';
+$lang['admin']['armorysync_access']			= 'Zugriffsrechte|Konfiguriere die Zugriffsrechte für ArmorySync';
+$lang['admin']['armorysync_debug']			= 'Debugging|Konfiguriere das Debugging für ArmorySync';
+
 $lang['admin']['armorysync_host']			= 'Host|Host mit dem synchronisiert werden soll.';
 $lang['admin']['armorysync_minlevel']		= 'Minimum Level|Minimum Level der Charaktere die synchronisiert werden.';
 $lang['admin']['armorysync_synchcutofftime']	= 'Sync cutoff time|Zeit in Tagen.<br />Alle Charaktere die nicht in den letzten (x) Tagen aktualisiert wurden werden synchronisiert.';
@@ -32,17 +36,35 @@ $lang['admin']['armorysync_reloadwaittime']	= 'Reload wait time|Zeit in Sekunden
 $lang['admin']['armorysync_fetch_timeout'] = 'Armory Fetch timeout|Zeit in Sekunden bis das Herunterladen<br />einer einzelnen XML Datei abgebrochen wird.';
 $lang['admin']['armorysync_skip_start'] = 'Überspringe die Startseite|Überspringe die Startseite bei <b>ArmorySync</b> updates.';
 $lang['admin']['armorysync_status_hide'] = 'Verstecke das Statusfenster initial|Versteckt das Status Fenster von <b>ArmorySync</b> beim ersten Laden.';
+$lang['admin']['armorysync_protectedtitle']	= "Geschützer Gildentitel|Charaktere mit diesen Gildentiteln sind davor geschützt,<br />durch einen Abgleich der Mitgliederliste gegen die Armory gelöscht zu werden.<br />Dieses Problem besteht häufig mit Bank Charakteren.<br />Mehrfachnennung durch trennen mit \",\" möglich. Z.B. Banker,Lager";
+
 $lang['admin']['armorysync_char_update_access'] = 'Char Update Access Level|Wer ist in der Lage Charakter zu aktualisieren';
 $lang['admin']['armorysync_guild_update_access'] = 'Guild Update Access Level|Wer ist in der Lage Gilden zu aktualisieren';
 $lang['admin']['armorysync_guild_memberlist_update_access'] = 'Guild Memberlist Update Access Level|Wer ist in der Lage Gilden Mitgliederlisten zu aktualisieren';
 $lang['admin']['armorysync_realm_update_access'] = 'Realm Update Access Level|Wer ist in der Lage Realms zu aktualisieren';
 $lang['admin']['armorysync_guild_add_access'] = 'Guild Add Access Level|Wer ist in der Lage neue Gilden einzufügen';
 
-//$lang['admin']['armorysync_usecurl']		= 'Use Curl|Auf false setzen wenn du die original FileSocket function benutzen möchtest.';
-//$lang['admin']['armorysync_debuglevel']		= 'Debug level';
-//$lang['admin']['armorysync_updateroster']	= "Update Roster|Das Roster aktualisieren oder nicht.<br />Sinnvoll fürs Debuggen.";
-//$lang['admin']['armorysync_ismysqllower411']	= "MySQL < 4.1.1|Auf True setzen wenn deine MySQL Version kleiner als 4.1.1 ist.";
-$lang['admin']['armorysync_protectedtitle']	= "Geschützer Gildentitel|Charaktere mit diesen Gildentiteln sind davor geschützt,<br />durch einen Abgleich der Mitgliederliste gegen die Armory gelöscht zu werden.<br />Dieses Problem besteht häufig mit Bank Charakteren.<br />Mehrfachnennung durch trennen mit \",\" möglich. Z.B. Banker,Lager";
+$lang['admin']['armorysync_logo'] = 'ArmorySync Logo|';
+$lang['admin']['armorysync_pic1'] = 'ArmorySync Bild 1|';
+$lang['admin']['armorysync_pic2'] = 'ArmorySync Bild 2|';
+$lang['admin']['armorysync_pic3'] = 'ArmorySync Bild 3|';
+$lang['admin']['armorysync_effects'] = 'ArmorySync Bild Effekte|';
+$lang['admin']['armorysync_logo_show'] = 'Logo anzeigen|';
+$lang['admin']['armorysync_pic1_show'] = $lang['admin']['armorysync_pic2_show'] = $lang['admin']['armorysync_pic3_show'] = 'Bild anzeigen|';
+$lang['admin']['armorysync_pic_effects'] = 'Aktiviert|Benutze JavaScript Effekte für Bilder.';
+$lang['admin']['armorysync_logo_pos_left'] = $lang['admin']['armorysync_pic1_pos_left'] = $lang['admin']['armorysync_pic2_pos_left'] = $lang['admin']['armorysync_pic3_pos_left'] = 'Bild Position horizontal|';
+$lang['admin']['armorysync_logo_pos_top'] = $lang['admin']['armorysync_pic1_pos_top'] = $lang['admin']['armorysync_pic2_pos_top'] = $lang['admin']['armorysync_pic3_pos_top'] = 'Bild Position vertikal|';
+$lang['admin']['armorysync_logo_size'] = $lang['admin']['armorysync_pic1_size'] = $lang['admin']['armorysync_pic2_size'] = $lang['admin']['armorysync_pic3_size'] = 'Bild Größe|';
+$lang['admin']['armorysync_pic1_min_rows'] = $lang['admin']['armorysync_pic2_min_rows'] = $lang['admin']['armorysync_pic3_min_rows'] = 'Minimun Zeilen|Minimum Anzahl an Zeilen in der Statusanzeige<br />bei der das Bild angezeigt wird.';
+
+$lang['admin']['armorysync_debuglevel']		= 'Debug Level|Hiermit stellst du den Debuglevel für ArmorySync ein.<br /><br />Quiete - Keine Meldungen<br />Base Infos - Grundlegende Meldungen<br />Armory & Job Method Infos - Alle Meldungen der Methoden der Armory und des Jobs<br />All Methods Info - Meldungen aller Methoden <b style="color:red;">(Vorsicht - sehr viele Infos)</b>';
+$lang['admin']['armorysync_debugdata']		= 'Debug Data|Hiermit erhöhst die gewählte Debug Ausgabe um die Argumente und Rückgabewerte der Methoden<br /><b style="color:red;">(Vorsicht - sehr viele Infos bei hohem Debuglevel)</b>';
+$lang['admin']['armorysync_javadebug']		= 'Debug Java|Hiermit stellst du ein dass JavaScript Debugmeldungen ausgibt.<br />Bis jetzt nicht implementiert.';
+$lang['admin']['armorysync_xdebug_php']		= 'XDebug Session PHP|Hiermit wird bei Reloads im POST die XDEBUG Variable gesetzt.';
+$lang['admin']['armorysync_xdebug_ajax']	= 'XDebug Session AJAX|Hiermit wird bei Reloads per AJAX im POST die XDEBUG Variable gesetzt.';
+$lang['admin']['armorysync_xdebug_idekey']	= 'XDebug Session IDEKEY|Hiermit wird der IDEKEY für Xdebug Session festgelegt.';
+$lang['admin']['armorysync_sqldebug']		= 'SQL Debug|Hiermit schaltest du das SQL Debugging für ArmorySync ein.';
+$lang['admin']['armorysync_updateroster']	= "Update Roster|Das Roster aktualisieren oder nicht.<br />Sinnvoll fürs Debuggen.<br />Bis jetzt nicht implementiert.";
 
 
 $lang['bindings']['bind_on_pickup'] = "Wird beim Aufheben gebunden";
