@@ -136,6 +136,7 @@ $lang['skill_short'] = "Habil.";
 $lang['reputation_short'] = "Repu.";
 $lang['equipment_short'] = "Equipo";
 $lang['talents_short'] = "Talen.";
+$lang['arenaTeams_short'] = "Arena";
 
 $lang['started'] = "empezo";
 $lang['finished'] = "acabo";

@@ -41,12 +41,13 @@ class ArmorySync extends ArmorySyncBase {
 
     var $datas = array();
 
-    var $status = array(    'guildInfo' => 0,
-                            'characterInfo' => 0,
-                            'skillInfo' => 0,
-                            'reputationInfo' => 0,
-                            'equipmentInfo' => 0,
-                            'talentInfo' => 0,
+    var $status = array(    'guildInfo' => -1,
+                            'characterInfo' => -1,
+                            'skillInfo' => -1,
+                            'reputationInfo' => -1,
+                            'equipmentInfo' => -1,
+                            'talentInfo' => -1,
+							'arenaTeamsInfo' => -1,
                         );
 
     /**
@@ -131,8 +132,18 @@ class ArmorySync extends ArmorySyncBase {
             $this->_getSkillInfo();
             $this->_getReputationInfo();
             $this->_getTalentInfo();
+			$this->_getAreanaTeamsInfo();
             $this->_debug( 1, $this->data, 'Parsed all armory data',  'OK' );
         } else {
+			$this->status = array(
+							'guildInfo' => -2,
+                            'characterInfo' => -2,
+                            'skillInfo' => -2,
+                            'reputationInfo' => -2,
+                            'equipmentInfo' => -2,
+                            'talentInfo' => -2,
+							'arenaTeamsInfo' => -1,
+                        );
             $this->_debug( 1, $this->data, 'Parsed all armory data',  'Failed' );
         }
     }
@@ -154,7 +165,8 @@ class ArmorySync extends ArmorySyncBase {
         if ( $this->_checkContent( $content, array( 'guildInfo', 'guild' ) ) ) {
             $guild = $content->guildInfo->guild;
 
-            //$this->data['Ranks'] = $this->_getGuildRanks( $roster->data['guild_id'] );
+            $this->status['guildInfo'] = 0;
+			//$this->data['Ranks'] = $this->_getGuildRanks( $roster->data['guild_id'] );
             //$this->data['timestamp']['init']['datakey'] = $roster->data['region'];
             $this->data['Ranks'] = $this->_getGuildRanks( $this->guildId );
             $this->data['timestamp']['init']['datakey'] = $this->region;
@@ -241,9 +253,10 @@ class ArmorySync extends ArmorySyncBase {
                     }
                 }
             }
-            $this->_debug( 1, $this->data, 'Parsed guild info',  'OK' );
+            $this->_debug( 1, null, 'Parsed guild info',  'OK' );
         } else {
-            $this->_debug( 1, $this->data, 'Parsed guild info',  'Failed' );
+			$this->status['guildInfo'] = -2;
+            $this->_debug( 0, null, 'Parsed guild info',  'Failed' );
         }
     }
 
@@ -489,14 +502,16 @@ class ArmorySync extends ArmorySyncBase {
             $this->status['characterInfo'] = 1;
             $this->status['guildInfo'] = 1;
 
-            $this->_debug( 1, true, 'Parsed character infos',  'OK' );
+            $this->_debug( 1, null, 'Parsed character infos',  'OK' );
 
             if ( $this->_checkContent( $tab, array( 'items', 'item' ) ) ) {
                 $equip = $tab->items->item;
                 $this->_getEquipmentInfo( $equip );
             }
         } else {
-            $this->_debug( 1, false, 'Parsed character infos',  'Failed' );
+            $this->status['characterInfo'] = -2;
+            $this->status['guildInfo'] = -2;
+            $this->_debug( 0, null, 'Parsed character infos',  'Failed' );
         }
     }
 
@@ -508,6 +523,7 @@ class ArmorySync extends ArmorySyncBase {
         global $roster, $addon;
 
         include_once(ROSTER_LIB . 'armory.class.php');
+		$this->status['equipmentInfo'] = 0;
 
         foreach($equip as $item) {
 
@@ -561,7 +577,10 @@ class ArmorySync extends ArmorySyncBase {
                 ////} else {
                 //    $this->data["Equipment"][$slot]['Item'] .= ":0:0:0";
                 //}
-            }
+				$this->_debug( 2, null, 'Parsed item tooltip', 'OK' );
+            } else {
+				$this->_debug( 0, null, 'Parsed item tooltip', 'Failed' );
+			}
             $this->data["Equipment"][$slot]['Item'] .= ":". $item->permanentenchant;
             $this->data["Equipment"][$slot]['Item'] .= ":". "0"; // GemId0
             $this->data["Equipment"][$slot]['Item'] .= ":". "0"; // GemId1
@@ -572,9 +591,10 @@ class ArmorySync extends ArmorySyncBase {
             $this->status['equipmentInfo'] += 1;
         }
         if ( $this->status['equipmentInfo'] > 0 ) {
-            $this->_debug( 1, true, 'Parsed equipment info', 'OK' );
+            $this->_debug( 1, null, 'Parsed equipment info', 'OK' );
         } else {
-            $this->_debug( 1, false, 'Parsed equipment info', 'Failed' );
+			$this->status['equipmentInfo'] = -2;
+            $this->_debug( 0, null, 'Parsed equipment info', 'Failed' );
         }
 
     }
@@ -597,6 +617,7 @@ class ArmorySync extends ArmorySyncBase {
         if ( $this->_checkContent( $content, array( 'characterInfo', 'skillTab' ) ) ) {
 
             $skillSets = $content->characterInfo->skillTab->skillCategory;
+			$this->status['skillInfo'] = 0;
 
             foreach ($skillSets as $skillSet) {
                 $type = $skillSet->name;
@@ -619,9 +640,10 @@ class ArmorySync extends ArmorySyncBase {
 
                 $this->data["Skills"][$type]["Order"] = $this->_getSkillOrder($type);
             }
-            $this->_debug( 1, true, 'Parsed skill info', 'OK' );
+            $this->_debug( 1, null, 'Parsed skill info', 'OK' );
         } else {
-            $this->_debug( 1, false, 'Parsed skill info', 'Failed' );
+			$this->status['skillInfo'] = -2;
+            $this->_debug( 0, null, 'Parsed skill info', 'Failed' );
         }
     }
 
@@ -645,6 +667,7 @@ class ArmorySync extends ArmorySyncBase {
             $factionReputation = $content->characterInfo->reputationTab->factionCategory;
 
             $this->data["Reputation"]["Count"] = 0;
+			$this->status['reputationInfo'] = 0;
 
             if (is_array($factionReputation)) {
                 foreach ($factionReputation as $factionRep) {
@@ -669,9 +692,10 @@ class ArmorySync extends ArmorySyncBase {
                     $this->_setFactionRep( $factionType, $factionRep->faction);
                 }
             }
-            $this->_debug( 1, true, 'Parsed reputation info', 'OK' );
+            $this->_debug( 1, null, 'Parsed reputation info', 'OK' );
         } else {
-            $this->_debug( 1, false, 'Parsed reputation info', 'Failed' );
+			$this->status['reputationInfo'] = -2;
+            $this->_debug( 0, null, 'Parsed reputation info', 'Failed' );
         }
     }
 
@@ -709,6 +733,8 @@ class ArmorySync extends ArmorySyncBase {
 
             $pointsSpent = array();
             $dl_talentTree = array();
+
+			$this->status['talentInfo'] = 0;
 
             for ($i = 0; $i < sizeof($talentArray); $i++) {
                     $talentName = $talents['talent'][$i][1];
@@ -750,11 +776,42 @@ class ArmorySync extends ArmorySyncBase {
                     }
                     $this->data["Talents"][$talentTree]["PointsSpent"] = $pointsSpent[$talentTree];
             }
-            $this->_debug( 1, true, 'Parsed talent info', 'OK' );
+            $this->_debug( 1, null, 'Parsed talent info', 'OK' );
         } else {
-            $this->_debug( 1, false, 'Parsed talent info', 'Failed' );
+			$this->status['talentInfo'] = -2;
+            $this->_debug( 0, null, 'Parsed talent info', 'Failed' );
         }
     }
+
+    /**
+     * fetches character arena teams info
+     *
+     */
+    function _getAreanaTeamsInfo() {
+        global $roster, $addon;
+
+        include_once(ROSTER_LIB . 'armory.class.php');
+        $armory = new RosterArmory;
+        //$armory->region = $roster->data['region'];
+        $armory->region = $this->region;
+        $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
+
+        $content = $this->_parseData( $armory->fetchCharacterArenaTeams( $this->memberName, $roster->config['locale'], $this->server ) );
+
+        if ( $this->_checkContent( $content, array( 'characterInfo', 'character') ) ) {
+			$characterInfo = $content->characterInfo->character;
+			if ( $this->_checkContent( $content, array( 'arenaTeams') ) ) {
+				$this->status['arenaTeamsInfo'] = 0;
+				$this->_debug( 1, null, 'Parsed arena teams info', 'OK' );
+			} else {
+				$this->status['arenaTeamsInfo'] = 0;
+				$this->_debug( 1, null, 'Parsed arena teams info', 'NA' );
+			}
+		} else {
+			$this->status['arenaTeamsInfo'] = -2;
+            $this->_debug( 0, null, 'Parsed arena teams info', 'Failed' );
+		}
+	}
     // Helper functions
 
     /**

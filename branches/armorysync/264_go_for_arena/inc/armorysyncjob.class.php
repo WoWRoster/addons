@@ -643,6 +643,7 @@ class ArmorySyncJob extends ArmorySyncBase {
             $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => "Infos<br />". $roster->locale->act['reputation_short']));
             $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => "Infos<br />". $roster->locale->act['equipment_short']));
             $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => "Infos<br />". $roster->locale->act['talents_short']));
+			$roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => "Infos<br />". $roster->locale->act['arenaTeams_short']));
         }
 
         $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['started']));
@@ -660,15 +661,15 @@ class ArmorySyncJob extends ArmorySyncBase {
             $array['GUILD'] = $member['guild_name'];
             $array['SERVER'] = $member['region']. "-". $member['server'];
 
-            foreach ( array( 'guild_info', 'character_info', 'skill_info', 'reputation_info', 'equipment_info', 'talent_info' ) as $key ) {
+            foreach ( array( 'guild_info', 'character_info', 'skill_info', 'reputation_info', 'equipment_info', 'talent_info', 'arenaTeams_info' ) as $key ) {
                 if ( $memberlist && $key !== 'guild_info' ) {
                     continue;
                 }
-                if ( isset( $member[$key] ) && $member[$key] == 1 ) {
+                if ( isset( $member[$key] ) && $member[$key] == 1 && ( $key == 'guild_info' || $key == 'character_info' ) ) {
                     $array[strtoupper($key)] = "<img src=\"img/pvp-win.gif\" alt=\"\"/>";
-                } elseif ( isset( $member[$key] ) && $member[$key] >= 1 ) {
+                } elseif ( isset( $member[$key] ) && $member[$key] >= 0 ) {
                     $array[strtoupper($key)] = $member[$key];
-                } elseif ( isset( $member[$key] ) ) {
+                } elseif ( isset( $member[$key] ) && $member[$key] == -2 ) {
                     $array[strtoupper($key)] = "<img src=\"img/pvp-loss.gif\" alt=\"\" />";
                 } else {
                     $array[strtoupper($key)] = "<img src=\"img/blue-question-mark.gif\" alt=\"?\" />";
@@ -748,15 +749,15 @@ class ArmorySyncJob extends ArmorySyncBase {
         $id = $memberlist ? $member['guild_id'] : $member['member_id'];
 
         if ( $id ) {
-            foreach ( array( 'guild_info', 'character_info', 'skill_info', 'reputation_info', 'equipment_info', 'talent_info' ) as $key ) {
+            foreach ( array( 'guild_info', 'character_info', 'skill_info', 'reputation_info', 'equipment_info', 'talent_info', 'arenaTeams_info' ) as $key ) {
                 if ( $memberlist && $key !== 'guild_info' ) {
                     continue;
                 }
-                if ( isset( $member[$key] ) && $member[$key] == 1 ) {
+                if ( isset( $member[$key] ) && $member[$key] == 1 && ( $key == 'guild_info' || $key == 'character_info' ) ) {
 					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), "img/pvp-win.gif" );
-                } elseif ( isset( $member[$key] ) && $member[$key] >= 1 ) {
+                } elseif ( isset( $member[$key] ) && $member[$key] >= 0 ) {
 					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => 'as_status_'. $key. '_'. $id), $member[$key] );
-                } elseif ( isset( $member[$key] ) ) {
+                } elseif ( isset( $member[$key] ) && $member[$key] == -2 ) {
 					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), "img/pvp-loss.gif" );
                 } else {
 					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), "img/blue-question-mark.gif" );
@@ -1112,11 +1113,12 @@ class ArmorySyncJob extends ArmorySyncBase {
             }
 
             $this->active_member['guild_info'] = $this->ArmorySync->status['guildInfo'];
-            $this->active_member['character_info'] = $this->ArmorySync->status['characterInfo'];;
-            $this->active_member['skill_info'] = $this->ArmorySync->status['skillInfo'];;
-            $this->active_member['reputation_info'] = $this->ArmorySync->status['reputationInfo'];;
-            $this->active_member['equipment_info'] = $this->ArmorySync->status['equipmentInfo'];;
-            $this->active_member['talent_info'] = $this->ArmorySync->status['talentInfo'];;
+            $this->active_member['character_info'] = $this->ArmorySync->status['characterInfo'];
+            $this->active_member['skill_info'] = $this->ArmorySync->status['skillInfo'];
+            $this->active_member['reputation_info'] = $this->ArmorySync->status['reputationInfo'];
+            $this->active_member['equipment_info'] = $this->ArmorySync->status['equipmentInfo'];
+            $this->active_member['talent_info'] = $this->ArmorySync->status['talentInfo'];
+			$this->active_member['arenaTeams_info'] = $this->ArmorySync->status['arenaTeamsInfo'];
             $this->active_member['stoptimeutc'] = gmdate('Y-m-d H:i:s');
             $this->active_member['log'] = $this->ArmorySync->message;
             if ( $this->_updateMemberJobStatus( $this->jobid, $this->active_member ) ) {
@@ -1484,7 +1486,7 @@ class ArmorySyncJob extends ArmorySyncBase {
                             '"'.$roster->db->escape($member['guild_name']). '"'.", ".
                             '"'.$roster->db->escape($member['server']). '"'.", ".
                             '"'.$roster->db->escape($member['region']). '"'.", ".
-                            "NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), ";
+                            "NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL), ";
             }
             $query = preg_replace('/, $/', ';', $query);
             $result = $roster->db->query($query);
@@ -1714,6 +1716,7 @@ class ArmorySyncJob extends ArmorySyncBase {
         isset ( $member['reputation_info'] ) ? $set .= "reputation_info=". $member['reputation_info']. ", " : 1;
         isset ( $member['equipment_info'] ) ? $set .= "equipment_info=". $member['equipment_info']. ", " : 1;
         isset ( $member['talent_info'] ) ? $set .= "talent_info=". $member['talent_info']. ", " : 1;
+		isset ( $member['arenaTeams_info'] ) ? $set .= "arenaTeams_info=". $member['arenaTeams_info']. ", " : 1;
 
         isset ( $member['starttimeutc'] ) ? $set .= "starttimeutc=".'"'. $roster->db->escape($member['starttimeutc']). '"'.", " : 1;
         isset ( $member['stoptimeutc'] ) ? $set .= "stoptimeutc=".'"'. $roster->db->escape($member['stoptimeutc']). '"'.", " : 1;

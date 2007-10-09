@@ -142,23 +142,23 @@ class armorysync
 		$installer->create_table(
 				$installer->table('jobqueue'),
 							"
-							 `job_id` int(11) unsigned NOT NULL,
-							 `member_id` int(11) unsigned NOT NULL,
-							 `name` varchar(64) NOT NULL,
-							 `guild_id` int(11) NOT NULL,
-							 `guild_name` varchar(64) NOT NULL,
-							 `server` varchar(32) NOT NULL,
-							 `region` char(2) NOT NULL,
-							 `guild_info` int(11) unsigned default NULL,
-							 `character_info` tinyint(1) default NULL,
-							 `skill_info` int(11) default NULL,
-							 `reputation_info` int(11) default NULL,
-							 `equipment_info` int(11) default NULL,
-							 `talent_info` int(11) default NULL,
-							 `starttimeutc` datetime default NULL,
-							 `stoptimeutc` datetime default NULL,
-							 `log` text,
-							 PRIMARY KEY  (`job_id`,`member_id`)
+								`job_id` int(11) unsigned NOT NULL,
+								`member_id` int(11) unsigned NOT NULL,
+								`name` varchar(64) NOT NULL,
+								`guild_id` int(11) NOT NULL,
+								`guild_name` varchar(64) NOT NULL,
+								`server` varchar(32) NOT NULL,
+								`region` char(2) NOT NULL,
+								`guild_info` int(11) default NULL,
+								`character_info` tinyint(1) default NULL,
+								`skill_info` int(11) default NULL,
+								`reputation_info` int(11) default NULL,
+								`equipment_info` int(11) default NULL,
+								`talent_info` int(11) default NULL,
+								`arenaTeams_info` int(11) default NULL,
+								`starttimeutc` datetime default NULL,
+								`stoptimeutc` datetime default NULL,
+								`log` text,
 							" );
 		$installer->create_table(
 				$installer->table('updates'),
@@ -269,6 +269,30 @@ class armorysync
 			$installer->add_config("'9300', 'armorysync_updateroster', '1', 'radio{yes^1|no^0', 'armorysync_debug'");
 		}
 
+		if ( version_compare('2.6.0.264', $oldversion,'>') == true ) {
+			$installer->drop_table( $installer->table('jobqueue') );
+			$installer->create_table(
+					$installer->table('jobqueue'),
+								"
+								`job_id` int(11) unsigned NOT NULL,
+								`member_id` int(11) unsigned NOT NULL,
+								`name` varchar(64) NOT NULL,
+								`guild_id` int(11) NOT NULL,
+								`guild_name` varchar(64) NOT NULL,
+								`server` varchar(32) NOT NULL,
+								`region` char(2) NOT NULL,
+								`guild_info` int(11) default NULL,
+								`character_info` tinyint(1) default NULL,
+								`skill_info` int(11) default NULL,
+								`reputation_info` int(11) default NULL,
+								`equipment_info` int(11) default NULL,
+								`talent_info` int(11) default NULL,
+								`arenaTeams_info` int(11) default NULL,
+								`starttimeutc` datetime default NULL,
+								`stoptimeutc` datetime default NULL,
+								`log` text,
+								" );
+		}
 		return true;
 	}
 
