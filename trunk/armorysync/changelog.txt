@@ -2,6 +2,9 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[268]
+- implemented appending of debug data with ajax
+
 svn[264]
 - once again a rewrite of doUpdateStatus in armorysync.js
 - once again restructured XML Data

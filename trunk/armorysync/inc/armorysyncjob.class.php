@@ -257,11 +257,11 @@ class ArmorySyncJob extends ArmorySyncBase {
 
         $functions = $this->functions[$this->isMemberList];
         $ret = $this->$functions['update_status']();
+
+        $status = $this->$functions['get_ajax_status']();
         $this->_debug( 1, null, 'Started ajax status update', 'OK');
 
         $result = "\n";
-        $status = $this->$functions['get_ajax_status']();
-
         if ( count( $this->errormessages ) > 0 ) {
             foreach ( $this->errormessages as $message ) {
 
@@ -275,30 +275,11 @@ class ArmorySyncJob extends ArmorySyncBase {
 						array('emesg', array( 'type' => 'function' ), $message['function']),
 						array('emesg', array( 'type' => 'info' ), $message['info']),
 						array('emesg', array( 'type' => 'as_status' ), $message['status']),
-						array('edata', array( 'type' => 'arg' ), $message['arg']),
-						array('edata', array( 'type' => 'ret' ), $message['ret']),
+						array('edata', array( 'type' => 'args' ), aprint($message['args'], '', 1)),
+						array('edata', array( 'type' => 'ret' ), aprint($message['ret'], '', 1)),
 					)
 				 );
             }
-            //foreach ( $this->errormessages as $message ) {
-            //    $result .= "<message type=\"error\" >";
-            //    $result .= "<infos>";
-            //    $result .= $this->_xmlEncode('line', $message['line']);
-            //    $result .= $this->_xmlEncode('time', $message['time']);
-            //    $result .= $this->_xmlEncode('file', $message['file']);
-            //    $result .= $this->_xmlEncode('class', $message['class']);
-            //    $result .= $this->_xmlEncode('function', $message['function']);
-            //    $result .= $this->_xmlEncode('info', $message['info']);
-            //    $result .= $this->_xmlEncode('as_status', $message['status']);
-            //    $result .= "</infos>";
-            //    $result .= "<arguments>";
-            //    $result .= $this->_xmlEncode('arg', $message['arg']);
-            //    $result .= "</arguments>";
-            //    $result .= "<returns>";
-            //    $result .= $this->_xmlEncode('ret', $message['ret']);
-            //    $result .= "</returns>";
-            //    $result .= "</message>";
-            //}
         }
 
         if ( $addon['config']['armorysync_debuglevel'] > 0 && count( $this->debugmessages ) > 0 ) {
@@ -314,8 +295,8 @@ class ArmorySyncJob extends ArmorySyncBase {
 						array('dmesg', array( 'type' => 'function' ), $message['function']),
 						array('dmesg', array( 'type' => 'info' ), $message['info']),
 						array('dmesg', array( 'type' => 'as_status' ), $message['status']),
-						array('ddata', array( 'type' => 'arg' ), $message['arg']),
-						array('ddata', array( 'type' => 'ret' ), $message['ret']),
+						array('ddata', array( 'type' => 'args' ), aprint($message['args'], '', 1)),
+						array('ddata', array( 'type' => 'ret' ), aprint($message['ret'], '', 1)),
 					)
 				 );
             }
@@ -713,7 +694,7 @@ class ArmorySyncJob extends ArmorySyncBase {
         global $roster;
 
         $ret = $this->_get_ajax_status( $jobid, 1 );
-        $this->_debug( 1, $ret, 'Prepared ajax meberlist status', 'OK');
+        $this->_debug( 1, htmlspecialchars($ret), 'Prepared ajax meberlist status', 'OK');
         return $ret;
     }
 
@@ -737,7 +718,7 @@ class ArmorySyncJob extends ArmorySyncBase {
 
 		$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'bar', 'targetId' => 'progress_bar'), $perc);
 		$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => 'progress_text'), "$perc% ". $roster->locale->act['complete']. " ($this->done / $this->total)");
-        if (isset($this->active_member['name'])) {
+        if (isset($this->active_member['name']) && $this->active_member['name'] != '' ) {
 			$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => 'progress_next'), $roster->locale->act['next_to_update']. $this->active_member['name']);
         } else {
             $result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => 'progress_next') );
@@ -780,7 +761,7 @@ class ArmorySyncJob extends ArmorySyncBase {
 				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'overlib', 'overlibType' => 'memberlistLog', 'targetId' => 'as_status_log_'. $id ), str_replace("'", '"', $member['log'] ) );
             }
         }
-        $this->_debug( 1, $result, 'Prepared ajax status', 'OK');
+        $this->_debug( 1, htmlspecialchars($result), 'Prepared ajax status', 'OK');
         return $result;
     }
 
@@ -909,7 +890,7 @@ class ArmorySyncJob extends ArmorySyncBase {
                 'STATUS' => $message['status'],
                 'ARGS' => aprint($message['args'], '', 1),
                 'RET'  => aprint($message['ret'], '' , 1),
-                'ROW_CLASS1' => $roster->switch_row_class(),
+                'ROW_CLASS1' => $addon['config']['armorysync_debugdata'] ? 1 : $roster->switch_row_class(),
                 'ROW_CLASS2' => 1,
                 'ROW_CLASS3' => 1,
                 ));
@@ -932,7 +913,7 @@ class ArmorySyncJob extends ArmorySyncBase {
                 'STATUS' => $message['status'],
                 'ARGS' => aprint($message['args'], '', 1),
                 'RET'  => aprint($message['ret'], '' , 1),
-                'ROW_CLASS1' => $roster->switch_row_class(),
+                'ROW_CLASS1' => $addon['config']['armorysync_debugdata'] ? 1 : $roster->switch_row_class(),
                 'ROW_CLASS2' => 1,
                 'ROW_CLASS3' => 1,
                 ));
@@ -1316,7 +1297,7 @@ class ArmorySyncJob extends ArmorySyncBase {
 </script>
 ';
         }
-        $this->_debug( 1, $header, 'Printed reload java code', $header ? 'OK' : 'Failed');
+        $this->_debug( 1, htmlspecialchars($header), 'Printed reload java code', $header ? 'OK' : 'Failed');
         $this->header .= $header;
     }
 
