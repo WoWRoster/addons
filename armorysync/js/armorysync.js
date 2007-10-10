@@ -32,6 +32,8 @@ function doUpdateStatus(result) {
         var debugMessages = result.getElementsByTagName('debugmessage');
         if ( debugMessages != null ) _doUpdateDebugMessages(debugMessages);
 
+        var reloadMessages = result.getElementsByTagName('reload');
+        if ( reloadMessages != null ) _doReload(reloadMessages);
     }
 }
 
@@ -161,10 +163,11 @@ function _doUpdateDebugMessages(infoDebug) {
 
         var target = infoDebug[0].getAttribute('target');
         var debugTable = document.getElementById(target);
+        var debugTBody = debugTable.getElementsByTagName('tbody')[0];
 
         if ( debugTable != null ) {
 
-            var debugTableTrs = debugTable.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            var debugTableTrs = debugTBody.getElementsByTagName('tr');
             var k = debugTableTrs.length - 1;
             rowClass = debugTableTrs[k].getElementsByTagName('td')[0].getAttribute('class').substr(10,1);
 
@@ -185,12 +188,48 @@ function _doUpdateDebugMessages(infoDebug) {
                     if ( j == messagesCount - 1 ) {
                         newTdClass += 'Right';
                     }
-                    newTd.setAttribute( 'class', newTdClass+ r );
+                    newTd.setAttribute( 'class', newTdClass+ (armorysync_debugdata == 1 ? 1 : r ) );
                     var newTextNode = document.createTextNode(content);
                     newTd.appendChild(newTextNode);
                     newTr.appendChild(newTd);
                 }
-                debugTable.appendChild(newTr);
+                debugTBody.appendChild(newTr);
+
+                if ( armorysync_debugdata == 1 ) {
+
+                    var messages = infoDebugMessage.getElementsByTagName('ddata');
+                    var messagesCount = messages.length;
+                    var header = ['Arguments', 'Returns']
+
+                    for ( var j = 0; j < messagesCount; j++) {
+                        var message = messages[j];
+                        var content = _getContent(message);
+
+                        var newHeadTh = document.createElement("th");
+                        newHeadTh.setAttribute('colspan', '7');
+                        newHeadTh.setAttribute('class', 'membersHeaderRight');
+                        newHeadTh.appendChild(document.createTextNode(header[j]));
+
+                        var newHeadTr = document.createElement("tr");
+                        newHeadTr.appendChild(newHeadTh);
+
+                        debugTable.appendChild(newHeadTr);
+
+                        var newDataDiv = document.createElement("div");
+                        newDataDiv.setAttribute('style', 'max-height:300px;max-width:100%;overflow:auto;');
+                        newDataDiv.innerHTML = content;
+
+                        var newDataTd = document.createElement("td");
+                        newDataTd.setAttribute('colspan', '7');
+                        newDataTd.setAttribute('class', 'membersRow1');
+                        newDataTd.appendChild(newDataDiv);
+
+                        var newDataTr = document.createElement("tr");
+                        newDataTr.appendChild(newDataTd);
+
+                        debugTBody.appendChild(newDataTr);
+                    }
+                }
             }
         }
     }
@@ -207,7 +246,7 @@ function _doUpdateErrorMessages(infoError) {
         if ( errorTable == null ) {
 
             errorTable = _ceateErrorTable();
-            rowClass = 1;
+            rowClass = 2;
         }
 
         if ( errorTable != null ) {
@@ -242,13 +281,60 @@ function _doUpdateErrorMessages(infoError) {
                     if ( j == messagesCount - 1 ) {
                         newTdClass += 'Right';
                     }
-                    newTd.setAttribute( 'class', newTdClass+ r );
+                    newTd.setAttribute( 'class', newTdClass+ (armorysync_debugdata == 1 ? 1 : r ) );
                     var newTextNode = document.createTextNode(content);
                     newTd.appendChild(newTextNode);
                     newTr.appendChild(newTd);
                 }
                 errorTable.appendChild(newTr);
+
+                if ( armorysync_debugdata == 1 ) {
+
+                    var messages = infoErrorMessage.getElementsByTagName('ddata');
+                    var messagesCount = messages.length;
+                    var header = ['Arguments', 'Returns']
+
+                    for ( var j = 0; j < messagesCount; j++) {
+                        var message = messages[j];
+                        var content = _getContent(message);
+
+                        var newHeadTh = document.createElement("th");
+                        newHeadTh.setAttribute('colspan', '7');
+                        newHeadTh.setAttribute('class', 'membersHeaderRight');
+                        newHeadTh.appendChild(document.createTextNode(header[j]));
+
+                        var newHeadTr = document.createElement("tr");
+                        newHeadTr.appendChild(newHeadTh);
+
+                        debugTable.appendChild(newHeadTr);
+
+                        var newDataDiv = document.createElement("div");
+                        newDataDiv.setAttribute('style', 'max-height:300px;max-width:100%;overflow:auto;');
+                        newDataDiv.innerHTML = content;
+
+                        var newDataTd = document.createElement("td");
+                        newDataTd.setAttribute('colspan', '7');
+                        newDataTd.setAttribute('class', 'membersRow1');
+                        newDataTd.appendChild(newDataDiv);
+
+                        var newDataTr = document.createElement("tr");
+                        newDataTr.appendChild(newDataTd);
+
+                        errorTable.appendChild(newDataTr);
+                    }
+                }
             }
+        }
+    }
+}
+
+function _doReload(messages) {
+    var message = messages[0];
+    if ( message != null ) {
+        var reloadTime = message.getAttribute('reloadTime');
+
+        if ( reloadTime != null ) {
+            self.setTimeout('nextStep()', reloadTime);
         }
     }
 }
@@ -267,9 +353,6 @@ function _ceateErrorTable() {
         newTh.appendChild(document.createTextNode(headers[i]));
         newTr.appendChild(newTh);
     }
-
-    //var newTBody = document.createElement('tbody');
-    //newTBody.appendChild('newTr')
 
     var newTable = document.createElement('table');
     newTable.setAttribute('id', 'armorysync_error_table');
@@ -345,12 +428,6 @@ function _getContent(node) {
     }
     return decode(content);
 }
-
-
-//
-//        if ( doReload == true ) {
-//            self.setTimeout('nextStep()', reloadTime);
-//        }
 
 function decode(text) {
     return decode_utf8(URLDecode(text));
