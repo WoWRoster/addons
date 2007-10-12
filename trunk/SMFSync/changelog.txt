@@ -1,3 +1,5 @@
+[254]
+-Increased size of default signature and avatar fields.
 [253]
 -Linux server compatibility issue fixed. (Require case.)
 [252]
@@ -75,5 +77,6 @@ Todo
 Bugs
 On every user updated - Personal text not updated. May be current or user not found.
 
-Even with SMF disabled, it will use the login script. It shouldn't.
+Even with SMF disabled, it will use the login script. It shouldn't. 
+Possibly fixed, redirecting to . currently. May need to be changed. Hasn't been tested yet.
 

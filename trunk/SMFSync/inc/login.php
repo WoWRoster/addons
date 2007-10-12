@@ -15,6 +15,14 @@
 * @package    SMFSync
 * @subpackage User
 */
+//Check to make sure SMFSync is enabled before trying to use it.
+$query = "SELECT * FROM `{$roster->db->prefix}addon_config` WHERE `addon_id` = '{$roster->addon_data['smf_sync']['addon_id']}' AND `config_name` = 'main_enable' AND `config_value` = '1' LIMIT 1";
+$result = $roster->db->query ( $query );
+if ($roster->db->affected_rows() != 1){
+	$query = "UPDATE `{$roster->db->prefix}config` SET `config_value` = '0' WHERE `config_name` = 'use_external_auth' LIMIT 1 ;";
+	$result = $roster->db->query ( $query );
+	header ("Location: .");
+}
 class RosterLogin
 {
 
@@ -128,25 +136,35 @@ class RosterLogin
 		return $this->message;
 	}
 
+
 	function getLoginForm ($level = 3){
 		global $roster;
 
 		$level = $this->translateLevel ($level);
 		$return = "";
 		$return .= border('sred','start',$level. ' login required');
-		$return .= '<iframe src="'.$roster->tpl->_tpldata['.']['0']['ROSTER_URL'].'addons/smfsync/inc/loginForm.php" ></iframe>';
+		$return .= '<iframe frameborder=0 width=200 height=90 scrolling=no align=top src="'.$roster->tpl->_tpldata['.']['0']['ROSTER_URL'].'addons/smfsync/inc/loginForm.php" ></iframe>';
 		$return .= border('sred','end');
 
 		return $return;
 
 	}
-	function getLoginForm2 ( $level = 3){
+
+	function getLoginForm_Old2 ($level = 3){
+
+		echo border('sred','start',$this->translateLevel($level).' login required.');
+		echo ssi_login('http://localhost/roster20/');
+		echo border('sred','end');
+
+
+	}
+
+	function getLoginForm_Old1 ( $level = 3){
 		global $roster;
 
 		$level = $this->translateLevel ($level);
 
 		$forumPath = $roster->db->fetch($roster->db->query("SELECT * FROM `{$roster->db->prefix}addon_config` WHERE `addon_id` = '{$roster->addon_data['smfsync']['addon_id']}' AND `config_name` = 'forum_path' LIMIT 1"));
-
 		return '
 			<!--Begin Login Box -->
 			<form action="'.$roster->config['website_address'].DIR_SEP.$forumPath['config_value'].'index.php?action=login2" method="post" accept-charset="UTF-8">

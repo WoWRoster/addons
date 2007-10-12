@@ -28,7 +28,7 @@ class smfsync
 	var $active = true;
 	var $icon = 'smf.gif';
 
-	var $version = '1.9.9.245';
+	var $version = '1.9.9.254';
 
 	var $fullname = 'smfsync';
 	var $description = 'smfsync_desc';
@@ -60,15 +60,15 @@ class smfsync
 		$installer->add_config("'1100','main_enable','0','radio{yes^1|no^0','smf_menu_main'");
 		$installer->add_config("'1101','forum_prefix','smf_','text{200|30','smf_menu_main'");
 		$installer->add_config("'1102','forum_path','forum/','text{200|30','smf_menu_main'");
-		$installer->add_config("'1103','choose_guild','1','function{GetGuildList','smf_menu_main'");
+		$installer->add_config("'1103','choose_guild','1','function{getGuildList','smf_menu_main'");
 
 		$installer->add_config("'1200','player_update_location','1','radio{yes^1|no^0','smf_menu_player'");
 		$installer->add_config("'1201','player_location','Zone','select{Hearth^Hearth|Zone^Zone','smf_menu_player'");
 		$installer->add_config("'1202','player_enable_signature','0','radio{yes^1|no^0','smf_menu_player'");
-		$installer->add_config("'1203','player_signature',NULL,'text{200|30','smf_menu_player'");
+		$installer->add_config("'1203','player_signature',NULL,'text{1000|30','smf_menu_player'");
 		//$installer->add_config("'1203','player_signature','[url=http://sovereign.kaydence.org/roster/char.php?member=%name%&amp;server=Blackwater%20Raiders][img]http://sovereign.kaydence.org/roster/addons/siggen/sig.php?member=%name%[/img][/url]','text{200|30','smf_menu_player'");
 		$installer->add_config("'1204','player_enable_avatar','0','radio{yes^1|no^0','smf_menu_player'");
-		$installer->add_config("'1205','player_avatar',NULL,'text{200|30','smf_menu_player'");
+		$installer->add_config("'1205','player_avatar',NULL,'text{1000|30','smf_menu_player'");
 		//$installer->add_config("'1205','player_avatar','http://sovereign.kaydence.org/roster/addons/siggen/siggen.php?member=%name%&amp;mode=avatar&amp;saveonly=0','text{200|30','smf_menu_player'");
 
 		//$installer->add_config("'1300','guild_add','0','radio{yes^1|no^0','smf_menu_guild'");
@@ -76,6 +76,7 @@ class smfsync
 		$installer->add_config("'1302','guild_groups','0','radio{yes^1|no^0','smf_menu_guild'");
 		$installer->add_config("'1303','guild_groups_create','0','radio{yes^1|no^0','smf_menu_guild'");
 		$installer->add_config("'1304','guild_enable_personaltext','0','radio{yes^1|no^0','smf_menu_guild'");
+		$installer->add_config("'1305','guild_protected_group','0','function{getProtectedGroup','smf_menu_guild'");
 
 		//This is used only until I can get integration with Roster.
 		$installer->add_query ("INSERT INTO `{$roster->db->prefix}config` (`id` ,`config_name` ,`config_value` ,`form_type` ,`config_type` )VALUES ('1180', 'use_external_auth', '0', 'radio{on^1|off^0', 'main_conf' )");
