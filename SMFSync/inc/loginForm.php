@@ -21,9 +21,9 @@
 
 if ($_GET['login'] == "true"){
 	//Do this to prevent asking to reload for post data.
-	header ("Location: http://{$_SERVER['SERVER_NAME']}{$_SERVER['SCRIPT_NAME']}?login2=true");
+	header ("Location: http://{$_SERVER['SERVER_NAME']}{$_SERVER['SCRIPT_NAME']}?login2=true&rosterTemplate={$_GET['rosterTemplate']}");
 }elseif ($_GET['login2'] == "true"){
-	echo '<link REL="STYLESHEET" TYPE="text/css" HREF="../../../templates/'.$rosterTemplate.'/style.css"><center>';
+	echo '<link REL="STYLESHEET" TYPE="text/css" HREF="../../../templates/'.$_GET['rosterTemplate'].'/style.css"><center>';
 	echo '<center><a href=# onClick="self.parent.location.reload(true)">Logged in. Click here to proceed.</a></center>';
 echo '
 <script language="JavaScript">
@@ -34,7 +34,7 @@ self.parent.location.reload(true);
 }else{
 	//Only get the required information for the login form, we dont need it anywhere else.
 
-	//Get credentials
+	//Get credentials from Roster
 	require ('../../../conf.php');
 
 	//Connect to the database.
@@ -47,6 +47,7 @@ self.parent.location.reload(true);
 	$sqlqueryarray = mysql_fetch_array ($sqlqueryresult);
 	$forumPath = $sqlqueryarray['config_value'];
 
+	//And we need the theme name, for css.
 	$query = "SELECT `config_value` FROM `{$db_config['table_prefix']}config` WHERE `config_name` = 'theme' LIMIT 1";
 	$sqlqueryresult = mysql_query($query);
 	$sqlqueryarray = mysql_fetch_array($sqlqueryresult);
@@ -55,7 +56,7 @@ self.parent.location.reload(true);
 	require ("../../../../{$forumPath}SSI.php");
 
 	echo '<link REL="STYLESHEET" TYPE="text/css" HREF="../../../templates/'.$rosterTemplate.'/style.css"><center>';
-	$redirect = "http://{$_SERVER['SERVER_NAME']}{$_SERVER['SCRIPT_NAME']}?login=true";
+	$redirect = "http://{$_SERVER['SERVER_NAME']}{$_SERVER['SCRIPT_NAME']}?login=true&rosterTemplate={$rosterTemplate}";
 
 	ssi_login($redirect);
 }

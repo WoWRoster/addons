@@ -43,7 +43,7 @@ $lang['admin']['guild_suspend']='Allow suspend members|Allow SMFSync to suspend 
 $lang['admin']['guild_groups']='Allow to manage groups|Allow SMFSync to change guild members groups based on guild rank.<br />Members will not be assigned to groups until they are created<br />It will error on the first time the guild update is run but will work successfully thereafter.';
 $lang['admin']['guild_groups_create']='Automatically create groups|Automatically create the groups in SMF.<br />This setting will automatically disable itself after successful run.<br />(Don\'t forget to set your group permissions in SMF.)';
 $lang['admin']['guild_enable_personaltext']='Set Personal text to Guild note|Set SMF Personal Text to Guild note.';
-
+$lang['admin']['guild_protected_group']='Protected group|Members of this group will not have their account suspended or any of their settings changed.<br />To use, create a group in SMF that you wish to use, and set permissions accordingly.<br />Then select the appropriate group here.';
 $lang['admin']['group_permissions']='Group Permissions';
 
 $lang['LocationNotSpecified']='Location not specified. Assuming inside ArmorySync.';
@@ -82,6 +82,8 @@ $lang['Admin']='Admin';
 $lang['Officer']='Officer';
 $lang['Guild']='Guild';
 $lang['Public']='Public';
+
+$lang['MemberGroupProtected']='Member is in protected group. Nothing changed.';
 
 //SMF Specific Settings
 $lang['Stars']='1#star.gif';
