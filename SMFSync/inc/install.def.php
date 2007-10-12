@@ -28,7 +28,7 @@ class smfsync
 	var $active = true;
 	var $icon = 'smf.gif';
 
-	var $version = '1.9.9.254';
+	var $version = '1.9.9.271';
 
 	var $fullname = 'smfsync';
 	var $description = 'smfsync_desc';

@@ -1,3 +1,10 @@
+[271]
+-Updated version number.
+[270]
+-Added protectedGroup checks.
+-More work on custom login.
+-Cleaned up alot of code to make it more readable.
+-Preparing for next public beta.
 [254]
 -Increased size of default signature and avatar fields.
 [253]
