@@ -149,11 +149,11 @@ class ArmorySyncJob extends ArmorySyncBase {
             return;
         }
 
-        if ( isset($roster->pages[2]) && $roster->pages[2] == 'guildadd' && !isset($_POST['process']) ) {
+        if ( !$this->id && isset($roster->pages[2]) && $roster->pages[2] == 'guildadd' && !isset($_POST['process']) ) {
 
             $this->_showAddGuildScreen();
 
-        } elseif ( isset($roster->pages[2]) && $roster->pages[2] == 'guildadd' && isset($_POST['process']) && $_POST['process'] == 'process' ) {
+        } elseif ( !$this->id && isset($roster->pages[2]) && $roster->pages[2] == 'guildadd' && isset($_POST['process']) && $_POST['process'] == 'process' ) {
 
             $this->_startAddGuild();
 
@@ -424,6 +424,7 @@ class ArmorySyncJob extends ArmorySyncBase {
             $this->isAuth = $this->_checkAuth('armorysync_realm_update_access');
         } elseif ( $roster->scope == 'util' ) {
             $this->title = "<span class=\"title_text\">". $roster->locale->act['armorySyncTitle_Guildmembers']. "</span>\n";
+			$this->id = isset($_POST['job_id']) ? $_POST['job_id'] : null;
             $this->isMemberList = 1;
             $this->isAuth = $this->_checkAuth('armorysync_guild_add_access');
         } else {
@@ -1265,7 +1266,8 @@ class ArmorySyncJob extends ArmorySyncBase {
         global $roster, $addon;
 
         $reloadTime = $addon['config']['armorysync_reloadwaittime'] * 500;
-        $link = 'ajax.php?addon=armorysync&method=armorysync_status_update&cont=doUpdateStatus';
+        //$link = 'ajax.php?addon=armorysync&method=armorysync_status_update&cont=doUpdateStatus';
+        $link = 'index.php?p=ajax-addon-armorysync-status_update&cont=doUpdateStatus';
 
 		if ( $addon['config']['armorysync_use_ajax'] ) {
 	        $postadd = '';

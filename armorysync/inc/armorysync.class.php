@@ -980,7 +980,7 @@ class ArmorySync extends ArmorySyncBase {
 
             $content = strip_tags( $content );
 
-            $content = str_replace("%__BRTAG%", "<br />", $content );
+            $content = str_replace("%__BRTAG%", "\n", $content );
             $content = utf8_encode($this->_unhtmlentities( $content ));
             //$content = mb_convert_encoding( $content, "UTF-8", "HTML-ENTITIES");
             $content = str_replace($roster->locale->act['bindings']['bind_on_pickup'], $roster->locale->act['bindings']['bind'], $content);
@@ -1060,11 +1060,17 @@ class ArmorySync extends ArmorySyncBase {
         $ret = '';
         switch ($value) {
             case 5: $ret = "ff8000"; //Orange
+				break;
             case 4: $ret = "a335ee"; //Purple
+				break;
             case 3: $ret = "0070dd"; //Blue
+				break;
             case 2: $ret = "1eff00"; //Green
+				break;
             case 1: $ret = "ffffff"; //White
+				break;
             default: $ret = "9d9d9d"; //Grey
+				break;
         }
         $this->_debug( 2, $ret, 'Determined item color', 'OK' );
         return $ret;
@@ -1080,24 +1086,43 @@ class ArmorySync extends ArmorySyncBase {
         $ret = '';
         switch ($value) {
             case 0: $ret = "Head";
+				break;
             case 1: $ret = "Neck";
+				break;
             case 2: $ret = "Shoulder";
+				break;
             case 3: $ret = "Shirt";
+				break;
             case 4: $ret = "Chest";
+				break;
             case 5: $ret = "Waist";
+				break;
             case 6: $ret = "Legs";
+				break;
             case 7: $ret = "Feet";
+				break;
             case 8: $ret = "Wrist";
+				break;
             case 9: $ret = "Hands";
+				break;
             case 10: $ret = "Finger0";
+				break;
             case 11: $ret = "Finger1";
+				break;
             case 12: $ret = "Trinket0";
+				break;
             case 13: $ret = "Trinket1";
+				break;
             case 14: $ret = "Back";
+				break;
             case 15: $ret = "MainHand";
+				break;
             case 16: $ret = "SecondaryHand";
+				break;
             case 17: $ret = "Ranged";
+				break;
             case 18: $ret = "Tabard";
+				break;
         }
         $this->_debug( 2, $ret, 'Determined item slot', 'OK' );
         return $ret;
@@ -1114,12 +1139,19 @@ class ArmorySync extends ArmorySyncBase {
         $ret = 0;
         switch ($value) {
             case $roster->locale->act['Skills']['Class Skills']: $ret = 1;
+				break;
             case $roster->locale->act['Skills']['Professions']: $ret = 2;
+				break;
             case $roster->locale->act['Skills']['Secondary Skills']: $ret = 3;
+				break;
             case $roster->locale->act['Skills']['Weapon Skills']: $ret = 4;
+				break;
             case $roster->locale->act['Skills']['Armor Proficiencies']: $ret = 5;
+				break;
             case $roster->locale->act['Skills']['Languages']: $ret = 6;
+				break;
             default: $ret = 0;
+				break;
         }
         $this->_debug( 2, $ret, 'Determined skill order', 'OK' );
         return $ret;

@@ -29,7 +29,7 @@ class armorysync
 	var $active = true;
 	var $icon = 'inv_misc_missilesmall_blue';
 
-	var $version = '2.6.0.268';
+	var $version = '2.6.0.269';
 
 	var $fullname = 'Armory Sync';
 	var $description = 'Syncronizes chars with Blizzard\'s Armory';
@@ -269,6 +269,9 @@ class armorysync
 			$installer->add_config("'9300', 'armorysync_updateroster', '1', 'radio{yes^1|no^0', 'armorysync_debug'");
 		}
 
+		if ( version_compare('2.6.0.269', $oldversion,'>') == true ) {
+			$installer->update_config('1250', 'config_value=0');
+		}
 		return true;
 	}
 

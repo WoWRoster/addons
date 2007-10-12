@@ -1,6 +1,9 @@
 ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
+svn[269]
+- fixed bug with missing breaks in armorysync.class.php
+- fixed bug loading guild add screen after presync status screen
 
 svn[268]
 - implemented appending of debug data with ajax

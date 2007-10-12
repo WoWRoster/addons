@@ -21,6 +21,6 @@ if( !defined('IN_ROSTER') )
     exit('Detected invalid access to this file!');
 }
 
-$ajaxfuncs['armorysync_status_update'] = array(
+$ajaxfuncs['status_update'] = array(
 	'file'=>$addon['dir'] . 'ajax/armorysync.php',
 );
