@@ -23,15 +23,15 @@ if( !defined('IN_ROSTER') )
 
 switch ($method)
 {
-    case 'armorysync_status_update':
+    case 'status_update':
         if( isset($_POST['job_id']) )
         {
             $job_id = $_POST['job_id'];
             require_once ($addon['dir'] . 'inc/armorysyncjob.class.php');
-            
+
             $job = new ArmorySyncJob();
             $ret = $job->start_ajax_status_update();
-            
+
             if ( isset( $ret['status'] ) ) {
                 $status = $ret['status'];
             }
@@ -51,4 +51,3 @@ switch ($method)
         }
         break;
 }
-
