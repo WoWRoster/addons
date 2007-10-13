@@ -212,9 +212,16 @@ class ArmorySync extends ArmorySyncBase {
                 $this->status['guildInfo'] += 1;
             }
 
+			if ( isset($roster->addon_data['guildbank']) && $roster->addon_data['guildbank']['active'] == 1 ) {
+				$guildbank = getaddon('guildbank');
+			}
+
             foreach ( $members as $member ) {
                 if ( ! array_key_exists( 'done', $member ) ) {
-                    if ( is_int( array_search( $member['guild_title'], explode( ',', $addon['config']['armorysync_protectedtitle'] ) ) ) ) {
+                    if ( is_int( array_search( $member['guild_title'], explode( ',', $addon['config']['armorysync_protectedtitle'] ) ) )
+						||
+						( isset($guildbank) && strstr($member[$guildbank['config']['banker_fieldname']], $guildbank['config']['banker_rankname']) )
+						) {
 
                         $player['name'] = $member['name'];
                         $player['Class'] = $member['class'];
