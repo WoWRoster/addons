@@ -77,7 +77,7 @@ class armorysync
 
 		$installer->add_config("'1100', 'armorysync_minlevel', '10', 'text{2|2', 'armorysync_conf'");
 		$installer->add_config("'1200', 'armorysync_synchcutofftime', '1', 'text{4|4', 'armorysync_conf'");
-		$installer->add_config("'1250', 'armorysync_use_ajax', '1', 'radio{On^1|Off^0', 'armorysync_conf'");
+		$installer->add_config("'1250', 'armorysync_use_ajax', '0', 'radio{On^1|Off^0', 'armorysync_conf'");
 		$installer->add_config("'1300', 'armorysync_reloadwaittime', '5', 'text{4|4', 'armorysync_conf'");
 		$installer->add_config("'1350', 'armorysync_fetch_timeout', '8', 'text{2|2', 'armorysync_conf'");
 		$installer->add_config("'1360', 'armorysync_skip_start', '0', 'radio{On^1|Off^0', 'armorysync_conf'");

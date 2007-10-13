@@ -180,22 +180,22 @@ $lang['start_message_the_realm'] = "le realm";
 $lang['start_message_this_realm'] = "toutes les personnages de ce realm";
 
 $lang['month_to_en'] = array(
-    "Januar" => "January",
-    "Februar" => "February",
-    "März" => "March",
-    "April" => "April",
-    "Mai" => "May",
-    "Juni" => "June",
-    "Juli" => "July",
-    "August" => "August",
-    "September" => "September",
+    "janvier" => "January",
+    "février" => "February",
+    "mars" => "March",
+    "avril" => "April",
+    "mai" => "May",
+    "juin" => "June",
+    "juillet" => "July",
+    "août" => "August",
+    "septembre" => "September",
     "octobre" => "October",
-    "November" => "November",
-    "Dezember" => "December"
+    "novembre" => "November",
+    "décembre" => "December"
 );
 
-$lang['roster_deprecated'] = "WoWRoster deprecated";
-$lang['roster_deprecated_message'] = "<br />You are using <b>WoWRoster</b><br /><br />Version: <strong style=\"color:red;\" >%s</strong><br /><br />To use <b>ArmorySync</b> Version <strong style=\"color:yellow;\" >%s</strong><br />you will at least need <b>WoWRoster</b><br /><br />Version <strong style=\"color:green;\" >%s</strong><br /><br />Please update your <b>WoWRoster</b><br />&nbsp;";
+$lang['roster_deprecated'] = "WoWRoster obsolète";
+$lang['roster_deprecated_message'] = "<br />Vous utilisez <b>WoWRoster</b><br /><br />Version: <strong style=\"color:red;\" >%s</strong><br /><br />Pour utiliser <b>ArmorySync</b> Version <strong style=\"color:yellow;\" >%s</strong><br />vous avez besoin au moins <b>WoWRoster</b><br /><br />Version <strong style=\"color:green;\" >%s</strong><br /><br />Veuillez mettre à jour <b>WoWRoster</b><br /> ";
 
-$lang['armorysync_not_upgraded'] = "ArmorySync not upgraded";
-$lang['armorysync_not_upgraded_message'] = "<br />You have installed <b>ArmorySync</b><br /><br />Version: <strong style=\"color:green;\" >%s</strong><br /><br />Right now there is <b>ArmorySync</b><br /><br />Version <strong style=\"color:red;\" >%s</strong><br /><br />registered with <b>WoWRoster</b>.<br /><br />Please go to <b>WoWRoster</b> configuration<br />and upgrade your <b>ArmorySync</b><br />&nbsp;";
+$lang['armorysync_not_upgraded'] = "ArmorySync n'est pas été mise à jour";
+$lang['armorysync_not_upgraded_message'] = "<br />Vous avez actuèllement <b>ArmorySync</b><br /><br />Version: <strong style=\"color:green;\" >%s</strong><br /><br />Maintenant on est à <b>ArmorySync</b><br /><br />Version <strong style=\"color:red;\" >%s</strong><br /><br />enregistré avec <b>WoWRoster</b>.<br /><br />Veuillez aller à la <b>WoWRoster</b> configuration<br />et mettez à jour votre <b>ArmorySync</b><br /> ";
