@@ -172,8 +172,9 @@ $lang['error_guild_notexist'] = "Die angegebene Gilde existiert nicht in der Arm
 $lang['error_missing_params'] = "Fehlende Angaben. Bitte versuch es erneut.";
 $lang['error_wrong_region'] = "Ungültige Region. Nur EU und US sind gültige Regionen.";
 $lang['armorysync_guildadd'] = "Gilde hinzufügen und Mitgliederliste<br />mit der Armory synchronisieren.";
-$lang['armorysync_guildadd_help'] = "Hinweis";
-$lang['armorysync_guildadd_helpText'] = "Schreibe die Gilde und den Server exakt so wie sie, bzw. er, bei Blizzard geführt werden.<br />Die Region ist EU für europäische Gilden und US für amerikanische. Es wird zuerst<br />überprüft ob die Gilde existiert. Anschließend wird eine Synchronisierung der<br />Mitgliederliste angestoßen.";
+$lang['armorysync_charadd'] = "Charakter hinzufügen und<br />mit der Armory synchronisieren.";
+$lang['armorysync_add_help'] = "Hinweis";
+$lang['armorysync_add_helpText'] = "Schreibe die Gilde / den Charakter und den Server exakt so wie sie, bzw. er,<br /> bei Blizzard geführt werden. Die Region ist EU für europäische Gilden<br />und US für amerikanische. Es wird zuerst überprüft ob der Charakter oder die Gilde<br />existiert. Anschließend wird eine Synchronisierung angestoßen.";
 
 $lang['guildleader'] = "Gildenmeister";
 

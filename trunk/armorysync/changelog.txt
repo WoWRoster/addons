@@ -2,6 +2,12 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[274]
+- changed some method names to make method names unitary
+- outsourced ajax functions to own class armorysyncjobajax.class.php which extends armorysyncjob.class.php
+- fixed a bug in _checkEnv to fit with page system on ajax calls
+- implemented adding of single characters
+
 svn[273]
 - implemented configurable guild titles
 

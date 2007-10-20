@@ -128,7 +128,7 @@ class ArmorySyncTalents extends ArmorySyncBase {
 		}
 
 		//If not using CURL we may get the header returned before the HTML table..
-		$pos = $this->_stripos_b ($content, 'var i =');
+		$pos = $this->_striposB ($content, 'var i =');
 		if ($pos != 0){
 			//Need to trim header off..
 			$content = substr ($content, $pos);
@@ -159,7 +159,7 @@ class ArmorySyncTalents extends ArmorySyncBase {
 		$this->_debug( 3, null, 'Choose server and url', 'OK');
     }
 
-    function _stripos_b($haystack, $needle){
+    function _striposB($haystack, $needle){
         $ret = strpos($haystack, stristr( $haystack, $needle ));
 		$this->_debug( $ret ? 3 : 0, $ret, 'Find needle in haystack', $ret ? 'OK' : 'Failed' );
 		return $ret;

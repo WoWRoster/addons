@@ -173,8 +173,9 @@ $lang['error_guild_notexist'] = "The guild given does not exist in the Armory.";
 $lang['error_missing_params'] = "Missing parameters. Plaese try again";
 $lang['error_wrong_region'] = "Invalid region. Only EU and US are valid regions.";
 $lang['armorysync_guildadd'] = "Adding Guild and synchronize<br />memberlist with the Armory.";
-$lang['armorysync_guildadd_help'] = "Information";
-$lang['armorysync_guildadd_helpText'] = "Spell the guild and the server names exactly how they are listed on the Armory.<br />Region is EU for European and US for American/Oceanic.<br />First, ArmorySync will check if the guild exists in the Armory.<br />Next, a synchronization of the meberlist will be done.";
+$lang['armorysync_charadd'] = "Adding Charakter and synchronize<br />with the Armory.";
+$lang['armorysync_add_help'] = "Information";
+$lang['armorysync_add_helpText'] = "Spell the charakter / guild and the server names exactly how they are listed on the Armory.<br />Region is EU for European and US for American/Oceanic.<br />First, ArmorySync will check if the guild exists in the Armory.<br />Next, a synchronization of the meberlist will be done.";
 
 $lang['guildleader'] = "Guildleader";
 

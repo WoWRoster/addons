@@ -173,8 +173,9 @@ $lang['error_guild_notexist'] = "La hermandad facilitada no existe en la Armerí
 $lang['error_missing_params'] = "Faltan parametros. Por favor vuelve a intentarlo";
 $lang['error_wrong_region'] = "Region incorrecta. Solo EU y US son regiones validas.";
 $lang['armorysync_guildadd'] = "Añadiendo Hermandad y sincronizando<br />listado de miembros con la Armería.";
-$lang['armorysync_guildadd_help'] = "Información";
-$lang['armorysync_guildadd_helpText'] = "Escribe la hermandad y el servidor exactamente como se muestran en la Armería de Blizzard.<br />Region es EU pra los europeos y US para las hermandades americanas. En primer lugar<br />se comprobara la existencia de la hermandad. Acto seguido se empezara con la<br />sincronización del listado de miembros.";
+$lang['armorysync_charadd'] = "Adding Charakter and synchronize<br />with the Armory.";
+$lang['armorysync_add_help'] = "Información";
+$lang['armorysync_add_helpText'] = "Escribe la hermandad y el servidor exactamente como se muestran en la Armería de Blizzard.<br />Region es EU pra los europeos y US para las hermandades americanas. En primer lugar<br />se comprobara la existencia de la hermandad. Acto seguido se empezara con la<br />sincronización del listado de miembros.";
 
 $lang['guildleader'] = "Maestro de la hermandad";
 

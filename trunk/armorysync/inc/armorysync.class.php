@@ -277,6 +277,28 @@ class ArmorySync extends ArmorySyncBase {
     }
 
     /**
+     * fetches guild info
+     *
+     */
+    function checkCharInfo( $name = false, $server = false, $region = false ) {
+        global $roster, $addon;
+
+        include_once(ROSTER_LIB . 'armory.class.php');
+        $armory = new RosterArmory;
+        $armory->region = $region;
+        $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
+
+        $content = $this->_parseData( $armory->fetchCharacter( $name, $roster->config['locale'], $server ) );
+        if ( $this->_checkContent( $content, array('characterInfo', 'characterTab' ) ) ) {
+            $this->_debug( 1, true, 'Checked char on existence',  'OK' );
+            return true;
+        } else {
+            $this->_debug( 1, false, 'Checked char on existence',  'Failed' );
+            return false;
+        }
+    }
+
+    /**
      * fetches character info
      *
      */
@@ -1016,14 +1038,14 @@ class ArmorySync extends ArmorySyncBase {
     //    $armory->region = $this->region;
     //    if ( $content = $armory->fetchItemInfoHTML( $itemId, $roster->config['locale'] ) ) {
     //
-    //        //$pos = $this->_stripos_b($content, '<div class="displayTable">');
-    //        $pos = $this->_stripos_b($content, '<div class="myTable">');
+    //        //$pos = $this->_striposB($content, '<div class="displayTable">');
+    //        $pos = $this->_striposB($content, '<div class="myTable">');
     //        if ($pos != 0){
     //                //Need to trim garbage off..
     //                $content = substr ($content, $pos);
     //        }
     //        $pos = 0;
-    //        $pos = $this->_stripos_b($content, '</div>');
+    //        $pos = $this->_striposB($content, '</div>');
     //        $pos += 6;
     //        $len = strlen($content) - $pos;
     //        $len *= -1;
@@ -1051,7 +1073,7 @@ class ArmorySync extends ArmorySyncBase {
      * @param string $needle
      * @return string
      */
-    function _stripos_b($haystack, $needle){
+    function _striposB($haystack, $needle){
         $ret = strpos($haystack, stristr( $haystack, $needle ));
         $this->_debug( 3, $ret, 'Fetched item tooltip', 'OK' );
         return $ret;
