@@ -41,31 +41,32 @@ class ArmorySyncJob extends ArmorySyncBase {
     var $isAuth = 0;
     var $link;
     var $dataNotAccepted = 0;
+	var $util_type = '';
 
     var $header;
 
     var $debugmessages = array();
     var $errormessages = array();
 
-	var $xmlIndent = 1;
-
     var $functions = array(
                         array(
                             'link' => '_link',
-                            'prepare_update' => '_prepare_update',
-                            'update_status' => '_update_status',
-                            'show_status' => '_show_status',
-                            'get_ajax_status' => '_get_ajax_status'
+                            'prepare_update' => '_prepareUpdate',
+                            'update_status' => '_updateStatus',
+                            'show_status' => '_showStatus',
                         ),
                         array(
                             'link' => '_link',
-                            'prepare_update' => '_prepare_updateMemberlist',
-                            'update_status' => '_update_statusMemberlist',
-                            'show_status' => '_show_statusMemberlist',
-                            'get_ajax_status' => '_get_ajax_statusMemberList'
+                            'prepare_update' => '_prepareUpdateMemberlist',
+                            'update_status' => '_updateStatusMemberlist',
+                            'show_status' => '_showStatusMemberlist',
                         ),
                     );
 
+    /**
+     * Initialize ArmorySync class
+     *
+     */
     function _init() {
         global $addon;
 
@@ -133,7 +134,7 @@ class ArmorySyncJob extends ArmorySyncBase {
         global $roster, $addon;
 
         $this->_showHeader();
-        $this->_check_env();
+        $this->_checkEnv();
 
         if ( ! $this->isAuth ) {
             $this->_showFooter();
@@ -149,13 +150,18 @@ class ArmorySyncJob extends ArmorySyncBase {
             return;
         }
 
-        if ( !$this->id && isset($roster->pages[2]) && $roster->pages[2] == 'guildadd' && !isset($_POST['process']) ) {
+        if ( !$this->id && isset($roster->pages[2]) && $roster->pages[2] == 'add' && !isset($_POST['process']) ) {
 
-            $this->_showAddGuildScreen();
+            $this->_showAddScreen();
 
-        } elseif ( !$this->id && isset($roster->pages[2]) && $roster->pages[2] == 'guildadd' && isset($_POST['process']) && $_POST['process'] == 'process' ) {
+        } elseif ( !$this->id && isset($roster->pages[2]) && $roster->pages[2] == 'add' && isset($_POST['process']) && $_POST['process'] == 'addguild' ) {
 
-            $this->_startAddGuild();
+			$this->isMemberList = 1;
+			$this->_startAddGuild();
+
+        } elseif ( !$this->id && isset($roster->pages[2]) && $roster->pages[2] == 'add' && isset($_POST['process']) && $_POST['process'] == 'addchar' ) {
+
+            $this->_startAddChar();
 
         } elseif ( $this->id && $addon['config']['armorysync_skip_start'] == 0 && !( isset($_GET['job_id']) || isset($_POST['job_id']) ) ) {
 
@@ -219,7 +225,7 @@ class ArmorySyncJob extends ArmorySyncBase {
                     $this->$functions['link']();
                 }
             } else {
-                $this->_nothing_to_do();
+                $this->_nothingToDo();
             }
         } else {
             $ret = $this->$functions['update_status']();
@@ -235,86 +241,7 @@ class ArmorySyncJob extends ArmorySyncBase {
     }
 
     /**
-     * fetch insert jobid, fill jobqueue
-     *
-     */
-    function start_ajax_status_update( $id = 0 ) {
-        global $roster, $addon;
-
-        $this->_check_env();
-
-        if ( ! $this->isAuth ) {
-            return array( 'status' => 103, 'errmsg' => 'Not authorized' );
-        }
-        //return array( 'result' => 'Das ist ein Test', 'status' => 2 );
-
-        if ( isset($_GET['job_id']) ) {
-            $this->jobid = $_GET['job_id'];
-        }
-        if ( isset($_POST['job_id']) ) {
-            $this->jobid = $_POST['job_id'];
-        }
-
-        $functions = $this->functions[$this->isMemberList];
-        $ret = $this->$functions['update_status']();
-
-        $status = $this->$functions['get_ajax_status']();
-        $this->_debug( 1, null, 'Started ajax status update', 'OK');
-
-        $result = "\n";
-        if ( count( $this->errormessages ) > 0 ) {
-            foreach ( $this->errormessages as $message ) {
-
-				$result .= $this->_xmlEncode(
-					'errormessage', array( 'target' => 'armorysync_error_table'), null,
-					array(
-						array('emesg', array( 'type' => 'line' ), $message['line']),
-						array('emesg', array( 'type' => 'time' ), $message['time']),
-						array('emesg', array( 'type' => 'file' ), $message['file']),
-						array('emesg', array( 'type' => 'class' ), $message['class']),
-						array('emesg', array( 'type' => 'function' ), $message['function']),
-						array('emesg', array( 'type' => 'info' ), $message['info']),
-						array('emesg', array( 'type' => 'as_status' ), $message['status']),
-						array('edata', array( 'type' => 'args' ), aprint($message['args'], '', 1)),
-						array('edata', array( 'type' => 'ret' ), aprint($message['ret'], '', 1)),
-					)
-				 );
-            }
-        }
-
-        if ( $addon['config']['armorysync_debuglevel'] > 0 && count( $this->debugmessages ) > 0 ) {
-            foreach ( $this->debugmessages as $message ) {
-
-				$result .= $this->_xmlEncode(
-					'debugmessage', array( 'target' => 'armorysync_debug_table'), null,
-					array(
-						array('dmesg', array( 'type' => 'line' ), $message['line']),
-						array('dmesg', array( 'type' => 'time' ), $message['time']),
-						array('dmesg', array( 'type' => 'file' ), $message['file']),
-						array('dmesg', array( 'type' => 'class' ), $message['class']),
-						array('dmesg', array( 'type' => 'function' ), $message['function']),
-						array('dmesg', array( 'type' => 'info' ), $message['info']),
-						array('dmesg', array( 'type' => 'as_status' ), $message['status']),
-						array('ddata', array( 'type' => 'args' ), aprint($message['args'], '', 1)),
-						array('ddata', array( 'type' => 'ret' ), aprint($message['ret'], '', 1)),
-					)
-				 );
-            }
-        }
-
-        $result .= $status;
-
-        if ( $ret ) {
-            $reloadTime = $addon['config']['armorysync_reloadwaittime'] * 500;
-			$result .= $this->_xmlEncode('reload', array('reloadTime' => $reloadTime), '');
-        }
-		$result .= "  ";
-        return array(   'result' => $result,
-                        'status' => 0 );
-    }
-
-    /**
-     * fetch insert jobid, fill jobqueue
+     * Adding new guild to roster
      *
      */
     function _startAddGuild() {
@@ -329,16 +256,17 @@ class ArmorySyncJob extends ArmorySyncBase {
                 $region = strtoupper($_POST['region']);
 
                 if ( $region == "EU" || $region == "US" ) {
-                    if ( $this->_check_guild_exist( $name, $server, $region ) ) {
+                    if ( $this->_checkGuildExist( $name, $server, $region ) ) {
 
-                        if ( $id = $this->_insert_guild( $name, $server, $region ) ) {
+                        if ( $id = $this->_insertGuild( $name, $server, $region ) ) {
 
-                            if ( $this->_insert_uploadRule( $name, $server, $region ) ) {
-                                if ( $this->_prepare_updateMemberlist( $id, $name, $server, $region ) ) {
-                                    $ret = $this->_update_statusMemberlist();
+                            if ( $this->_insertUploadRule( $name, $server, $region, 0 ) ) {
+                                if ( $this->_prepareUpdateMemberlist( $id, $name, $server, $region ) ) {
+                                    $ret = $this->_updateStatusMemberlist();
                                     $link = makelink('guild-armorysync-memberlist&guild='. $id);
-                                    $this->_show_statusMemberlist();
+                                    $this->_showStatusMemberlist();
                                     if ( $ret ) {
+										$this->util_type = 'addguild';
                                         $this->_link();//_guildMemberlist( $id )
                                     }
                                     $this->_debug( 1, null, 'Added guild', 'OK');
@@ -383,12 +311,81 @@ class ArmorySyncJob extends ArmorySyncBase {
     }
 
     /**
+     * Adding new character to roster
+     *
+     */
+    function _startAddChar() {
+        global $roster;
+        $out = '';
+        if ( isset($_POST['action']) && $_POST['action'] == 'add' ) {
+
+            if ( isset($_POST['name']) && isset($_POST['server']) && isset($_POST['region']) ) {
+
+                $name = urldecode(trim(stripslashes( $_POST['name'] )));
+                $server = urldecode(trim(stripslashes( $_POST['server'] )));
+                $region = strtoupper($_POST['region']);
+
+                if ( $region == "EU" || $region == "US" ) {
+                    if ( $this->_checkCharExist( $name, $server, $region ) ) {
+
+                        if ( $id = $this->_insertChar( $name, $server, $region ) ) {
+
+                            if ( $this->_insertUploadRule( $name, $server, $region, 2 ) ) {
+                                if ( $this->_prepareUpdate( $id, $name, $server, $region ) ) {
+                                    $ret = $this->_updateStatus();
+                                    $this->_showStatus();
+                                    if ( $ret ) {
+										$this->util_type = 'addchar';
+                                        $this->_link();
+                                    }
+                                    $this->_debug( 1, null, 'Added char', 'OK');
+                                } else {
+                                    $this->_debug( 0, null, 'Added char', 'Failed. No job found');
+                                }
+                            } else {
+                                $html = "&nbsp;&nbsp;".
+                                        $roster->locale->act['error_uploadrule_insert'].
+                                        "&nbsp;&nbsp;";
+                                $out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
+                            }
+                        } else {
+                            $html = "&nbsp;&nbsp;".
+                                    $roster->locale->act['error_guild_insert'].
+                                    "&nbsp;&nbsp;";
+                            $out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
+                        }
+                    } else {
+                        $html = "&nbsp;&nbsp;".
+                                $roster->locale->act['error_guild_notexist'].
+                                "&nbsp;&nbsp;";
+                        $out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
+                    }
+                } else {
+                    $html = "&nbsp;&nbsp;".
+                            $roster->locale->act['error_wrong_region'].
+                            "&nbsp;&nbsp;";
+                    $out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
+                }
+            } else {
+                $html = "&nbsp;&nbsp;".
+                        $roster->locale->act['error_missing_params'].
+                        "&nbsp;&nbsp;";
+                $out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
+            }
+        }
+        if ( $out ) {
+            $this->_debug( 1, $out, 'Added guild', 'Failed');
+            print $out;
+        }
+    }
+
+    /**
      * fetch insert jobid, fill jobqueue
      *
      */
-    function _check_env() {
+    function _checkEnv() {
         global $roster;
-        if ( isset($_GET['ROSTER_PAGE']) && $_GET['ROSTER_PAGE'] == 'ajax') {
+        if ( $roster->pages[0] == 'ajax') {
             $this->isMemberlist = $_POST['memberlist'];
             if ( $_POST['scope'] == 'char') {
                 $this->isAuth = $this->_checkAuth('armorysync_char_update_access');
@@ -402,7 +399,11 @@ class ArmorySyncJob extends ArmorySyncBase {
             } elseif ( $_POST['scope'] == 'realm') {
                 $this->isAuth = $this->_checkAuth('armorysync_realm_update_access');
             } elseif ( $_POST['scope'] == 'util') {
-                $this->isMemberList = 1;
+				if ( isset($_POST['util_type']) ) {
+					if ( $_POST['util_type'] == 'addguild' ) {
+						$this->isMemberList = 1;
+					}
+				}
                 $this->isAuth = $this->_checkAuth('armorysync_guild_add_access');
             }
         } elseif ( $roster->scope == 'char' ) {
@@ -425,7 +426,7 @@ class ArmorySyncJob extends ArmorySyncBase {
         } elseif ( $roster->scope == 'util' ) {
             $this->title = "<span class=\"title_text\">". $roster->locale->act['armorySyncTitle_Guildmembers']. "</span>\n";
 			$this->id = isset($_POST['job_id']) ? $_POST['job_id'] : null;
-            $this->isMemberList = 1;
+            //$this->isMemberList = 1;
             $this->isAuth = $this->_checkAuth('armorysync_guild_add_access');
         } else {
             $this->_debug( 0, array( '$_GET' => $_GET, '$_POST' => $_POST, 'scope' => $roster->scope, 'data' => $roster->data ), 'Checking environment', 'Failed');
@@ -438,21 +439,34 @@ class ArmorySyncJob extends ArmorySyncBase {
      * fetch insert jobid, fill jobqueue
      *
      */
-    function _prepare_update() {
+    function _prepareUpdate( $id = 0, $name = false , $server = false , $region = false ) {
         global $roster, $addon;
+
+        if ( ! $id ) {
+            $id = $roster->data['member_id'];
+        }
+        if ( ! $name ) {
+            $name = $roster->data['name'];
+        }
+        if ( ! $server ) {
+            $server = $roster->data['server'];
+        }
+        if ( ! $region ) {
+            $region = $roster->data['region'];
+        }
 
         $this->time_started = gmdate('Y-m-d H:i:s');
 
-        if ( $roster->scope == 'char' ) {
+        if ( $roster->scope == 'char' || $roster->scope == 'util' ) {
 
             $this->members = array(
                         array(
-                                'member_id' => $roster->data['member_id'],
-                                'name' => $roster->data['name'],
-                                'guild_id' => $roster->data['guild_id'],
-                                'guild_name' => $roster->data['guild_name'],
-                                'server' => $roster->data['server'],
-                                'region' => $roster->data['region'] ) );
+                                'member_id' => $id,
+                                'name' => $name,
+                                'guild_id' => $roster->data['guild_id'] ? $roster->data['guild_id'] : 0,
+                                'guild_name' => $roster->data['guild_name'] ? $roster->data['guild_name'] : '',
+                                'server' => $server,
+                                'region' => $region ) );
         } elseif ( $roster->scope == 'guild' ) {
 
             $this->members = $this->_getGuildMembersToUpdate();
@@ -476,7 +490,7 @@ class ArmorySyncJob extends ArmorySyncBase {
      * fetch insert jobid, fill jobqueue
      *
      */
-    function _prepare_updateMemberlist( $id = 0, $name = false , $server = false , $region = false ) {
+    function _prepareUpdateMemberlist( $id = 0, $name = false , $server = false , $region = false ) {
         global $roster, $addon;
 
         if ( ! $id ) {
@@ -520,7 +534,7 @@ class ArmorySyncJob extends ArmorySyncBase {
      *
      * @param int $jobid
      */
-    function _nothing_to_do() {
+    function _nothingToDo() {
         global $roster;
 
         $html = '<span class="title_text">&nbsp;&nbsp;'. $roster->locale->act['nothing_to_do']. '&nbsp;&nbsp;</span>';
@@ -536,7 +550,7 @@ class ArmorySyncJob extends ArmorySyncBase {
      *
      * @param int $jobid
      */
-    function _show_status( $jobid = 0, $memberlist = false ) {
+    function _showStatus( $jobid = 0, $memberlist = false ) {
         global $roster, $addon;
 
         $jscript = "<script type=\"text/javascript\" src=\"". $addon['url_path']. "js/armorysync.js\"></script>\n";
@@ -687,149 +701,6 @@ class ArmorySyncJob extends ArmorySyncBase {
     }
 
     /**
-     * statusbox Memberlist output with ajax ( experimental )
-     *
-     * @param int $jobid
-     */
-    function _get_ajax_statusMemberlist( $jobid = 0 ) {
-        global $roster;
-
-        $ret = $this->_get_ajax_status( $jobid, 1 );
-        $this->_debug( 1, htmlspecialchars($ret), 'Prepared ajax meberlist status', 'OK');
-        return $ret;
-    }
-
-    /**
-     * statusbox output with ajax ( experimental )
-     *
-     * @param int $jobid
-     */
-    function _get_ajax_status( $jobid = 0, $memberlist = false ) {
-        global $roster, $addon;
-
-        $result = "";
-
-        $perc = 0;
-        if ( $this->total == 0 ) {
-            $perc = 100;
-        } else {
-            $perc = round ($this->done / $this->total * 100);
-        }
-
-
-		$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'bar', 'targetId' => 'progress_bar'), $perc);
-		$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => 'progress_text'), "$perc% ". $roster->locale->act['complete']. " ($this->done / $this->total)");
-        if (isset($this->active_member['name']) && $this->active_member['name'] != '' ) {
-			$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => 'progress_next'), $roster->locale->act['next_to_update']. $this->active_member['name']);
-        } else {
-            $result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => 'progress_next') );
-        }
-
-        $member = $this->active_member;
-
-        $id = $memberlist ? $member['guild_id'] : $member['member_id'];
-
-        if ( $id ) {
-            foreach ( array( 'guild_info', 'character_info', 'skill_info', 'reputation_info', 'equipment_info', 'talent_info' ) as $key ) {
-                if ( $memberlist && $key !== 'guild_info' ) {
-                    continue;
-                }
-                if ( isset( $member[$key] ) && $member[$key] == 1 ) {
-					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), "img/pvp-win.gif" );
-                } elseif ( isset( $member[$key] ) && $member[$key] >= 1 ) {
-					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => 'as_status_'. $key. '_'. $id), $member[$key] );
-                } elseif ( isset( $member[$key] ) ) {
-					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), "img/pvp-loss.gif" );
-                } else {
-					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), "img/blue-question-mark.gif" );
-                }
-            }
-
-			if ( isset( $member['starttimeutc'] ) ) {
-				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => "as_status_starttimeutc_". $id), $this->_getLocalisedTime($member['starttimeutc']) );
-			}
-
-			if (isset( $member['stoptimeutc'] ) ) {
-				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => "as_status_stoptimeutc_". $id), $this->_getLocalisedTime($member['stoptimeutc']) );
-			}
-
-            if ( !$memberlist && $member['log'] ) {
-				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_log_'. $id ), "img/note.gif" );
-				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'overlib', 'overlibType' => 'charLog', 'targetId' => 'as_status_log_'. $id ), str_replace("'", '"', $member['log'] ) );
-
-            } elseif( $member['log'] ) {
-				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_log_'. $id ), "img/note.gif" );
-				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'overlib', 'overlibType' => 'memberlistLog', 'targetId' => 'as_status_log_'. $id ), str_replace("'", '"', $member['log'] ) );
-            }
-        }
-        $this->_debug( 1, htmlspecialchars($result), 'Prepared ajax status', 'OK');
-        return $result;
-    }
-
-    /**
-     * Encode for ajax XML transfer
-     *
-     * @param string $tagname
-     * @param array $attributes
-     * @param string $content
-     * @param array $subs
-     */
-    function _xmlEncode( $tagname = false, $attributes = array(), $content = '', $subs = array() ) {
-
-        if ( $tagname ) {
-
-			$this->xmlIndent++;
-			$indent = '';
-			for ( $i = 1; $i <= $this->xmlIndent; $i++ ) {
-				$indent .= "  ";
-			}
-			$encContent = urlencode( $content );
-			$multi = strlen( $encContent ) > 4000;
-			$tag = $indent. "<". $tagname;
-			foreach ( $attributes as $key => $value ) {
-				$tag .= " ". $key. "=\"". urlencode($value). "\"";
-			}
-			if ( $multi ) {
-				$tag .= " multipart=\"1\">\n";
-			} elseif ( count(array_keys($subs)) > 0 ) {
-				$tag .= ">\n";
-			} else {
-				$tag .= ">";
-			}
-
-			foreach ( $subs as $sub ) {
-				list( $subTag, $subAttributes, $subContent, $subSubs ) = $sub;
-				$tag .= $this->_xmlEncode( $subTag, $subAttributes, $subContent, $subSubs );
-			}
-
-			if ( $multi ) {
-				$i = 1;
-				while ( strlen($encContent) > 0 ) {
-					 $subEncContent = substr($encContent, 0, 4000);
-					 $encContent = substr($encContent, 4000);
-					 $tag .= $indent. "  <multi part=\"". $i++. "\">";
-					 $tag .= $subEncContent;
-					 $tag .= "</multi>\n";
-				}
-			} else {
-				$tag .= $encContent;
-			}
-
-			if ( $multi || count(array_keys($subs)) > 0 ) {
-				$tag .= $indent. "</". $tagname. ">\n";
-			} else {
-				$tag .= "</". $tagname. ">\n";
-			}
-			$this->xmlIndent--;
-
-			$this->_debug( 3, $tag, 'Encoded data for XML transfer', 'OK');
-			return $tag;
-		} else {
-			$this->_debug( 0, $tag, 'Encoded data for XML transfer', 'Failed');
-		}
-    }
-
-    /**
      * create header
      *
      *
@@ -966,26 +837,35 @@ class ArmorySyncJob extends ArmorySyncBase {
      *
      * @param int $jobid
      */
-    function _showAddGuildScreen() {
+    function _showAddScreen() {
         global $roster, $addon;
 
         $body = '';
         $body .= '<form action="' . makelink() . '" method="post" id="allow">
         <input type="hidden" id="addguild" name="action" value="" />
-        <input type="hidden" name="process" value="process" />
+        <input type="hidden" name="process" value="addguild" />
         <input type="hidden" name="block" value="allow" />';
 
-        $body .= $this->_ruletable_head('sgreen',$roster->locale->act['armorysync_guildadd'],'addguild','');
-        $body .= $this->_ruletable_foot('sgreen','addguild','');
+        $body .= $this->_ruletableHead('sgreen',$roster->locale->act['armorysync_guildadd'],'addguild','', $roster->locale->act['guildname']);
+        $body .= $this->_ruletableFoot('sgreen','addguild','');
 
         $body .= '</form>';
 
         $body .= "<br />\n";
+        $body .= '<form action="' . makelink() . '" method="post" id="allow">
+        <input type="hidden" id="addchar" name="action" value="" />
+        <input type="hidden" name="process" value="addchar" />
+        <input type="hidden" name="block" value="allow" />';
+
+        $body .= $this->_ruletableHead('sgreen',$roster->locale->act['armorysync_charadd'],'addchar','', $roster->locale->act['charname']);
+        $body .= $this->_ruletableFoot('sgreen','addchar','');
+
+        $body .= '</form>';
         $body .= "<br />\n";
         $body .= "<br />\n";
-        $body .= messagebox($roster->locale->act['armorysync_guildadd_helpText'],'<img src="' . $roster->config['img_url'] . 'blue-question-mark.gif" alt="?" style="float:right;" />' . $roster->locale->act['armorysync_guildadd_help'],'sgray', '400px');
+        $body .= messagebox($roster->locale->act['armorysync_add_helpText'],'<img src="' . $roster->config['img_url'] . 'blue-question-mark.gif" alt="?" style="float:right;" />' . $roster->locale->act['armorysync_add_help'],'sgray', '500px');
         $body .= "<br />\n";
-        $this->_debug( 1, $body, 'Printed guild add screen', 'OK');
+        $this->_debug( 1, $body, 'Printed add screen', 'OK');
         print $body;
     }
 
@@ -994,7 +874,7 @@ class ArmorySyncJob extends ArmorySyncBase {
      *
      * @param int $jobid
      */
-    function _ruletable_head( $style , $title , $type , $mode )
+    function _ruletableHead( $style , $title , $type , $mode, $name )
     {
         global $roster;
 
@@ -1004,10 +884,10 @@ class ArmorySyncJob extends ArmorySyncBase {
                 <tr>
 ';
 
-        $name = $roster->locale->act['guildname'];
+        //$name = $roster->locale->act['guildname'];
 
         $output .= '
-                        <th class="membersHeader" ' . makeOverlib($name) . '> ' . $roster->locale->act['guildname'] . '</th>
+                        <th class="membersHeader" ' . makeOverlib($name) . '> ' . $name . '</th>
                         <th class="membersHeader" ' . makeOverlib($roster->locale->act['realmname']) . '> ' . $roster->locale->act['server'] . '</th>
                         <th class="membersHeader" ' . makeOverlib($roster->locale->act['regionname']) . '> ' . $roster->locale->act['region'] . '</th>
                         <th class="membersHeaderRight">&nbsp;</th>
@@ -1024,7 +904,7 @@ class ArmorySyncJob extends ArmorySyncBase {
      *
      * @param int $jobid
      */
-    function _ruletable_foot( $style , $type , $mode )
+    function _ruletableFoot( $style , $type , $mode )
     {
         global $roster;
 
@@ -1048,10 +928,10 @@ class ArmorySyncJob extends ArmorySyncBase {
      *
      * @param int $jobid
      */
-    function _show_statusMemberlist( $jobid = 0 ) {
+    function _showStatusMemberlist( $jobid = 0 ) {
         global $roster;
 
-        $this->_show_status( $jobid, 1 );
+        $this->_showStatus( $jobid, 1 );
         $this->_debug( 1, null, 'Printed memberlist status', 'OK');
     }
 
@@ -1061,7 +941,7 @@ class ArmorySyncJob extends ArmorySyncBase {
      *
      * @param int $jobid
      */
-    function _update_status( $jobid = 0 ) {
+    function _updateStatus( $jobid = 0 ) {
         global $roster;
 
         $this->_init();
@@ -1113,7 +993,7 @@ class ArmorySyncJob extends ArmorySyncBase {
         }
     }
 
-    function _update_statusMemberlist( $jobid = 0 ) {
+    function _updateStatusMemberlist( $jobid = 0 ) {
         global $roster;
 
         $this->_init();
@@ -1163,12 +1043,12 @@ class ArmorySyncJob extends ArmorySyncBase {
     // Helper functions
 
     /**
-     * Create localised time based on utc + offset;
+     * Check if guild exists in armory
      *
      * @param string $time
      * @return string
      */
-    function _check_guild_exist( $name, $server, $region ) {
+    function _checkGuildExist( $name, $server, $region ) {
         global $addon;
 
         require_once ($addon['dir'] . 'inc/armorysync.class.php');
@@ -1176,6 +1056,22 @@ class ArmorySyncJob extends ArmorySyncBase {
         $this->_init();
         $ret = $this->ArmorySync->checkGuildInfo( $name, $server, $region );
         $this->_debug( 1, $ret, 'Checked guild on existenz', $ret ? 'OK' : 'Failed');
+        return $ret;
+    }
+    /**
+     * Check if guild exists in armory
+     *
+     * @param string $time
+     * @return string
+     */
+    function _checkCharExist( $name, $server, $region ) {
+        global $addon;
+
+        require_once ($addon['dir'] . 'inc/armorysync.class.php');
+
+        $this->_init();
+        $ret = $this->ArmorySync->checkCharInfo( $name, $server, $region );
+        $this->_debug( 1, $ret, 'Checked char on existenz', $ret ? 'OK' : 'Failed');
         return $ret;
     }
     /**
@@ -1266,11 +1162,16 @@ class ArmorySyncJob extends ArmorySyncBase {
         global $roster, $addon;
 
         $reloadTime = $addon['config']['armorysync_reloadwaittime'] * 500;
-        //$link = 'ajax.php?addon=armorysync&method=armorysync_status_update&cont=doUpdateStatus';
-        $link = 'index.php?p=ajax-addon-armorysync-status_update&cont=doUpdateStatus';
+        $link = ROSTER_URL. 'index.php?p=ajax-addon-armorysync-status_update&cont=doUpdateStatus';
+		$posts = 'job_id='. $this->jobid. '&memberlist='. $this->isMemberList. '&scope='. $roster->scope. '&page='. ( isset($roster->pages[2]) ? $roster->pages[2] : '' ). '&ARMORYSYNC_STARTTIME='. ARMORYSYNC_STARTTIME;
+
+		$postadd = '';
+
+		if ( $this->util_type ) {
+			$postadd .= "&util_type=".$this->util_type;
+		}
 
 		if ( $addon['config']['armorysync_use_ajax'] ) {
-	        $postadd = '';
             if ( $addon['config']['armorysync_xdebug_ajax'] ) {
                 $postadd .= '&XDEBUG_SESSION_START='. $addon['config']['armorysync_xdebug_idekey'];
             }
@@ -1278,7 +1179,7 @@ class ArmorySyncJob extends ArmorySyncBase {
 <script type="text/javascript">
 <!--
     function nextStep() {
-        loadXMLDoc(\''. ROSTER_URL. $link. '\',\'job_id='. $this->jobid. '&memberlist='. $this->isMemberList. '&scope='. $roster->scope. '&page='. ( isset($roster->pages[2]) ? $roster->pages[2] : '' ). '&ARMORYSYNC_STARTTIME='. ARMORYSYNC_STARTTIME. $postadd. '\');
+        loadXMLDoc(\''. $link. '\',\''. $posts. $postadd. '\');
     }
     self.setTimeout(\'nextStep()\', '. $reloadTime. ');
 //-->
@@ -1771,7 +1672,7 @@ class ArmorySyncJob extends ArmorySyncBase {
      * @param string $server
      * @param string $region
      */
-    function _insert_uploadRule( $name, $server, $region ) {
+    function _insertUploadRule( $name, $server, $region, $type ) {
         global $roster;
 
         $query =    "SELECT ".
@@ -1787,7 +1688,7 @@ class ArmorySyncJob extends ArmorySyncBase {
             $query =    "INSERT ".
                         "INTO `". $roster->db->table('upload'). "` ".
                         "(`name`,`server`,`region`,`type`,`default`) VALUES ".
-                        "('" . $roster->db->escape($name) . "','" . $roster->db->escape($server) . "','" . strtoupper($region) . "','0','0');";
+                        "('" . $roster->db->escape($name) . "','" . $roster->db->escape($server) . "','" . strtoupper($region) . "','". $type. "','0');";
 
             if ( !$roster->db->query($query) ) {
                     die_quietly($roster->db->error(),'Database Error',__FILE__,__LINE__,$query);
@@ -1808,7 +1709,7 @@ class ArmorySyncJob extends ArmorySyncBase {
      * @param string $server
      * @param string $region
      */
-    function _insert_guild( $name, $server, $region ) {
+    function _insertGuild( $name, $server, $region ) {
         global $roster;
 
         $query =    "SELECT ".
@@ -1837,6 +1738,45 @@ class ArmorySyncJob extends ArmorySyncBase {
             }
         }
         $this->_debug( 2, $ret, 'Inserted guild to DB', $ret ? 'OK' : 'Failed');
+        return $ret;
+    }
+
+    /**
+     * Inserts new char
+     *
+     * @param string $name
+     * @param string $server
+     * @param string $region
+     */
+    function _insertChar( $name, $server, $region ) {
+        global $roster;
+
+        $query =    "SELECT ".
+                    "member_id ".
+                    "FROM `". $roster->db->table('members'). "` ".
+                    "WHERE ".
+                    "`name`='". $roster->db->escape($name). "' ".
+                    "AND `server`='". $roster->db->escape($server). "' ".
+                    "AND `region`='". $roster->db->escape($region). "';";
+        $ret = $roster->db->query_first($query);
+
+        if ( ! $ret ) {
+
+            $query =    "INSERT ".
+                        "INTO `". $roster->db->table('members'). "` ".
+                        "SET ".
+                        "`name`='". $roster->db->escape($name). "', ".
+                        "`server`='". $roster->db->escape($server). "', ".
+                        "`region`='". $roster->db->escape($region). "';";
+
+            if ( !$roster->db->query($query) ) {
+                die_quietly($roster->db->error(),'Database Error',__FILE__,__LINE__,$query);
+            } else {
+                $query = "SELECT LAST_INSERT_ID();";
+                $ret = $roster->db->query_first($query);
+            }
+        }
+        $this->_debug( 2, $ret, 'Inserted char to DB', $ret ? 'OK' : 'Failed');
         return $ret;
     }
 }

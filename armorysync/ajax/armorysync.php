@@ -27,10 +27,10 @@ switch ($method)
         if( isset($_POST['job_id']) )
         {
             $job_id = $_POST['job_id'];
-            require_once ($addon['dir'] . 'inc/armorysyncjob.class.php');
+            require_once ($addon['dir'] . 'inc/armorysyncjobajax.class.php');
 
-            $job = new ArmorySyncJob();
-            $ret = $job->start_ajax_status_update();
+            $job = new ArmorySyncJobAjax();
+            $ret = $job->startAjaxStatusUpdate();
 
             if ( isset( $ret['status'] ) ) {
                 $status = $ret['status'];

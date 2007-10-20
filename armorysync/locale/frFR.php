@@ -171,8 +171,9 @@ $lang['error_guild_notexist'] = "La guilde donnée n'existe pas dans Armory.";
 $lang['error_missing_params'] = "Paramètre(s) absent(s). Essaie encore une fois.";
 $lang['error_wrong_region'] = "Region invalide. Seulement EU ou US sont des regions valable.";
 $lang['armorysync_guildadd'] = "Ajoute la Guild and synchronise<br />la liste des membres avec Armory.";
-$lang['armorysync_guildadd_help'] = "Information";
-$lang['armorysync_guildadd_helpText'] = "<br />Orthographier <b>la guilde</b> et <b>le serveur</b> <b>exactement</b> <br />comme ils sont connues chez Blizzards Armory. <br />Region est <b>EU</b> pour l'Europe et <b>US</b> pour des guildes Américaines.<br /><br /> En premier lieu la guilde sera examinée<br /> pour assurer l'existence.<br /><br /> Après une synchronisation de la liste des membres commencera.<br /><br />";
+$lang['armorysync_charadd'] = "Adding Charakter and synchronize<br />with the Armory.";
+$lang['armorysync_add_help'] = "Information";
+$lang['armorysync_add_helpText'] = "<br />Orthographier <b>la guilde</b> et <b>le serveur</b> <b>exactement</b> <br />comme ils sont connues chez Blizzards Armory. <br />Region est <b>EU</b> pour l'Europe et <b>US</b> pour des guildes Américaines.<br /><br /> En premier lieu la guilde sera examinée<br /> pour assurer l'existence.<br /><br /> Après une synchronisation de la liste des membres commencera.<br /><br />";
 
 $lang['guildleader'] = "Maître de Guild";
 
