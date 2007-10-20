@@ -170,13 +170,13 @@ class ArmorySyncJobAjax extends ArmorySyncJob {
                     continue;
                 }
                 if ( isset( $member[$key] ) && $member[$key] == 1 ) {
-					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), "img/pvp-win.gif" );
+					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), ROSTER_PATH. "img/pvp-win.gif" );
                 } elseif ( isset( $member[$key] ) && $member[$key] >= 1 ) {
 					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => 'as_status_'. $key. '_'. $id), $member[$key] );
                 } elseif ( isset( $member[$key] ) ) {
-					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), "img/pvp-loss.gif" );
+					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), ROSTER_PATH. "img/pvp-loss.gif" );
                 } else {
-					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), "img/blue-question-mark.gif" );
+					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), ROSTER_PATH. "img/blue-question-mark.gif" );
                 }
             }
 
@@ -189,11 +189,11 @@ class ArmorySyncJobAjax extends ArmorySyncJob {
 			}
 
             if ( !$memberlist && $member['log'] ) {
-				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_log_'. $id ), "img/note.gif" );
+				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_log_'. $id ), ROSTER_PATH. "img/note.gif" );
 				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'overlib', 'overlibType' => 'charLog', 'targetId' => 'as_status_log_'. $id ), str_replace("'", '"', $member['log'] ) );
 
             } elseif( $member['log'] ) {
-				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_log_'. $id ), "img/note.gif" );
+				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_log_'. $id ), ROSTER_PATH. "img/note.gif" );
 				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'overlib', 'overlibType' => 'memberlistLog', 'targetId' => 'as_status_log_'. $id ), str_replace("'", '"', $member['log'] ) );
             }
         }
