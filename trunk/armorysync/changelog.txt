@@ -2,8 +2,11 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[273]
+- implemented configurable guild titles
+
 svn[272]
-- implemented protection of character deletion by meberlistsync from guildbank config
+- implemented protection of character deletion by memberlistsync from guildbank config
 -- every char recognized as bankchar will be protected
 -- Old config field protected guild title is still functional
 - updated frFR locales. thx to tuigii

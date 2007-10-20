@@ -24,6 +24,7 @@ $lang['async_button4']			= 'ArmorySync Memberlist|Synchronisiere deine Mitgliede
 $lang['async_button5']			= 'ArmorySync Memberlist für eine neue Gilde|Füge eine neue Gilde ein und synchronisiere<br />die Mitgliederliste mit Blizzards Armory';
 // Config strings
 $lang['admin']['armorysync_conf']			= 'Allgemein|Konfiguriere die Grundeinstellungen für ArmorySync';
+$lang['admin']['armorysync_ranks']			= 'Ränge|Konfiguriere die Gildenränge für ArmorySync';
 $lang['admin']['armorysync_images']			= 'Bilder|Konfiguriere die Anzeige von Bildern für ArmorySync';
 $lang['admin']['armorysync_access']			= 'Zugriffsrechte|Konfiguriere die Zugriffsrechte für ArmorySync';
 $lang['admin']['armorysync_debug']			= 'Debugging|Konfiguriere das Debugging für ArmorySync';
@@ -37,6 +38,18 @@ $lang['admin']['armorysync_fetch_timeout'] = 'Armory Fetch timeout|Zeit in Sekun
 $lang['admin']['armorysync_skip_start'] = 'Überspringe die Startseite|Überspringe die Startseite bei <b>ArmorySync</b> updates.';
 $lang['admin']['armorysync_status_hide'] = 'Verstecke das Statusfenster initial|Versteckt das Status Fenster von <b>ArmorySync</b> beim ersten Laden.';
 $lang['admin']['armorysync_protectedtitle']	= "Geschützer Gildentitel|Charaktere mit diesen Gildentiteln sind davor geschützt,<br />durch einen Abgleich der Mitgliederliste gegen die Armory gelöscht zu werden.<br />Dieses Problem besteht häufig mit Bank Charakteren.<br />Mehrfachnennung durch trennen mit \",\" möglich. Z.B. Banker,Lager";
+
+$lang['admin']['armorysync_rank_set_order']	= "Reihenfolge zum setzen der Gildenränge|Bestimmt in welcher Reihenfolge die Gildentitel gesetzt werden.";
+$lang['admin']['armorysync_rank_0']	= "Titel des Gilden Meisters|Dieser Titel wird gesetzt wenn im Roster für die Gilde kein Titel existiert.";
+$lang['admin']['armorysync_rank_1']	= "Titel Rang 1|Dieser Titel wird gesetzt wenn im Roster für die Gilde kein Titel existiert.";
+$lang['admin']['armorysync_rank_2']	= "Titel Rang 2|Dieser Titel wird gesetzt wenn im Roster für die Gilde kein Titel existiert.";
+$lang['admin']['armorysync_rank_3']	= "Titel Rang 3|Dieser Titel wird gesetzt wenn im Roster für die Gilde kein Titel existiert.";
+$lang['admin']['armorysync_rank_4']	= "Titel Rang 4|Dieser Titel wird gesetzt wenn im Roster für die Gilde kein Titel existiert.";
+$lang['admin']['armorysync_rank_5']	= "Titel Rang 5|Dieser Titel wird gesetzt wenn im Roster für die Gilde kein Titel existiert.";
+$lang['admin']['armorysync_rank_6']	= "Titel Rang 6|Dieser Titel wird gesetzt wenn im Roster für die Gilde kein Titel existiert.";
+$lang['admin']['armorysync_rank_7']	= "Titel Rang 7|Dieser Titel wird gesetzt wenn im Roster für die Gilde kein Titel existiert.";
+$lang['admin']['armorysync_rank_8']	= "Titel Rang 8|Dieser Titel wird gesetzt wenn im Roster für die Gilde kein Titel existiert.";
+$lang['admin']['armorysync_rank_9']	= "Titel Rang 9|Dieser Titel wird gesetzt wenn im Roster für die Gilde kein Titel existiert.";
 
 $lang['admin']['armorysync_char_update_access'] = 'Char Update Access Level|Wer ist in der Lage Charakter zu aktualisieren';
 $lang['admin']['armorysync_guild_update_access'] = 'Guild Update Access Level|Wer ist in der Lage Gilden zu aktualisieren';

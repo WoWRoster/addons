@@ -25,6 +25,7 @@ $lang['async_button5']= 'ArmorySync Memberlist pour une nouvelle Guilde|Ajoute u
 
 // Config strings
 $lang['admin']['armorysync_conf']			= 'General|Configure base settings for armorysync';
+$lang['admin']['armorysync_ranks']			= 'Ranks|Configure guild ranks for ArmorySync';
 $lang['admin']['armorysync_images']			= 'Images|Configure image displaying for armorysync';
 $lang['admin']['armorysync_access']			= 'Access Rights|Configure access rights for armorysync';
 $lang['admin']['armorysync_debug']			= 'Debugging|Configure debug settings for armorysync';
@@ -38,6 +39,18 @@ $lang['admin']['armorysync_fetch_timeout'] = "Armory chargement arrêt|Temps en 
 $lang['admin']['armorysync_skip_start'] = "Saute page de démarrage|Saute la page de démarrage des ArmorySync chargements.";
 $lang['admin']['armorysync_status_hide'] = 'Hide status windows initialy|Hide the status windows of ArmorySync on the first load.';
 $lang['admin']['armorysync_protectedtitle']	= "Guild titres protégé|Les personnages avec ce titre seront protégé<br />contre l'effacement de la Guilde pendant un synchronisation de la liste des membres auprès Armory de Blizzard.<br />Ce problème peut arriver avec des personnages 'banquiers'.<br />Plusieurs valeurs ont possible, avec la séparation \",\". i.e. Banquier,Stock";
+
+$lang['admin']['armorysync_rank_set_order']	= "Guild Rank Set Order|Defines in which order the guild titles will be set.";
+$lang['admin']['armorysync_rank_0']	= "Title Guild Leader|This title will be set if in WoWRoster for that guild non is defined.";
+$lang['admin']['armorysync_rank_1']	= "Title Rank 1|This title will be set if in WoWRoster for that guild non is defined.";
+$lang['admin']['armorysync_rank_2']	= "Title Rank 2|This title will be set if in WoWRoster for that guild non is defined.";
+$lang['admin']['armorysync_rank_3']	= "Title Rank 3|This title will be set if in WoWRoster for that guild non is defined.";
+$lang['admin']['armorysync_rank_4']	= "Title Rank 4|This title will be set if in WoWRoster for that guild non is defined.";
+$lang['admin']['armorysync_rank_5']	= "Title Rank 5|This title will be set if in WoWRoster for that guild non is defined.";
+$lang['admin']['armorysync_rank_6']	= "Title Rank 6|This title will be set if in WoWRoster for that guild non is defined.";
+$lang['admin']['armorysync_rank_7']	= "Title Rank 7|This title will be set if in WoWRoster for that guild non is defined.";
+$lang['admin']['armorysync_rank_8']	= "Title Rank 8|This title will be set if in WoWRoster for that guild non is defined.";
+$lang['admin']['armorysync_rank_9']	= "Title Rank 9|This title will be set if in WoWRoster for that guild non is defined.";
 
 $lang['admin']['armorysync_char_update_access'] = "Pers. niveau d'accès|Qui pourrait effectuer des chargements niveau personnage";
 $lang['admin']['armorysync_guild_update_access'] = "Guild niveau d'accès|Qui pourrait effectuer des chargements niveau Guilde";

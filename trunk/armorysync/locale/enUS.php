@@ -25,6 +25,7 @@ $lang['async_button5']			= 'ArmorySync Memberlist for a new guild|Add a new guil
 
 // Config strings
 $lang['admin']['armorysync_conf']			= 'General|Configure base settings for armorysync';
+$lang['admin']['armorysync_ranks']			= 'Ranks|Configure guild ranks for ArmorySync';
 $lang['admin']['armorysync_images']			= 'Images|Configure image displaying for armorysync';
 $lang['admin']['armorysync_access']			= 'Access Rights|Configure access rights for armorysync';
 $lang['admin']['armorysync_debug']			= 'Debugging|Configure debug settings for armorysync';
@@ -38,6 +39,18 @@ $lang['admin']['armorysync_fetch_timeout'] = 'Armory Fetch timeout|Time in secon
 $lang['admin']['armorysync_skip_start'] = 'Skip start page|Skip start page on ArmorySync updates.';
 $lang['admin']['armorysync_status_hide'] = 'Hide status windows initialy|Hide the status windows of ArmorySync on the first load.';
 $lang['admin']['armorysync_protectedtitle']	= 'Protected Guild Title|Characters with these guild titles are protected<br />from being deleted by a synchronization against the armory.<br />This problem often occours with bank characters.<br />Multiple values seperated by a comma (,) \"Banker,Stock\"';
+
+$lang['admin']['armorysync_rank_set_order']	= "Guild Rank Set Order|Defines in which order the guild titles will be set.";
+$lang['admin']['armorysync_rank_0']	= "Title Guild Leader|This title will be set if in WoWRoster for that guild non is defined.";
+$lang['admin']['armorysync_rank_1']	= "Title Rank 1|This title will be set if in WoWRoster for that guild non is defined.";
+$lang['admin']['armorysync_rank_2']	= "Title Rank 2|This title will be set if in WoWRoster for that guild non is defined.";
+$lang['admin']['armorysync_rank_3']	= "Title Rank 3|This title will be set if in WoWRoster for that guild non is defined.";
+$lang['admin']['armorysync_rank_4']	= "Title Rank 4|This title will be set if in WoWRoster for that guild non is defined.";
+$lang['admin']['armorysync_rank_5']	= "Title Rank 5|This title will be set if in WoWRoster for that guild non is defined.";
+$lang['admin']['armorysync_rank_6']	= "Title Rank 6|This title will be set if in WoWRoster for that guild non is defined.";
+$lang['admin']['armorysync_rank_7']	= "Title Rank 7|This title will be set if in WoWRoster for that guild non is defined.";
+$lang['admin']['armorysync_rank_8']	= "Title Rank 8|This title will be set if in WoWRoster for that guild non is defined.";
+$lang['admin']['armorysync_rank_9']	= "Title Rank 9|This title will be set if in WoWRoster for that guild non is defined.";
 
 $lang['admin']['armorysync_char_update_access'] = 'Char Update Access Level|Who ia able to do character updates';
 $lang['admin']['armorysync_guild_update_access'] = 'Guild Update Access Level|Who ia able to do guild updates';
