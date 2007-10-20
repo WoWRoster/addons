@@ -581,7 +581,7 @@ class ArmorySyncJob extends ArmorySyncBase {
         $status = isset($_POST['StatusHidden']) ? $_POST['StatusHidden'] :
                     ( $addon['config']['armorysync_status_hide'] ? 'ON' : 'OFF' );
         $display = ( $status == 'ON' ) ? 'none' : '';
-        $icon = ( $status == 'ON' ) ? 'img/plus.gif' : 'img/minus.gif';
+        $icon = ROSTER_PATH. ( $status == 'ON' ? 'img/plus.gif' : 'img/minus.gif' );
         $style = 'syellow';
 
         $roster->tpl->assign_vars(array(
@@ -661,25 +661,25 @@ class ArmorySyncJob extends ArmorySyncBase {
                     continue;
                 }
                 if ( isset( $member[$key] ) && $member[$key] == 1 ) {
-                    $array[strtoupper($key)] = "<img src=\"img/pvp-win.gif\" alt=\"\"/>";
+                    $array[strtoupper($key)] = "<img src=\"". ROSTER_PATH. "img/pvp-win.gif\" alt=\"\"/>";
                 } elseif ( isset( $member[$key] ) && $member[$key] >= 1 ) {
                     $array[strtoupper($key)] = $member[$key];
                 } elseif ( isset( $member[$key] ) ) {
-                    $array[strtoupper($key)] = "<img src=\"img/pvp-loss.gif\" alt=\"\" />";
+                    $array[strtoupper($key)] = "<img src=\"". ROSTER_PATH. "img/pvp-loss.gif\" alt=\"\" />";
                 } else {
-                    $array[strtoupper($key)] = "<img src=\"img/blue-question-mark.gif\" alt=\"?\" />";
+                    $array[strtoupper($key)] = "<img src=\"". ROSTER_PATH. "img/blue-question-mark.gif\" alt=\"?\" />";
                 }
             }
 
-            $array['STARTTIMEUTC'] = isset( $member['starttimeutc'] ) ? $this->_getLocalisedTime($member['starttimeutc']) : "<img src=\"img/blue-question-mark.gif\" alt=\"?\"/>";
-            $array['STOPTIMEUTC'] = isset( $member['stoptimeutc'] ) ? $this->_getLocalisedTime($member['stoptimeutc']) : "<img src=\"img/blue-question-mark.gif\" alt=\"?\"/>";
+            $array['STARTTIMEUTC'] = isset( $member['starttimeutc'] ) ? $this->_getLocalisedTime($member['starttimeutc']) : "<img src=\"". ROSTER_PATH. "img/blue-question-mark.gif\" alt=\"?\"/>";
+            $array['STOPTIMEUTC'] = isset( $member['stoptimeutc'] ) ? $this->_getLocalisedTime($member['stoptimeutc']) : "<img src=\"". ROSTER_PATH. "img/blue-question-mark.gif\" alt=\"?\"/>";
 
             if ( !$memberlist && $member['log'] ) {
-                $array['LOG'] = "<img src=\"img/note.gif\"". makeOverlib( $member['log'] , $roster->locale->act['update_log'] , '' ,0 , '' , ',WRAP' ). " alt=\"\" />";
+                $array['LOG'] = "<img src=\"". ROSTER_PATH. "img/note.gif\"". makeOverlib( $member['log'] , $roster->locale->act['update_log'] , '' ,0 , '' , ',WRAP' ). " alt=\"\" />";
             } elseif( $member['log'] ) {
-                $array['LOG'] = "<img src=\"img/note.gif\"". makeOverlib( "<div style=\"height:300px;width:500px;overflow:auto;\">". $member['log']. "</div>", $roster->locale->act['update_log'] , '' ,0 , '' , ',STICKY, OFFSETX, 250, CLOSECLICK' ). " alt=\"\" />";
+                $array['LOG'] = "<img src=\"". ROSTER_PATH. "img/note.gif\"". makeOverlib( "<div style=\"height:300px;width:500px;overflow:auto;\">". $member['log']. "</div>", $roster->locale->act['update_log'] , '' ,0 , '' , ',STICKY, OFFSETX, 250, CLOSECLICK' ). " alt=\"\" />";
             } else {
-                $array['LOG'] = "<img src=\"img/no_note.gif\" alt=\"\" />";
+                $array['LOG'] = "<img src=\"". ROSTER_PATH. "img/no_note.gif\" alt=\"\" />";
             }
 
 
