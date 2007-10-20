@@ -29,7 +29,7 @@ class armorysync
 	var $active = true;
 	var $icon = 'inv_misc_missilesmall_blue';
 
-	var $version = '2.6.0.269';
+	var $version = '2.6.0.273';
 
 	var $fullname = 'Armory Sync';
 	var $description = 'Syncronizes chars with Blizzard\'s Armory';
@@ -62,6 +62,7 @@ class armorysync
 		// Master and menu entries
 		$installer->add_config("'1','startpage','armorysync_conf','display','master'");
 		$installer->add_config("'10','armorysync_conf',NULL,'blockframe','menu'");
+		$installer->add_config("'15','armorysync_ranks',NULL,'blockframe','menu'");
 		$installer->add_config("'20','armorysync_images',NULL,'page{1','menu'");
 		$installer->add_config("'30','armorysync_access',NULL,'blockframe','menu'");
 		$installer->add_config("'90','armorysync_debug',NULL,'blockframe','menu'");
@@ -77,13 +78,24 @@ class armorysync
 
 		$installer->add_config("'1100', 'armorysync_minlevel', '10', 'text{2|2', 'armorysync_conf'");
 		$installer->add_config("'1200', 'armorysync_synchcutofftime', '1', 'text{4|4', 'armorysync_conf'");
-		$installer->add_config("'1250', 'armorysync_use_ajax', '0', 'radio{On^1|Off^0', 'armorysync_conf'");
+		$installer->add_config("'1250', 'armorysync_use_ajax', '1', 'radio{On^1|Off^0', 'armorysync_conf'");
 		$installer->add_config("'1300', 'armorysync_reloadwaittime', '5', 'text{4|4', 'armorysync_conf'");
 		$installer->add_config("'1350', 'armorysync_fetch_timeout', '8', 'text{2|2', 'armorysync_conf'");
 		$installer->add_config("'1360', 'armorysync_skip_start', '0', 'radio{On^1|Off^0', 'armorysync_conf'");
 		$installer->add_config("'1370', 'armorysync_status_hide', '0', 'radio{On^1|Off^0', 'armorysync_conf'");
 		$installer->add_config("'1400', 'armorysync_protectedtitle', 'Banker', 'text{64|20', 'armorysync_conf'");
 
+		$installer->add_config("'1540', 'armorysync_rank_set_order', '3', 'select{Roster/ArmorySync/Armory^3|ArmorySync/Roster/Armory^2|Roster/Armory^1|Armory^0', 'armorysync_ranks'");
+		$installer->add_config("'1550', 'armorysync_rank_0', '', 'text{64|20', 'armorysync_ranks'");
+		$installer->add_config("'1551', 'armorysync_rank_1', '', 'text{64|20', 'armorysync_ranks'");
+		$installer->add_config("'1552', 'armorysync_rank_2', '', 'text{64|20', 'armorysync_ranks'");
+		$installer->add_config("'1553', 'armorysync_rank_3', '', 'text{64|20', 'armorysync_ranks'");
+		$installer->add_config("'1554', 'armorysync_rank_4', '', 'text{64|20', 'armorysync_ranks'");
+		$installer->add_config("'1555', 'armorysync_rank_5', '', 'text{64|20', 'armorysync_ranks'");
+		$installer->add_config("'1556', 'armorysync_rank_6', '', 'text{64|20', 'armorysync_ranks'");
+		$installer->add_config("'1557', 'armorysync_rank_7', '', 'text{64|20', 'armorysync_ranks'");
+		$installer->add_config("'1558', 'armorysync_rank_8', '', 'text{64|20', 'armorysync_ranks'");
+		$installer->add_config("'1559', 'armorysync_rank_9', '', 'text{64|20', 'armorysync_ranks'");
 
 		$installer->add_config("'1440', 'armorysync_char_update_access', '1', 'access', 'armorysync_access'");
 		$installer->add_config("'1450', 'armorysync_guild_update_access', '2', 'access', 'armorysync_access'");
@@ -269,8 +281,24 @@ class armorysync
 			$installer->add_config("'9300', 'armorysync_updateroster', '1', 'radio{yes^1|no^0', 'armorysync_debug'");
 		}
 
-		if ( version_compare('2.6.0.269', $oldversion,'>') == true ) {
-			$installer->update_config('1250', 'config_value=0');
+		if ( version_compare('2.6.0.273', $oldversion,'>') == true ) {
+			$installer->add_config("'15','armorysync_ranks',NULL,'blockframe','menu'");
+
+			$installer->add_config("'1540', 'armorysync_rank_set_order', '3', 'select{Roster/ArmorySync/Armory^3|ArmorySync/Roster/Armory^2|Roster/Armory^1|Armory^0', 'armorysync_ranks'");
+			$installer->add_config("'1550', 'armorysync_rank_0', '', 'text{64|20', 'armorysync_ranks'");
+			$installer->add_config("'1551', 'armorysync_rank_1', '', 'text{64|20', 'armorysync_ranks'");
+			$installer->add_config("'1552', 'armorysync_rank_2', '', 'text{64|20', 'armorysync_ranks'");
+			$installer->add_config("'1553', 'armorysync_rank_3', '', 'text{64|20', 'armorysync_ranks'");
+			$installer->add_config("'1554', 'armorysync_rank_4', '', 'text{64|20', 'armorysync_ranks'");
+			$installer->add_config("'1555', 'armorysync_rank_5', '', 'text{64|20', 'armorysync_ranks'");
+			$installer->add_config("'1556', 'armorysync_rank_6', '', 'text{64|20', 'armorysync_ranks'");
+			$installer->add_config("'1557', 'armorysync_rank_7', '', 'text{64|20', 'armorysync_ranks'");
+			$installer->add_config("'1558', 'armorysync_rank_8', '', 'text{64|20', 'armorysync_ranks'");
+			$installer->add_config("'1559', 'armorysync_rank_9', '', 'text{64|20', 'armorysync_ranks'");
+		}
+
+		if ( version_compare('2.6.0.273', $oldversion,'>') == true ) {
+			$installer->update_config('1250', 'config_value=1');
 		}
 		return true;
 	}

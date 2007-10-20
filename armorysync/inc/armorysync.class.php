@@ -1347,32 +1347,67 @@ class ArmorySync extends ArmorySyncBase {
     function _getGuildRanks( $guild_id ) {
         global $roster, $addon;
 
-        $query =	"SELECT ".
-                        "guild_rank, guild_title ".
-                        "FROM ". $roster->db->table('members'). " AS members ".
-                        "WHERE ".
-                        "members.guild_id=". $guild_id. " ".
-                        "AND NOT members.guild_title='' ".
-                        "GROUP BY guild_rank, guild_title;";
-        $result = $roster->db->query($query);
-        if( $roster->db->num_rows($result) > 0 ) {
+		$array = array();
+		$ranks = array();
+		if ( $addon['config']['armorysync_rank_set_order'] >= 1 ) {
+			$query =	"SELECT ".
+							"guild_rank, guild_title ".
+							"FROM ". $roster->db->table('members'). " AS members ".
+							"WHERE ".
+							"members.guild_id=". $guild_id. " ".
+							"AND NOT members.guild_title='' ".
+							"GROUP BY guild_rank, guild_title ".
+							"ORDER BY guild_rank;";
+			$result = $roster->db->query($query);
+			if( $roster->db->num_rows($result) > 0 ) {
 
-            $ranks = $roster->db->fetch_all();
-            $array = array();
-            foreach ( $ranks as $rank ) {
-                $array[$rank['guild_rank']]['Title'] = $rank['guild_title'];
-            }
-            $this->_debug( 3, $array, 'Fetched guild ranks from DB', 'OK' );
-            return $array;
-        } else {
-            $array = array();
-            $array['0']['Title'] = $roster->locale->act['guildleader'];
-            for ( $i = 1; $i <= 9; $i++ ) {
-                $array[$i]['Title'] = $roster->locale->act['rank']. $i;
-            }
-            $this->_debug( 3, $array, 'Fetched guild ranks from DB', 'Failed. Created standard' );
-            return $array;
-        }
+				$tmp = $roster->db->fetch_all();
+				foreach ( $tmp as $rank ) {
+					$ranks[$rank['guild_rank']] = $rank['guild_title'];
+				}
+			}
+		}
+
+		if ( $addon['config']['armorysync_rank_set_order'] == 3 ) {
+            for ( $i = 0; $i <= 9; $i++ ) {
+				$array[$i]['Title'] = isset($ranks[$i]) && $ranks[$i] != '' ?
+										$ranks[$i] :
+										( $addon['config']['armorysync_rank_'. $i] != '' ?
+											$addon['config']['armorysync_rank_'. $i] :
+											( $i == 0 ?
+												$roster->locale->act['guildleader'] :
+												$roster->locale->act['rank']. $i ) );
+			}
+		}
+		elseif ( $addon['config']['armorysync_rank_set_order'] == 2 ) {
+            for ( $i = 0; $i <= 9; $i++ ) {
+				$array[$i]['Title'] = $addon['config']['armorysync_rank_'. $i] != '' ?
+										$addon['config']['armorysync_rank_'. $i] :
+										( isset($ranks[$i]) && $ranks[$i] != '' ?
+											$ranks[$i] :
+											( $i == 0 ?
+												$roster->locale->act['guildleader'] :
+												$roster->locale->act['rank']. $i ) );
+			}
+		}
+		elseif ( $addon['config']['armorysync_rank_set_order'] == 1 ) {
+            for ( $i = 0; $i <= 9; $i++ ) {
+				$array[$i]['Title'] = isset($ranks[$i]) && $ranks[$i] != '' ?
+										$ranks[$i] :
+										( $i == 0 ?
+											$roster->locale->act['guildleader'] :
+											$roster->locale->act['rank']. $i );
+			}
+		}
+		elseif ( $addon['config']['armorysync_rank_set_order'] == 0 ) {
+            for ( $i = 0; $i <= 9; $i++ ) {
+				$array[$i]['Title'] = $i == 0 ?
+										$roster->locale->act['guildleader'] :
+										$roster->locale->act['rank']. $i;
+			}
+		}
+		$this->_debug( 3, $array, 'Fetched guild ranks from DB', 'OK' );
+		return $array;
     }
 
     /**
