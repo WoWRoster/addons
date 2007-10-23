@@ -1,4 +1,4 @@
-[276 - 102307]
+[278 - 102307]
 -Updated version number.
 [275 - 102307]
 -Fixed Login still working with SMFSync disabled.
