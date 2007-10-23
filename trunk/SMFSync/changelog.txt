@@ -1,3 +1,8 @@
+[275 - 102307]
+-Fixed Login still working with SMFSync disabled.
+-Added updateCheck stuff.
+-Fixed bug in php4 and using $roster->db->escape inside an sql query.
+--http://www.wowroster.net/Forums/viewtopic/p=28200.html#28200
 [271]
 -Updated version number.
 [270]
@@ -79,11 +84,7 @@
 
 Todo
 -Ready for public beta.
--clean up code to abide by the 80 cols rule
 
 Bugs
-On every user updated - Personal text not updated. May be current or user not found.
 
-Even with SMF disabled, it will use the login script. It shouldn't. 
-Possibly fixed, redirecting to . currently. May need to be changed. Hasn't been tested yet.
 

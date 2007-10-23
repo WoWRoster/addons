@@ -22,7 +22,7 @@ if( isset($_POST['process']) && $_POST['process'] != '' )
 {
 	$roster_config_message = processData();
 }
-
+echo $roster->locale->act['Hunter'];
 //Check to make sure database field exists, if not create it.
 $fieldExists = '';
 $query = "SELECT * FROM `{$addon['config']['forum_prefix']}membergroups`";

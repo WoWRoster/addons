@@ -15,9 +15,7 @@
  * @subpackage Locale
 */
 
-//$lang['']=
-//$lang['admin']['']=
-//$lang['gbankbutton']='GuildBank|Shows the inventory of characters marked as the Guild Bank';
+
 $lang['smfsync']='SMFSync';
 $lang['smfsync_desc']='Syncrhonize guild members with forum members.';
 

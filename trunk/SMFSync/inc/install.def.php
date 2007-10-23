@@ -28,7 +28,8 @@ class smfsync
 	var $active = true;
 	var $icon = 'smf.gif';
 
-	var $version = '1.9.9.271';
+	var $version = '1.9.9.275';
+	var $wrnet_id = '117';
 
 	var $fullname = 'smfsync';
 	var $description = 'smfsync_desc';
@@ -36,7 +37,6 @@ class smfsync
 		array(	"name"=>	"Boyo",
 				"info"=>	"Original author")
 	);
-
 
 	/**
 	 * Install function
