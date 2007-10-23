@@ -75,12 +75,17 @@ function getGuildList(){
 function topBox(){
 	global $roster;
 	global $addon;
+	$return = '';
 	if ($addon['config']['choose_guild'] == 0){
 		//UPDATE `roster20_addon_config` SET `config_value` = '1' WHERE `addon_id` =49 AND `id` =1100 LIMIT 1 ;
 		$query = "UPDATE {$roster->db->prefix}addon_config SET `config_value` = '0' WHERE `addon_id` =
 					'{$addon['addon_id']}' AND `config_name` = 'main_enable' ";
 		$result = $roster->db->query ( $query );
-		return messagebox("Guild must be selected before enabling.","Warning");
+		//return messagebox("Guild must be selected before enabling.","Warning");
+		$return .= messagebox("Guild must be selected before enabling.","Warning");
 	}
-	//Check for up to date version from wowroster once update code is implemented.
+	//Check for up to date version from wowroster.net
+	//$return .= updateCheck( $addon );
+
+	return $return;
 }

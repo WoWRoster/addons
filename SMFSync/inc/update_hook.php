@@ -211,8 +211,9 @@ class smfsyncUpdate
 				&& ($this->protectedGroup($data['Name']) == false)
 				){
 				if (isset($data['Note']) == true){
+					$Note = $roster->db->escape($data['Note']);
 					$query = "UPDATE `{$this->data['config']['forum_prefix']}members` SET `personalText` =
-								'{$roster->db->escape($data['Note'])}' WHERE `memberName` = '{$data['Name']}' LIMIT 1 ;";
+								'{$Note}' WHERE `memberName` = '{$data['Name']}' LIMIT 1 ;";
 					$result = $roster->db->query ( $query );
 					if ($roster->db->affected_rows() == 1){
 						$this->messages .= "<li><span class=\"green\">{$roster->locale->act['PersonalTextUpdated']}
