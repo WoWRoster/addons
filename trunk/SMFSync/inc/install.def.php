@@ -28,7 +28,7 @@ class smfsync
 	var $active = true;
 	var $icon = 'smf.gif';
 
-	var $version = '1.9.9.275';
+	var $version = '1.9.9.276';
 	var $wrnet_id = '117';
 
 	var $fullname = 'smfsync';
