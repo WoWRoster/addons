@@ -2,6 +2,12 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[279]
+- added esES month_to_en array. thx to subxero
+- fixed some frFR locales. thx to tuigii
+- fixed / bug in _get_date method armorysync.class.php
+- renamed method _get_date to _getDate in armorysync.class.php
+
 svn[275]
 - fixed some image src path
 

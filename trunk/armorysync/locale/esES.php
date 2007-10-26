@@ -196,18 +196,18 @@ $lang['start_message_the_realm'] = "el reino";
 $lang['start_message_this_realm'] = "todos los personajes de este reino";
 
 $lang['month_to_en'] = array(
-    "January" => "January",
-    "February" => "February",
-    "March" => "March",
-    "April" => "April",
-    "May" => "May",
-    "June" => "June",
-    "July" => "July",
-    "August" => "August",
+    "enero" => "January",
+    "febrero" => "February",
+    "marzo" => "March",
+    "abril" => "April",
+    "mayo" => "May",
+    "junio" => "June",
+    "julio" => "July",
+    "agosto" => "August",
     "septiembre" => "September",
-    "October" => "October",
-    "November" => "November",
-    "December" => "December"
+    "octubre" => "October",
+    "noviembre" => "November",
+    "diciembre" => "December"
 );
 
 $lang['roster_deprecated'] = "WoWRoster deprecated";
