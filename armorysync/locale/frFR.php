@@ -21,7 +21,7 @@ $lang['async_button1']= 'ArmorySync Character|Synchronise vos personnages avec B
 $lang['async_button2']= 'ArmorySync Characters|Synchronise vos personnages avec Blizzards Armory';
 $lang['async_button3']= 'ArmorySync Characters|Synchronise vos personnages avec Blizzards Armory';
 $lang['async_button4']= 'ArmorySync Memberlist|Synchronise vos liste des membres avec Blizzards Armory';
-$lang['async_button5']= 'ArmorySync Memberlist pour une nouvelle Guilde|Ajoute un nouvelle Guilde et synchronise<br />le avec la liste de ces membres chez Blizzards Armory';
+$lang['async_button5']= 'ArmorySync Memberlist Guilde|Ajoute un nouvelle Guilde et synchronise le avec la liste de ces membres chez Blizzards Armory';
 
 // Config strings
 $lang['admin']['armorysync_conf']			= 'General|Configure base settings for armorysync';
@@ -133,7 +133,7 @@ $lang['Talenttrees']['Shaman']['Elemental'] = "Élémentaire";
 $lang['Talenttrees']['Shaman']['Enhancement'] = "Amélioration";
 $lang['Talenttrees']['Shaman']['Restoration'] = "Restauration";
 $lang['Talenttrees']['Warlock']['Affliction'] = "Affliction";
-$lang['Talenttrees']['Warlock']['Demonology'] = " Démonologie";
+$lang['Talenttrees']['Warlock']['Demonology'] = "Démonologie";
 $lang['Talenttrees']['Warlock']['Destruction'] = "Destruction";
 $lang['Talenttrees']['Warrior']['Arms'] = "Armes";
 $lang['Talenttrees']['Warrior']['Fury'] = "Fureur";

@@ -498,7 +498,7 @@ class ArmorySync extends ArmorySyncBase {
 
             //$this->data["Hearth"] = "";
 
-            $this->data["timestamp"]["init"]["DateUTC"] = $this->_get_date($char->lastModified);
+            $this->data["timestamp"]["init"]["DateUTC"] = $this->_getDate($char->lastModified);
             //$this->data['timestamp']['init']['datakey'] = $roster->data['region']. ":";
             $this->data['timestamp']['init']['datakey'] = $this->region. ":";
             // $this->data["TimePlayed"] = 0; //Needed, otherwise WoWDB will kick out this character
@@ -1287,7 +1287,7 @@ class ArmorySync extends ArmorySyncBase {
      * @param string $string
      * @return string date
      */
-    function _get_date($string)
+    function _getDate($string)
     {
         global $roster;
 
@@ -1299,7 +1299,7 @@ class ArmorySync extends ArmorySyncBase {
             $array[1] = $roster->locale->act['month_to_en'][$array[1]];
             $string = implode( " ", $array );
         }
-        $ret = date('Y/m/d/ H:i:s', strtotime($string));
+        $ret = date('Y/m/d H:i:s', strtotime($string));
         $this->_debug( 2, $ret, 'Converted date', 'OK' );
         return $ret;
     }
