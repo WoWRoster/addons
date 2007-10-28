@@ -3,7 +3,7 @@
 SigGen Change Log
 
 
-09.27.07 - v0.3.0b
+10.28.07 - v0.3.0b3
  * Important Changes
    o Ported to Roster 2.0
    o Supports multi guild and public abilities in Roster
@@ -11,14 +11,16 @@ SigGen Change Log
      + name= access is now gone for good. Don't bother me about it, Roster uses member= now as well
    o Images for auto save are now saved as Charname @ RC-Realm.ext (ext is the chosen image extention)
  * SigGen Generator
+   o Fixed: etag dating, I have no idea why db_ver was added to the date
    o Changed: Access to SigGen image generator now uses the roster addon framework
      + I may put back in direct access to siggen.php but for now you must use the framework
-     + roster/index.php?p=char-siggen&member=##
-     + (SEO) roster/char/siggen/member=##.ext
+     + roster/index.php?p=util-siggen-signature&member=##
+     + (SEO) roster/util/siggen/signature/member=##.ext
      + This also means the path access sig.php/Name.png does not currently work, use mod_rewrite to bypass forum image restrictions
  * SigGen Config
    o Fixed: Settings Import will now show the correct error message instead of %1$s
-   o Fixed: Updated some tooltips that havn't been updated in some time
+   o Fixed: Updated some tooltips that haven't been updated in some time
+   o Fixed: Notice error when no preview image is selected
    o Changed: Layout has been re-formated due to the layout in RosterCP
    o Changed: Settings Import will no longer reject older db exports, but it will reject newer ones
    o Changed: Removed the sql query window
@@ -28,7 +30,9 @@ SigGen Change Log
      + %s% is now %s
      + %r% is now %r
      + Seems that encasing something in % makes it a wild card in SQL
-   o Changed: Cleaned up functions class of all unused code
+   o Changed: Cleaned up functions class of all unused code and up to Roster Coding Standards
+   o Changed: Now using addon.basename for part of the cookies used
+   o Removed: Check for new version as Roster 2.0 does this now
 
 
 

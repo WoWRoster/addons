@@ -53,7 +53,7 @@ class SigConfigClass
 	 * @param string $dir | directory to check
 	 * @param bool $writeable | check writable
 	 * @param bool $chmod | chmod directory
-	 * @return bool | ( TRUE{dir exists} | FALSE{dir does not exist} )
+	 * @return bool | ( true{dir exists} | false{dir does not exist} )
 	 */
 	function checkDir( $dir , $writeable=0 , $chmod=0 )
 	{
@@ -66,15 +66,7 @@ class SigConfigClass
 				{
 					if( $chmod )
 					{
-						$chmod_check = @chmod( $dir,0777 );
-						if( $chmod_check )
-						{
-							return true;
-						}
-						else
-						{
-							return false;
-						}
+						return @chmod( $dir,0777 );
 					}
 					else
 					{
@@ -95,19 +87,11 @@ class SigConfigClass
 	 * Create a directory
 	 *
 	 * @param string $dir | name of the directory to create
-	 * @return bool | ( TRUE{created} | FALSE{not created} )
+	 * @return bool | ( true{created} | false{not created} )
 	 */
 	function makeDir( $dir )
 	{
-		$mkdir_check = @mkdir($dir);
-		if( $mkdir_check )
-		{
-			return TRUE;
-		}
-		else
-		{
-			return FALSE;
-		}
+		return @mkdir($dir);
 	}
 
 
@@ -118,7 +102,7 @@ class SigConfigClass
 	 */
 	function setMessage( $message )
 	{
-		$this->message .= $message.'[|]';
+		$this->message .= $message . '[|]';
 	}
 
 
@@ -146,12 +130,12 @@ class SigConfigClass
 				{
 					$output .= '
   <tr>
-    <td class="sc_row_right'.((($row++)%2)+1).'">'.$line.'</td>
+    <td class="sc_row_right' . ((($row++)%2)+1) . '">' . $line . '</td>
   </tr>';
 				}
 			}
 
-$output .= "\n</table>";
+			$output .= "\n</table>";
 
 			return messagebox($output,$roster->locale->act['sql_messages'],'syellow');
 		}
@@ -314,7 +298,7 @@ $output .= "\n</table>";
 				{
 					if( in_array(strtolower($pfad_info['extension']),$ext))
 					{
-						$name = str_replace('.'.$pfad_info['extension'],'',$file);
+						$name = str_replace('.' . $pfad_info['extension'],'',$file);
 						$arrFiles += array($file => $name);
 					}
 				}
@@ -322,7 +306,7 @@ $output .= "\n</table>";
 				{
 					if( strtolower($pfad_info['extension']) == strtolower($ext) )
 					{
-						$name = str_replace('.'.$pfad_info['extension'],'',$file);
+						$name = str_replace('.' . $pfad_info['extension'],'',$file);
 						$arrFiles += array($file => $name);
 					}
 				}
@@ -355,7 +339,7 @@ $output .= "\n</table>";
 			// Read the files
 			while( $file = readdir($tmp_dir) )
 			{
-				if( is_dir($dir.$file) && $file != '.' && $file != '..' )
+				if( is_dir($dir . $file) && $file != '.' && $file != '..' )
 				{
 					$arrFiles += array($file => $file);
 				}
@@ -388,11 +372,11 @@ $output .= "\n</table>";
 
 		if( empty($r) )
 		{
-			return FALSE;
+			return false;
 		}
 		else
 		{
-			return TRUE;
+			return true;
 		}
 	}
 
@@ -414,12 +398,12 @@ $output .= "\n</table>";
 		{
 			if( !empty($where) )
 			{
-				$where = ' WHERE '.$where;
+				$where = ' WHERE ' . $where;
 			}
 
 			if( !empty($order) )
 			{
-				$order = ' ORDER BY '.$order;
+				$order = ' ORDER BY ' . $order;
 			}
 
 			if( empty($field) )
@@ -471,12 +455,12 @@ $output .= "\n</table>";
 		{
 			if( !empty($where) )
 			{
-				$where = ' WHERE '.$where;
+				$where = ' WHERE ' . $where;
 			}
 
 			if( !empty($order) )
 			{
-				$order = ' ORDER BY '.$order;
+				$order = ' ORDER BY ' . $order;
 			}
 
 			if( empty($field) )
@@ -544,54 +528,54 @@ $output .= "\n</table>";
 		$uploaded_filename = $_FILES['userfile']['name'];
 		$uploaded_fileext = strtolower(ltrim(strrchr($uploaded_filename,'.'),'.'));
 
-		$userfile_name = ( isset($_FILES['userfile']['name']) ? $filename.'.'.$uploaded_fileext : '' );
+		$userfile_name = ( isset($_FILES['userfile']['name']) ? $filename . '.' . $uploaded_fileext : '' );
 
 		if( isset($_FILES['userfile']) )
 		{
 			if( empty($_FILES['userfile']['name']) )
 			{
 				$this->setMessage($roster->locale->act['select_image_upload']);
-				return FALSE;
+				return false;
 			}
 			elseif( empty( $filename ) )
 			{
 				$this->setMessage($roster->locale->act['select_name_upload']);
-				return FALSE;
+				return false;
 			}
 			else
 			{
-				$userfile_name = $_POST['image_type'].$userfile_name;
+				$userfile_name = $_POST['image_type'] . $userfile_name;
 
 				if( !in_array( $uploaded_fileext,$accepted_files ) )
 				{
 					$this->setMessage($roster->locale->act['image_mustbe_right']);
-					return FALSE;
+					return false;
 				}
 
-				if( file_exists($dir.$userfile_name) )
+				if( file_exists($dir . $userfile_name) )
 				{
-					if( md5_file($dir.$userfile_name) == md5_file($_FILES['userfile']['tmp_name']) )
+					if( md5_file($dir . $userfile_name) == md5_file($_FILES['userfile']['tmp_name']) )
 					{
 						$this->setMessage($roster->locale->act['image_a_copy']);
-						return FALSE;
+						return false;
 					}
 				}
 
-				if( !move_uploaded_file( $_FILES['userfile']['tmp_name'],$dir.$userfile_name ) || !chmod( $dir.$userfile_name,0777 ) )
+				if( !move_uploaded_file( $_FILES['userfile']['tmp_name'],$dir . $userfile_name ) || !chmod( $dir . $userfile_name,0777 ) )
 				{
 					$this->setMessage(sprintf($roster->locale->act['image_upload_failed'],$userfile_name,str_replace( '\\','/',$dir )));
-					return FALSE;
+					return false;
 				}
 				else
 				{
 					$this->setMessage(sprintf($roster->locale->act['image_upload_success'],$userfile_name,str_replace( '\\','/',$dir )));
-					return TRUE;
+					return true;
 				}
 			}
 		}
 		else
 		{
-			return FALSE;
+			return false;
 		}
 	}
 
@@ -610,21 +594,21 @@ $output .= "\n</table>";
 		if( empty($filename) )
 		{
 			$this->setMessage($roster->locale->act['select_image_delete']);
-			return FALSE;
+			return false;
 		}
 		else
 		{
-			if( file_exists($dir.$filename) )
+			if( file_exists($dir . $filename) )
 			{
-				if( unlink($dir.$filename) )
+				if( unlink($dir . $filename) )
 				{
-					$this->setMessage(sprintf($roster->locale->act['image_deleted'],str_replace( '\\','/',$dir ).$filename));
-					return TRUE;
+					$this->setMessage(sprintf($roster->locale->act['image_deleted'],str_replace( '\\','/',$dir ) . $filename));
+					return true;
 				}
 				else
 				{
-					$this->setMessage(sprintf($roster->locale->act['image_delete_failed'],str_replace( '\\','/',$dir ).$filename));
-					return FALSE;
+					$this->setMessage(sprintf($roster->locale->act['image_delete_failed'],str_replace( '\\','/',$dir ) . $filename));
+					return false;
 				}
 			}
 		}
@@ -684,7 +668,7 @@ $output .= "\n</table>";
 			{
 				if( substr($settingValue, 0, 1) != '#' )
 				{
-					$settingValue = '#'.strtoupper($settingValue);
+					$settingValue = '#' . strtoupper($settingValue);
 				}
 				else
 				{
@@ -720,9 +704,9 @@ $output .= "\n</table>";
 		// Update DataBase
 		if( count($sqlarray) > 0 )
 		{
-			$update_sql = 'UPDATE `'.ROSTER_SIGCONFIGTABLE."` SET ".$roster->db->build_query('UPDATE',$sqlarray)." WHERE `config_id` = '".$config_name."'";
+			$update_sql = 'UPDATE `' . ROSTER_SIGCONFIGTABLE . "` SET " . $roster->db->build_query('UPDATE',$sqlarray) . " WHERE `config_id` = '" . $config_name . "'";
 
-			$roster->db->query($update_sql) or errorMode( 'processData: '.$roster->db->error() );
+			$roster->db->query($update_sql) or errorMode( 'processData: ' . $roster->db->error() );
 
 			$this->setMessage( $roster->locale->act['settings_changed'] );
 		}
@@ -739,7 +723,7 @@ $output .= "\n</table>";
 	{
 		global $roster;
 
-		$sql_file = SIGGEN_DIR.'inc/sql.inc';
+		$sql_file = SIGGEN_DIR . 'inc/sql.inc';
 
 		if( $confirm )
 		{
@@ -749,7 +733,7 @@ $output .= "\n</table>";
 
 				$sql = $create_sql['reset'][$config_id];
 
-				$roster->db->query($sql) or errorMode( 'resetDefaults: '.$roster->db->error() );
+				$roster->db->query($sql) or errorMode( 'resetDefaults: ' . $roster->db->error() );
 
 				$this->setMessage($roster->locale->act['settings_reset']);
 			}
@@ -788,7 +772,7 @@ $output .= "\n</table>";
 			if( empty($_FILES['userfile']['name']) )
 			{
 				$this->setMessage(sprintf($roster->locale->act['select_import_file'],$accepted_file));
-				return FALSE;
+				return false;
 			}
 			else
 			{
@@ -861,8 +845,8 @@ $output .= "\n</table>";
 			$file .= "$name|$value\n";
 		}
 
-		header('Content-Type: text/x-delimtext; name="siggen_'.$config_id.'.txt"');
-		header('Content-disposition: attachment; filename="siggen_'.$config_id.'.txt"');
+		header('Content-Type: text/x-delimtext; name="siggen_' . $config_id . '.txt"');
+		header('Content-disposition: attachment; filename="siggen_' . $config_id . '.txt"');
 
 		// We need to stripslashes no matter what the setting of magic_quotes_gpc is
 		echo stripslashes($file);
@@ -920,7 +904,7 @@ $output .= "\n</table>";
 						$return .= '<tr>';
 					}
 
-					$return .= '<td align="center"><img src="'.$addon['url_path'].'img/'.$file.'" style="border:0;"><br />'.$file.'</td>';
+					$return .= '<td align="center"><img src="' . $addon['url_path'] . 'img/' . $file . '" style="border:0;"><br />' . $file . '</td>';
 					$drawIndex++;
 
 					if($drawIndex == $columns)

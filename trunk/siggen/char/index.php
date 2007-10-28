@@ -38,16 +38,15 @@ if ( !defined('IN_ROSTER') )
 }
 
 // Read SigGen Config data from Database
-$config_str = "SELECT `config_id`,`main_image_size_w`,`main_image_size_h` FROM `".$roster->db->table('config',$addon['basename'])."`;";
+$config_str = "SELECT `config_id`,`main_image_size_w`,`main_image_size_h` FROM `" . $roster->db->table('config',$addon['basename']) . "`;";
 
 $config_sql = $roster->db->query($config_str);
 if( $config_sql )
 {
 	while( $row = $roster->db->fetch($config_sql, SQL_ASSOC) )
 	{
-		print messagebox('<img src="'.makelink('util-siggen&amp;mode=' . $row['config_id'] . '&amp;member=' . $roster->data['member_id'] . '&amp;saveonly=0') . '" alt="" width="' . $row['main_image_size_w'] . '" height="' . $row['main_image_size_h'] . '" /><br />'
-			. makelink('util-siggen&amp;mode=' . $row['config_id'] . '&amp;member=' . $roster->data['name'] . '@' . $roster->data['region'] . '-' . $roster->data['server'],true),
-			ucfirst($row['config_id']),'sblue') . '<br />';
+		print messagebox('<img src="' . makelink('util-' . $addon['basename'] . '-' . $row['config_id'] . '&amp;member=' . $roster->data['member_id'] . '&amp;saveonly=0') . '" alt="" width="' . $row['main_image_size_w'] . '" height="' . $row['main_image_size_h'] . '" /><br />'
+			. makelink('util-' . $addon['basename'] . '-' . $row['config_id'] . '&amp;member=' . $roster->data['name'] . '@' . $roster->data['region'] . '-' . $roster->data['server'],true), ucfirst($row['config_id']),'sblue') . '<br />';
 	}
 	$roster->db->free_result();
 }

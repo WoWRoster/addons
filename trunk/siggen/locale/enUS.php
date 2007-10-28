@@ -81,12 +81,14 @@ $lang['translate']['Female']    = 'Female';
 // That means <br /> not \n, &quot; not ", etc...
 
 $lang['menu_siggen_config'] = 'SigGen Config';
+$lang['menu_siggen_char'] = 'SigGen|Lists all SigGen images for this character';
+$lang['siggen_install_desc'] = 'Signature and Avatar Generator';
 $lang['title_siggen_config'] = 'SigGen Config v%1$s';
 $lang['sql_queries'] = 'SigGen SQL Queries';
 $lang['sql_messages'] = 'SigGen Messages';
 
 $lang['fatal_error'] = '<span class="red">Fatal Error</span>';
-$lang['no_gd_error'] = 'GD Functions are not available<br />SigGen REQUIRES GD with FreeType support<br /><br /><a href="rosterdiag.php" target="_blank">More Info</a>';
+$lang['no_gd_error'] = 'GD Functions are not available<br />SigGen REQUIRES GD with FreeType support';
 $lang['config_notfound'] = 'SigGen &quot;Configuration&quot; file not included';
 $lang['functions_notfound'] = 'SigGen Config &quot;Functions Class&quot; file not found<br />[<span class="green">%1$s</span>]';
 $lang['upgrade'] = 'Please upgrade SigGen via RosterCP-&gt;Manage Addons';

@@ -39,12 +39,6 @@ if ( !defined('IN_ROSTER') )
 
 
 
-// ----[ Update Check Service ]-----------------------------
-$siggen_update = true;
-
-
-
-
 // ----[ SigGen directory ]---------------------------------
 // This should be the path to the siggen addon directory
 // Starting from where siggen config is accessed

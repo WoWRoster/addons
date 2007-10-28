@@ -64,7 +64,7 @@ class siggenUpdate
 		$this->data = $data;
 
 		// Read SigGen Config data from Database
-		$config_str = "SELECT `config_id`,`trigger`,`guild_trigger`,`uniup_compat`,`main_image_size_w`,`main_image_size_h` FROM `".$roster->db->table('config',$this->data['basename'])."`;";
+		$config_str = "SELECT `config_id`,`trigger`,`guild_trigger`,`uniup_compat`,`main_image_size_w`,`main_image_size_h` FROM `" . $roster->db->table('config',$this->data['basename']) . "`;";
 
 		$config_sql = $roster->db->query($config_str);
 		if( $config_sql )
@@ -126,29 +126,29 @@ class siggenUpdate
 
 		if( $update->textmode == false )
 		{
-			$this->messages .= 'Saving '.$config.'-[ <img src="'.makelink('util-siggen-siggen&amp;mode='.$config.'&amp;etag=0&amp;member='.$member_id,false,true).'" width="'.$data['w'].'" height="'.$data['h'].'" alt="" /> ]<br />'."\n";
+			$this->messages .= 'Saving ' . $config . '-[ <img src="' . makelink('util-' . $this->data['basename'] . '-' . $config . '&amp;etag=0&amp;member=' . $member_id,true) . '" width="' . $data['w'] . '" height="' . $data['h'] . '" alt="" /> ]<br />' . "\n";
 		}
 		elseif( $data['uniup'] && $update->textmode == true )
 		{
 			if( ini_get('allow_url_fopen') )
 			{
-				$temp = @readfile(makelink('util-siggen-siggen&amp;mode='.$config.'&etag=0&saveonly=1&member='.$member_id),false,true);
+				$temp = @readfile(str_replace('&amp;','&',makelink('util-' . $this->data['basename'] . '-' . $config . '&amp;etag=0&amp;saveonly=1&amp;member=' . $member_id,true)));
 
 				if( $temp != false )
 				{
-					$this->messages .= '- Saving '.$config."\n";
+					$this->messages .= '- Saving ' . $config . "\n";
 				}
 				else
 				{
-					$this->messages .= '- Could not save '.$config.": function readfile() failed\n";
+					$this->messages .= '- Could not save ' . $config . ": function readfile() failed\n";
 				}
 
 				unset($temp);
 			}
 			else
 			{
-				$this->messages .= 'Cannot save '.$config.", &quot;allow_url_fopen&quot; is disabled on your server\n".
-					"Disable &quot;UniUploader Fix&quot; in RosterCP->SigGen\n";
+				$this->messages .= 'Cannot save ' . $config . ", &quot;allow_url_fopen&quot; is disabled on your server\n"
+								.  "Disable &quot;UniUploader Fix&quot; in RosterCP->SigGen\n";
 			}
 		}
 	}
