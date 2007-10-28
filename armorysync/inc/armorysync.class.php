@@ -57,7 +57,7 @@ class ArmorySync extends ArmorySyncBase {
      * @return bool
      */
     function synchMemberByID( $server, $memberId = 0, $memberName = false, $region = false, $guildId = 0 ) {
-        global $addon, $roster;
+        global $addon, $roster, $update;
 
         $this->server = $server;
         $this->memberId = $memberId;
@@ -96,7 +96,7 @@ class ArmorySync extends ArmorySyncBase {
      * @return bool
      */
     function synchGuildByID( $server, $memberId = 0, $memberName = false, $region = false ) {
-        global $addon, $roster;
+        global $addon, $roster, $update;
 
         $this->server = $server;
         $this->guildId = $memberId;
