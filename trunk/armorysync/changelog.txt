@@ -2,6 +2,9 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[283]
+- added $updated as global variable in armorysync.class.php
+
 svn[279]
 - added esES month_to_en array. thx to subxero
 - fixed some frFR locales. thx to tuigii
