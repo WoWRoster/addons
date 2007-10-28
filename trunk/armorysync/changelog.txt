@@ -1,6 +1,10 @@
 ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
+svn[284]
+- added some isset's in armorysyncjob.class.php to eliminate php notices
+- added member/guild name to debug messages of syncMemberById and syncGuildById
+- shortend file in debugmassages to basename
 
 svn[283]
 - added $updated as global variable in armorysync.class.php

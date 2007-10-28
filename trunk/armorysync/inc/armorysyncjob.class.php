@@ -443,16 +443,16 @@ class ArmorySyncJob extends ArmorySyncBase {
         global $roster, $addon;
 
         if ( ! $id ) {
-            $id = $roster->data['member_id'];
+            $id = isset($roster->data['member_id']) ? $roster->data['member_id'] : 0;
         }
         if ( ! $name ) {
-            $name = $roster->data['name'];
+            $name = isset($roster->data['name']) ? $roster->data['name'] : false;
         }
         if ( ! $server ) {
-            $server = $roster->data['server'];
+            $server = isset($roster->data['server']) ? $roster->data['server'] : false;
         }
         if ( ! $region ) {
-            $region = $roster->data['region'];
+            $region = isset($roster->data['region']) ? $roster->data['region'] : false;
         }
 
         $this->time_started = gmdate('Y-m-d H:i:s');
