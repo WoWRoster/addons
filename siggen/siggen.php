@@ -89,6 +89,10 @@ elseif( isset($config_name) )
 {
 	$config_name = $config_name;
 }
+elseif( isset($roster->pages[2]) )
+{
+	$config_name = $roster->pages[2];
+}
 else
 {
 	if( eregi(basename(__FILE__),$roster->pages[1]).'.php' )
@@ -374,7 +378,7 @@ if( isset($_GET['format']) )
 
 	if( $sig_etag_mode )
 	{
-		$DTS = strtotime($sig_updated.$configData['db_ver']);
+		$DTS = strtotime($sig_updated);
 		$condDTS = ( isset($_SERVER['http_if_modified_since']) ? $_SERVER['http_if_modified_since'] : 0 );
 
 		if( isset($_SERVER['HTTP_IF_NONE_MATCH']) && ereg( md5($DTS) , $_SERVER['HTTP_IF_NONE_MATCH']) )

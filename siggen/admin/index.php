@@ -53,7 +53,7 @@ if( !defined('SIGCONFIG_CONF') )
 	return;
 }
 
-$siggen_functions_file = SIGGEN_DIR.'inc'.DIR_SEP.'functions.inc';
+$siggen_functions_file = SIGGEN_DIR . 'inc' . DIR_SEP . 'functions.inc';
 if( file_exists($siggen_functions_file) )
 {
 	require_once( $siggen_functions_file );
@@ -72,16 +72,16 @@ else
 if( isset( $_POST['config_name'] ) )
 {
 	$config_name = $_POST['config_name'];
-	setcookie( 'siggen_configname',$config_name,0,'/' );
+	setcookie( $addon['basename'] . '_configname',$config_name,0,'/' );
 }
-elseif( isset( $_COOKIE['siggen_configname'] ) )
+elseif( isset( $_COOKIE[$addon['basename'] . '_configname'] ) )
 {
-	$config_name = $_COOKIE['siggen_configname'];
+	$config_name = $_COOKIE[$addon['basename'] . '_configname'];
 }
 else
 {
 	$config_name = 'signature';
-	setcookie( 'siggen_configname',$config_name,0,'/' );
+	setcookie( $addon['basename'] . '_configname',$config_name,0,'/' );
 }
 
 // Name to test siggen with
@@ -90,17 +90,17 @@ if( isset($_POST['name_test']) )
 	if( $_POST['name_test'] == '' )
 	{
 		$name_test = '';
-		setcookie( 'siggen_nametest',$name_test,0,'/' );
+		setcookie( $addon['basename'] . '_nametest',$name_test,0,'/' );
 	}
 	else
 	{
 		$name_test = stripslashes($_POST['name_test']);
-		setcookie( 'siggen_nametest',$name_test,0,'/' );
+		setcookie( $addon['basename'] . '_nametest',$name_test,0,'/' );
 	}
 }
-elseif( isset($_COOKIE['siggen_nametest']) )
+elseif( isset($_COOKIE[$addon['basename'] . '_nametest']) )
 {
-	$name_test = $_COOKIE['siggen_nametest'];
+	$name_test = $_COOKIE[$addon['basename'] . '_nametest'];
 }
 else
 {
@@ -131,7 +131,7 @@ if( isset($_POST['sc_op']) && $_POST['sc_op'] != '' )
 	switch ( $_POST['sc_op'] )
 	{
 		case 'delete_image':
-			$functions->deleteImage( SIGGEN_DIR.$checkData['image_dir'].$checkData['user_dir'],$_POST['image_name'] );
+			$functions->deleteImage( SIGGEN_DIR . $checkData['image_dir'] . $checkData['user_dir'],$_POST['image_name'] );
 			break;
 
 		case 'reset_defaults':
@@ -151,7 +151,7 @@ if( isset($_POST['sc_op']) && $_POST['sc_op'] != '' )
 			break;
 
 		case 'upload_image':
-			$functions->uploadImage( SIGGEN_DIR.$checkData['image_dir'].$checkData['user_dir'],$_POST['image_name'] );
+			$functions->uploadImage( SIGGEN_DIR . $checkData['image_dir'] . $checkData['user_dir'],$_POST['image_name'] );
 			break;
 
 		case 'process':
@@ -204,7 +204,7 @@ if( isset($_GET['make_dir']) && $_GET['make_dir'] == 'chmodsave' )
 
 if( isset($_GET['make_dir']) && $_GET['make_dir'] == 'user' )
 {
-	if( $functions->makeDir( SIGGEN_DIR.$checkData['image_dir'].$checkData['user_dir'] ) )
+	if( $functions->makeDir( SIGGEN_DIR . $checkData['image_dir'] . $checkData['user_dir'] ) )
 	{
 		$functions->setMessage($roster->locale->act['custom_folder_created']);
 	}
@@ -216,7 +216,7 @@ if( isset($_GET['make_dir']) && $_GET['make_dir'] == 'user' )
 
 if( isset($_GET['make_dir']) && $_GET['make_dir'] == 'chmoduser' )
 {
-	if( $functions->checkDir( SIGGEN_DIR.$checkData['image_dir'].$checkData['user_dir'],1,1 ) )
+	if( $functions->checkDir( SIGGEN_DIR . $checkData['image_dir'] . $checkData['user_dir'],1,1 ) )
 	{
 		$functions->setMessage($roster->locale->act['custom_folder_chmoded']);
 	}
@@ -232,68 +232,68 @@ if( isset($_GET['make_dir']) && $_GET['make_dir'] == 'chmoduser' )
 
 // ----[ Check the directories ]--------------------------------
 // Check for the Main Images directory
-if( !$functions->checkDir( SIGGEN_DIR.$checkData['image_dir'] ) )
+if( !$functions->checkDir( SIGGEN_DIR . $checkData['image_dir'] ) )
 {
-	$functions->setMessage(sprintf($roster->locale->act['cannot_find_main_images'],SIGGEN_DIR.$checkData['image_dir']));
+	$functions->setMessage(sprintf($roster->locale->act['cannot_find_main_images'],SIGGEN_DIR . $checkData['image_dir']));
 }
 
 // Check for the Character Images directory
-if( !$functions->checkDir( SIGGEN_DIR.$checkData['image_dir'].$checkData['char_dir'] ) )
+if( !$functions->checkDir( SIGGEN_DIR . $checkData['image_dir'] . $checkData['char_dir'] ) )
 {
-	$functions->setMessage(sprintf($roster->locale->act['cannot_find_char_images'],SIGGEN_DIR.$checkData['image_dir'].$checkData['char_dir']));
+	$functions->setMessage(sprintf($roster->locale->act['cannot_find_char_images'],SIGGEN_DIR . $checkData['image_dir'] . $checkData['char_dir']));
 }
 
 // Check for the fonts directory
-if( !$functions->checkDir( ROSTER_BASE.$checkData['font_dir'] ) )
+if( !$functions->checkDir( ROSTER_BASE . $checkData['font_dir'] ) )
 {
-	$functions->setMessage(sprintf($roster->locale->act['cannot_find_font_folder'],ROSTER_BASE.$checkData['font_dir']));
+	$functions->setMessage(sprintf($roster->locale->act['cannot_find_font_folder'],ROSTER_BASE . $checkData['font_dir']));
 }
 
 // Check for the Class Images directory
-if( !$functions->checkDir( SIGGEN_DIR.$checkData['image_dir'].$checkData['class_dir'] ) )
+if( !$functions->checkDir( SIGGEN_DIR . $checkData['image_dir'] . $checkData['class_dir'] ) )
 {
-	$functions->setMessage(sprintf($roster->locale->act['cannot_find_class_images'],SIGGEN_DIR.$checkData['image_dir'].$checkData['class_dir']));
+	$functions->setMessage(sprintf($roster->locale->act['cannot_find_class_images'],SIGGEN_DIR . $checkData['image_dir'] . $checkData['class_dir']));
 }
 
 // Check for the Background Images directory
-if( !$functions->checkDir( SIGGEN_DIR.$checkData['image_dir'].$checkData['backg_dir'] ) )
+if( !$functions->checkDir( SIGGEN_DIR . $checkData['image_dir'] . $checkData['backg_dir'] ) )
 {
-	$functions->setMessage(sprintf($roster->locale->act['cannot_find_backg_images'],SIGGEN_DIR.$checkData['image_dir'].$checkData['backg_dir']));
+	$functions->setMessage(sprintf($roster->locale->act['cannot_find_backg_images'],SIGGEN_DIR . $checkData['image_dir'] . $checkData['backg_dir']));
 }
 
 // Check for the PvP Logo Images directory
-if( !$functions->checkDir( SIGGEN_DIR.$checkData['image_dir'].$checkData['pvplogo_dir'] ) )
+if( !$functions->checkDir( SIGGEN_DIR . $checkData['image_dir'] . $checkData['pvplogo_dir'] ) )
 {
-	$functions->setMessage(sprintf($roster->locale->act['cannot_find_pvp_images'],SIGGEN_DIR.$checkData['image_dir'].$checkData['pvplogo_dir']));
+	$functions->setMessage(sprintf($roster->locale->act['cannot_find_pvp_images'],SIGGEN_DIR . $checkData['image_dir'] . $checkData['pvplogo_dir']));
 }
 
 // Check for the Frame Images directory
-if( !$functions->checkDir( SIGGEN_DIR.$checkData['image_dir'].$checkData['frame_dir'] ) )
+if( !$functions->checkDir( SIGGEN_DIR . $checkData['image_dir'] . $checkData['frame_dir'] ) )
 {
-	$functions->setMessage(sprintf($roster->locale->act['cannot_find_frame_images'],SIGGEN_DIR.$checkData['image_dir'].$checkData['frame_dir']));
+	$functions->setMessage(sprintf($roster->locale->act['cannot_find_frame_images'],SIGGEN_DIR . $checkData['image_dir'] . $checkData['frame_dir']));
 }
 
 // Check for the Level Images directory
-if( !$functions->checkDir( SIGGEN_DIR.$checkData['image_dir'].$checkData['level_dir'] ) )
+if( !$functions->checkDir( SIGGEN_DIR . $checkData['image_dir'] . $checkData['level_dir'] ) )
 {
-	$functions->setMessage(sprintf($roster->locale->act['cannot_find_level_images'],SIGGEN_DIR.$checkData['image_dir'].$checkData['level_dir']));
+	$functions->setMessage(sprintf($roster->locale->act['cannot_find_level_images'],SIGGEN_DIR . $checkData['image_dir'] . $checkData['level_dir']));
 }
 
 // Check for the Border Images directory
-if( !$functions->checkDir( SIGGEN_DIR.$checkData['image_dir'].$checkData['border_dir'] ) )
+if( !$functions->checkDir( SIGGEN_DIR . $checkData['image_dir'] . $checkData['border_dir'] ) )
 {
-	$functions->setMessage(sprintf($roster->locale->act['cannot_find_border_images'],SIGGEN_DIR.$checkData['image_dir'].$checkData['border_dir']));
+	$functions->setMessage(sprintf($roster->locale->act['cannot_find_border_images'],SIGGEN_DIR . $checkData['image_dir'] . $checkData['border_dir']));
 }
 
 // Check for the custom images directory
-if( !$functions->checkDir( SIGGEN_DIR.$checkData['image_dir'].$checkData['user_dir'] ) )
+if( !$functions->checkDir( SIGGEN_DIR . $checkData['image_dir'] . $checkData['user_dir'] ) )
 {
-	$functions->setMessage(sprintf($roster->locale->act['cannot_find_custom_folder'],makelink('&amp;make_dir=user'),SIGGEN_DIR.$checkData['image_dir'].$checkData['user_dir']));
+	$functions->setMessage(sprintf($roster->locale->act['cannot_find_custom_folder'],makelink('&amp;make_dir=user'),SIGGEN_DIR . $checkData['image_dir'] . $checkData['user_dir']));
 	$allow_upload = false;
 }
-elseif( !$functions->checkDir( SIGGEN_DIR.$checkData['image_dir'].$checkData['user_dir'],1 ) )
+elseif( !$functions->checkDir( SIGGEN_DIR . $checkData['image_dir'] . $checkData['user_dir'],1 ) )
 {
-	$functions->setMessage(sprintf($roster->locale->act['cannot_writeto_custom_folder'],makelink('&amp;make_dir=chmoduser'),SIGGEN_DIR.$checkData['image_dir'].$checkData['user_dir']));
+	$functions->setMessage(sprintf($roster->locale->act['cannot_writeto_custom_folder'],makelink('&amp;make_dir=chmoduser'),SIGGEN_DIR . $checkData['image_dir'] . $checkData['user_dir']));
 	$allow_upload = false;
 }
 else
@@ -341,39 +341,6 @@ if( !CAN_INI_SET )
 }
 
 
-// ----[ Check for latest SigGen Version ]------------------
-if( $siggen_update )
-{
-	$sc_file_ver_latest = '';
-
-	// Check wowroster.net for versioning
-	$sh = @fsockopen('wowroster.net', 80, $errno, $error, 5);
-	if ( $sh )
-	{
-		@fputs($sh, "GET /rss/downloads.php?id=20 HTTP/1.1\r\nHost: wowroster.net\r\nConnection: close\r\n\r\n");
-		while ( !@feof($sh) )
-		{
-			$content = @fgets($sh, 512);
-			if ( preg_match('#<version>(.+)</version>#i',$content,$version) )
-			{
-				$sc_file_ver_latest = $version[1];
-				break;
-			}
-		}
-	}
-	@fclose($sh);
-
-	if( $sc_file_ver_latest == '' )
-	{
-		$functions->setMessage($roster->locale->act['cannot_check_version']);
-	}
-	elseif( version_compare($sc_file_ver_latest, $addon['version'],'>') == true )
-	{
-		$functions->setMessage(sprintf($roster->locale->act['new_siggen_available'],$sc_file_ver_latest));
-	}
-}
-
-
 // ----[ Initial set up and data grabbing ]-----------------
 
 // Get the current settings
@@ -386,44 +353,44 @@ $config_list = $functions->getDbList( (ROSTER_SIGCONFIGTABLE) , 'config_id' );
 $member_list = $functions->getDbData( ($roster->db->table('members')),'`member_id`, `name`, CONCAT(`region`, "-", `server`) AS server', '`guild_id` != "0"', '`name`' );
 
 // Get the background files
-$backgFilesArr = $functions->listFiles( SIGGEN_DIR.$configData['image_dir'].$configData['backg_dir'],array('png','gif','jpeg','jpg') );
+$backgFilesArr = $functions->listFiles( SIGGEN_DIR . $configData['image_dir'] . $configData['backg_dir'],array('png','gif','jpeg','jpg') );
 
 // Get the font files
-$fontFilesArr = $functions->listFiles( ROSTER_BASE.$configData['font_dir'],'ttf' );
+$fontFilesArr = $functions->listFiles( ROSTER_BASE . $configData['font_dir'],'ttf' );
 
 // Get regular image files
-$frameFilesArr = $functions->listFiles( SIGGEN_DIR.$configData['image_dir'].$configData['frame_dir'],array('png','gif','jpeg','jpg') );
-$levelFilesArr = $functions->listFiles( SIGGEN_DIR.$configData['image_dir'].$configData['level_dir'],array('png','gif','jpeg','jpg') );
-$borderFilesArr = $functions->listFiles( SIGGEN_DIR.$configData['image_dir'].$configData['border_dir'],array('png','gif','jpeg','jpg') );
+$frameFilesArr = $functions->listFiles( SIGGEN_DIR . $configData['image_dir'] . $configData['frame_dir'],array('png','gif','jpeg','jpg') );
+$levelFilesArr = $functions->listFiles( SIGGEN_DIR . $configData['image_dir'] . $configData['level_dir'],array('png','gif','jpeg','jpg') );
+$borderFilesArr = $functions->listFiles( SIGGEN_DIR . $configData['image_dir'] . $configData['border_dir'],array('png','gif','jpeg','jpg') );
 
 // Get the img folders
-$backImgDirScan  = $functions->listDir( SIGGEN_DIR.$configData['image_dir'].'background'.DIR_SEP );
-$charImgDirScan  = $functions->listDir( SIGGEN_DIR.$configData['image_dir'].'character'.DIR_SEP );
-$classImgDirScan = $functions->listDir( SIGGEN_DIR.$configData['image_dir'].'class'.DIR_SEP );
-$pvpImgDirScan   = $functions->listDir( SIGGEN_DIR.$configData['image_dir'].'pvp'.DIR_SEP );
+$backImgDirScan  = $functions->listDir( SIGGEN_DIR . $configData['image_dir'] . 'background' . DIR_SEP );
+$charImgDirScan  = $functions->listDir( SIGGEN_DIR . $configData['image_dir'] . 'character' . DIR_SEP );
+$classImgDirScan = $functions->listDir( SIGGEN_DIR . $configData['image_dir'] . 'class' . DIR_SEP );
+$pvpImgDirScan   = $functions->listDir( SIGGEN_DIR . $configData['image_dir'] . 'pvp' . DIR_SEP );
 
-$charDirList = $functions->listFiles( SIGGEN_DIR.$configData['image_dir'].$configData['char_dir'],array('png','gif','jpeg','jpg') );
+$charDirList = $functions->listFiles( SIGGEN_DIR . $configData['image_dir'] . $configData['char_dir'],array('png','gif','jpeg','jpg') );
 
 $backImgDirList = $charImgDirList = $classImgDirList = $pvpImgDirList = array();
 
 foreach( $backImgDirScan as $dir_check )
 {
-	$backImgDirList += array( $dir_check => 'background/'.$dir_check.'/' );
+	$backImgDirList += array( $dir_check => 'background/' . $dir_check . '/' );
 }
 
 foreach( $charImgDirScan as $dir_check )
 {
-	$charImgDirList += array( $dir_check => 'character/'.$dir_check.'/' );
+	$charImgDirList += array( $dir_check => 'character/' . $dir_check . '/' );
 }
 
 foreach( $classImgDirScan as $dir_check )
 {
-	$classImgDirList += array( $dir_check => 'class/'.$dir_check.'/' );
+	$classImgDirList += array( $dir_check => 'class/' . $dir_check . '/' );
 }
 
 foreach( $pvpImgDirScan as $dir_check )
 {
-	$pvpImgDirList += array( $dir_check => 'pvp/'.$dir_check.'/' );
+	$pvpImgDirList += array( $dir_check => 'pvp/' . $dir_check . '/' );
 }
 
 // Get list of columns for background selection
@@ -444,49 +411,49 @@ $imgTypeArr = array('png' => 'png','jpeg' => 'jpg','gif' => 'gif');
 
 // ----[ Include the name test box ]------------------------
 ob_start();
-include_once( SIGGEN_DIR.'templates/sc_nametest.tpl' );
+include_once( SIGGEN_DIR . 'templates/sc_nametest.tpl' );
 $body = ob_get_contents();
 ob_end_clean();
 
 
 // ----[ Include the body ]---------------------------------
 ob_start();
-include_once( SIGGEN_DIR.'templates/sc_body.tpl' );
+include_once( SIGGEN_DIR . 'templates/sc_body.tpl' );
 $body .= '<br />' . ob_get_contents();
 ob_end_clean();
 
 
 // ----[ Include upload/delete images box ]-----------------
 ob_start();
-include_once( SIGGEN_DIR.'templates/sc_custimg.tpl' );
+include_once( SIGGEN_DIR . 'templates/sc_custimg.tpl' );
 $body .= ob_get_contents();
 ob_end_clean();
 
 
 // ----[ Include export settings box ]-----------------------
 ob_start();
-include_once( SIGGEN_DIR.'templates/sc_export.tpl' );
+include_once( SIGGEN_DIR . 'templates/sc_export.tpl' );
 $body .= '<br />' . ob_get_contents();
 ob_end_clean();
 
 
 // ----[ Include the java ]---------------------------------
 ob_start();
-include_once( SIGGEN_DIR.'templates/sc_java.tpl' );
+include_once( SIGGEN_DIR . 'templates/sc_java.tpl' );
 $body .= ob_get_contents();
 ob_end_clean();
 
 
 // ----[ Include the config select box ]--------------------
 ob_start();
-include_once( SIGGEN_DIR.'templates/sc_configselect.tpl' );
+include_once( SIGGEN_DIR . 'templates/sc_configselect.tpl' );
 $menu = ob_get_contents();
 ob_end_clean();
 
 
 // ----[ Include the menu ]---------------------------------
 ob_start();
-include_once( SIGGEN_DIR.'templates/sc_menu.tpl' );
+include_once( SIGGEN_DIR . 'templates/sc_menu.tpl' );
 $menu .= '<br />' . ob_get_contents();
 ob_end_clean();
 
@@ -502,9 +469,9 @@ if( !empty($messages) )
 
 
 // ----[ Render the entire page ]---------------------------
-$header .= '<span class="title_text">'.sprintf($roster->locale->act['title_siggen_config'],$addon['version']).'</span><br />'.
-$roster_login->getMessage().'<br />'.
-$messages;
+$header .= '<span class="title_text">' . sprintf($roster->locale->act['title_siggen_config'],$addon['version']) . '</span><br />'
+		.  $roster_login->getMessage() . '<br />'
+		.  $messages;
 
 $all_body = ",'radioOn','radioOff','checkboxOn','checkboxOff'";
 $roster->output['body_attr'] = "onload=\"initARC('reset_settings'$all_body);initARC('images_upload'$all_body);\"";
@@ -530,11 +497,11 @@ function errorMode($message,$text=null)
 		$message = messagebox($message,$text,'sred');
 
 		ob_start();
-		include_once( SIGGEN_DIR.'templates/sc_java.tpl' );
+		include_once( SIGGEN_DIR . 'templates/sc_java.tpl' );
 		$body .= ob_get_contents();
 		ob_end_clean();
 
-		return '<br />'.$message;
+		return '<br />' . $message;
 	}
 	else
 	{
