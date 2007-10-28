@@ -75,15 +75,15 @@ class ArmorySync extends ArmorySyncBase {
             $tmp = explode( "\n", $this->message);
             $this->message = implode( '', $tmp);
             if ( strpos( $this->message, sprintf($roster->locale->act['upload_data'],$roster->locale->act['char'],$memberName,$server,$region)) ) {
-                $this->_debug( 1, true, 'Synced armory data with roster',  'OK' );
+                $this->_debug( 1, true, 'Synced armory data for '. $this->memberName. ' with roster',  'OK' );
                 return true;
             } else {
-                $this->_debug( 1, false, 'Synced armory data with roster',  'Failed' );
+                $this->_debug( 1, false, 'Synced armory data for '. $this->memberName. ' with roster',  'Failed' );
                 return false;
             }
         } else {
             $this->message = "No infos for ". $this->memberName. "<br>Character has probalby not been updated for a while";
-            $this->_debug( 1, false, 'Synced armory data with roster',  'Failed' );
+            $this->_debug( 1, false, 'Synced armory data '. $this->memberName. ' with roster',  'Failed' );
             return false;
         }
     }
@@ -113,10 +113,10 @@ class ArmorySync extends ArmorySyncBase {
             $tmp = explode( "\n", $this->message);
             $this->message = implode( '', $tmp);
 
-            $this->_debug( 1, true, 'Synced armory data with roster',  'OK' );
+            $this->_debug( 1, true, 'Synced armory data '. $this->memberName. ' with roster',  'OK' );
             return true;
         }
-        $this->_debug( 0, false, 'Synced armory data with roster',  'Failed' );
+        $this->_debug( 0, false, 'Synced armory data '. $this->memberName. ' with roster',  'Failed' );
         return false;
     }
 
