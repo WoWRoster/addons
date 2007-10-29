@@ -19,7 +19,7 @@ if( !defined('IN_ROSTER') )
     exit('Detected invalid access to this file!');
 }
 
-require_once ($addon['dir'] . 'inc/assessment.base.class.php');
+require_once (ROSTER_BASE. 'addons'. DIR_SEP. 'assessment'. DIR_SEP. 'inc/assessment.base.class.php');
 
 class AssessmentActivity extends AssessmentBase {
 
@@ -47,6 +47,10 @@ class AssessmentActivity extends AssessmentBase {
 						'eventId',
 						'name',
 						);
+	var $tableColRewrite = array(
+									'lastDamage' => 'last_damage',
+									'lastHealing' => 'last_healing',
+								 );
 
 	function get ( $eventId = 0 , $name = false ) {
 		$this->eventId = $eventId;

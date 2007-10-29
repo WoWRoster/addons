@@ -19,7 +19,7 @@ if( !defined('IN_ROSTER') )
     exit('Detected invalid access to this file!');
 }
 
-require_once ($addon['dir'] . 'inc/assessment.damagetakendamagetypedetails.class.php');
+require_once (ROSTER_BASE. 'addons'. DIR_SEP. 'assessment'. DIR_SEP. 'inc/assessment.damagetakendamagetypedetails.class.php');
 
 class AssessmentDamageDealtDamageTypeDetails extends AssessmentDamageTakenDamageTypeDetails {
 
