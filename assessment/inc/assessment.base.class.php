@@ -32,15 +32,15 @@ class AssessmentBase {
 
 	function set( &$data = array() ) {
 		foreach ( $this->tableCols as &$col ) {
-			if ( isset($data[$col])) {
-				$attribute = isset( $this->tableColRewrite[$col] ) ? $this->tableColRewrite[$col] : $col;
-				$this->$attribute = $data[$col];
+			$attribute = isset( $this->tableColRewrite[$col] ) ? $this->tableColRewrite[$col] : $col;
+			if ( isset($data[$attribute])) {
+				$this->$col = $data[$attribute];
 			}
 		}
 		$this->_dbWrite();
 	}
     /**
-     * dbFunction Insert or Update
+     * dbFunction Read
      *
      * @param string $string
      * @return string date
@@ -111,7 +111,7 @@ class AssessmentBase {
 		}
 		$query = preg_replace( '/, $/', ' ', $query );
 
-		$query .= "FROM `". $roster->db->table( $this->tableName, $addon['basename']). "` ";
+		$query .= "FROM `". $roster->db->table( $this->tableName, 'assessment'). "` ";
 
 		$where = "WHERE ";
 		foreach ( $this->tableCols as $colName ) {
@@ -133,7 +133,7 @@ class AssessmentBase {
 	function _buildWriteQuery() {
         global $roster, $addon;
 
-		$query = "INSERT INTO`". $roster->db->table( $this->tableName, $addon['basename']). "` ".
+		$query = "INSERT INTO`". $roster->db->table( $this->tableName, 'assessment'). "` ".
 					"SET ";
 		foreach ( $this->tableCols as $colName ) {
 			$query .= $this->_isSet( $colName );

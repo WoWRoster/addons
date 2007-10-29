@@ -41,8 +41,6 @@ class assessmentUpdate
 	 */
 	function assessmentUpdate( $data )
 	{
-		global $addon;
-		$addon = $data;
 		$this->data = $data;
 		$this->files[] = 'assessment';
 	}
@@ -54,30 +52,7 @@ class assessmentUpdate
 	 */
 	function update( )
 	{
-		global $roster, $addon, $update;
-
-
-		//require_once( $addon['dir']. 'inc/assessment.base.class.php');
-		//require_once( $addon['dir']. 'inc/assessment.activity.class.php');
-		//require_once( $addon['dir']. 'inc/assessment.aura.class.php');
-		//require_once( $addon['dir']. 'inc/assessment.combattime.class.php');
-		//require_once( $addon['dir']. 'inc/assessment.crowdcontrolbreak.class.php');
-		//require_once( $addon['dir']. 'inc/assessment.damagedealt.class.php');
-		//require_once( $addon['dir']. 'inc/assessment.damagedealtattackdetails.class.php');
-		//require_once( $addon['dir']. 'inc/assessment.damagedealtdamagetypedetails.class.php');
-		//require_once( $addon['dir']. 'inc/assessment.damagetaken.class.php');
-		//require_once( $addon['dir']. 'inc/assessment.damagetakenattackdetails.class.php');
-		//require_once( $addon['dir']. 'inc/assessment.damagetakendamagetypedetails.class.php');
-		//require_once( $addon['dir']. 'inc/assessment.dataupdatetimes.class.php');
-		//require_once( $addon['dir']. 'inc/assessment.deaths.class.php');
-		//require_once( $addon['dir']. 'inc/assessment.deathseventlist.class.php');
-		//require_once( $addon['dir']. 'inc/assessment.dispel.class.php');
-		//require_once( $addon['dir']. 'inc/assessment.event.class.php');
-		//require_once( $addon['dir']. 'inc/assessment.gain.class.php');
-		//require_once( $addon['dir']. 'inc/assessment.groupmembers.class.php');
-		//require_once( $addon['dir']. 'inc/assessment.healingdone.class.php');
-		//require_once( $addon['dir']. 'inc/assessment.healingtaken.class.php');
-		//require_once( $addon['dir']. 'inc/assessment.interrupt.class.php');
+		global $roster, $update;
 
 		$this->usage = memory_get_usage();
 		$this->last_usage = memory_get_usage();
@@ -98,7 +73,7 @@ class assessmentUpdate
 			}
 			$this->_updateEvent( $fightName, $data );
 		}
-		$this->messages .= '</ul>';
+		$this->messages .= '</ul><br />';
 
 		return true;
 	}
@@ -109,9 +84,9 @@ class assessmentUpdate
 	}
 
 	function _updateEvent( &$name = false, &$data = false ) {
-		global $roster, $addon;
+		global $roster;
 
-		require_once ($addon['dir'] . 'inc/assessment.event.class.php');
+		require_once (ROSTER_BASE. 'addons'. DIR_SEP. 'assessment'. DIR_SEP. 'inc'. DIR_SEP. 'assessment.event.class.php');
 		$this->mem( $name);
 
 		$assEvent = new AssessmentEvent;
@@ -129,9 +104,9 @@ class assessmentUpdate
 	}
 
 	function _updateEventDetail( &$eventId = 0, &$name = false, &$data = false ) {
-		global $roster, $addon;
+		global $roster;
 
-		$classFile = $addon['dir']. 'inc/assessment.'. strtolower($name). '.class.php';
+		$classFile = ROSTER_BASE. 'addons'. DIR_SEP. 'assessment'. DIR_SEP. 'inc/assessment.'. strtolower($name). '.class.php';
 
 		$this->mem( $name);
 
@@ -214,7 +189,7 @@ class assessmentUpdate
 	}
 
 	function _updateEventCrowdControlBreak( &$eventId = 0, &$name = false, &$data = false ) {
-		global $roster, $addon;
+		global $roster;
 
 		foreach ( $data as $memberName => &$memberData ) {
 			$eventBreak = new AssessmentCrowdControlBreak;
@@ -236,7 +211,7 @@ class assessmentUpdate
 	}
 
 	function _updateEventInterrupt( &$eventId = 0, &$name = false, &$data = false ) {
-		global $roster, $addon;
+		global $roster;
 
 		foreach ( $data as $memberName => &$memberData ) {
 			$eventInterrupt = new AssessmentInterrupt;
@@ -256,7 +231,7 @@ class assessmentUpdate
 	}
 
 	function _updateEventGroupMembers( &$eventId = 0, &$name = false, &$data = false ) {
-		global $roster, $addon;
+		global $roster;
 
 		foreach ( $data as $memberName => &$memberData ) {
 			$eventGroupMember = new AssessmentGroupMembers;
@@ -269,7 +244,7 @@ class assessmentUpdate
 	}
 
 	function _updateEventDataUpdateTimes( &$eventId = 0, &$name = false, &$data = false ) {
-		global $roster, $addon;
+		global $roster;
 
 		$eventDataUpdateTime = new AssessmentDataUpdateTimes;
 		$eventDataUpdateTime->get( $eventId );
@@ -278,14 +253,14 @@ class assessmentUpdate
 	}
 
 	function _updateEventDamageDealt( &$eventId = 0, &$name = false, &$data = false ) {
-		global $roster, $addon;
+		global $roster;
 
 		foreach ( $data as $memberName => &$damages ) {
 			$eventDamage = new AssessmentDamageDealt;
 			$eventDamage->get( 0, $eventId, $memberName );
 			$eventDamage->set( $damages );
 
-			require_once( $addon['dir']. 'inc/assessment.damagedealtattackdetails.class.php' );
+			require_once( ROSTER_BASE. 'addons'. DIR_SEP. 'assessment'. DIR_SEP. 'inc/assessment.damagedealtattackdetails.class.php' );
 			foreach ( $damages['attackDetails'] as $abilityName => &$abilityData ) {
 				$eventDamageDetail = new AssessmentDamageDealtAttackDetails;
 				$eventDamageDetail->get( $eventDamage->id, $abilityName, 'sum');
@@ -300,7 +275,7 @@ class assessmentUpdate
 				unset($eventDamageDetail);
 			}
 
-			require_once( $addon['dir']. 'inc/assessment.damagedealtdamagetypedetails.class.php' );
+			require_once( ROSTER_BASE. 'addons'. DIR_SEP. 'assessment'. DIR_SEP. 'inc/assessment.damagedealtdamagetypedetails.class.php' );
 			foreach ( $damages['damageTypeDetails'] as $typeName => &$typeData ) {
 				$eventDamageDetail = new AssessmentDamageDealtDamageTypeDetails;
 				$eventDamageDetail->get( $eventDamage->id, $typeName );
@@ -313,7 +288,7 @@ class assessmentUpdate
 	}
 
 	function _updateEventCombatTime( &$eventId = 0, &$name = false, &$data = false ) {
-		global $roster, $addon;
+		global $roster;
 
 		$eventCombatTime = new AssessmentCombatTime;
 		$eventCombatTime->get( $eventId );
@@ -321,7 +296,7 @@ class assessmentUpdate
 	}
 
 	function _updateEventAura( &$eventId = 0, &$name = false, &$data = false ) {
-		global $roster, $addon;
+		global $roster;
 
 		foreach ( $data as $memberName => &$auras ) {
 			$eventAura = new AssessmentAura;
@@ -343,26 +318,26 @@ class assessmentUpdate
 	}
 
 	function _updateEventDispel( &$eventId = 0, &$name = false, &$data = false ) {
-		global $roster, $addon;
+		global $roster;
 
 		foreach ( $data as $memberName => &$dispels ) {
 			$eventDispel = new AssessmentDispel;
 			$eventDispel->get( $eventId, $memberName );
-			$eventDispel->set( $dispels['count']);
+			$eventDispel->set( $dispels );
 			unset($eventDispel);
 		}
 		unset($eventId, $name, $data);
 	}
 
 	function _updateEventDamageTaken( &$eventId = 0, &$name = false, &$data = false ) {
-		global $roster, $addon;
+		global $roster;
 
 		foreach ( $data as $memberName => &$damages ) {
 			$eventDamage = new AssessmentDamageTaken;
 			$eventDamage->get( 0, $eventId, $memberName );
 			$eventDamage->set( $damages );
 
-			require_once( $addon['dir']. 'inc/assessment.damagetakenattackdetails.class.php' );
+			require_once( ROSTER_BASE. 'addons'. DIR_SEP. 'assessment'. DIR_SEP. 'inc/assessment.damagetakenattackdetails.class.php' );
 			foreach ( $damages['attackDetails'] as $abilityName => &$abilityData ) {
 				$eventDamageDetail = new AssessmentDamageTakenAttackDetails;
 				$eventDamageDetail->get( $eventDamage->id, $abilityName, 'sum');
@@ -377,7 +352,7 @@ class assessmentUpdate
 				unset($eventDamageDetail);
 			}
 
-			require_once( $addon['dir']. 'inc/assessment.damagetakendamagetypedetails.class.php' );
+			require_once( ROSTER_BASE. 'addons'. DIR_SEP. 'assessment'. DIR_SEP. 'inc/assessment.damagetakendamagetypedetails.class.php' );
 			foreach ( $damages['damageTypeDetails'] as $typeName => &$typeData ) {
 				$eventDamageDetail = new AssessmentDamageTakenDamageTypeDetails;
 				$eventDamageDetail->get( $eventDamage->id, $typeName );
@@ -395,7 +370,7 @@ class assessmentUpdate
 	}
 
 	function _updateEventHealingX( &$eventId = 0, &$name = false, &$data = false, $class = false ) {
-		global $roster, $addon;
+		global $roster;
 
 		foreach ( $data as $memberName => &$healings ) {
 			$eventHealing = new $class;
@@ -428,7 +403,7 @@ class assessmentUpdate
 	}
 
 	function _updateEventActivity( &$eventId = 0, &$name = false, &$data = false ) {
-		global $roster, $addon;
+		global $roster;
 
 		foreach ( $data as $memberName => &$activitys ) {
 			$eventActivity = new AssessmentActivity;
@@ -440,12 +415,12 @@ class assessmentUpdate
 	}
 
 	function _updateEventDeaths( &$eventId = 0, &$name = false, &$data = false ) {
-		global $roster, $addon;
+		global $roster;
 
 		foreach ( $data as $memberName => &$deaths ) {
 			$eventDeaths = new AssessmentDeaths;
 			$eventDeaths->get( 0, $eventId, $memberName, 'sum' );
-			$eventDeaths->set( $deaths['count']);
+			$eventDeaths->set( $deaths );
 
 			if ( isset($deaths['deathTimes']) ) {
 				$i = 1;
@@ -466,7 +441,7 @@ class assessmentUpdate
 					$eventDeathsDetail->set( $deathDetails );
 					$j = 1;
 					foreach ( $deathDetails['recentEventList'] as &$eventList ) {
-						require_once( $addon['dir']. 'inc/assessment.deathseventlist.class.php' );
+						require_once( ROSTER_BASE. 'addons'. DIR_SEP. 'assessment'. DIR_SEP. 'inc/assessment.deathseventlist.class.php' );
 
 						$deathEventList = new AssessmentDeathsEventList;
 						$deathEventList->get( $eventId, $i, $j++ );
@@ -483,12 +458,12 @@ class assessmentUpdate
 	}
 
 	function _updateEventGain( &$eventId = 0, &$name = false, &$data = false ) {
-		global $roster, $addon;
+		global $roster;
 
 		foreach ( $data as $memberName => &$gains ) {
 			$eventGain = new AssessmentGain;
 			$eventGain->get( $eventId, $memberName, 'sum' );
-			$eventGain->set( $gains['count'], $gains['amount'] );
+			$eventGain->set( $gains );
 
 			foreach ( $gains['gainDetails'] as $gainDetailName => &$gainDetailData ) {
 				$eventGainDetail = new AssessmentGain;
