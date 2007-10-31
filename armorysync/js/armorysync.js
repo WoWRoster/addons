@@ -147,7 +147,7 @@ function _doUpdateStatusOverlib(info) {
     }
     if ( image != null && overlibType != null && overlibType == 'memberlistLog' ) {
         image.onclick = function() {
-            return overlib('<div style="height:300px;width:500px;overflow:auto;">'+ content+ '</div>',CAPTION,'Update Log',STICKY, OFFSETX, 250, CLOSECLICK);
+            return overlib('<div style="height:300px;width:500px;overflow:auto;">'+ content+ '</div>',CAPTION,'Update Log',STICKY, WRAP, CLOSECLICK);
         }
         image.onmouseover = function() {
             return overlib('Click to see update log',WRAP);
@@ -169,7 +169,7 @@ function _doUpdateDebugMessages(infoDebug) {
 
             var debugTableTrs = debugTBody.getElementsByTagName('tr');
             var k = debugTableTrs.length - 1;
-            rowClass = debugTableTrs[k].getElementsByTagName('td')[0].getAttribute('class').substr(10,1);
+            rowClass = debugTableTrs[k].getElementsByTagName('td')[0].className.substr(10,1);
 
             for (var i = 0; i < infoCount; i++) {
 
@@ -188,7 +188,8 @@ function _doUpdateDebugMessages(infoDebug) {
                     if ( j == messagesCount - 1 ) {
                         newTdClass += 'Right';
                     }
-                    newTd.setAttribute( 'class', newTdClass+ (armorysync_debugdata == 1 ? 1 : r ) );
+                    newTdClass += armorysync_debugdata == 1 ? 1 : r;
+                    newTd.className = newTdClass;
                     var newTextNode = document.createTextNode(content);
                     newTd.appendChild(newTextNode);
                     newTr.appendChild(newTd);
@@ -206,23 +207,19 @@ function _doUpdateDebugMessages(infoDebug) {
                         var content = _getContent(message);
 
                         var newHeadTh = document.createElement("th");
-                        newHeadTh.setAttribute('colspan', '7');
-                        newHeadTh.setAttribute('class', 'membersHeaderRight');
+                        newHeadTh.colSpan = '7';
+                        newHeadTh.className = 'membersHeaderRight';
                         newHeadTh.appendChild(document.createTextNode(header[j]));
 
                         var newHeadTr = document.createElement("tr");
                         newHeadTr.appendChild(newHeadTh);
 
-                        debugTable.appendChild(newHeadTr);
-
-                        var newDataDiv = document.createElement("div");
-                        newDataDiv.setAttribute('style', 'max-height:300px;max-width:100%;overflow:auto;');
-                        newDataDiv.innerHTML = content;
+                        debugTBody.appendChild(newHeadTr);
 
                         var newDataTd = document.createElement("td");
-                        newDataTd.setAttribute('colspan', '7');
-                        newDataTd.setAttribute('class', 'membersRow1');
-                        newDataTd.appendChild(newDataDiv);
+                        newDataTd.colSpan = '7';
+                        newDataTd.className = 'membersRow1';
+                        newDataTd.innerHTML = '<div style="max-height:300px;max-width:100%;overflow:auto;">'+ content+ '</div>';
 
                         var newDataTr = document.createElement("tr");
                         newDataTr.appendChild(newDataTd);
@@ -257,7 +254,7 @@ function _doUpdateErrorMessages(infoError) {
 
                 var errorTableTrs = errorTableTBody.getElementsByTagName('tr');
                 var k = errorTableTrs.length - 1;
-                rowClass = errorTableTrs[k].getElementsByTagName('td')[0].getAttribute('class').substr(10,1);
+                rowClass = errorTableTrs[k].getElementsByTagName('td')[0].className.substr(10,1);
 
             } else {
 
@@ -281,7 +278,8 @@ function _doUpdateErrorMessages(infoError) {
                     if ( j == messagesCount - 1 ) {
                         newTdClass += 'Right';
                     }
-                    newTd.setAttribute( 'class', newTdClass+ (armorysync_debugdata == 1 ? 1 : r ) );
+                    newTdClass += (armorysync_debugdata == 1 ? 1 : r );
+                    newTd.className = newTdClass;
                     var newTextNode = document.createTextNode(content);
                     newTd.appendChild(newTextNode);
                     newTr.appendChild(newTd);
@@ -299,23 +297,19 @@ function _doUpdateErrorMessages(infoError) {
                         var content = _getContent(message);
 
                         var newHeadTh = document.createElement("th");
-                        newHeadTh.setAttribute('colspan', '7');
-                        newHeadTh.setAttribute('class', 'membersHeaderRight');
+                        newHeadTh.colSpan = '7';
+                        newHeadTh.className = 'membersHeaderRight';
                         newHeadTh.appendChild(document.createTextNode(header[j]));
 
                         var newHeadTr = document.createElement("tr");
                         newHeadTr.appendChild(newHeadTh);
 
-                        debugTable.appendChild(newHeadTr);
-
-                        var newDataDiv = document.createElement("div");
-                        newDataDiv.setAttribute('style', 'max-height:300px;max-width:100%;overflow:auto;');
-                        newDataDiv.innerHTML = content;
+                        errorTable.appendChild(newHeadTr);
 
                         var newDataTd = document.createElement("td");
-                        newDataTd.setAttribute('colspan', '7');
-                        newDataTd.setAttribute('class', 'membersRow1');
-                        newDataTd.appendChild(newDataDiv);
+                        newDataTd.colSpan = '7';
+                        newDataTd.className = 'membersRow1';
+                        newDataTd.innerHTML = '<div style="max-height:300px;max-width:100%;overflow:auto;">'+ content+ '</div>';
 
                         var newDataTr = document.createElement("tr");
                         newDataTr.appendChild(newDataTd);

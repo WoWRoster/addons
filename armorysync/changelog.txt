@@ -1,6 +1,12 @@
 ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
+
+svn[286]
+- fixed problem with uncomplete XML in _getCharacterInfo
+- fixed overlib of memberlist update log in IE7
+- fixed some ajax problem with IE7
+
 svn[284]
 - added some isset's in armorysyncjob.class.php to eliminate php notices
 - added member/guild name to debug messages of syncMemberById and syncGuildById
