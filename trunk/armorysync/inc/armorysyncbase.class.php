@@ -40,7 +40,7 @@ class ArmorySyncBase {
         }
         $array = array(
             'time' => $timestamp,
-            'file' => isset($trace['file']) ? str_replace($addon['dir']. 'inc'. DIR_SEP, '', $trace['file']) : 'armorysync.class.php',
+            'file' => isset($trace['file']) ? str_replace($addon['dir'], '', $trace['file']) : 'armorysync.class.php',
             'line' => isset($trace['line']) ? $trace['line'] : '',
             'function' => isset($trace['function']) ? $trace['function'] : '',
             'class' => isset($trace['class']) ? $trace['class'] : '',

@@ -312,7 +312,8 @@ class ArmorySync extends ArmorySyncBase {
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
         $content = $this->_parseData( $armory->fetchCharacter( $this->memberName, $roster->config['locale'], $this->server ) );
-        if ( $this->_checkContent($content, array('characterInfo', 'characterTab' ) ) ) {
+        if ( $this->_checkContent($content, array('characterInfo', 'character' ) ) &&
+			 $this->_checkContent($content, array('characterInfo', 'characterTab' ) ) ) {
 
             $char = $content->characterInfo->character;
             $tab = $content->characterInfo->characterTab;
