@@ -1,0 +1,501 @@
+<!-- $Id$ -->
+
+
+<form action={FORMLINK} method="post" id="allow">
+<input type="hidden" id="evenListId" name="eventId" value="" />
+<input type="hidden" name="process" value="showMemberDetails" />
+	<table cellspacing="1" cellpadding="0" class="border_frame">
+		<tr>
+			<td class="border_color syellowborder">
+				<div class="header_text syellowborder">
+					<span class="title_text">{EVENTNAME}</span>
+					<br /><br />
+					<table class="border_frame" cellspacing="0" cellpadding="0" align="center">
+						<tr>
+							<th class="membersHeader ts_string">DamageDealt</th>
+							<th class="membersHeader ts_string">HealingDone</th>
+							<th class="membersHeader ts_string">DamageTaken</th>
+							<th class="membersHeader ts_string">HealingTaken</th>
+							<th class="membersHeader ts_string">
+								<img src="{DRUIDICON}" hight="24" width="24" alt="" />
+							</th>
+							<th class="membersHeader ts_string">
+								<img src="{HUNTERICON}" hight="24" width="24" alt="" />
+							</th>
+							<th class="membersHeader ts_string">
+								<img src="{MAGEICON}" hight="24" width="24" alt="" />
+							</th>
+							<th class="membersHeader ts_string">
+								<img src="{PALADINICON}" hight="24" width="24" alt="" />
+							</th>
+							<th class="membersHeader ts_string">
+								<img src="{PRIESTICON}" hight="24" width="24" alt="" />
+							</th>
+							<th class="membersHeader ts_string">
+								<img src="{ROGUEICON}" hight="24" width="24" alt="" />
+							</th>
+							<th class="membersHeader ts_string">
+								<img src="{SHAMANICON}" hight="24" width="24" alt="" />
+							</th>
+							<th class="membersHeader ts_string">
+								<img src="{WARLOCKICON}" hight="24" width="24" alt="" />
+							</th>
+							<th class="membersHeader ts_string">
+								<img src="{WARRIORICON}" hight="24" width="24" alt="" />
+							</th>
+						</tr>
+						<tr class="membersRow1">
+							<td class="damageDealt" align="center">{DDS}</td>
+							<td class="healingDone" align="center">{HDS}</td>
+							<td class="damageTaken" align="center">{DTS}</td>
+							<td class="healingTaken" align="center">{HTS}</td>
+							<td align="center"><span class="classDruidtxt">{DRUIDCOUNT}</span></td>
+							<td align="center"><span class="classHuntertxt">{HUNTERCOUNT}</span></td>
+							<td align="center"><span class="classMagetxt">{MAGECOUNT}</span></td>
+							<td align="center"><span class="classPaladintxt">{PALADINCOUNT}</span></td>
+							<td align="center"><span class="classPriesttxt">{PRIESTCOUNT}</span></td>
+							<td align="center"><span class="classRoguetxt">{ROGUECOUNT}</span></td>
+							<td align="center"><span class="classShamantxt">{SHAMANCOUNT}</span></td>
+							<td align="center"><span class="classWarlocktxt">{WARLOCKCOUNT}</span></td>
+							<td align="center"><span class="classWarriortxt">{WARRIORCOUNT}</span></td>
+						</tr>
+					</table>
+					<br />
+
+					<table cellspacing="1" cellpadding="0" width="100%" class="border_frame">
+						<tr>
+							<td class="border_color sblueborder">
+								<div class="header_text sblueborder">
+									<span class="title_text">Raidmembers</span>
+									<br /><br />
+
+
+									<table cellspacing="0" cellpadding="0" align="left">
+										<tr>
+											<td class="tabIndent"/>
+											<td onclick="showDamageDealt();" id="damageDealtTab" class="tabActive">DamageDealt</td>
+											<td onclick="showHealingDone();" id="healingDoneTab" class="tabInactive">HealingDone</td>
+											<td onclick="showDamageTaken();" id="damageTakenTab" class="tabInactive">DamageTaken</td>
+											<td onclick="showHealingTaken();" id="healingTakenTab" class="tabInactive">HealingTaken</td>
+										</tr>
+									</table>
+								</div>
+
+								<!-- Assessment EventListDetails DamageDealt Div -->
+
+								<div id="damageDealt">
+									<table class="border_frame" width="100%" cellspacing="0" cellpadding="0" align="center">
+										<tr>
+											<th class="membersHeader ts_string" width="20px">#</th>
+											<th class="membersHeader ts_string" width="120px">MemberName</th>
+											<th class="membersHeader ts_string">DamageDealt</th>
+											<th class="membersHeader ts_string">DamageDealtPerc</th>
+											<th class="membersHeader ts_string">DamageDealtPercGraph</th>
+											<th class="membersHeader ts_string">DDPS</th>
+											<th class="membersHeader ts_string">Deaths</th>
+											<th class="membersHeader ts_string">Interrupts</th>
+											<th class="membersHeader ts_string">CCB</th>
+											<th class="membersHeader ts_string">HealingDonePerc</th>
+											<th class="membersHeader ts_string">DamageTakenPerc</th>
+											<th class="membersHeader ts_string">HealingTakenPerc</th>
+										</tr>
+
+									<!-- Assessment EventListDetails DamageDealt Div Rows -->
+
+									<!-- BEGIN dd_row -->
+										<tr class="damageDealtRow{dd_row.ROWCLASS}">
+											<td>{dd_row.ORDER}.</td>
+											<td><span class="class{dd_row.CLASS}txt">{dd_row.MEMBERNAME}</span></td>
+											<td>{dd_row.DAMAGEDEALT}</td>
+											<td>{dd_row.DAMAGEDEALTPERC} %</td>
+											<td>
+												<table width="100%" cellspacing="0" cellpadding="0" align="center">
+													<tr>
+														<td class="percgraph" width="{dd_row.PERC}%"></td>
+														<td class="percleftgraph" width="{dd_row.PERCLEFT}%"></td>
+													</tr>
+												</table>
+											</td>
+											<td>{dd_row.DAMAGEDEALTPERSEC}</td>
+											<td>{dd_row.DEATHS}</td>
+											<td>{dd_row.INTERRUPTS}</td>
+											<td>{dd_row.CROWDCONTROLBREAKS}</td>
+											<td class="healingDone">{dd_row.HEALINGDONEPERC} %</td>
+											<td class="damageTaken">{dd_row.DAMAGETAKENPERC} %</td>
+											<td class="healingTaken">{dd_row.HEALINGTAKENPERC} %</td>
+										</tr>
+									<!-- END dd_row -->
+
+									<!-- Assessment EventListDetails DamageDealt Div Rows End -->
+
+									</table>
+								</div>
+
+								<!-- Assessment EventListDetails HealingDone Div -->
+
+								<div id="healingDone" style="display:none;">
+									<table class="border_frame" width="100%" cellspacing="0" cellpadding="0" align="center">
+										<tr>
+											<th class="membersHeader ts_string" width="20px">#</th>
+											<th class="membersHeader ts_string" width="120px">MemberName</th>
+											<th class="membersHeader ts_string">HealingDone</th>
+											<th class="membersHeader ts_string">HealingDonePerc</th>
+											<th class="membersHeader ts_string">HealingDonePercGraph</th>
+											<th class="membersHeader ts_string">Overheal</th>
+											<th class="membersHeader ts_string">OverhealPerc</th>
+											<th class="membersHeader ts_string">HDPS</th>
+											<th class="membersHeader ts_string">Dispels</th>
+											<th class="membersHeader ts_string">DamageDealtPerc</th>
+											<th class="membersHeader ts_string">DamageTakenPerc</th>
+											<th class="membersHeader ts_string">HealingTakenPerc</th>
+										</tr>
+
+									<!-- Assessment EventListDetails HealingDone Div Rows -->
+
+									<!-- BEGIN hd_row -->
+										<tr class="healingDoneRow{hd_row.ROWCLASS}">
+											<td>{hd_row.ORDER}.</td>
+											<td><span class="class{hd_row.CLASS}txt">{hd_row.MEMBERNAME}</span></td>
+											<td>{hd_row.HEALINGDONE}</td>
+											<td>{hd_row.HEALINGDONEPERC} %</td>
+											<td>
+												<table width="100%" cellspacing="0" cellpadding="0" align="center">
+													<tr>
+														<td class="percgraph" width="{hd_row.PERC}%"></td>
+														<td class="percleftgraph" width="{hd_row.PERCLEFT}%"></td>
+													</tr>
+												</table>
+											</td>
+											<td>{hd_row.OVERHEAL}</td>
+											<td>{hd_row.OVERHEALPERC} %</td>
+											<td>{hd_row.HEALINGDONEPERSEC}</td>
+											<td>{hd_row.DISPELS}</td>
+											<td class="damageDealt">{hd_row.DAMAGEDEALTPERC} %</td>
+											<td class="damageTaken">{hd_row.DAMAGETAKENPERC} %</td>
+											<td class="healingTaken">{hd_row.HEALINGTAKENPERC} %</td>
+										</tr>
+									<!-- END hd_row -->
+
+									<!-- Assessment EventListDetails HealingDone Div Rows End -->
+
+									</table>
+								</div>
+
+								<!-- Assessment EventListDetails DamageTaken Div -->
+
+								<div id="damageTaken" style="display:none;">
+									<table class="border_frame" width="100%" cellspacing="0" cellpadding="0" align="center">
+										<tr>
+											<th class="membersHeader ts_string" width="20px">#</th>
+											<th class="membersHeader ts_string" width="120px">MemberName</th>
+											<th class="membersHeader ts_string">DamageTaken</th>
+											<th class="membersHeader ts_string">DamageTakenPerc</th>
+											<th class="membersHeader ts_string">DamageTakenPercGraph</th>
+											<th class="membersHeader ts_string">DTPS</th>
+											<th class="membersHeader ts_string">DamageDealtPerc</th>
+											<th class="membersHeader ts_string">HealingDonePerc</th>
+											<th class="membersHeader ts_string">HealingTakenPerc</th>
+										</tr>
+
+									<!-- Assessment EventListDetails DamageTaken Div Rows -->
+
+									<!-- BEGIN dt_row -->
+										<tr class="damageTakenRow{dt_row.ROWCLASS}">
+											<td>{dt_row.ORDER}.</td>
+											<td><span class="class{dt_row.CLASS}txt">{dt_row.MEMBERNAME}</span></td>
+											<td>{dt_row.DAMAGETAKEN}</td>
+											<td>{dt_row.DAMAGETAKENPERC} %</td>
+											<td>
+												<table width="100%" cellspacing="0" cellpadding="0" align="center">
+													<tr>
+														<td class="percgraph" width="{dt_row.PERC}%"></td>
+														<td class="percleftgraph" width="{dt_row.PERCLEFT}%"></td>
+													</tr>
+												</table>
+											</td>
+											<td>{dt_row.DAMAGETAKENPERSEC}</td>
+											<td class="damageDealt">{dt_row.DAMAGEDEALTPERC} %</td>
+											<td class="healingDone">{dt_row.HEALINGDONEPERC} %</td>
+											<td class="healingTaken">{dt_row.HEALINGTAKENPERC} %</td>
+										</tr>
+									<!-- END dt_row -->
+
+									<!-- Assessment EventListDetails DamageTaken Div Rows End -->
+
+									</table>
+								</div>
+
+								<!-- Assessment EventListDetails HealingTaken Div -->
+
+								<div id="healingTaken" style="display:none;">
+									<table class="border_frame" width="100%" cellspacing="0" cellpadding="0" align="center">
+										<tr>
+											<th class="membersHeader ts_string" width="20px">#</th>
+											<th class="membersHeader ts_string" width="120px">MemberName</th>
+											<th class="membersHeader ts_string">HealingTaken</th>
+											<th class="membersHeader ts_string">HealingTakenPerc</th>
+											<th class="membersHeader ts_string">HealingTakenPercGraph</th>
+											<th class="membersHeader ts_string">Overheal</th>
+											<th class="membersHeader ts_string">OverhealPerc</th>
+											<th class="membersHeader ts_string">HTPS</th>
+											<th class="membersHeader ts_string">DamageDealtPerc</th>
+											<th class="membersHeader ts_string">HealingDonePerc</th>
+											<th class="membersHeader ts_string">DamageTakenPerc</th>
+										</tr>
+
+									<!-- Assessment EventListDetails HealingTaken Div Rows -->
+
+									<!-- BEGIN ht_row -->
+										<tr class="healingTakenRow{ht_row.ROWCLASS}">
+											<td>{ht_row.ORDER}.</td>
+											<td><span class="class{ht_row.CLASS}txt">{ht_row.MEMBERNAME}</span></td>
+											<td>{ht_row.HEALINGTAKEN}</td>
+											<td>{ht_row.HEALINGTAKENPERC} %</td>
+											<td>
+												<table width="100%" cellspacing="0" cellpadding="0" align="center">
+													<tr>
+														<td class="percgraph" width="{ht_row.PERC}%"></td>
+														<td class="percleftgraph" width="{ht_row.PERCLEFT}%"></td>
+													</tr>
+												</table>
+											</td>
+											<td>{ht_row.OVERHEAL}</td>
+											<td>{ht_row.OVERHEALPERC} %</td>
+											<td>{ht_row.HEALINGTAKENPERSEC}</td>
+											<td class="damageDealt">{ht_row.DAMAGEDEALTPERC} %</td>
+											<td class="healingDone">{ht_row.HEALINGDONEPERC} %</td>
+											<td class="damageTaken">{ht_row.DAMAGETAKENPERC} %</td>
+										</tr>
+									<!-- END ht_row -->
+
+									<!-- Assessment EventListDetails HealingTaken Div Rows End -->
+
+									</table>
+								</div>
+							</td>
+						</tr>
+					</table>
+					<br />
+
+					<!-- Assessment EventListDetails Mob Table -->
+
+					<br />
+					<table cellspacing="1" cellpadding="0" width="100%" class="border_frame">
+						<tr>
+							<td class="border_color sredborder">
+								<div class="header_text sredborder">
+									<span class="title_text">Mobs</span>
+									<br /><br />
+
+
+									<table cellspacing="0" cellpadding="0" align="left">
+										<tr>
+											<td class="tabIndent"/>
+											<td onclick="showMobDamageDealt();" id="mobDamageDealtTab" class="mobTabActive">DamageDealt</td>
+											<td onclick="showMobHealingDone();" id="mobHealingDoneTab" class="mobTabInactive">HealingDone</td>
+											<td onclick="showMobDamageTaken();" id="mobDamageTakenTab" class="mobTabInactive">DamageTaken</td>
+											<td onclick="showMobHealingTaken();" id="mobHealingTakenTab" class="mobTabInactive">HealingTaken</td>
+										</tr>
+									</table>
+								</div>
+
+								<!-- Assessment EventListDetails DamageDealt Div -->
+
+								<div id="mobDamageDealt">
+									<table class="border_frame" width="100%" cellspacing="0" cellpadding="0" align="center">
+										<tr>
+											<th class="membersHeader ts_string" width="20px">#</th>
+											<th class="membersHeader ts_string" width="120px">MemberName</th>
+											<th class="membersHeader ts_string">DamageDealt</th>
+											<th class="membersHeader ts_string">DamageDealtPerc</th>
+											<th class="membersHeader ts_string">DamageDealtPercGraph</th>
+											<th class="membersHeader ts_string">DDPS</th>
+											<th class="membersHeader ts_string">Deaths</th>
+											<th class="membersHeader ts_string">Interrupts</th>
+											<th class="membersHeader ts_string">CCB</th>
+											<th class="membersHeader ts_string">HealingDonePerc</th>
+											<th class="membersHeader ts_string">DamageTakenPerc</th>
+											<th class="membersHeader ts_string">HealingTakenPerc</th>
+										</tr>
+
+									<!-- Assessment EventListDetails DamageDealt Div Rows -->
+
+									<!-- BEGIN mdd_row -->
+										<tr class="damageDealtRow{mdd_row.ROWCLASS}">
+											<td>{mdd_row.ORDER}.</td>
+											<td>{mdd_row.MEMBERNAME}</td>
+											<td>{mdd_row.DAMAGEDEALT}</td>
+											<td>{mdd_row.DAMAGEDEALTPERC} %</td>
+											<td>
+												<table width="100%" cellspacing="0" cellpadding="0" align="center">
+													<tr>
+														<td class="percgraph" width="{mdd_row.PERC}%"></td>
+														<td class="percleftgraph" width="{mdd_row.PERCLEFT}%"></td>
+													</tr>
+												</table>
+											</td>
+											<td>{mdd_row.DAMAGEDEALTPERSEC}</td>
+											<td>{mdd_row.DEATHS}</td>
+											<td>{mdd_row.INTERRUPTS}</td>
+											<td>{mdd_row.CROWDCONTROLBREAKS}</td>
+											<td class="healingDone">{mdd_row.HEALINGDONEPERC} %</td>
+											<td class="damageTaken">{mdd_row.DAMAGETAKENPERC} %</td>
+											<td class="healingTaken">{mdd_row.HEALINGTAKENPERC} %</td>
+										</tr>
+									<!-- END mdd_row -->
+
+									<!-- Assessment EventListDetails DamageDealt Div Rows End -->
+
+									</table>
+								</div>
+
+								<!-- Assessment EventListDetails HealingDone Div -->
+
+								<div id="mobHealingDone" style="display:none;">
+									<table class="border_frame" width="100%" cellspacing="0" cellpadding="0" align="center">
+										<tr>
+											<th class="membersHeader ts_string" width="20px">#</th>
+											<th class="membersHeader ts_string" width="120px">MemberName</th>
+											<th class="membersHeader ts_string">HealingDone</th>
+											<th class="membersHeader ts_string">HealingDonePerc</th>
+											<th class="membersHeader ts_string">HealingDonePercGraph</th>
+											<th class="membersHeader ts_string">Overheal</th>
+											<th class="membersHeader ts_string">OverhealPerc</th>
+											<th class="membersHeader ts_string">HDPS</th>
+											<th class="membersHeader ts_string">Dispels</th>
+											<th class="membersHeader ts_string">DamageDealtPerc</th>
+											<th class="membersHeader ts_string">DamageTakenPerc</th>
+											<th class="membersHeader ts_string">HealingTakenPerc</th>
+										</tr>
+
+									<!-- Assessment EventListDetails HealingDone Div Rows -->
+
+									<!-- BEGIN mhd_row -->
+										<tr class="healingDoneRow{mhd_row.ROWCLASS}">
+											<td>{mhd_row.ORDER}.</td>
+											<td>{mhd_row.MEMBERNAME}</td>
+											<td>{mhd_row.HEALINGDONE}</td>
+											<td>{mhd_row.HEALINGDONEPERC} %</td>
+											<td>
+												<table width="100%" cellspacing="0" cellpadding="0" align="center">
+													<tr>
+														<td class="percgraph" width="{mhd_row.PERC}%"></td>
+														<td class="percleftgraph" width="{mhd_row.PERCLEFT}%"></td>
+													</tr>
+												</table>
+											</td>
+											<td>{mhd_row.OVERHEAL}</td>
+											<td>{mhd_row.OVERHEALPERC} %</td>
+											<td>{mhd_row.HEALINGDONEPERSEC}</td>
+											<td>{mhd_row.DISPELS}</td>
+											<td class="damageDealt">{mhd_row.DAMAGEDEALTPERC} %</td>
+											<td class="damageTaken">{mhd_row.DAMAGETAKENPERC} %</td>
+											<td class="healingTaken">{mhd_row.HEALINGTAKENPERC} %</td>
+										</tr>
+									<!-- END mhd_row -->
+
+									<!-- Assessment EventListDetails HealingDone Div Rows End -->
+
+									</table>
+								</div>
+
+								<!-- Assessment EventListDetails DamageTaken Div -->
+
+								<div id="mobDamageTaken" style="display:none;">
+									<table class="border_frame" width="100%" cellspacing="0" cellpadding="0" align="center">
+										<tr>
+											<th class="membersHeader ts_string" width="20px">#</th>
+											<th class="membersHeader ts_string" width="120px">MemberName</th>
+											<th class="membersHeader ts_string">DamageTaken</th>
+											<th class="membersHeader ts_string">DamageTakenPerc</th>
+											<th class="membersHeader ts_string">DamageTakenPercGraph</th>
+											<th class="membersHeader ts_string">DTPS</th>
+											<th class="membersHeader ts_string">DamageDealtPerc</th>
+											<th class="membersHeader ts_string">HealingDonePerc</th>
+											<th class="membersHeader ts_string">HealingTakenPerc</th>
+										</tr>
+
+									<!-- Assessment EventListDetails DamageTaken Div Rows -->
+
+									<!-- BEGIN mdt_row -->
+										<tr class="damageTakenRow{mdt_row.ROWCLASS}">
+											<td>{mdt_row.ORDER}.</td>
+											<td>{mdt_row.MEMBERNAME}</td>
+											<td>{mdt_row.DAMAGETAKEN}</td>
+											<td>{mdt_row.DAMAGETAKENPERC} %</td>
+											<td>
+												<table width="100%" cellspacing="0" cellpadding="0" align="center">
+													<tr>
+														<td class="percgraph" width="{mdt_row.PERC}%"></td>
+														<td class="percleftgraph" width="{mdt_row.PERCLEFT}%"></td>
+													</tr>
+												</table>
+											</td>
+											<td>{mdt_row.DAMAGETAKENPERSEC}</td>
+											<td class="damageDealt">{mdt_row.DAMAGEDEALTPERC} %</td>
+											<td class="healingDone">{mdt_row.HEALINGDONEPERC} %</td>
+											<td class="healingTaken">{mdt_row.HEALINGTAKENPERC} %</td>
+										</tr>
+									<!-- END mdt_row -->
+
+									<!-- Assessment EventListDetails DamageTaken Div Rows End -->
+
+									</table>
+								</div>
+
+								<!-- Assessment EventListDetails HealingTaken Div -->
+
+								<div id="mobHealingTaken" style="display:none;">
+									<table class="border_frame" width="100%" cellspacing="0" cellpadding="0" align="center">
+										<tr>
+											<th class="membersHeader ts_string" width="20px">#</th>
+											<th class="membersHeader ts_string" width="120px">MemberName</th>
+											<th class="membersHeader ts_string">HealingTaken</th>
+											<th class="membersHeader ts_string">HealingTakenPerc</th>
+											<th class="membersHeader ts_string">HealingTakenPercGraph</th>
+											<th class="membersHeader ts_string">Overheal</th>
+											<th class="membersHeader ts_string">OverhealPerc</th>
+											<th class="membersHeader ts_string">HTPS</th>
+											<th class="membersHeader ts_string">DamageDealtPerc</th>
+											<th class="membersHeader ts_string">HealingDonePerc</th>
+											<th class="membersHeader ts_string">DamageTakenPerc</th>
+										</tr>
+
+									<!-- Assessment EventListDetails HealingTaken Div Rows -->
+
+									<!-- BEGIN mht_row -->
+										<tr class="healingTakenRow{mht_row.ROWCLASS}">
+											<td>{mht_row.ORDER}.</td>
+											<td>{mht_row.MEMBERNAME}</td>
+											<td>{mht_row.HEALINGTAKEN}</td>
+											<td>{mht_row.HEALINGTAKENPERC} %</td>
+											<td>
+												<table width="100%" cellspacing="0" cellpadding="0" align="center">
+													<tr>
+														<td class="percgraph" width="{mht_row.PERC}%"></td>
+														<td class="percleftgraph" width="{mht_row.PERCLEFT}%"></td>
+													</tr>
+												</table>
+											</td>
+											<td>{mht_row.OVERHEAL}</td>
+											<td>{mht_row.OVERHEALPERC} %</td>
+											<td>{mht_row.HEALINGTAKENPERSEC}</td>
+											<td class="damageDealt">{mht_row.DAMAGEDEALTPERC} %</td>
+											<td class="healingDone">{mht_row.HEALINGDONEPERC} %</td>
+											<td class="damageTaken">{mht_row.DAMAGETAKENPERC} %</td>
+										</tr>
+									<!-- END mht_row -->
+
+									<!-- Assessment EventListDetails HealingTaken Div Rows End -->
+
+									</table>
+								</div>
+							</td>
+						</tr>
+					</table>
+
+				</div>
+			</td>
+		</tr>
+	</table>
+</form>

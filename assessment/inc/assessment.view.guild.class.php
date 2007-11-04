@@ -31,15 +31,64 @@ class AssessmentViewGuild extends AssessmentViewBase {
      */
 	function start() {
 		global $roster, $addon;
-		$this->_eventList();
+
+		if ( isset($_POST['process']) ) {
+
+			if ( $_POST['process'] == 'showEventDetails' ) {
+				if ( isset($_POST['eventId']) ) {
+					$id = $_POST['eventId'];
+					require_once ($addon['dir'] . 'inc/assessment.view.eventdetails.class.php');
+					$details = new AssessmentViewEventDetails;
+					$details->start( $id );
+				}
+			}
+
+		} else {
+			$this->_eventList();
+		}
 	}
 
 	function _eventList() {
 		global $roster, $addon;
 		$events = $this->_getGuildEvents();
+
+		$roster->tpl->assign_vars(array(
+				'START_BORDER' => border( 'syellow', 'start' ),
+				'STOP_BORDER' => border( 'syellow', 'end' ),
+				'FORMLINK' => makelink(),
+			));
 		foreach ( $events as $event ) {
-			print $event->eventName. "<br />";
+			$roster->tpl->assign_block_vars( 'body_row', array(
+				'EVENTID' => $event->id,
+				'EVENTNAME' => $event->eventName,
+				'DDS' => $event->damageDealtSum,
+				'HDS' => $event->healingDoneSum,
+				'DTS' => $event->damageTakenSum,
+				'HTS' => $event->healingTakenSum,
+				'DRUIDICON' => $roster->config['img_url']. 'class/druid_icon.jpg',
+				'HUNTERICON' => $roster->config['img_url']. 'class/hunter_icon.jpg',
+				'MAGEICON' => $roster->config['img_url']. 'class/mage_icon.jpg',
+				'PALADINICON' => $roster->config['img_url']. 'class/paladin_icon.jpg',
+				'PRIESTICON' => $roster->config['img_url']. 'class/priest_icon.jpg',
+				'ROGUEICON' => $roster->config['img_url']. 'class/rogue_icon.jpg',
+				'SHAMANICON' => $roster->config['img_url']. 'class/shaman_icon.jpg',
+				'WARLOCKICON' => $roster->config['img_url']. 'class/warlock_icon.jpg',
+				'WARRIORICON' => $roster->config['img_url']. 'class/warrior_icon.jpg',
+				'DRUIDCOUNT' => isset( $event->memberClasses['DRUID']) ? $event->memberClasses['DRUID'] : 0,
+				'HUNTERCOUNT' => isset( $event->memberClasses['HUNTER']) ? $event->memberClasses['HUNTER'] : 0,
+				'MAGECOUNT' => isset( $event->memberClasses['MAGE']) ? $event->memberClasses['MAGE'] : 0,
+				'PALADINCOUNT' => isset( $event->memberClasses['PALADIN']) ? $event->memberClasses['PALADIN'] : 0,
+				'PRIESTCOUNT' => isset( $event->memberClasses['PRIEST']) ? $event->memberClasses['PRIEST'] : 0,
+				'ROGUECOUNT' => isset( $event->memberClasses['ROGUE']) ? $event->memberClasses['ROGUE'] : 0,
+				'SHAMANCOUNT' => isset( $event->memberClasses['SHAMAN']) ? $event->memberClasses['SHAMAN'] : 0,
+				'WARLOCKCOUNT' => isset( $event->memberClasses['WARLOCK']) ? $event->memberClasses['WARLOCK'] : 0,
+				'WARRIORCOUNT' => isset( $event->memberClasses['WARRIOR']) ? $event->memberClasses['WARRIOR'] : 0,
+			));
 		}
+		$roster->tpl->set_filenames(array(
+                'eventListBody' => $addon['basename'] . '/assessment.view.eventlist.body.html',
+                ));
+        $roster->tpl->display('eventListBody');
 	}
 
 	function _getGuildEvents() {
@@ -64,6 +113,7 @@ class AssessmentViewGuild extends AssessmentViewBase {
 				foreach ( $array as $set ) {
 					$event = new AssessmentEvent;
 					$event->get($set['id']);
+					$event->getEventListDetails();
 					$ret[] = $event;
 				}
 				$roster->db->free_result($result);

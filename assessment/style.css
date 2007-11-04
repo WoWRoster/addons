@@ -1,0 +1,264 @@
+/**
+ * WoWRoster.net WoWRoster
+ *
+ * ArmorySync css file
+ *
+ * LICENSE: Licensed under the Creative Commons
+ *          "Attribution-NonCommercial-ShareAlike 2.5" license
+ *
+ * @copyright  2002-2007 WoWRoster.net
+ * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5"
+ * @version    SVN: $Id$
+ * @link       http://www.wowroster.net
+ * @package    ArmorySync
+*/
+
+
+.tabIndent {
+	width: 1em;
+}
+
+.tabActive {
+	border-color: #0000FF;
+	border-style: solid;
+	border-top-width: 1px;
+	border-left-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 0px;
+	background-color: #2E2D2B;
+	padding: 5px;
+	font-size: 12px;
+	color: #CBA300;
+	cursor: pointer;
+}
+
+.tabInactive {
+	border-color: #C6C7CB rgb(95, 96, 96) rgb(57, 57, 57) rgb(105, 107, 110);
+	border-style: solid;
+	border-top-width: 1px;
+	border-left-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 0px;
+	background-color: #1F1E1D;
+	padding: 5px;
+	font-size: 12px;
+	color: #CBA300;
+	cursor: pointer;
+}
+
+.mobTabActive {
+	border-color: red;
+	border-style: solid;
+	border-top-width: 1px;
+	border-left-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 0px;
+	background-color: #2E2D2B;
+	padding: 5px;
+	font-size: 12px;
+	color: #CBA300;
+	cursor: pointer;
+}
+
+.mobTabInactive {
+	border-color: #C6C7CB rgb(95, 96, 96) rgb(57, 57, 57) rgb(105, 107, 110);
+	border-style: solid;
+	border-top-width: 1px;
+	border-left-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 0px;
+	background-color: #1F1E1D;
+	padding: 5px;
+	font-size: 12px;
+	color: #CBA300;
+	cursor: pointer;
+}
+
+.percgraph {
+	background-color: green;
+	height: 12px;
+}
+
+.percleftgraph {
+	height: 12px;
+}
+
+.classPettxt {
+	color: green;
+}
+
+.damageDealtRow1 {
+	color: rgb(0, 153, 255);
+	background-color:#1F1E1D;
+	border-color:#000000 rgb(93, 93, 93) rgb(93, 93, 93);
+	border-style:solid;
+	border-width:1px 0pt 0pt 1px;
+	font-family:arial,helvetica,sans-serif;
+	font-size:11px;
+	font-size-adjust:none;
+	font-stretch:normal;
+	font-style:normal;
+	font-variant:normal;
+	font-weight:bold;
+	line-height:normal;
+	padding:3px 6px;
+	position:relative;
+	text-align:left;
+	white-space:nowrap;
+}
+
+.damageDealtRow2 {
+	color: rgb(0, 153, 255);
+	background-color:#2E2D2B;
+	border-color:#000000 rgb(93, 93, 93) rgb(93, 93, 93);
+	border-style:solid;
+	border-width:1px 0pt 0pt 1px;
+	font-family:arial,helvetica,sans-serif;
+	font-size:11px;
+	font-size-adjust:none;
+	font-stretch:normal;
+	font-style:normal;
+	font-variant:normal;
+	font-weight:bold;
+	line-height:normal;
+	padding:3px 6px;
+	position:relative;
+	text-align:left;
+	white-space:nowrap;
+}
+
+.healingDoneRow1 {
+	color: green;
+	background-color:#1F1E1D;
+	border-color:#000000 rgb(93, 93, 93) rgb(93, 93, 93);
+	border-style:solid;
+	border-width:1px 0pt 0pt 1px;
+	font-family:arial,helvetica,sans-serif;
+	font-size:11px;
+	font-size-adjust:none;
+	font-stretch:normal;
+	font-style:normal;
+	font-variant:normal;
+	font-weight:bold;
+	line-height:normal;
+	padding:3px 6px;
+	position:relative;
+	text-align:left;
+	white-space:nowrap;
+}
+
+.healingDoneRow2 {
+	color: green;
+	background-color:#2E2D2B;
+	border-color:#000000 rgb(93, 93, 93) rgb(93, 93, 93);
+	border-style:solid;
+	border-width:1px 0pt 0pt 1px;
+	font-family:arial,helvetica,sans-serif;
+	font-size:11px;
+	font-size-adjust:none;
+	font-stretch:normal;
+	font-style:normal;
+	font-variant:normal;
+	font-weight:bold;
+	line-height:normal;
+	padding:3px 6px;
+	position:relative;
+	text-align:left;
+	white-space:nowrap;
+}
+
+.damageTakenRow1 {
+	color: red;
+	background-color:#1F1E1D;
+	border-color:#000000 rgb(93, 93, 93) rgb(93, 93, 93);
+	border-style:solid;
+	border-width:1px 0pt 0pt 1px;
+	font-family:arial,helvetica,sans-serif;
+	font-size:11px;
+	font-size-adjust:none;
+	font-stretch:normal;
+	font-style:normal;
+	font-variant:normal;
+	font-weight:bold;
+	line-height:normal;
+	padding:3px 6px;
+	position:relative;
+	text-align:left;
+	white-space:nowrap;
+}
+
+.damageTakenRow2 {
+	color: red;
+	background-color:#2E2D2B;
+	border-color:#000000 rgb(93, 93, 93) rgb(93, 93, 93);
+	border-style:solid;
+	border-width:1px 0pt 0pt 1px;
+	font-family:arial,helvetica,sans-serif;
+	font-size:11px;
+	font-size-adjust:none;
+	font-stretch:normal;
+	font-style:normal;
+	font-variant:normal;
+	font-weight:bold;
+	line-height:normal;
+	padding:3px 6px;
+	position:relative;
+	text-align:left;
+	white-space:nowrap;
+}
+
+.healingTakenRow1 {
+	color: yellow;
+	background-color:#1F1E1D;
+	border-color:#000000 rgb(93, 93, 93) rgb(93, 93, 93);
+	border-style:solid;
+	border-width:1px 0pt 0pt 1px;
+	font-family:arial,helvetica,sans-serif;
+	font-size:11px;
+	font-size-adjust:none;
+	font-stretch:normal;
+	font-style:normal;
+	font-variant:normal;
+	font-weight:bold;
+	line-height:normal;
+	padding:3px 6px;
+	position:relative;
+	text-align:left;
+	white-space:nowrap;
+}
+
+.healingTakenRow2 {
+	color: yellow;
+	background-color:#2E2D2B;
+	border-color:#000000 rgb(93, 93, 93) rgb(93, 93, 93);
+	border-style:solid;
+	border-width:1px 0pt 0pt 1px;
+	font-family:arial,helvetica,sans-serif;
+	font-size:11px;
+	font-size-adjust:none;
+	font-stretch:normal;
+	font-style:normal;
+	font-variant:normal;
+	font-weight:bold;
+	line-height:normal;
+	padding:3px 6px;
+	position:relative;
+	text-align:left;
+	white-space:nowrap;
+}
+
+.damageDealt {
+	color: rgb(0, 153, 255);
+}
+
+.healingDone {
+	color: green;
+}
+
+.damageTaken {
+	color: red;
+}
+
+.healingTaken {
+	color: yellow;
+}
