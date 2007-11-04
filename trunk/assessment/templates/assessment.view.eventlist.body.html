@@ -1,0 +1,75 @@
+<!-- $Id$ -->
+
+
+<form action="{FORMLINK}" method="post" name="eventListDetails" id="eventList">
+<input type="hidden" id="eventListId" name="eventId" value="" />
+<input type="hidden" name="process" value="showEventDetails" />
+	{START_BORDER}
+		<table class="border_frame" width="100%" cellspacing="0" cellpadding="0" align="center">
+
+		<!-- Assessment EventList Body -->
+		<!-- BEGIN body_row -->
+			<tr class="membersRow1" style="cursor:pointer;" onclick="setvalue('eventListId', '{body_row.EVENTID}'); document.eventListDetails.submit();">
+				<td>
+					<span class="title_text">{body_row.EVENTNAME}</span>
+				</td>
+			</tr>
+			<tr style="cursor:pointer;" onclick="setvalue('eventListId', '{body_row.EVENTID}'); document.eventListDetails.submit();">
+				<td>
+					<table class="border_frame" cellspacing="0" cellpadding="0">
+						<tr>
+							<th class="membersHeader ts_string">DamageDealt</th>
+							<th class="membersHeader ts_string">HealingDone</th>
+							<th class="membersHeader ts_string">DamageTaken</th>
+							<th class="membersHeader ts_string">HealingTaken</th>
+							<th class="membersHeader ts_string">
+								<img src="{body_row.DRUIDICON}" hight="24" width="24" alt="" />
+							</th>
+							<th class="membersHeader ts_string">
+								<img src="{body_row.HUNTERICON}" hight="24" width="24" alt="" />
+							</th>
+							<th class="membersHeader ts_string">
+								<img src="{body_row.MAGEICON}" hight="24" width="24" alt="" />
+							</th>
+							<th class="membersHeader ts_string">
+								<img src="{body_row.PALADINICON}" hight="24" width="24" alt="" />
+							</th>
+							<th class="membersHeader ts_string">
+								<img src="{body_row.PRIESTICON}" hight="24" width="24" alt="" />
+							</th>
+							<th class="membersHeader ts_string">
+								<img src="{body_row.ROGUEICON}" hight="24" width="24" alt="" />
+							</th>
+							<th class="membersHeader ts_string">
+								<img src="{body_row.SHAMANICON}" hight="24" width="24" alt="" />
+							</th>
+							<th class="membersHeader ts_string">
+								<img src="{body_row.WARLOCKICON}" hight="24" width="24" alt="" />
+							</th>
+							<th class="membersHeader ts_string">
+								<img src="{body_row.WARRIORICON}" hight="24" width="24" alt="" />
+							</th>
+						</tr>
+						<tr class="membersRow1">
+							<td class="damageDealt" align="center">{body_row.DDS}</td>
+							<td class="healingDone" align="center">{body_row.HDS}</td>
+							<td class="damageTaken" align="center">{body_row.DTS}</td>
+							<td class="healingTaken" align="center">{body_row.HTS}</td>
+							<td align="center"><span class="classDruidtxt">{body_row.DRUIDCOUNT}</span></td>
+							<td align="center"><span class="classHuntertxt">{body_row.HUNTERCOUNT}</span></td>
+							<td align="center"><span class="classMagetxt">{body_row.MAGECOUNT}</span></td>
+							<td align="center"><span class="classPaladintxt">{body_row.PALADINCOUNT}</span></td>
+							<td align="center"><span class="classPriesttxt">{body_row.PRIESTCOUNT}</span></td>
+							<td align="center"><span class="classRoguetxt">{body_row.ROGUECOUNT}</span></td>
+							<td align="center"><span class="classShamantxt">{body_row.SHAMANCOUNT}</span></td>
+							<td align="center"><span class="classWarlocktxt">{body_row.WARLOCKCOUNT}</span></td>
+							<td align="center"><span class="classWarriortxt">{body_row.WARRIORCOUNT}</span></td>
+						</tr>
+					</table>
+					<br />
+				</td>
+			</tr>
+		<!-- END body_row -->
+		</table>
+	{STOP_BORDER}
+</form>
