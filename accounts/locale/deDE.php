@@ -1,18 +1,18 @@
 <?php
-/** 
+/**
  * Dev.PKComp.net WoWRoster Addon
- * 
- * LICENSE: Licensed under the Creative Commons 
- *          "Attribution-NonCommercial-ShareAlike 2.5" license 
- * 
- * @copyright  2005-2007 Pretty Kitty Development 
- * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5" 
- * @link       http://dev.pkcomp.net 
- * @package    Accounts 
+ *
+ * LICENSE: Licensed under the Creative Commons
+ *          "Attribution-NonCommercial-ShareAlike 2.5" license
+ *
+ * @copyright  2005-2007 Pretty Kitty Development
+ * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5"
+ * @link       http://dev.pkcomp.net
+ * @package    Accounts
  * @subpackage Locale deDE
- */ 
+ */
 
-// -[ deDE Localization ]- 
+// -[ deDE Localization ]-
 
 // User class messages
 $lang['account_user']['msg10'] = "Login und/oder Passwort finden keinen Treffer in der Datenbank.";
@@ -49,5 +49,3 @@ $lang['account_user']['msg38'] = "Das best&auml;tigte Passwort hat keine &Uuml;b
 $lang['account_profile']['msg1'] = "Zur Zeit verf&uuml;gt dieses Konto über keine weiteren Profildaten.";
 $lang['account_profile']['msg2'] = "Die Profildaten wurden ge&auml;ndert.";
 $lang['account_profile']['msg3'] = "Es ist ein Fehler entstanden, bitte probieren Sie es erneut.";
-
-?>

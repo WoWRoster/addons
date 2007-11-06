@@ -11,4 +11,3 @@
  * @package    Accounts 
  * @subpackage Search 
  */ 
-?>
