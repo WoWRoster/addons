@@ -1,0 +1,196 @@
+/******************************
+ * $Id$
+ ******************************/
+
+
+
+
+/**
+ * List Menus
+ */
+.tab_menu3 { padding:0;margin:0;font:11px arial,helvetica,sans-serif;list-style-type:none;text-align:center; }
+.tab_menu3 li { display:block;margin:2px 2px 2px; }
+.tab_menu3 li a {
+	display:block;
+	width:65px;
+background-image:url('addons/RosterGallery/inc/arrow-prev.bmp');
+	background-repeat:no-repeat;
+
+	text-decoration:none;
+
+}
+.tab_menu3 li a:visited { color:#CBA300; }
+.tab_menu3 li a:hover { text-decoration:none;background-color:#7A7772;color:#EABB00; }
+.tab_menu3 li.selected { position:relative; }
+.tab_menu3 li.selected a { background-color:#5b5955; }
+.tab_menu3 li.selected a:hover{ text-decoration:none;background-color:#7A7772; }
+
+.icon33 {
+	float:left;
+	width:77px;
+	height:24px;
+	padding:1px 0 0 0;
+	z-index:1;
+}
+
+
+
+.ss_table {
+	white-space:nowrap;
+}
+.ss_titletext {
+	font-size:14px;
+	font-weight:bold;
+	color:#DAA520;
+}
+.ss_table {
+	border:1px solid #212121;
+	white-space:nowrap;
+	font-size:10px;
+}
+.ss_row1 {
+	
+	color:#FFFFFF;
+	background-color:#1F1E1D;
+	font-size:12px;
+	white-space:nowrap;
+	border-style:solid;
+	border-width:1px 1px 1px 1px;
+	border-color:#5D5D5D #5D5D5D #5D5D5D #5D5D5D;
+}
+.ss_row2 {
+	
+	color:#FFFFFF;
+	background-color:#2E2D2B;
+	font-size:12px;
+	white-space:nowrap;
+	border-style:solid;
+	border-width:1px 1px 1px 1px;
+	border-color:#5D5D5D #5D5D5D #5D5D5D #5D5D5D;
+}
+.ss_row_right1 {
+	vertical-align:bottom;
+	color:#FFFFFF;
+	background-color:#1F1E1D;
+	font-size:10px;
+	white-space:nowrap;
+	border-style:solid;
+	border-width:1px 1px 0px 1px;
+	border-color:#000000 #5D5D5D #5D5D5D #5D5D5D;
+}
+.ss_row_right2 {
+	vertical-align:bottom;
+	color:#FFFFFF;
+	background-color:#2E2D2B;
+	font-size:10px;
+	white-space:nowrap;
+	border-style:solid;
+	border-width:1px 1px 0px 1px;
+	border-color:#000000 #5D5D5D #5D5D5D #5D5D5D;
+}
+
+.ss_row_left1 {
+	vertical-align:bottom;
+	color:#FFFFFF;
+	background-color:#1F1E1D;
+	font-size:10px;
+	white-space:nowrap;
+	border-style:solid;
+	border-width:1px 1px 0px 1px;
+	border-color:#000000 #5D5D5D #5D5D5D #5D5D5D;
+}
+.ss_row_left2 {
+	vertical-align:bottom;
+	color:#FFFFFF;
+	background-color:#2E2D2B;
+	font-size:10px;
+	white-space:nowrap;
+	border-style:solid;
+	border-width:1px 1px 0px 1px;
+	border-color:#000000 #5D5D5D #5D5D5D #5D5D5D;
+}
+.ss_header {
+	vertical-align:bottom;
+	color:#CBA300;
+	background-color:#2E2D2B;
+	font-size:10px;
+	white-space:nowrap;
+	border-style:solid;
+	border-width:1px 0px 0px 1px;
+	border-color:#5D5D5D;
+}
+.ss_header_right {
+	vertical-align:bottom;
+	color:#CBA300;
+	background-color:#2E2D2B;
+	font-size:10px;
+	white-space:nowrap;
+	border-style:solid;
+	border-width:1px 1px 0px 1px;
+	border-color:#5D5D5D;
+}
+.divider_sred {
+	height: 1px;
+	margin: 0px;
+	padding: 0px;
+	background-color: #FF0000;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+.divider_sgray {
+	height: 1px;
+	margin: 0px;
+	padding: 0px;
+	background-color: #999999;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+.divider_swhite {
+	height: 1px;
+	margin: 0px;
+	padding: 0px;
+	background-color: #FFFFFF;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+.divider_sblue {
+	height: 1px;
+	margin: 0px;
+	padding: 0px;
+	background-color: #0000FF;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+.divider_sgreen {
+	height: 1px;
+	margin: 0px;
+	padding: 0px;
+	background-color: #008000;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+.divider_syellow {
+	height: 1px;
+	margin: 0px;
+	padding: 0px;
+	background-color: #FFCC00;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+.divider_orange {
+	height: 1px;
+	margin: 0px;
+	padding: 0px;
+	background-color: #FFA500;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+.divider_purple {
+	height: 1px;
+	margin: 0px;
+	padding: 0px;
+	background-color: #4B0082;
+	border-top: 1px solid #000000;
+	border-bottom: 1px solid #000000;
+}
+
