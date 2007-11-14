@@ -1,3 +1,12 @@
+[315 - 111407]
+-Changed code for getGroups()
+-Started code for SuspendMembers - Now allows to move to a new group.
+-Fixed UniUploader not running guild update when using authentication.
+-Changed memberName to realName in update_hook
+-Found another hard coded path to /forum/ - fixed.
+-Removed Administrator and Global Moderator from the admin dropdowns.
+--Can be manually changed in /admin/config.func.php by changing the sql query on line 29.
+-Increased version number to prepare for update.
 [278 - 102307]
 -Updated version number.
 [275 - 102307]
@@ -88,5 +97,7 @@ Todo
 -Ready for public beta.
 
 Bugs
+Groups are not updated at all if suspend members is turned off and member leaves guild.
+Need to work on auth for uniuploader. Guild update is not functioning in uni when user auth is active.
 
 

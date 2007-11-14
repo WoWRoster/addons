@@ -17,25 +17,28 @@ if ( !defined('IN_ROSTER') )
     exit('Detected invalid access to this file!');
 }
 
-function getProtectedGroup(){
+function getGroups($values){
 	global $roster;
 	global $addon;
 	if (!$addon['config']['forum_prefix'] || $addon['config']['forum_prefix'] == ''){
 		$return = 'Set forum_prefix.';
 	}else{
-		$query = "SELECT * FROM `{$addon['config']['forum_prefix']}membergroups` WHERE `minPosts` = '-1'";
-		//$query = "SELECT * FROM `smf_membergroups` ";
+		$configName = $values['name'];
+		//The ID_GROUP > 3 stops the script from showing Administrator, Global Moderator and Moderator.
+		//If you wish to show moderator change it to 2, global moderator 1,and Administrator 0.
+		$query = "SELECT * FROM `{$addon['config']['forum_prefix']}membergroups` WHERE `ID_GROUP` > 3 AND `minPosts` = '-1'";
 		$result = $roster->db->query ( $query );
 
-		$return = '<select name="config_guild_protected_group">';
-		if ($addon['config']['guild_protected_group'] == 0){
+		$return = '<select name="config_' . $configName . '">';
+		if ($addon['config'][$configName] == 0){
 			$return .= '<option value="0" selected="selected">-[ Disabled ]-</option>';
 		}else{
 			$return .= '<option value="0">Disabled</option>';
 		}
 
 		while ($row = $roster->db->fetch ( $result ) ){
-			if ($row['ID_GROUP'] == $addon['config']['guild_protected_group']){
+
+			if ($row['ID_GROUP'] == $addon['config'][$configName]){
 				$return .= '<option value="'. $row['ID_GROUP'] .'" selected="selected">-[ '. $row['groupName'] .' ]-</option>';
 			}else{
 				$return .= '<option value="'. $row['ID_GROUP'] .'">'. $row['groupName'] .'</option>';
@@ -45,6 +48,8 @@ function getProtectedGroup(){
 	}
 	return $return;
 }
+
+
 function getGuildList(){
 	global $roster;
 	global $addon;
@@ -84,8 +89,6 @@ function topBox(){
 		//return messagebox("Guild must be selected before enabling.","Warning");
 		$return .= messagebox("Guild must be selected before enabling.","Warning");
 	}
-	//Check for up to date version from wowroster.net
-	//$return .= updateCheck( $addon );
 
 	return $return;
 }

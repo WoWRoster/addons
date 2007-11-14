@@ -43,6 +43,7 @@ $lang['admin']['guild_groups_create']='Automatically create groups|Automatically
 $lang['admin']['guild_enable_personaltext']='Set Personal text to Guild note|Set SMF Personal Text to Guild note.';
 $lang['admin']['guild_protected_group']='Protected group|Members of this group will not have their account suspended or any of their settings changed.<br />To use, create a group in SMF that you wish to use, and set permissions accordingly.<br />Then select the appropriate group here.';
 $lang['admin']['group_permissions']='Group Permissions';
+$lang['admin']['guild_suspended_group']='Select a group to put suspended members in|';
 
 $lang['LocationNotSpecified']='Location not specified. Assuming inside ArmorySync.';
 $lang['LocationIsCurrent']='Location is current.';

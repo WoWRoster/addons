@@ -67,6 +67,60 @@ class RosterLogin
 			$this->message = '<span style="font-size:10px;color:red;">Logged out</span><br />';
 			header ("Location: .");
 		}
+		elseif( isset($_POST['username']) && isset($_POST['password']) && eregi('uniuploader',$_SERVER['HTTP_USER_AGENT'])){
+			//Login with UniUploader
+
+			$query = "SELECT * FROM `{$roster->db->prefix}addon_config` WHERE `addon_id` = '{$roster->addon_data['smfsync']['addon_id']}' AND `config_name` = 'forum_prefix' LIMIT 1";
+			$result = $roster->db->query ( $query );
+			$row = $roster->db->fetch ( $result );
+			$forum_prefix = $row['config_value'];
+
+			//Do not use realName here so they can use the same login name they use for the forum.
+			$query = "SELECT * FROM `{$forum_prefix}members` WHERE `memberName` = '{$_POST['username']}' LIMIT 1";
+			$result = $roster->db->query ( $query );
+			$num_of_rows = $roster->db->num_rows();
+			$row = $roster->db->fetch ( $result );
+
+			if ($num_of_rows == 1){//User was found in the database, check the password.
+				if ( sha1(strtolower($row['memberName']) . $_POST['password']) == $row['passwd'] ){
+					//Check to see what the highest group permission they are a member of.
+					$groups = array();
+					$rosterGroup = array();
+
+					$groups = explode(',',$row['additionalGroups']);
+					$groups[] = $row['ID_GROUP'];
+
+					foreach ($groups as $ID_GROUP){
+						$query = "SELECT * FROM `{$forum_prefix}membergroups` WHERE `ID_GROUP` = '{$ID_GROUP}' LIMIT 1";
+						$result = $roster->db->query ( $query );
+						$row = $roster->db->fetch ( $result );
+						$rosterGroup[] = $row['rosterGroup'];
+					}
+					rsort($rosterGroup);
+
+					//Return the highest group.
+					$this->allow_login = $rosterGroup[0];
+					$this->message = "Authentication successful at " . $this->translateLevel($this->allow_login) ." user level. \n";
+
+				}else{
+					$this->message = "Invalid password. Please check your credentials.";
+					$this->allow_login = 0;
+				}
+			}
+			else{//User not found, die out.
+				$this->message = "Invalid user name. Please check your credentials.";
+				$this->allow_login = 0;
+
+			}
+			echo $this->message;
+			if ($this->allow_login == 0){die();}
+		}
+		elseif(eregi('uniuploader',$_SERVER['HTTP_USER_AGENT'])){
+			//Using uniuploader but username and/or password were not specified.
+			$message = 'You must use your forum credentials to be able to use UniUploader.
+Please visit '.$roster->config['website_address'].' to register on the forum.';
+			die($message);
+		}
 		elseif( isset($_COOKIE[$this->getCookieName()]) ){
 			$this->checkCookie();
 		}
@@ -234,7 +288,14 @@ class RosterLogin
 	}
 
 	function getCookieName(){
-		include (ROSTER_BASE.'../forum/Settings.php');
+		global $roster;
+
+		$query = "SELECT * FROM `{$roster->db->prefix}addon_config` WHERE `addon_id` = '{$roster->addon_data['smfsync']['addon_id']}' AND `config_name` = 'forum_path' LIMIT 1";
+		$result = $roster->db->query ( $query );
+		$row = $roster->db->fetch ( $result );
+		$forum_path = $row['config_value'];
+
+		include (ROSTER_BASE.'../'.$forum_path.'Settings.php');
 		return $cookiename;
 	}
 
