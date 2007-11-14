@@ -77,7 +77,7 @@ class smfsyncUpdate
 				//This "should" be safe here, from looking in roster/lib/update.lib.php
 				//it looks like this function is run AFTER the guild is updated.
 				$query = "SELECT * FROM `{$this->data['config']['forum_prefix']}members` WHERE
-							`memberName` = '{$data['Name']}' ";
+							`realName` = '{$data['Name']}' ";
 				$result = $roster->db->query ( $query );
 				$row = $roster->db->fetch ( $result );
 
@@ -88,7 +88,7 @@ class smfsyncUpdate
 				}else{ //Player is in forum, check forum group to guild title.
 					//Dont forget to check if forum group is 1(admin) and set it to additional groups when changing
 					$query = "SELECT * FROM `{$this->data['config']['forum_prefix']}members` m,
-							 `{$this->data['config']['forum_prefix']}membergroups` g WHERE m.memberName =
+							 `{$this->data['config']['forum_prefix']}membergroups` g WHERE m.realName =
 							 '{$data['Name']}' AND m.ID_GROUP = g.ID_GROUP ";
 					$result = $roster->db->query ( $query );
 					$row = $roster->db->fetch ( $result );
@@ -111,12 +111,12 @@ class smfsyncUpdate
 													</span><br />\n";
 							}else{
 								$query4 = "UPDATE `{$this->data['config']['forum_prefix']}members` SET `ID_GROUP` =
-											'{$row3['ID_GROUP']}' WHERE `memberName` = '{$row2['name']}' LIMIT 1";
+											'{$row3['ID_GROUP']}' WHERE `realName` = '{$row2['name']}' LIMIT 1";
 								$result4 = $roster->db->query ( $query4 );
 
 								if ($row['ID_GROUP'] == 1){ //Check if user was an admin and set it in additional groups
 									$query5 = "UPDATE `{$this->data['config']['forum_prefix']}members`
-												SET `additionalGroups` = '1' WHERE `memberName` =
+												SET `additionalGroups` = '1' WHERE `realName` =
 												'{$row2['name']}' LIMIT 1";
 									$result5 = $roster->db->query ( $query5 );
 								}
@@ -141,7 +141,7 @@ class smfsyncUpdate
  					&& ($this->protectedGroup($data['Name']) == false)
  					){
  				$query = "SELECT `signature` FROM `{$this->data['config']['forum_prefix']}members` WHERE
- 							`memberName` = '{$data['Name']}' LIMIT 1";
+ 							`realName` = '{$data['Name']}' LIMIT 1";
  				$result = $roster->db->query( $query );
  				$row = $roster->db->fetch ( $result );
 
@@ -154,7 +154,7 @@ class smfsyncUpdate
 	 				if ($row['signature'] != $SetSigAs){
 	 					//Update Signature
 	 					$query = "UPDATE `{$this->data['config']['forum_prefix']}members` SET `signature` =
-	 								'$SetSigAs' WHERE `memberName` = '{$data['Name']}' LIMIT 1";
+	 								'$SetSigAs' WHERE `realName` = '{$data['Name']}' LIMIT 1";
 	 					$result = $roster->db->query ( $query );
 	 					if ($roster->db->affected_rows() == 1){
 	 						$this->messages .= "<li><span class=\"green\">{$roster->locale->act['SigUpdated']}
@@ -177,7 +177,7 @@ class smfsyncUpdate
  					&& ($this->protectedGroup($data['Name']) == false)
  					){
  				$query = "SELECT `avatar` FROM `{$this->data['config']['forum_prefix']}members` WHERE
- 							`memberName` = '{$data['Name']}' LIMIT 1";
+ 							`realName` = '{$data['Name']}' LIMIT 1";
  				$result = $roster->db->query( $query );
  				$row = $roster->db->fetch ( $result );
 
@@ -190,7 +190,7 @@ class smfsyncUpdate
 	 				if ($row['avatar'] != $SetAvAs){
 	 					//Update Signature
 	 					$query = "UPDATE `{$this->data['config']['forum_prefix']}members` SET `avatar` = '$SetAvAs'
-	 								WHERE `memberName` = '{$data['Name']}' LIMIT 1";
+	 								WHERE `realName` = '{$data['Name']}' LIMIT 1";
 	 					$result = $roster->db->query ( $query );
 	 					if ($roster->db->affected_rows() == 1){
 	 						$this->messages .= "<li><span class=\"green\">{$roster->locale->act['AvUpdated']}</span><br />\n";
@@ -213,7 +213,7 @@ class smfsyncUpdate
 				if (isset($data['Note']) == true){
 					$Note = $roster->db->escape($data['Note']);
 					$query = "UPDATE `{$this->data['config']['forum_prefix']}members` SET `personalText` =
-								'{$Note}' WHERE `memberName` = '{$data['Name']}' LIMIT 1 ;";
+								'{$Note}' WHERE `realName` = '{$data['Name']}' LIMIT 1 ;";
 					$result = $roster->db->query ( $query );
 					if ($roster->db->affected_rows() == 1){
 						$this->messages .= "<li><span class=\"green\">{$roster->locale->act['PersonalTextUpdated']}
@@ -301,7 +301,7 @@ class smfsyncUpdate
  				}
  			}
  			//Suspend members after leaving the guild.
-			if ($this->data['config']['guild_suspend'] == true){
+			if ($this->data['config']['guild_suspend'] == 1){
 				//Get the suspended group ID
 				$query = "SELECT * FROM `{$this->data['config']['forum_prefix']}membergroups` WHERE `groupName` =
 							'{$roster->locale->act['Suspended']}' ";
@@ -309,24 +309,47 @@ class smfsyncUpdate
 				$GroupID = $row['ID_GROUP'];
 
 				$query = "SELECT * FROM `{$roster->db->prefix}members` m, `{$this->data['config']['forum_prefix']}members` f
-							WHERE m.active = 0 AND f.is_activated = 1 AND m.name = f.memberName";
+							WHERE m.active = 0 AND f.is_activated = 1 AND m.name = f.realName";
 				$result = $roster->db->query ( $query );
 				while ($row = $roster->db->fetch ( $result ) ){
-					if ($this->protectedGroup($row['memberName']) == true){
-						$this->messages .= "<span class=\"green\">{$row['memberName']} -
+					if ($this->protectedGroup($row['realName']) == true){
+						$this->messages .= "<span class=\"green\">{$row['realName']} -
 											{$roster->locale->act['MemberGroupProtected']}</span><br />\n";
 						break;
 					}
 					$query = "UPDATE `{$this->data['config']['forum_prefix']}members` SET `is_activated` = '0',
 								`passwd` = '', `passwordSalt` = '', `emailAddress` = 'SUSPENDED_{$row['emailAddress']}_SUSPENDED',
 								`personalText` = '', `signature` = '{$roster->locale->act['NoLongerAMember']}', `avatar` = '',
-								`ID_GROUP` = '$GroupID' WHERE `memberName` = '{$row['name']}' LIMIT 1";
+								`ID_GROUP` = '$GroupID', `additionalGroups` = '' WHERE `realName` = '{$row['name']}' LIMIT 1";
 					$roster->db->query( $query );
 					//---------------------------------------------No space here \/ because locale file has 's in it.
-					$this->messages .= "<span class=\"green\">{$row['memberName']}{$roster->locale->act['MemberSuspended']}
+					$this->messages .= "<span class=\"green\">{$row['realName']}{$roster->locale->act['MemberSuspended']}
 									</span><br />\n";
 
 				}
+			}
+			elseif($this->data['config']['guild_suspend'] == 2){
+				//
+				if ($this->data['config']['guild_suspended_group'] != 0){
+					//
+					$query = "SELECT * FROM `{$roster->db->prefix}members` m, `{$this->data['config']['forum_prefix']}members` f
+							WHERE m.active = 0 AND f.is_activated = 1 AND m.name = f.realName";
+					$result = $roster->db->query ( $query );
+					while ($row = $roster->db->fetch ( $result ) ){
+						if ($this->protectedGroup($row['realName']) == true){
+							$this->messages .= "<span class=\"green\">{$row['realName']} -
+												{$roster->locale->act['MemberGroupProtected']}</span><br />\n";
+							break;
+						}
+							$query = "UPDATE `{$this->data['config']['forum_prefix']}members` SET
+									`ID_GROUP` = '{$this->data['config']['guild_suspended_group']}', `additionalGroups` = ''
+									WHERE `realName` = '{$row['name']}' LIMIT 1";
+							$roster->db->query ( $query );
+							$this->messages .= "<span class=\"green\">{$row['realName']} moved to guest group.</span><br />\n";
+					}
+
+				}
+
 			}
 
  		}
@@ -354,7 +377,7 @@ class smfsyncUpdate
  					&& ($this->protectedGroup($data['Name']) == false)
  				){
  				//Read the current location setting.
- 				$query = "SELECT `location` FROM `{$this->data['config']['forum_prefix']}members` WHERE `memberName` =
+ 				$query = "SELECT `location` FROM `{$this->data['config']['forum_prefix']}members` WHERE `realName` =
  							'{$data['Name']}' ";
  				$result = $roster->db->query( $query );
 
@@ -373,7 +396,7 @@ class smfsyncUpdate
 		 										</span><br />\n";
 		 				}else{
 		 					$query = "UPDATE `{$this->data['config']['forum_prefix']}members` SET `location` =
-		 								'{$data['Hearth']}'	WHERE `memberName` = '{$data['Name']}' LIMIT 1 ";
+		 								'{$data['Hearth']}'	WHERE `realName` = '{$data['Name']}' LIMIT 1 ";
 		 					$result = $roster->db->query ( $query );
 		 					$ResultRows = $roster->db->affected_rows();
 		 					if ($ResultRows == 1){
@@ -397,7 +420,7 @@ class smfsyncUpdate
 		 										</span><br />\n";
 		 				}else{
 		 					$query = "UPDATE `{$this->data['config']['forum_prefix']}members` SET `location` =
-		 								'{$data['Zone']}' WHERE `memberName` = '{$data['Name']}' LIMIT 1 ";
+		 								'{$data['Zone']}' WHERE `realName` = '{$data['Name']}' LIMIT 1 ";
 		 					$result = $roster->db->query ( $query );
 		 					$ResultRows = $roster->db->affected_rows();
 		 					if ($ResultRows == 1){
@@ -438,7 +461,7 @@ class smfsyncUpdate
 		}
 
 		//Get groups.
-		$query = "SELECT * FROM `{$this->data['config']['forum_prefix']}members` WHERE `memberName` = '$name' LIMIT 1";
+		$query = "SELECT * FROM `{$this->data['config']['forum_prefix']}members` WHERE `realName` = '$name' LIMIT 1";
 		$result = $roster->db->query ( $query );
 		$row = $roster->db->fetch ( $result );
 		$groups = $row['ID_GROUP'].','.$row['additionalGroups'];
