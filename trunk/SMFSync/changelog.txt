@@ -1,3 +1,7 @@
+[316 - 111507]
+-Added code to import GroupCalendar mod into SMF's calendar.
+--For now I had to use the original author's LUA parser because I couldnt get
+--rosters to work for me correctly.
 [315 - 111407]
 -Changed code for getGroups()
 -Started code for SuspendMembers - Now allows to move to a new group.

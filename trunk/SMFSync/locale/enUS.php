@@ -22,6 +22,7 @@ $lang['smfsync_desc']='Syncrhonize guild members with forum members.';
 $lang['admin']['smf_menu_main']='Main|Main settings';
 $lang['admin']['smf_menu_player']='Player|Options for items updated on player update';
 $lang['admin']['smf_menu_guild']='Guild|Options for items updated on guild update';
+$lang['admin']['smf_menu_groupcal']='GroupCalendar|Options for GroupCalendar mod';
 $lang['admin']['smf_menu_permissions']='Permissions|Set permissions for groups here';
 
 $lang['admin']['main_enable']='Enable SMFSync|If disabled, SMFSync will not run at all.';
@@ -44,6 +45,9 @@ $lang['admin']['guild_enable_personaltext']='Set Personal text to Guild note|Set
 $lang['admin']['guild_protected_group']='Protected group|Members of this group will not have their account suspended or any of their settings changed.<br />To use, create a group in SMF that you wish to use, and set permissions accordingly.<br />Then select the appropriate group here.';
 $lang['admin']['group_permissions']='Group Permissions';
 $lang['admin']['guild_suspended_group']='Select a group to put suspended members in|';
+
+$lang['admin']['groupcal_enable']='Enable GroupCalendar Sync with SMF Calendar|Dont forget to enable and setup permissions<br />for the calendar in SMF\'s admin panel.';
+$lang['admin']['groupcal_update_permission']='Permission to update|Select permission level to update calendar';
 
 $lang['LocationNotSpecified']='Location not specified. Assuming inside ArmorySync.';
 $lang['LocationIsCurrent']='Location is current.';
