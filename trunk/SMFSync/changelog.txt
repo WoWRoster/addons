@@ -1,3 +1,6 @@
+[317 - 111507]
+-Thank you Zanix!
+--Fixed having to use the original author's LUA parser.
 [316 - 111507]
 -Added code to import GroupCalendar mod into SMF's calendar.
 --For now I had to use the original author's LUA parser because I couldnt get
@@ -99,6 +102,7 @@
 
 Todo
 -Ready for public beta.
+-Make it optional to replace entire signature or just make sure specific part is in it.
 
 Bugs
 Groups are not updated at all if suspend members is turned off and member leaves guild.
