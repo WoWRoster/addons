@@ -23,7 +23,7 @@ if ( !defined('ROSTER_INSTALLED') )
  * @package    Accounts
  * @subpackage Installer
  */
-class accounts
+class accountsInstall
 {
 	var $active = true;
 	var $icon = 'inv_misc_groupneedmore';

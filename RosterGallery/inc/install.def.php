@@ -25,7 +25,7 @@ if ( !defined('ROSTER_INSTALLED') )
  * @subpackage Installer
  *
  */
-class rostergallery
+class rostergalleryInstall
 {
 	var $active = true;
 	var $icon = 'inv_misc_spyglass_03';

@@ -24,7 +24,7 @@ if ( !defined('IN_ROSTER') )
  * @package ArmorySync
  * @subpackage Installer
  */
-class armorysync
+class armorysyncInstall
 {
 	var $active = true;
 	var $icon = 'inv_misc_missilesmall_blue';

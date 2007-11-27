@@ -23,7 +23,7 @@ if ( !defined('IN_ROSTER') )
  * @package    AutoRecruit
  * @subpackage Installer
  */
-class autorecruit
+class autorecruitInstall
 {
 	var $active = true;
 	var $icon = 'spell_holy_blessedlife';

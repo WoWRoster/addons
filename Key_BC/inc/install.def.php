@@ -25,7 +25,7 @@ if ( !defined('ROSTER_INSTALLED') )
  * @subpackage Installer
  *
  */
-class Key_BC
+class Key_BCInstall
 {
 	var $active = true;
 	var $icon = 'inv_misc_key_01';
