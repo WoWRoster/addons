@@ -25,7 +25,7 @@ if ( !defined('ROSTER_INSTALLED') )
  * @subpackage Installer
  *
  */
-class GemsDisplay
+class GemsDisplayInstall
 {
 	var $active = true;
 	var $icon = 'inv_jewelcrafting_nightseye_03';

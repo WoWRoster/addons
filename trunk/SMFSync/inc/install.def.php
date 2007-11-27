@@ -23,7 +23,7 @@ if ( !defined('IN_ROSTER') )
  * @package SMFSync
  * @subpackage Installer
  */
-class smfsync
+class smfsyncInstall
 {
 	var $active = true;
 	var $icon = 'smf.gif';

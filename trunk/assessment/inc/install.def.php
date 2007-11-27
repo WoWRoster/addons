@@ -24,7 +24,7 @@ if ( !defined('IN_ROSTER') )
  * @package    Assessment
  * @subpackage Installer
  */
-class assessment
+class assessmentInstall
 {
 	var $active = true;
 	var $icon = 'ability_ambush';

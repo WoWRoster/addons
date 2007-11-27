@@ -26,7 +26,7 @@ if ( !defined('IN_ROSTER') )
  * @subpackage Installer
  *
  */
-class siggen
+class siggenInstall
 {
 	var $active = true;
 	var $icon = 'inv_misc_book_13';
