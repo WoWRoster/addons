@@ -97,6 +97,10 @@ if ( !defined('IN_ROSTER') )
 			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="font_dir" type="text" value="<?php print $configData['font_dir']; ?>" size="20" maxlength="64" /></td>
 		</tr>
 		<tr>
+			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Set the links that are displayed on the character page<br /><br />- &quot;Default&quot; Shows the default link, based on Roster SEO settings<br />- &quot;Force SEO&quot; Force the display of the SEO link<br />- &quot;Save Directory&quot; Show the link to the saved generated image','Show Link' ); ?></td>
+			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionList($linklist,$configData['link_type'],'link_type' ); ?></td>
+		</tr>
+		<tr>
 			<td class="sc_row_right<?php echo (((++$row)%2)+1); ?>" align="left" colspan="2"><?php print $functions->createTip( 'These <u><strong>MUST</strong></u> be separated with a ( : )<br />Choices { frames | char | border | pvp | lvl | class }','Image layer order' ); ?>
 				<input name="image_order" type="text" value="<?php print $configData['image_order']; ?>" size="50" maxlength="128" /></td>
 		</tr>
@@ -157,14 +161,6 @@ if( $allow_save )
 				No</label></td>
 		</tr>
 		<tr>
-			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'This will convert accented characters in a player\\\'s name to non accented characters when saving images<br /><span class=&quot;red&quot;>WARNING:</span> All players with names that map to the same name can and will be overwritten<br />For a list of converted characters, view the SigGen Documentation','Convert Accents' ); ?></td>
-			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><label>
-				<input type="radio" class="checkBox" name="save_char_convert" value="1" <?php print ( $configData['save_char_convert'] ? 'checked="checked"' : '' ); ?> />
-				Yes</label> <label>
-				<input type="radio" class="checkBox" name="save_char_convert" value="0" <?php print ( !$configData['save_char_convert'] ? 'checked="checked"' : '' ); ?> />
-				No</label></td>
-		</tr>
-		<tr>
 			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Specify a directory to save generated images to<br />This is a full path to the save location<br />Options:<ul><li>%s - Use this to specify the SigGen Directory</li><li>%r - Use this to specify the Roster Directory</li></ul>Current save path is &quot;'.str_replace('\\','/',str_replace($siggen_saved_find,$siggen_saved_rep,$configData['save_images_dir'])).'&quot;','Saved images directory' ); ?></td>
 			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="save_images_dir" type="text" value="<?php print $configData['save_images_dir']; ?>" size="20" maxlength="255" /></td>
 		</tr>
@@ -191,6 +187,14 @@ if( $allow_save )
 				<input type="radio" class="checkBox" name="guild_trigger" value="1" <?php print ( $configData['guild_trigger'] ? 'checked="checked"' : '' ); ?> />
 				Yes</label> <label>
 				<input type="radio" class="checkBox" name="guild_trigger" value="0" <?php print ( !$configData['guild_trigger'] ? 'checked="checked"' : '' ); ?> />
+				No</label></td>
+		</tr>
+		<tr>
+			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'This will clear the saved directory when &quot;Auto-save images on guild update&quot; is active<br />Useful to clear out old saved images','Clear Saved Directory' ); ?></td>
+			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><label>
+				<input type="radio" class="checkBox" name="clear_dir" value="1" <?php print ( $configData['clear_dir'] ? 'checked="checked"' : '' ); ?> />
+				Yes</label> <label>
+				<input type="radio" class="checkBox" name="clear_dir" value="0" <?php print ( !$configData['clear_dir'] ? 'checked="checked"' : '' ); ?> />
 				No</label></td>
 		</tr>
 		<tr>
@@ -225,11 +229,11 @@ else
 		<tr>
 			<td class="sc_header_right" colspan="2" align="center"><?php print $functions->createTip( 'Either the directory doesn&acute;t exist or &quot;Save Images&quot; is turned off','Save Image Functions Disabled' ); ?>
 				<input name="save_only_mode" type="hidden" value="0" />
-				<input name="save_char_convert" type="hidden" value="<?php print $configData['save_char_convert']; ?>" />
 				<input name="save_prefix" type="hidden" value="<?php print $configData['save_prefix']; ?>" />
 				<input name="save_suffix" type="hidden" value="<?php print $configData['save_suffix']; ?>" />
 				<input name="trigger" type="hidden" value="0" />
 				<input name="guild_trigger" type="hidden" value="0" />
+				<input name="clear_dir" type="hidden" value="<?php print $configData['clear_dir']; ?>" />
 				<input name="uniup_compat" type="hidden" value="<?php print $configData['uniup_compat']; ?>" /></td>
 		</tr>
 	</table>
