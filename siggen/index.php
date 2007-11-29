@@ -38,4 +38,4 @@ if ( !defined('IN_ROSTER') )
 }
 
 // Require sig.php (must be in the same directory)
-require (dirname(__FILE__).DIRECTORY_SEPARATOR.'siggen.php');
+require (dirname(__FILE__) . DIRECTORY_SEPARATOR . 'siggen.php');

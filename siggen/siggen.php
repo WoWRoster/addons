@@ -44,33 +44,12 @@ if( CAN_INI_SET )
 }
 
 
-// Get name from browser request
-if( isset($_GET['member']) )
+// Get member_id from $roster->anchor
+if( $roster->atype == 'char' )
 {
-	if( is_numeric($_GET['member']) )
-	{
-		$member_where = ' `member_id` = "' . $_GET['member'] . '"';
-	}
-	elseif( strpos($_GET['member'], '@') !== false )
-	{
-		list($name, $realm) = explode('@',$_GET['member']);
-		if( strpos($realm,'-') !== false )
-		{
-			list($region, $realm) = explode('-',$realm);
-			$member_where = ' `name` = "' . $name . '" AND `server` = "' . $realm . '" AND `region` = "' . strtoupper($region) . '"';
-		}
-		else
-		{
-			$member_where = ' `name` = "' . $name . '" AND `server` = "' . $realm . '"';
-		}
-	}
-	else
-	{
-		$name = $_GET['member'];
-		$member_where = ' `name` = "' . $name . '"';
-	}
+	$member_where = ' `member_id` = "' . $roster->anchor . '"';
 }
-/*
+/* Commented out since we are accessing this via the framework
 elseif( isset($_SERVER['REQUEST_URI']) ) // Try pulling from a "REQUEST_URI" request
 {
 	list($char_name,$img_format) = explode('.', $_SERVER['REQUEST_URI']);
@@ -95,7 +74,7 @@ elseif( isset($roster->pages[2]) )
 }
 else
 {
-	if( eregi(basename(__FILE__),$roster->pages[1]).'.php' )
+	if( eregi(basename(__FILE__),$roster->pages[1]) . '.php' )
 	{
 		debugMode('1',"You cannot access siggen directly without a 'mode' option");
 	}
@@ -151,7 +130,7 @@ if( isset($_GET['format']) )
 #--[ MYSQL CONNECT AND STORE ]---------------------------------------------
 
 	// Read SigGen Config data from Database
-	$config_str = 'SELECT * FROM `'.ROSTER_SIGCONFIGTABLE."` WHERE `config_id` LIKE '$config_name';";
+	$config_str = 'SELECT * FROM `' . ROSTER_SIGCONFIGTABLE . "` WHERE `config_id` LIKE '$config_name';";
 	$config_sql = $roster->db->query($config_str);
 	if( $config_sql && $roster->db->num_rows() != 0 )
 	{
@@ -159,7 +138,7 @@ if( isset($_GET['format']) )
 	}
 	else
 	{
-		debugMode('DB',"Could not find config_id [$config_name] in table [".ROSTER_SIGCONFIGTABLE."]",(__FILE__),0,'MySQL said: '.$roster->db->error());
+		debugMode('DB',"Could not find config_id [$config_name] in table [" . ROSTER_SIGCONFIGTABLE . "]",(__FILE__),0,'MySQL said: ' . $roster->db->error());
 	}
 	$roster->db->free_result();
 
@@ -172,7 +151,7 @@ if( isset($_GET['format']) )
 
 
 	// Read member list from Database
-	$members_str = 'SELECT * FROM `'.$roster->db->table('members').'` WHERE'.$member_where.';';
+	$members_str = 'SELECT * FROM `' . $roster->db->table('members') . '` WHERE' . $member_where . ' LIMIT 1;';
 	$members_sql = $roster->db->query($members_str);
 	if( $members_sql )
 	{
@@ -181,7 +160,7 @@ if( isset($_GET['format']) )
 	}
 	else
 	{
-		debugMode('DB','Could not get Members Data','',0,"MySQL said: ".$roster->db->error());
+		debugMode('DB','Could not get Members Data','',0,"MySQL said: " . $roster->db->error());
 	}
 
 	// If the member is not found, write message to name
@@ -194,7 +173,7 @@ if( isset($_GET['format']) )
 
 
 	// Read guild list from Database
-	$guild_str = 'SELECT * FROM `'.$roster->db->table('guild')."` WHERE `guild_id` = '".$membersData['guild_id']."';";
+	$guild_str = 'SELECT * FROM `' . $roster->db->table('guild') . "` WHERE `guild_id` = '" . $membersData['guild_id'] . "' LIMIT 1;";
 	$guild_sql = $roster->db->query($guild_str);
 	if( $guild_sql )
 	{
@@ -202,13 +181,13 @@ if( isset($_GET['format']) )
 	}
 	else
 	{
-		debugMode('DB','Could not get Guild Data','',0,"MySQL said: ".$roster->db->error());
+		debugMode('DB','Could not get Guild Data','',0,"MySQL said: " . $roster->db->error());
 	}
 	$roster->db->free_result();
 
 
 	// Read character data from Database
-	$players_str = 'SELECT * FROM `'.$roster->db->table('players')."` WHERE `member_id` = '$member_id';";
+	$players_str = 'SELECT * FROM `' . $roster->db->table('players') . "` WHERE `member_id` = '$member_id' LIMIT 1;";
 	$players_sql = $roster->db->query($players_str);
 	if( $players_sql )
 	{
@@ -216,7 +195,7 @@ if( isset($_GET['format']) )
 	}
 	else
 	{
-		debugMode('DB','Could not get Character Data','',0,"MySQL said: ".$roster->db->error());
+		debugMode('DB','Could not get Character Data','',0,"MySQL said: " . $roster->db->error());
 	}
 	$roster->db->free_result();
 
@@ -224,7 +203,7 @@ if( isset($_GET['format']) )
 	// Read skills_table from Database
 	if( isset($playersData['name']) )
 	{
-		$skill_str = 'SELECT * FROM `'.$roster->db->table('skills')."` WHERE `member_id` = $member_id ORDER BY `skill_order` ASC;";
+		$skill_str = 'SELECT * FROM `' . $roster->db->table('skills') . "` WHERE `member_id` = $member_id ORDER BY `skill_order` ASC;";
 		$skill_sql = $roster->db->query($skill_str);
 
 		$skill_rows = $roster->db->num_rows();
@@ -249,7 +228,7 @@ if( isset($_GET['format']) )
 	// Get Talent Spec
 	if( isset($playersData['name']) )
 	{
-		$spec_str = 'SELECT `pointsspent`, `tree` FROM `'.$roster->db->table('talenttree')."` WHERE `member_id` = '$member_id' ORDER BY `order` ASC;";
+		$spec_str = 'SELECT `pointsspent`, `tree` FROM `' . $roster->db->table('talenttree') . "` WHERE `member_id` = '$member_id' ORDER BY `order` ASC;";
 		$spec_sql = $roster->db->query($spec_str);
 
 		$spec_rows = $roster->db->num_rows();
@@ -281,13 +260,13 @@ if( isset($_GET['format']) )
 #--[ FIX SOME STUFF ]------------------------------------------------------
 
 	// Replace slashes in directories with system slashes
-		$configData['image_dir'] = str_replace( '/',DIR_SEP,SIGGEN_DIR.$configData['image_dir'] );
+		$configData['image_dir'] = str_replace( '/',DIR_SEP,SIGGEN_DIR . $configData['image_dir'] );
 		$configData['backg_dir'] = str_replace( '/',DIR_SEP,$configData['backg_dir'] );
 		$configData['user_dir'] = str_replace( '/',DIR_SEP,$configData['user_dir'] );
 		$configData['char_dir'] = str_replace( '/',DIR_SEP,$configData['char_dir'] );
 		$configData['class_dir'] = str_replace( '/',DIR_SEP,$configData['class_dir'] );
 		$configData['pvplogo_dir'] = str_replace( '/',DIR_SEP,$configData['pvplogo_dir'] );
-		$configData['font_dir'] = str_replace( '/',DIR_SEP,ROSTER_BASE.$configData['font_dir'] );
+		$configData['font_dir'] = str_replace( '/',DIR_SEP,ROSTER_BASE . $configData['font_dir'] );
 
 		$configData['save_images_dir'] = str_replace( '/',DIR_SEP,$configData['save_images_dir'] );
 		$configData['save_images_dir'] = str_replace( '%r',ROSTER_BASE,$configData['save_images_dir'] );
@@ -319,9 +298,9 @@ if( isset($_GET['format']) )
 		// Remove crap from pvprankicon
 		if( $playersData['lifetimeHighestRank'] > 0 )
 		{
-			if( file_exists($configData['image_dir'].$configData['pvplogo_dir'].'ext.inc') && is_readable($configData['image_dir'].$configData['pvplogo_dir'].'ext.inc') )
+			if( file_exists($configData['image_dir'] . $configData['pvplogo_dir'] . 'ext.inc') && is_readable($configData['image_dir'] . $configData['pvplogo_dir'] . 'ext.inc') )
 			{
-				include( $configData['image_dir'].$configData['pvplogo_dir'].'ext.inc' );
+				include( $configData['image_dir'] . $configData['pvplogo_dir'] . 'ext.inc' );
 			}
 			else
 			{
@@ -329,11 +308,11 @@ if( isset($_GET['format']) )
 			}
 			if( $playersData['lifetimeHighestRank'] < 10 )
 			{
-				$sig_pvp_icon = 'PvPRank0'.$playersData['lifetimeHighestRank'].'.'.$pvp_ext;
+				$sig_pvp_icon = 'PvPRank0' . $playersData['lifetimeHighestRank'] . '.' . $pvp_ext;
 			}
 			else
 			{
-				$sig_pvp_icon = 'PvPRank'.$playersData['lifetimeHighestRank'].'.'.$pvp_ext;
+				$sig_pvp_icon = 'PvPRank' . $playersData['lifetimeHighestRank'] . '.' . $pvp_ext;
 			}
 		}
 		else
@@ -342,15 +321,15 @@ if( isset($_GET['format']) )
 		}
 
 	// Translate Class Images
-		if( file_exists($configData['image_dir'].$configData['class_dir'].'ext.inc') && is_readable($configData['image_dir'].$configData['class_dir'].'ext.inc') )
+		if( file_exists($configData['image_dir'] . $configData['class_dir'] . 'ext.inc') && is_readable($configData['image_dir'] . $configData['class_dir'] . 'ext.inc') )
 		{
-			include( $configData['image_dir'].$configData['class_dir'].'ext.inc' );
+			include( $configData['image_dir'] . $configData['class_dir'] . 'ext.inc' );
 		}
 		else
 		{
 			$class_ext = 'png';
 		}
-		$sig_class_img = strtolower(getEnglishValue($sig_class,$sig_char_locale)).'.'.$class_ext;
+		$sig_class_img = strtolower(getEnglishValue($sig_class,$sig_char_locale)) . '.' . $class_ext;
 
 
 	// Check to remove 'http://'
@@ -394,7 +373,7 @@ if( isset($_GET['format']) )
 		else
 		{
 			header( 'Last-Modified: ' . gmdate('D, d M Y H:i:s T', $DTS) );
-			header( 'ETag: "{ '.md5($DTS).' }"' );
+			header( 'ETag: "{ ' . md5($DTS) . ' }"' );
 		}
 	}
 
@@ -418,8 +397,8 @@ if( isset($_GET['format']) )
 		}
 
 		$error_text = 'Error!';
-		$line_text  = 'Line: '.$line;
-		$file  = ( !empty($file) ? 'File: '.$file : '' );
+		$line_text  = 'Line: ' . $line;
+		$file  = ( !empty($file) ? 'File: ' . $file : '' );
 		$config = ( $config ? 'Check the config file' : '' );
 		$message2 = ( !empty($message2) ? $message2 : '' );
 
@@ -512,7 +491,7 @@ if( isset($_GET['format']) )
 		{
 			$for_curr = number_format($current);
 			$for_max = number_format($max);
-			return $for_curr.' of '.$for_max;
+			return $for_curr . ' of ' . $for_max;
 		}
 		else
 		{
@@ -666,7 +645,7 @@ if( isset($_GET['format']) )
 					}
 				}
 				// build NCE-Code
-				$html .= '&#'.$new_val.';';
+				$html .= '&#' . $new_val . ';';
 				// Skip additional UTF-8-Bytes
 				$str_pos = $str_pos + $str_off;
 			}
@@ -718,7 +697,7 @@ if( isset($_GET['format']) )
 	{
 		global $configData;
 
-		$font_file = $configData['font_dir'].$font;
+		$font_file = $configData['font_dir'] . $font;
 
 		// Check to see if SigGen can see the font
 		if( file_exists($font_file) )
@@ -797,7 +776,7 @@ if( isset($_GET['format']) )
 				break;
 
 			default:
-				debugMode( $line,'Unhandled image type: '.$info['mime'] );
+				debugMode( $line,'Unhandled image type: ' . $info['mime'] );
 		}
 
 		// Get the image dimentions
@@ -843,12 +822,12 @@ if( isset($_GET['format']) )
 
 	function blankpng()
 	{
-		$c  = "iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29m".
-			"dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAADqSURBVHjaYvz//z/DYAYAAcTEMMgBQAANegcCBNCg".
-			"dyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAAN".
-			"egcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQ".
-			"oHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAA".
-			"DXoHAgTQoHcgQAANegcCBNCgdyBAgAEAMpcDTTQWJVEAAAAASUVORK5CYII=";
+		$c  = "iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29m"
+			. "dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAADqSURBVHjaYvz//z/DYAYAAcTEMMgBQAANegcCBNCg"
+			. "dyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAAN"
+			. "egcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQ"
+			. "oHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAADXoHAgTQoHcgQAANegcCBNCgdyBAAA16BwIE0KB3IEAA"
+			. "DXoHAgTQoHcgQAANegcCBNCgdyBAgAEAMpcDTTQWJVEAAAAASUVORK5CYII=";
 		return $c;
 	}
 
@@ -874,29 +853,29 @@ if( isset($_GET['format']) )
 	if( $configData['charlogo_disp'] )
 	{
 		// Check for custom/uploaded image
-		$custom_user_img = $configData['image_dir'].$configData['user_dir'].$sig_name.'@'.$sig_region_name.'-'.$sig_server_name;
+		$custom_user_img = $configData['image_dir'] . $configData['user_dir'] . $sig_name . '@' . $sig_region_name . '-' . $sig_server_name;
 
 		// Set custom character image, based on name in DB
-		if( file_exists($custom_user_img.'.png') )
+		if( file_exists($custom_user_img . '.png') )
 		{
-			$im_user_file = $custom_user_img.'.png';
+			$im_user_file = $custom_user_img . '.png';
 		}
-		elseif( file_exists($custom_user_img.'.gif') )
+		elseif( file_exists($custom_user_img . '.gif') )
 		{
-			$im_user_file = $custom_user_img.'.gif';
+			$im_user_file = $custom_user_img . '.gif';
 		}
-		elseif( file_exists($custom_user_img.'.jpg') )
+		elseif( file_exists($custom_user_img . '.jpg') )
 		{
-			$im_user_file = $custom_user_img.'.jpg';
+			$im_user_file = $custom_user_img . '.jpg';
 		}
-		elseif( file_exists($custom_user_img.'.jpeg') )
+		elseif( file_exists($custom_user_img . '.jpeg') )
 		{
-			$im_user_file = $custom_user_img.'.jpeg';
+			$im_user_file = $custom_user_img . '.jpeg';
 		}
 		// If custom image is not found, check for image pack settings
-		elseif( file_exists($configData['image_dir'].$configData['char_dir'].'char.inc') )
+		elseif( file_exists($configData['image_dir'] . $configData['char_dir'] . 'char.inc') )
 		{
-			include( $configData['image_dir'].$configData['char_dir'].'char.inc' );
+			include( $configData['image_dir'] . $configData['char_dir'] . 'char.inc' );
 		}
 		else // Old legacy code if the char image pack doesnt have a char.inc file
 		{
@@ -907,18 +886,18 @@ if( isset($_GET['format']) )
 				if( !empty($sig_gender) )
 				{
 					// Set race-gender based image
-					$im_user_file = $configData['image_dir'].$configData['char_dir'].$sig_race.'-'.$sig_gender.$char_ext;
+					$im_user_file = $configData['image_dir'] . $configData['char_dir'] . $sig_race . '-' . $sig_gender . $char_ext;
 				}
 				// Set race only image
 				else
 				{
-					$im_user_file = $configData['image_dir'].$configData['char_dir'].$sig_race.$char_ext;
+					$im_user_file = $configData['image_dir'] . $configData['char_dir'] . $sig_race . $char_ext;
 				}
 
 			}	// Set default character image
 			else
 			{
-				$im_user_file = $configData['image_dir'].$configData['char_dir'].$configData['charlogo_default_image'];
+				$im_user_file = $configData['image_dir'] . $configData['char_dir'] . $configData['charlogo_default_image'];
 			}
 		}
 	}
@@ -946,45 +925,45 @@ if( isset($_GET['format']) )
 	{
 		if( $configData['backg_translate'] )
 		{
-			$key = array_search($configData['backg_search_'.$i],$roster->locale->wordings[$sig_char_locale]['translate']);
-			$backg[$key] = $configData['backg_file_'.$i];
+			$key = array_search($configData['backg_search_' . $i],$roster->locale->wordings[$sig_char_locale]['translate']);
+			$backg[$key] = $configData['backg_file_' . $i];
 		}
 		else
 		{
-			$backg[$configData['backg_search_'.$i]] = $configData['backg_file_'.$i];
+			$backg[$configData['backg_search_' . $i]] = $configData['backg_file_' . $i];
 		}
 	}
 
 	if( $configData['backg_disp'] )
 	{
 		// Set the default background image first
-		$im_back_file = $configData['image_dir'].$configData['backg_dir'].$configData['backg_default_image'];
+		$im_back_file = $configData['image_dir'] . $configData['backg_dir'] . $configData['backg_default_image'];
 
 		// Check if the default background is forced
 		if( !$configData['backg_force_default'] )
 		{
 			// Check for custom/uploaded image
-			$custom_back_img = $configData['image_dir'].$configData['user_dir'].'bk-'.$sig_name.'@'.$sig_region_name.'-'.$sig_server_name;
-			if( file_exists($custom_back_img.'.png') )
+			$custom_back_img = $configData['image_dir'] . $configData['user_dir'] . 'bk-' . $sig_name . '@' . $sig_region_name . '-' . $sig_server_name;
+			if( file_exists($custom_back_img . '.png') )
 			{
-				$im_back_file = $custom_back_img.'.png';
+				$im_back_file = $custom_back_img . '.png';
 			}
-			elseif( file_exists($custom_back_img.'.gif') )
+			elseif( file_exists($custom_back_img . '.gif') )
 			{
-				$im_back_file = $custom_back_img.'.gif';
+				$im_back_file = $custom_back_img . '.gif';
 			}
-			elseif( file_exists($custom_back_img.'.jpg') )
+			elseif( file_exists($custom_back_img . '.jpg') )
 			{
-				$im_back_file = $custom_back_img.'.jpg';
+				$im_back_file = $custom_back_img . '.jpg';
 			}
-			elseif( file_exists($custom_back_img.'.jpeg') )
+			elseif( file_exists($custom_back_img . '.jpeg') )
 			{
-				$im_back_file = $custom_back_img.'.jpeg';
+				$im_back_file = $custom_back_img . '.jpeg';
 			}
 			// Try setting background from config
 			elseif( ($backg['getdatafrom'] != '') && ($backg[$backg['getdatafrom']] != '') )
 			{
-				$selected_back_img = $configData['image_dir'].$configData['backg_dir'].$backg[$backg['getdatafrom']];
+				$selected_back_img = $configData['image_dir'] . $configData['backg_dir'] . $backg[$backg['getdatafrom']];
 				if( file_exists($selected_back_img) )
 				{
 					$im_back_file = $selected_back_img;
@@ -1027,7 +1006,7 @@ if( isset($_GET['format']) )
 		// Place the colored frames
 		if( $o == 'frames' && !empty($configData['frames_image']) )
 		{
-			$im_frame_file = $configData['image_dir'].$configData['frame_dir'].$configData['frames_image'];
+			$im_frame_file = $configData['image_dir'] . $configData['frame_dir'] . $configData['frames_image'];
 			if( file_exists($im_frame_file) )
 			{
 				combineImage( $im,$im_frame_file,(__LINE__),0,0 );
@@ -1037,7 +1016,7 @@ if( isset($_GET['format']) )
 		// Place the outside border
 		if( $o == 'border' && !empty($configData['outside_border_image']) )
 		{
-			$im_bdr_file = $configData['image_dir'].$configData['border_dir'].$configData['outside_border_image'];
+			$im_bdr_file = $configData['image_dir'] . $configData['border_dir'] . $configData['outside_border_image'];
 			if( file_exists($im_bdr_file) )
 			{
 				combineImage( $im,$im_bdr_file,(__LINE__),0,0 );
@@ -1047,7 +1026,7 @@ if( isset($_GET['format']) )
 		// Place HonorRank logo
 		if( $o == 'pvp' && $configData['pvplogo_disp'] && !empty($sig_pvp_icon) )
 		{
-			$im_pvp_file = $configData['image_dir'].$configData['pvplogo_dir'].$sig_pvp_icon;
+			$im_pvp_file = $configData['image_dir'] . $configData['pvplogo_dir'] . $sig_pvp_icon;
 			if( file_exists($im_pvp_file) )
 			{
 				combineImage( $im,$im_pvp_file,(__LINE__),$configData['pvplogo_loc_x'],$configData['pvplogo_loc_y'] );
@@ -1057,7 +1036,7 @@ if( isset($_GET['format']) )
 		// Place Class image
 		if( $o == 'class' && $configData['class_img_disp'] && !empty($sig_class_img) )
 		{
-			$im_class_file = $configData['image_dir'].$configData['class_dir'].$sig_class_img;
+			$im_class_file = $configData['image_dir'] . $configData['class_dir'] . $sig_class_img;
 			if( file_exists($im_class_file) )
 			{
 				combineImage( $im,$im_class_file,(__LINE__),$configData['class_img_loc_x'],$configData['class_img_loc_y'] );
@@ -1067,7 +1046,7 @@ if( isset($_GET['format']) )
 		// Place the level bubble
 		if( $o == 'lvl' && $configData['lvl_disp'] )
 		{
-			$im_lvl_file = $configData['image_dir'].$configData['level_dir'].$configData['lvl_image'];
+			$im_lvl_file = $configData['image_dir'] . $configData['level_dir'] . $configData['lvl_image'];
 			if( !empty($configData['lvl_image']) && file_exists($im_lvl_file) )
 			{
 				combineImage( $im,$im_lvl_file,(__LINE__),$configData['lvl_loc_x'],$configData['lvl_loc_y'] );
@@ -1174,7 +1153,7 @@ if( isset($_GET['format']) )
 			// eXpbar text
 			if( $configData['expbar_disp_text'] )
 			{
-				writeText( $im,$configData['expbar_font_size'],$exp_text_loc,$y_end-1,$configData['expbar_font_color'],$configData['expbar_font_name'],$configData['expbar_string_before'].$outexp.$configData['expbar_string_after'],$configData['expbar_align'],$configData['expbar_text_shadow'] );
+				writeText( $im,$configData['expbar_font_size'],$exp_text_loc,$y_end-1,$configData['expbar_font_color'],$configData['expbar_font_name'],$configData['expbar_string_before'] . $outexp . $configData['expbar_string_after'],$configData['expbar_align'],$configData['expbar_text_shadow'] );
 			}
 		}
 	}
@@ -1265,7 +1244,7 @@ if( isset($_GET['format']) )
 						// Shorten long strings based on max length in config
 						if( strlen($desc) > $configData['skills_desc_length'] )
 						{
-							$desc = trim( substr($desc,0,$configData['skills_desc_length']) ).'.';
+							$desc = trim( substr($desc,0,$configData['skills_desc_length']) ) . '.';
 						}
 						writeText( $im,$configData['skills_font_size'],$configData['skills_desc_loc_x'],$pos['desc'],$configData['skills_font_color'],$configData['skills_font_name'],$desc,$configData['skills_align_desc'],$configData['skills_shadow'] );
 					}
@@ -1276,7 +1255,7 @@ if( isset($_GET['format']) )
 						// Print max level if turned on in config
 						if( $configData['skills_disp_levelmax'] )
 						{
-							$level = $skill['level'].':'.$skill['max'];
+							$level = $skill['level'] . ':' . $skill['max'];
 						}
 						else
 						{
@@ -1311,7 +1290,7 @@ if( isset($_GET['format']) )
 						// Shorten long strings based on max length in config
 						if( strlen($desc) > $configData['skills_desc_length'] )
 						{
-							$desc = trim( substr($desc,0,$configData['skills_desc_length']) ).'.';
+							$desc = trim( substr($desc,0,$configData['skills_desc_length']) ) . '.';
 						}
 						writeText( $im,$configData['skills_font_size'],$configData['skills_desc_loc_x'],$pos['desc'],$configData['skills_font_color'],$configData['skills_font_name'],$desc,$configData['skills_align_desc'],$configData['skills_shadow'] );
 					}
@@ -1322,7 +1301,7 @@ if( isset($_GET['format']) )
 						// Print max level if turned on in config
 						if( $configData['skills_disp_levelmax'] )
 						{
-							$level = $skill['level'].':'.$skill['max'];
+							$level = $skill['level'] . ':' . $skill['max'];
 						}
 						else
 						{
@@ -1354,7 +1333,7 @@ if( isset($_GET['format']) )
 					// Shorten long strings based on max length in config
 					if( strlen($desc) > $configData['skills_desc_length_mount'] )
 					{
-						$desc = trim( substr($desc,0,$configData['skills_desc_length_mount']) ).'.';
+						$desc = trim( substr($desc,0,$configData['skills_desc_length_mount']) ) . '.';
 					}
 					writeText( $im,$configData['skills_font_size'],$configData['skills_desc_loc_x'],$pos['desc'],$configData['skills_font_color'],$configData['skills_font_name'],$desc,$configData['skills_align_desc'],$configData['skills_shadow'] );
 
@@ -1392,9 +1371,11 @@ if( isset($_GET['format']) )
 	if( $configData['save_images'] && $configData['default_message'] != $sig_name )
 	{
 		$save_dir = $configData['save_images_dir'];
-		$saved_name = $sig_name.'@'.$sig_region_name.'-'.$sig_server_name;
+		/* Removed since we save the image based on member id now
+		$saved_name = $sig_name . '@' . $sig_region_name . '-' . $sig_server_name;
 		$saved_name = ( $configData['save_char_convert'] ? removeAccents($saved_name) : $saved_name );
-		$saved_image = $save_dir.$configData['save_prefix'].$saved_name.$configData['save_suffix'].'.'.$configData['save_images_format'];
+		*/
+		$saved_image = $save_dir . $configData['save_prefix'] . $member_id . $configData['save_suffix'] . '.' . $configData['save_images_format'];
 
 		if( file_exists($save_dir) )
 		{
@@ -1443,7 +1424,7 @@ if( isset($_GET['format']) )
 		$configData['image_type'] = ( isset($img_format) ? $img_format : $configData['image_type'] );
 
 		// Set the header
-		header( 'Content-type: image/'.$configData['image_type'] );
+		header( 'Content-type: image/' . $configData['image_type'] );
 
 		switch ( $configData['image_type'] )
 		{

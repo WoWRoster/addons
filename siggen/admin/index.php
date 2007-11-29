@@ -393,6 +393,12 @@ foreach( $pvpImgDirScan as $dir_check )
 	$pvpImgDirList += array( $dir_check => 'pvp/' . $dir_check . '/' );
 }
 
+$linklist = array(
+	'Default' => 'default',
+	'Force SEO' => 'forceseo',
+	'Saved Directory' => 'saved',
+);
+
 // Get list of columns for background selection
 $table_name = ( $configData['backg_data_table'] == 'members' ? ($roster->db->table('members')) : ($roster->db->table('players')) );
 $backgColumsArr = $functions->getDbColumns( $table_name );
