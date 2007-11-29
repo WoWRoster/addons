@@ -16,14 +16,6 @@
 * @subpackage User
 */
 
-//Check to make sure SMFSync is enabled before trying to use it.
-$query = "SELECT * FROM `{$roster->db->prefix}addon_config` WHERE `addon_id` = '{$roster->addon_data['smfsync']['addon_id']}' AND `config_name` = 'main_enable' AND `config_value` = '1' LIMIT 1";
-$result = $roster->db->query ( $query );
-if ($roster->db->affected_rows() != 1){
-	$query = "UPDATE `{$roster->db->prefix}config` SET `config_value` = '0' WHERE `config_name` = 'use_external_auth' LIMIT 1 ;";
-	$result = $roster->db->query ( $query );
-	header ("Location: .");
-}
 class RosterLogin
 {
 

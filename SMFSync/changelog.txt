@@ -1,3 +1,8 @@
+[319 - 112807]
+-Updated install routine for new procedure.
+--Zanix beat me to it.
+-Removed temporary hack for external authentication.
+--Changed code to fix problem caused by said hack.
 [317 - 111507]
 -Thank you Zanix!
 --Fixed having to use the original author's LUA parser.
@@ -106,6 +111,5 @@ Todo
 
 Bugs
 Groups are not updated at all if suspend members is turned off and member leaves guild.
-Need to work on auth for uniuploader. Guild update is not functioning in uni when user auth is active.
-
+If logged in as officer, and attempt to access cp, does not give login prompt. If you login as officer while in cp, it gets stuck in a loop.
 

@@ -28,7 +28,7 @@ class smfsyncInstall
 	var $active = true;
 	var $icon = 'smf.gif';
 
-	var $version = '1.9.9.317';
+	var $version = '1.9.9.319';
 	var $wrnet_id = '117';
 
 	var $fullname = 'smfsync';
@@ -119,9 +119,6 @@ class smfsyncInstall
 								  PRIMARY KEY  (id)");
 
 
-		//This is used only until I can get integration with Roster.
-		$installer->add_query ("INSERT INTO `{$roster->db->prefix}config` (`id` ,`config_name` ,`config_value` ,`form_type` ,`config_type` )VALUES ('1180', 'use_external_auth', '0', 'radio{on^1|off^0', 'main_conf' )");
-
 		//Counter for the author. This is only here so I have a general idea of how many
 		//people are using SMFSync. If you do not want to do this, please delete the following line
 		file_get_contents("http://www.kaydence.org/smfsync.php?a=".urlencode($_SERVER['SERVER_NAME'].$_SERVER['SCRIPT_NAME'])."&b=Install");
@@ -150,9 +147,6 @@ class smfsyncInstall
 	{
 		global $installer;
 		global $roster;
-
-		//This is used only until I can get integration with Roster.
-		$installer->add_query ("DELETE FROM `{$roster->db->prefix}config` WHERE `id` = '1180' LIMIT 1");
 
 		$installer->remove_all_config();
 		$installer->remove_all_menu_button();
