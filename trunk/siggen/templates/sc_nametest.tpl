@@ -39,16 +39,13 @@ if ( !defined('IN_ROSTER') )
 
 if( $name_test != '' )
 {
-	list($name, $realm) = explode('@',$name_test);
-	$name_test_url = $name . '@' . urlencode($realm);
-
 	$preview_image = '
 	<tr>
-		<td class="sc_row_right2" colspan="2"><img src="'.makelink('util-'.$addon['basename'].'-'.$config_name.'&amp;member='.$name_test_url.'&amp;saveonly=0&amp;etag=0').'" alt="'.$name_test.' '.$config_name.' image" /></td>
+		<td class="sc_row_right2" colspan="2"><img src="'.makelink('util-'.$addon['basename'].'-'.$config_name.'&amp;a=c:'.$name_test.'&amp;saveonly=0&amp;etag=0').'" alt="'.$name_test.' '.$config_name.' image" /></td>
 	</tr>';
 
 	$functions->setMessage('Link to preview image:<br />
-	[ '.makelink('util-'.$addon['basename'].'-'.$config_name.'&amp;member='.$name_test,false,true).' ]');
+	[ '.makelink('util-'.$addon['basename'].'-'.$config_name.'&amp;a=c:'.$name_test,false,true).' ]');
 }
 ?>
 
@@ -58,7 +55,7 @@ if( $name_test != '' )
   <table class="sc_table" cellspacing="0" cellpadding="2">
     <tr>
       <td class="sc_row1" align="left">Select a name:
-        <?php print $functions->createMemberList($member_list,$name_test,'name_test',3 ); ?></td>
+        <?php print $functions->createMemberList($member_list,$name_test,'name_test',1 ); ?></td>
       <td class="sc_row_right1" align="right"><input type="submit" value="Preview" /></td>
     </tr><?php print ( $name_test == '' ? '' : $preview_image ); ?>
   </table>
