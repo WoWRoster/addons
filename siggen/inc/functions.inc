@@ -152,15 +152,13 @@ class SigConfigClass
 	 * @param array $values    array ($name => $value)
 	 * @param string $selected what will be selected
 	 * @param string $id       what to match selected with
-	 * @param string $type     how to arrange the value/label
-	 *                         0- name value (LIST)
-	 *                         1- value name (LISTREV)
-	 *                         2- name name (NAME)
-	 *                         3- value value (VALUE)
+	 * @param string $type     What value goes into
+	 *                         0- name
+	 *                         1- member_id
 	 * @param string $param    additional crap for <select> field
 	 * @return string          an html option list
 	 */
-	function createMemberList( $values , $selected , $id , $type='' , $param='' )
+	function createMemberList( $values , $selected , $id , $type=0 , $param='' )
 	{
 		if( !empty($selected) )
 		{
@@ -180,7 +178,7 @@ class SigConfigClass
 
 			foreach( $data as $member_id => $name )
 			{
-				$value = "$name@$server";
+				$value = ($type ? $member_id : "$name@$server");
 				if( $selected == $value && $select_one )
 				{
 					$option_list .= "\t\t\t<option value=\"{$value}\" selected=\"selected\">{$name}</option>\n";

@@ -53,7 +53,7 @@ if( $allow_upload )
 	<table width="198" class="sc_table" cellspacing="0" cellpadding="2">
 		<tr>
 			<td class="sc_row_right1" align="center">Character Name:<br />
-				<?php print $functions->createMemberList($member_list,$name_test,'image_name',3 ); ?></td>
+				<?php print $functions->createMemberList($member_list,$name_test,'image_name' ); ?></td>
 		</tr>
 		<tr>
 			<td class="sc_row_right2" align="left">Image Upload Type:<br />
