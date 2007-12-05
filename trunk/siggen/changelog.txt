@@ -4,7 +4,9 @@ SigGen Change Log
 
 Changes 0.3.321 => 0.3.0.322
 Changed back to using member= for id
+- a=c: will still work, but member= overrides it
 Changed saved images back to name@rc-realm.ext
+Preview images will not show if there are no siggen config rows (might never happen but you never know)
 
 Changes 0.3.320 => 0.3.0.321
 Fixed preview image
