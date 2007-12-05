@@ -2,6 +2,15 @@
 
 SigGen Change Log
 
+Changes 0.3.321 => 0.3.0.322
+Changed back to using member= for id
+Changed saved images back to name@rc-realm.ext
+
+Changes 0.3.320 => 0.3.0.321
+Fixed preview image
+- The link still needs to reflect the link settings
+Fixed missing ` in installer sql
+
 Changes 0.3.0b3 => 0.3.0.320
 Now using $roster->anchor instead of member=
 SigGen display on char page now shows the url with the image extension when SEO mode is enabled in Roster
@@ -16,16 +25,15 @@ Removed av.php and sig.php, these are legacy files and are no longer needed
  * Important Changes
    o Ported to Roster 2.0
    o Supports multi guild and public abilities in Roster
-   o Accessing an image uses a=c: with either a member id, name, name@realm, or name@RC-realm
-     + name= access is now gone for good. Don't bother me about it, Roster uses a=c: now as well
-   o Images for auto save are now saved as MemberID.ext (ext is the chosen image extention)
+   o Accessing an image uses member= with either a member id, name, name@realm, or name@RC-realm
+     + name= access is now gone for good. Don't bother me about it
  * SigGen Generator
    o Fixed: etag dating, I have no idea why db_ver was added to the date
    o Changed: Access to SigGen image generator now uses the roster addon framework
      + I may put back in direct access to siggen.php but for now you must use the framework
-     + roster/index.php?p=util-siggen-signature&a=c:##
-     + (SEO) roster/util/siggen/signature/a=c:##.ext
-     + This also means the path access sig.php/Name.png does not currently work, use mod_rewrite to bypass forum image restrictions
+     + roster/index.php?p=util-siggen-signature&member=##
+     + (SEO) roster/util/siggen/signature/member=##.ext
+     + This also means the path access sig.php/Name.png does not currently work
  * SigGen Config
    o Added: Clear Saved Directory setting
      + This will clear the save directory on a guild auto-save

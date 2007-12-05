@@ -41,11 +41,13 @@ if( $name_test != '' )
 {
 	$preview_image = '
 	<tr>
-		<td class="sc_row_right2" colspan="2"><img src="'.makelink('util-'.$addon['basename'].'-'.$config_name.'&amp;a=c:'.$name_test.'&amp;saveonly=0&amp;etag=0').'" alt="'.$name_test.' '.$config_name.' image" /></td>
+		<td class="sc_row_right2" colspan="2"><img src="'.makelink('util-'.$addon['basename'].'-'.$config_name.'&amp;member='.$name_test.'&amp;saveonly=0&amp;etag=0').'" alt="'.$name_test.' '.$config_name.' image" /></td>
 	</tr>';
 
+	/* Not needed
 	$functions->setMessage('Link to preview image:<br />
-	[ '.makelink('util-'.$addon['basename'].'-'.$config_name.'&amp;a=c:'.$name_test,false,true).' ]');
+	[ '.makelink('util-'.$addon['basename'].'-'.$config_name.'&amp;member='.$name_test,false,true).' ]');
+	*/
 }
 ?>
 
