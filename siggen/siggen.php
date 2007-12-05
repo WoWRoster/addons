@@ -44,20 +44,37 @@ if( CAN_INI_SET )
 }
 
 
+// Get name from browser request
+if( isset($_GET['member']) )
+{
+	if( is_numeric($_GET['member']) )
+	{
+		$member_where = ' `member_id` = "' . $_GET['member'] . '"';
+	}
+	elseif( strpos($_GET['member'], '@') !== false )
+	{
+		list($name, $realm) = explode('@',$_GET['member']);
+		if( strpos($realm,'-') !== false )
+		{
+			list($region, $realm) = explode('-',$realm);
+			$member_where = ' `name` = "' . $name . '" AND `server` = "' . $realm . '" AND `region` = "' . strtoupper($region) . '"';
+		}
+		else
+		{
+			$member_where = ' `name` = "' . $name . '" AND `server` = "' . $realm . '"';
+		}
+	}
+	else
+	{
+		$name = $_GET['member'];
+		$member_where = ' `name` = "' . $name . '"';
+	}
+}
 // Get member_id from $roster->anchor
-if( $roster->atype == 'char' )
+elseif( $roster->atype == 'char' )
 {
 	$member_where = ' `member_id` = "' . $roster->anchor . '"';
 }
-/* Commented out since we are accessing this via the framework
-elseif( isset($_SERVER['REQUEST_URI']) ) // Try pulling from a "REQUEST_URI" request
-{
-	list($char_name,$img_format) = explode('.', $_SERVER['REQUEST_URI']);
-}
-print $img_format;
-
-aprint($_SERVER);die();
-*/
 
 // Get image mode ( signature | avatar | etc )
 if( isset($_GET['mode']) )
@@ -1371,11 +1388,9 @@ if( isset($_GET['format']) )
 	if( $configData['save_images'] && $configData['default_message'] != $sig_name )
 	{
 		$save_dir = $configData['save_images_dir'];
-		/* Removed since we save the image based on member id now
 		$saved_name = $sig_name . '@' . $sig_region_name . '-' . $sig_server_name;
 		$saved_name = ( $configData['save_char_convert'] ? removeAccents($saved_name) : $saved_name );
-		*/
-		$saved_image = $save_dir . $configData['save_prefix'] . $member_id . $configData['save_suffix'] . '.' . $configData['save_images_format'];
+		$saved_image = $save_dir . $configData['save_prefix'] . $saved_name . $configData['save_suffix'] . '.' . $configData['save_images_format'];
 
 		if( file_exists($save_dir) )
 		{

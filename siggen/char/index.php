@@ -40,12 +40,15 @@ if ( !defined('IN_ROSTER') )
 // Read SigGen Config data from Database
 $config_str = "SELECT `config_id`,`main_image_size_w`,`main_image_size_h`,`image_type`,`link_type`,`save_images_dir` FROM `" . $roster->db->table('config',$addon['basename']) . "`;";
 
-
-print "<table><tr><td>\n";
-
 $config_sql = $roster->db->query($config_str);
-if( $config_sql )
+if( $config_sql && $roster->db->num_rows($config_sql) > 0 )
 {
+	print "<table><tr><td>\n";
+	
+	$member_name = $roster->data['name'];
+	$member_realm = str_replace(' ','%20',$roster->data['server']);
+	$member_str = $member_name . '@' . $roster->data['region'] . '-' . $member_realm;
+
 	while( $row = $roster->db->fetch($config_sql, SQL_ASSOC) )
 	{
 		$siggen_saved_find = array('/', '%r', '%s');
@@ -58,18 +61,19 @@ if( $config_sql )
 
 		if( $row['link_type'] == 'saved' )
 		{
-			print messagebox('<img src="' . str_replace('.html', '.' . $row['image_type'], makelink('util-' . $addon['basename'] . '-' . $row['config_id'] . '&amp;a=c:' . $roster->data['member_id'])) . '" alt="" width="' . $row['main_image_size_w'] . '" height="' . $row['main_image_size_h'] . '" /><br />'
-				. $save_loc . $roster->data['member_id'] . '.' . $row['image_type'], ucfirst($row['config_id']),'sblue','100%') . '<br />';
+			print messagebox('<img src="' . str_replace('.html', '.' . $row['image_type'], makelink('util-' . $addon['basename'] . '-' . $row['config_id'] . '&amp;member=' . $member_str)) . '" alt="" width="' . $row['main_image_size_w'] . '" height="' . $row['main_image_size_h'] . '" /><br />'
+				. $save_loc . $member_str . '.' . $row['image_type'], ucfirst($row['config_id']),'sblue','100%') . '<br />';
 		}
 		else
 		{
-			print messagebox('<img src="' . str_replace('.html', '.' . $row['image_type'], makelink('util-' . $addon['basename'] . '-' . $row['config_id'] . '&amp;a=c:' . $roster->data['member_id'] . '&amp;saveonly=0')) . '" alt="" width="' . $row['main_image_size_w'] . '" height="' . $row['main_image_size_h'] . '" /><br />'
-				. str_replace('.html', '.' . $row['image_type'], makelink('util-' . $addon['basename'] . '-' . $row['config_id'] . '&amp;a=c:' . $roster->data['member_id'],true)), ucfirst($row['config_id']),'sblue','100%') . '<br />';
+			print messagebox('<img src="' . str_replace('.html', '.' . $row['image_type'], makelink('util-' . $addon['basename'] . '-' . $row['config_id'] . '&amp;member=' . $member_str . '&amp;saveonly=0')) . '" alt="" width="' . $row['main_image_size_w'] . '" height="' . $row['main_image_size_h'] . '" /><br />'
+				. str_replace('.html', '.' . $row['image_type'], makelink('util-' . $addon['basename'] . '-' . $row['config_id'] . '&amp;member=' . $member_str,true)), ucfirst($row['config_id']),'sblue','100%') . '<br />';
 		}
 
 		$roster->config['seo_url'] = $curr_seo;
 	}
 	$roster->db->free_result();
+
+	print "</td></tr></table>\n";
 }
 
-print "</td></tr></table>\n";
