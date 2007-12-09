@@ -29,7 +29,7 @@ class armorysyncInstall
 	var $active = true;
 	var $icon = 'inv_misc_missilesmall_blue';
 
-	var $version = '2.6.0.324';
+	var $version = '2.6.0.325';
 
 	var $fullname = 'Armory Sync';
 	var $description = 'Syncronizes chars with Blizzard\'s Armory';

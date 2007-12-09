@@ -2,6 +2,9 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn [325]
+- updated wowroster prerequisist
+
 svn [324]
 - fixed Itemtooltip Parsing
 
