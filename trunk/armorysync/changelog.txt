@@ -2,6 +2,15 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn [324]
+- fixed Itemtooltip Parsing
+
+svn [318]
+- changed install.def.php class name
+
+svn[287]
+- updated version for nightly build
+
 svn[286]
 - fixed problem with uncomplete XML in _getCharacterInfo
 - fixed overlib of memberlist update log in IE7
