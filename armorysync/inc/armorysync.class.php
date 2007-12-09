@@ -287,6 +287,7 @@ class ArmorySync extends ArmorySyncBase {
         $armory = new RosterArmory;
         $armory->region = $region;
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
+		$this->_setUserAgent($armory);
 
         $content = $this->_parseData( $armory->fetchCharacter( $name, $roster->config['locale'], $server ) );
         if ( $this->_checkContent( $content, array('characterInfo', 'characterTab' ) ) ) {
@@ -310,6 +311,7 @@ class ArmorySync extends ArmorySyncBase {
         //$armory->region = $roster->data['region'];
         $armory->region = $this->region;
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
+		$this->_setUserAgent($armory);
 
         $content = $this->_parseData( $armory->fetchCharacter( $this->memberName, $roster->config['locale'], $this->server ) );
         if ( $this->_checkContent($content, array('characterInfo', 'character' ) ) &&
@@ -550,7 +552,6 @@ class ArmorySync extends ArmorySyncBase {
 
 
             $armory = new RosterArmory;
-            //$armory->region = $roster->data['region'];
             $armory->region = $this->region;
             $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
@@ -560,37 +561,8 @@ class ArmorySync extends ArmorySyncBase {
 
                 $tooltip = $content->itemTooltips->itemTooltip;
                 $this->data["Equipment"][$slot]['Name'] = $tooltip->name->_CDATA;
-                //$this->data["Equipment"][$slot]['Name'] = $tooltip['name'][0]['data'];
                 $this->data["Equipment"][$slot]['Color'] = $this->_getItemColor($tooltip->overallQualityId->_CDATA);
                 $this->data["Equipment"][$slot]['Tooltip'] = $this->_getItemTooltip( $item->id );
-
-                //// if ( is_array($tooltip['socketData'][0]['child']['socket']) ) {
-                ////    $gems = $tooltip['socketData'][0]['child']['socket'];
-                //    //$this->data["Equipment"][$slot]['Gem'] = array();
-                //    //$i = 0;
-                //    //foreach ( $gems as $gem ) {
-                //    //    if ( $gemContent = $armory->fetchItemInfo( $item->gem'. $i. 'Id'], $roster->config['locale'] ) ) {
-                //    //        $gemTooltip = $gemContent['page'][0]['child']['itemInfo'][0]['child']['item'][0];
-                //    //        $newgem = array();
-                //    //        $newgem['Item'] = $gemTooltip->id'].':0:0:0:0:0:0:0';
-                //    //        $newgem['Color'] = $this->_getItemColor($gemTooltip->quality']);
-                //    //        $newgem['Name'] = $gemTooltip->name'];
-                //    //        $newgem['Icon'] = $gemTooltip->icon'];
-                //    //        $newgem['Tooltip'] = $this->_getGemTooltip($gemTooltip->id']);
-                //    //        $this->data["Equipment"][$slot]['Gem'][] = $newgem;
-                //    //        $this->data["Equipment"][$slot]['Item'] .= ":". $gemTooltip['child']['createdBy'][0]['child']['spell'][0]->id'];
-                //    //    }
-                //    //    $i++;
-                //    //}
-                //    //if ( $i <= 2 ) {
-                //    //    $this->data["Equipment"][$slot]['Item'] .= ":0";
-                //    //}
-                //    //if ( $i <= 1 ) {
-                //    //    $this->data["Equipment"][$slot]['Item'] .= ":0";
-                //    //}
-                ////} else {
-                //    $this->data["Equipment"][$slot]['Item'] .= ":0:0:0";
-                //}
             }
             $this->data["Equipment"][$slot]['Item'] .= ":". $item->permanentenchant;
             $this->data["Equipment"][$slot]['Item'] .= ":". "0"; // GemId0
@@ -618,7 +590,6 @@ class ArmorySync extends ArmorySyncBase {
 
         include_once(ROSTER_LIB . 'armory.class.php');
         $armory = new RosterArmory;
-        //$armory->region = $roster->data['region'];
         $armory->region = $this->region;
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
@@ -664,7 +635,6 @@ class ArmorySync extends ArmorySyncBase {
 
         include_once(ROSTER_LIB . 'armory.class.php');
         $armory = new RosterArmory;
-        //$armory->region = $roster->data['region'];
         $armory->region = $this->region;
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
@@ -714,7 +684,6 @@ class ArmorySync extends ArmorySyncBase {
 
         include_once(ROSTER_LIB . 'armory.class.php');
         $armory = new RosterArmory;
-        //$armory->region = $roster->data['region'];
         $armory->region = $this->region;
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
@@ -725,7 +694,6 @@ class ArmorySync extends ArmorySyncBase {
             $armoryTalents = $content->characterInfo->talentTab->talentTree->value;
             $talentArray = preg_split('//', $armoryTalents, -1, PREG_SPLIT_NO_EMPTY);
             $dl_class = $roster->locale->act['class_to_en'][$this->data["Class"]];
-            //$dl_class = $this->_getDelocalisedClass($this->data["Class"]);
             $class = strtolower($dl_class);
             $locale = $roster->config['locale'];
 
@@ -815,6 +783,36 @@ class ArmorySync extends ArmorySyncBase {
             return false;
         }
     }
+
+    /**
+     * helper function to get classes for content
+     *
+     * @param string $class
+     * @param string $tree
+     * @return string
+     */
+    function _setUserAgent( $armory ) {
+		global $roster;
+
+		$userAgent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; ';
+		switch ( $roster->config['locale'] ) {
+			case 'enUS': $userAgent .= 'en-US';
+				break;
+
+			case 'deDE': $userAgent .= 'de-DE';
+				break;
+
+			case 'frFR': $userAgent .= 'fr-FR';
+				break;
+
+			case 'esES': $userAgent .= 'es-ES';
+				break;
+		}
+
+		$userAgent .= '; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1';
+		$armory->setUserAgent($userAgent);
+
+	}
 
     /**
      * helper function to get classes for content
@@ -1006,12 +1004,12 @@ class ArmorySync extends ArmorySyncBase {
 
             $content = str_replace("\n", "", $content );
             $content = str_replace('<span class="tooltipRight">', "\t", $content );
-            $content = str_replace("<br>", "%__BRTAG%", $content );
+            $content = str_replace("<br/>", "%__BRTAG%", $content );
 
             $content = strip_tags( $content );
 
             $content = str_replace("%__BRTAG%", "\n", $content );
-            $content = utf8_encode($this->_unhtmlentities( $content ));
+            //$content = utf8_encode($this->_unhtmlentities( $content ));
             //$content = mb_convert_encoding( $content, "UTF-8", "HTML-ENTITIES");
             $content = str_replace($roster->locale->act['bindings']['bind_on_pickup'], $roster->locale->act['bindings']['bind'], $content);
             $content = str_replace($roster->locale->act['bindings']['bind_on_equip'], $roster->locale->act['bindings']['bind'], $content);
