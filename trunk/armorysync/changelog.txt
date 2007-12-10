@@ -2,6 +2,9 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn [326]
+- switched back itemtooltip parsing (damn bliz. last week they changes all <br> tags to <br/> and all html umlauts to nativ utf8-. Now they rolled back)
+
 svn [325]
 - updated wowroster prerequisist
 
