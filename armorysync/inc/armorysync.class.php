@@ -1005,11 +1005,12 @@ class ArmorySync extends ArmorySyncBase {
             $content = str_replace("\n", "", $content );
             $content = str_replace('<span class="tooltipRight">', "\t", $content );
             $content = str_replace("<br/>", "%__BRTAG%", $content );
+            $content = str_replace("<br>", "%__BRTAG%", $content );
 
             $content = strip_tags( $content );
 
             $content = str_replace("%__BRTAG%", "\n", $content );
-            //$content = utf8_encode($this->_unhtmlentities( $content ));
+            $content = utf8_encode($this->_unhtmlentities( $content ));
             //$content = mb_convert_encoding( $content, "UTF-8", "HTML-ENTITIES");
             $content = str_replace($roster->locale->act['bindings']['bind_on_pickup'], $roster->locale->act['bindings']['bind'], $content);
             $content = str_replace($roster->locale->act['bindings']['bind_on_equip'], $roster->locale->act['bindings']['bind'], $content);
