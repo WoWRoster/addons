@@ -41,7 +41,8 @@ if ( !defined('IN_ROSTER') )
 <!-- Begin Java Link -->
 <script type="text/javascript" language="JavaScript">
 <!--
-	initializetabcontent("siggen_menu")
+	var siggen_menu=new tabcontent('siggen_menu');
+	siggen_menu.init();
 //-->
 </script>
 <script type="text/javascript" src="<?php echo ROSTER_PATH; ?>js/color_functions.js"></script>
