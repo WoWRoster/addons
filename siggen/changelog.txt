@@ -2,6 +2,9 @@
 
 SigGen Change Log
 
+Changes 0.3.322 => 0.3.0.327
+Changed tab content initialization in anticipation for new js code
+
 Changes 0.3.321 => 0.3.0.322
 Changed back to using member= for id
 - a=c: will still work, but member= overrides it
@@ -15,7 +18,7 @@ Fixed missing ` in installer sql
 
 Changes 0.3.0b3 => 0.3.0.320
 Now using $roster->anchor instead of member=
-SigGen display on char page now shows the url with the image extension when SEO mode is enabled in Roster
+SigGen display on character page now shows the url with the image extension when SEO mode is enabled in Roster
 Added config to show different kinds of links on SigGen display page (default, force seo, saved)
 SigGen now saves images based on member id, this is to resolve the accent problem
 Fixed "The install definition file for siggen did not contain a correct installation class"
