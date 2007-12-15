@@ -1,0 +1,40 @@
+<!-- BEGIN accounts_login -->
+{accounts_login.BORDER_START}
+<table class="bodyline" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<th class="membersHeader">
+			{accounts_login.LOGIN_TXT}
+		</th>
+	</tr>
+	<tr>
+	<form name="accountLogin" method="post" action="{accounts_login.FORM_LINK}">
+		<td class="membersRow1">
+			<span style="float:left">{accounts_login.UNAME_TXT}:</span>
+			<span style="float:right"><input type="text" name="user" class="wowinput128"></span>
+		</td>
+	</tr>
+	<tr>
+		<td class="membersRow2">
+			<span style="float:left">{accounts_login.PASS_TXT}:</span>
+			<span style="float:right"><input type="password" name="userPass" class="wowinput128"></span>
+		</td>
+	</tr>
+	<tr>
+		<td class="membersRow1">
+			<span style="float:left">{accounts_login.REM_TXT}</span>
+			<span style="float:right"><input type="checkbox" name="remember" value="checked"></span>
+		</td>
+	</tr>
+	<tr>
+		<td class="membersHeader">
+			<span style="float:right"><input type="submit" name="Submit" value="{accounts_login.LOGIN_BTTN}"></span>
+		</td>
+	</tr>
+	</form>
+</table>
+{accounts_login.BORDER_END}
+<p><b>{accounts_login.MESSAGE}</b></p>
+<p>&nbsp;</p>
+<p>{accounts_login.REGISTER_TXT}&nbsp;<a href="{accounts_login.REGISTER_LINK}">{accounts_login.REGISTER_CLICK}</a></p><br />
+<p><a href="{accounts_login.LOST_LINK}">{accounts_login.LOST_TXT}</a></p>
+<!-- END accounts_login -->

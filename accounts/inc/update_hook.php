@@ -59,7 +59,7 @@ class accountsUpdate
 		 * produce any output (update method off) we empty this before returning.
 		 */
 
-		$this->messages = 'Accounts';
+		$this->messages = '<strong>Accounts:</strong><ul>';
 	}
 	
 	/**
@@ -74,8 +74,48 @@ class accountsUpdate
 	{
 		global $roster;
 		
-		$this->messages .= "<span class=\"yellow\">Getting Character Information...</span><br />\n";
+		// --[ Check if this update type is enabled ]--
+		if($_SESSION['isLoggedIn'] == false)
+		{
+			// prevent the addon name from being displayed
+			$this->messages = '';
+			return true;
+		}
 		
+		$this->messages .= '<li><span style="color:yellow">Getting Character Information...</span></li><br />' . "\n";
+		
+		// --[ Fetch full member data ]--
+		$query = "SELECT `name`, `guild_id` FROM `" . $roster->db->table('players') . "` WHERE `member_id` = '" . $member_id . "';";
+		$result = $roster->db->query( $query );
+
+		if ( !$result )
+		{
+			$this->messages .= ' - <span style="color:red;">Character not updated, failed at line ' . __LINE__ . '. MySQL said:<br/>' . $roster->db->error() . '</span><br/>' . "\n";
+			return false;
+		}
+
+		if ( $row = $roster->db->fetch( $result ))
+		{	
+				$roster->db->free_result( $result );
+				$member_name = $row['name'];
+		}
+		else
+		{
+			$roster->db->free_result( $result );
+			$this->messages .= ' - <span style="color:red;">' . $member_name . ' not updated, failed at line ' . __LINE__ . '</span><br/>'."\n";
+			return false;
+		}
+
+		// --[ Add record to the cache of chars we'll be updating ]--
+		$this->chars[$member_id]['id'] = $member_id;
+		$this->chars[$member_id]['uid'] = $_SESSION['uid'];
+		$this->chars[$member_id]['name'] = $member_name;
+		$this->chars[$member_id]['guild_id'] = $row['guild_id'];
+		$this->chars[$member_id]['group_id'] = $_SESSION['groupID'];
+
+		$this->messages .= ' - <span style="color:green;">' . $member_name . ' will be updated.</span><br/>';
+		
+		$this->messages .= "</ul>";
 		return true;
 	}
 	
@@ -87,8 +127,67 @@ class accountsUpdate
 	function char_post( $data )
 	{
 		global $roster;
+		
+		// --[ Check if this update type is enabled ]--
+		if($_SESSION['isLoggedIn'] == false)
+		{
+			// prevent the addon name from being displayed
+			$this->messages = '';
+			return true;
+		}
+
+		if( empty($this->chars) ) 
+		{ 
+			$this->messages = ' - <span style="color:red;">Could not updated, failed at line ' . __LINE__ . '</span><br/>' . "\n";
+			return true;
+		}
  
-		$this->messages .= "<span class=\"red\">Storing your characters to database</span><br />\n";
+		$this->messages .= '<li><span style="color:yellow">Storing your characters to database...</span></li><br />' . "\n";
+
+		foreach($this->chars as $member_id => $mid)
+		{
+			$char[] = array();
+			$char['id'] = $mid['id'];
+			$char['uid'] = $mid['uid'];
+			$char['name'] = $mid['name'];
+			$char['guid'] = $mid['guild_id'];
+			$char['gid'] = $mid['group_id'];
+			
+			// And the update code
+			$sql = "SELECT `uid` FROM `" . $roster->db->table('user_link', $this->data['basename']) . "` WHERE `member_id` = '" . $char['id'] . "';";
+			$result = $roster->db->query( $sql );
+			$row = $roster->db->fetch($result);
+			
+			if($row == 0)
+			{
+				$query = "INSERT INTO `" . $roster->db->table('user_link',$this->data['basename']) . "` SET `uid` = '" . $char['uid'] . "', `member_id` = '" . $char['id'] . "', `guild_id` = '" . $char['guid'] . "', `group_id` = '" . $char['gid'] . "';";
+				
+				if( $roster->db->query($query) )
+				{
+					$this->messages .= ' - <span style="color:green;">' . $char['name'] . ' has been saved.</span><br/>';
+				}
+				else
+				{
+					$this->messages .= ' - <span style="color:red;">' . $char['name'] . ' has not been saved. MySQL said: ' . $roster->db->error() . '</span><br/>' . "\n";
+					return false;
+				}
+			}
+			else
+			{
+				$query = "UPDATE `" . $roster->db->table('user_link',$this->data['basename']) . "` SET `guild_id` = '" . $char['guid'] . "', `group_id` = '" . $char['gid'] . "';";
+				
+				if( $roster->db->query($query) )
+				{
+					$this->messages .= ' - <span style="color:green;">' . $char['name'] . ' has been updated.</span><br/>';
+				}
+				else
+				{
+					$this->messages .= ' - <span style="color:red;">' . $char['name'] . ' has not been updated. MySQL said: ' . $roster->db->error() . '</span><br/>' . "\n";
+					return false;
+				}
+			}
+		}
+		$this->messages .= "</ul>";
  
 		return true;
 	}

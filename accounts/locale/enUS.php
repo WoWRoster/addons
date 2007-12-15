@@ -1,29 +1,31 @@
 <?php
-/**
+/** 
  * Dev.PKComp.net WoWRoster Addon
- *
- * LICENSE: Licensed under the Creative Commons
- *          "Attribution-NonCommercial-ShareAlike 2.5" license
- *
- * @copyright  2005-2007 Pretty Kitty Development
- * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5"
- * @link       http://dev.pkcomp.net
- * @package    Accounts
+ * 
+ * LICENSE: Licensed under the Creative Commons 
+ *          "Attribution-NonCommercial-ShareAlike 2.5" license 
+ * 
+ * @copyright  2005-2007 Pretty Kitty Development 
+ * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5" 
+ * @link       http://dev.pkcomp.net 
+ * @package    Accounts 
  * @subpackage Locale enUS
- */
+ */ 
 
-// -[ enUS Localization ]-
+// -[ enUS Localization ]- 
 
 // Menu Panel
 $lang['menupanel_account_menu'] = 'Account';
 
-// Button names
+// Button names 
 $lang['account_index']        	= 'My Account|Displays your characters, guilds, and realms.';
 $lang['account_register_bttn']  = 'Register|Displays the account registration page.';
-$lang['account_user_bttn']      = 'Login/LogOut|Displays the login|logout|lost password page.';
+$lang['account_login_bttn']     = 'Login|Displays the login|lost password page.';
+$lang['account_logout_bttn']    = 'Logout|Logs a user out.';
 $lang['account_characters']  	= 'My Characters|Displays your characters.';
 $lang['account_guilds']      	= 'My Guilds|Displays your guilds.';
 $lang['account_realms']      	= 'My Realms|Displays your realms.';
+$lang['account_settings']       = 'Settings|Displays the user settings.';
 
 // Interface wordings
 $lang['account_register']       = 'Register';
@@ -40,7 +42,7 @@ $lang['account_act_pass_txt']   = 'Enter your new password here, ';
 $lang['account_no_access_txt']  = 'You are not allowed to view this page!';
 $lang['account_main_page']      = 'Accounts Main Page';
 $lang['account_forgot']         = 'Forgot your username/password?';
-$lang['account_forgot_txt']     = 'Please enter the e-mail address what you used during registration.';
+$lang['account_forgot_txt']     = 'Please enter the e-mail address that you used during registration.';
 $lang['remember_login']         = 'Remember login?';
 $lang['login']                  = 'Login';
 $lang['logged_out']             = 'You have successfully been logged out!';
@@ -48,13 +50,16 @@ $lang['click']                  = 'Click here.';
 $lang['user_group']             = 'User Group';
 $lang['conf_mail']				= 'Confirmation E-Mail';
 
-// Page names
-$lang['account_profile_page']   = 'Accounts Profile Page';
-$lang['account_main_page']      = 'Accounts Main Page';
-$lang['account_user_admin']     = 'User Admin Page';
-$lang['account_no_access']      = 'Access Denied!';
-$lang['account_reg_form']       = 'User Registration';
-$lang['account_act_pass']       = 'Password Activation';
+// Page names 
+$lang['accounts_main_page']     = 'Accounts Main';
+$lang['accounts_user_admin']    = 'User Admin';
+$lang['accounts_no_access']     = 'Access Denied!';
+$lang['accounts_reg_form']      = 'User Registration';
+$lang['accounts_act_pass']      = 'Password Activation';
+$lang['accounts_settings_page'] = 'User Settings';
+$lang['accounts_realms_page']   = 'User Realms';
+$lang['accounts_guilds_page']   = 'User Guilds';
+$lang['accounts_chars_page']    = 'User Characters';
 $lang['admin']['display']    	= 'Configuration|Configure options specific to accounts.';
 $lang['admin']['perms']         = 'Page Permissions|Set which groups can view which pages.';
 $lang['admin']['user']       	= 'User Config|Configure your account.';
@@ -136,3 +141,5 @@ $lang['account_user']['msg39'] = "New user registration on %s:\r\n\r\nClick here
 $lang['account_profile']['msg1'] = "There is no profile data at the moment.";
 $lang['account_profile']['msg2'] = "Your profile data is up to date.";
 $lang['account_profile']['msg3'] = "There was an error during update, please try again.";
+
+?>

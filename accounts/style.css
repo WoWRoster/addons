@@ -10,3 +10,5 @@
  * @package    Accounts 
  * @subpackage CSS 
  */
+
+#username { text-transform:capitalize}

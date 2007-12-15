@@ -1,18 +1,18 @@
 <?php
-/**
+/** 
  * Dev.PKComp.net WoWRoster Addon
- *
- * LICENSE: Licensed under the Creative Commons
- *          "Attribution-NonCommercial-ShareAlike 2.5" license
- *
- * @copyright  2005-2007 Pretty Kitty Development
- * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5"
- * @link       http://dev.pkcomp.net
- * @package    Accounts
+ * 
+ * LICENSE: Licensed under the Creative Commons 
+ *          "Attribution-NonCommercial-ShareAlike 2.5" license 
+ * 
+ * @copyright  2005-2007 Pretty Kitty Development 
+ * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5" 
+ * @link       http://dev.pkcomp.net 
+ * @package    Accounts 
  * @subpackage Locale frFR
- */
+ */ 
 
-// -[ frFR Localization ]-
+// -[ frFR Localization ]- 
 
 // User class messages
 $lang['account_user']['msg10'] = "Le login et/ou mot de passe ne correspondent pas.";
@@ -49,3 +49,5 @@ $lang['account_user']['msg38'] = "Le mot de passe de confirmation de concorde pa
 $lang['account_profile']['msg1'] = "Le profil ne contient actuellement aucune information.";
 $lang['account_profile']['msg2'] = "Les information de votre profil sont à jour.";
 $lang['account_profile']['msg3'] = "Il y a eu un problème pendant la mise à jour de votre profil. Veuillez réessayer.";
+
+?>

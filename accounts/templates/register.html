@@ -1,0 +1,62 @@
+<!-- BEGIN accounts_register -->
+{accounts_register.BORDER_START}
+<table class="bodyline" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<th class="membersHeader">
+			{accounts_register.REGISTER_TXT}<br />
+		</th>
+	</tr>
+	<tr>
+	<form name="regForm" method="post" action="{accounts_register.FORM_LINK}">
+		<td class="membersRow1">
+			<span style="float:left">{accounts_register.UNAME_TXT}:</span>
+			<span style="float:right"><input type="text" name="user" class="wowinput128">*</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="membersRow2">
+			<span style="float:left">{accounts_register.PASS_TXT}:</span>
+			<span style="float:right"><input type="password" name="userPass" class="wowinput128">* (min. {accounts_register.PASS_LEN} chars.)</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="membersRow1">
+			<span style="float:left">{accounts_register.PASS_CONF_TXT}:</span>
+			<span style="float:right"><input type="password" name="confirmPass" class="wowinput128">* (min. {accounts_register.PASS_LEN} chars.)</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="membersRow2">
+			<span style="float:left">{accounts_register.FNAME_TXT}:</span>
+			<span style="float:right"><input type="text" name="fname" class="wowinput128"></span>
+		</td>
+	</tr>
+	<tr>
+		<td class="membersRow1">
+			<span style="float:left">{accounts_register.LNAME_TXT}:</span>
+			<span style="float:right"><input type="text" name="lname" class="wowinput128"></span>
+		</td>
+	</tr>
+	<tr>
+		<td class="membersRow2">
+			<span style="float:left">{accounts_register.EMAIL_TXT}:</span>
+			<span style="float:right"><input type="text" name="email" class="wowinput192">*</span>
+		</td>
+	</tr>
+	<tr>
+		<td class="membersRow1">
+			<span style="float:left">{accounts_register.EXTRA_TXT}:</span>
+			<span style="float:right"><input type="text" name="info" class="wowinput192"></span>
+		</td>
+	</tr>
+	<tr>
+		<td class="membersHeader">
+			<div align="right"><input type="submit" name="Submit" value="{accounts_register.SUBMIT_BTTN}"></div>
+		</td>
+	</form>
+	</tr>
+</table>
+{accounts_register.BORDER_END}
+<p><b>{accounts_register.MESSAGE}</b></p>
+<p>&nbsp;</p>
+<!-- END accounts_register -->

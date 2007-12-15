@@ -1,28 +1,29 @@
 <?php
-/**
+/** 
  * Dev.PKComp.net WoWRoster Addon
- *
- * LICENSE: Licensed under the Creative Commons
- *          "Attribution-NonCommercial-ShareAlike 2.5" license
- *
- * @copyright  2005-2007 Pretty Kitty Development
- * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5"
- * @link       http://dev.pkcomp.net
- * @package    Accounts
+ * 
+ * LICENSE: Licensed under the Creative Commons 
+ *          "Attribution-NonCommercial-ShareAlike 2.5" license 
+ * 
+ * @copyright  2005-2007 Pretty Kitty Development 
+ * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5" 
+ * @link       http://dev.pkcomp.net 
+ * @package    Accounts 
  * @subpackage User Class
  */
 if( !defined('IN_ROSTER') )
 {
-	exit('Detected invalid access to this file!');
+    exit('Detected invalid access to this file!');
 }
 
 include_once ($addon['inc_dir'] . 'conf.php');
 
 class accountUser
 {
-	var $userTable = utable;
+	var $userTable = utable; 
 	var $userLinkTable = linktable;
 
+	var $uid;	
 	var $user;
 	var $userPass;
 	var $groupID;
@@ -32,30 +33,33 @@ class accountUser
 	var $userEMail;
 	var $saveLogin = savelogin;
 	var $cookieName = cookiename;
-	var $cookiePath = ROSTER_BASE;
+	var $cookiePath = ROSTER_BASE; 
 	var $isCookie;
 	var $isLoggedIn;
-	var $getUserInfo;
-
+	var $isActive;
+	
 	var $adminGroup = adminlevel;
 	var $minAccess = minaccess;
 	var $usePerms = useperms;
 	var $countVisit;
 	var $rosterLocale = roster_locale;
-
-	var $uid;
+	
 	var $message;
+	var $registerPage;
 	var $activationPage;
 	var $activationPageExt;
-	var $loginPage;
+	var $loginForm;
+	var $loginRed;
 	var $loginPageExt;
+	var $lostPassPage;
 	var $mainPage;
+	var $mainRed;
 	var $denyAccessPage;
 	var $adminPage;
 	var $adminPageExt;
 	var $autoActivation = autoact;
 	var $sendCopy = admincopy; // send a mail copy to the administrator (register only)
-
+	
 	var $webmasterMail = adminmail;
 	var $webmasterName = adminname;
 	var $adminMail = adminmail;
@@ -70,26 +74,29 @@ class accountUser
 	 */
 	function accountUser()
 	{
-		global $roster, $addon;
-
-		$this->activationPage = makelink('util-accounts-user&fct=activate');
-		$this->activationPageExt = makelink('util-accounts-user&fct=activate', true);
-		$this->loginPage = makelink('util-accounts-user&fct=login');
-		$this->loginPageExt = makelink('util-accounts-user&fct=login', true);
-		$this->logOutPage = makelink('util-accounts-user&fct=logout');
+	    global $roster, $addon;
+		
+		$this->registerPage = makelink('util-accounts-register');
+		$this->activationPage = makelink('util-accounts-activate');
+		$this->activationPageExt = makelink('util-accounts-activate', true);
+		$this->loginForm = makelink('util-accounts-login');
+		$this->loginRed = makelink('login');
+		$this->loginPageExt = makelink('util-accounts-login', true);
+		$this->lostPassPage = makelink('util-accounts-lost');
 		$this->mainPage = makelink('util-accounts-index');
-		$this->denyAccessPage = makelink('util-accounts-user&fct=deny');
+		$this->mainRed = makelink('index');
+		$this->denyAccessPage = makelink('util-accounts-deny');
 		$this->adminPage = makelink('rostercp-addons-accounts');
 		$this->adminPageExt = makelink('rostercp-addons-accounts', true);
 	}
-
+	
 	function checkUser($pass = '')
 	{
 		global $roster, $addon;
 
 		switch ($pass)
 		{
-			case 'new':
+			case 'new': 
 				$sql = sprintf("SELECT COUNT(*) AS `check` FROM %s WHERE `email` = '%s' OR `uname` = '%s'", $this->userTable, $this->userEMail, $this->user);
 				break;
 			case 'lost':
@@ -109,7 +116,7 @@ class accountUser
 				$sql = sprintf("SELECT COUNT(*) AS `check` FROM %s WHERE `uname` = '%s' AND `pass` = '%s' AND `active` = '1'", $this->userTable, $this->user, $password);
 		}
 		$result = $roster->db->query($sql) or die($roster->db->errno() . $roster->db->error());
-		if ($roster->db->result($result, 0, 'check') == 1)
+		if ($roster->db->result($result, 0, "check") == 1)
 		{
 			return true;
 		}
@@ -118,12 +125,12 @@ class accountUser
 			return false;
 		}
 	}
-
-	// New methods to handle the access level
+	
+	// New methods to handle the access level	
 	function getGroupID()
 	{
 		global $roster, $addon;
-
+		
 		$sql = sprintf("SELECT `group_id` FROM %s WHERE `uname` = '%s' AND `active` = '1'", $this->userTable, $this->user);
 		if (!$result = $roster->db->query($sql))
 		{
@@ -134,18 +141,25 @@ class accountUser
 			$this->groupID = $roster->db->result($result, 0, 'group_id');
 		}
 	}
-
+	
 	function setUser()
 	{
 		global $roster, $addon;
-
+		
+		$this->getUserInfo($this->user, $this->userPass);
+		$this->getGroupID();
+		
 		$this->isLoggedIn = true;
-
+		
+		$_SESSION['uid'] = $this->uid;
 		$_SESSION['user'] = $this->user;
 		$_SESSION['userPass'] = $this->userPass;
 		$_SESSION['groupID'] = $this->groupID;
 		$_SESSION['userFName'] = $this->userFName;
 		$_SESSION['isLoggedIn'] = $this->isLoggedIn;
+		
+		$this->setRosterAccess();
+		
 		if (isset($_SESSION['referer']) && $_SESSION['referer'] != '')
 		{
 			$next_page = $_SESSION['referer'];
@@ -155,13 +169,13 @@ class accountUser
 		{
 			$next_page = $this->mainPage;
 		}
-		header('Location: ' . $next_page);
+		header("Location: " . $next_page);
 	}
-
+	
 	function setRosterAccess()
 	{
 		global $roster, $addon;
-
+		
 		$sql = sprintf("SELECT * FROM %s WHERE `account_id` = %d", $roster->db->table('account'), $this->groupID);
 		$result = $roster->db->query($sql);
 
@@ -177,7 +191,7 @@ class accountUser
 		{
 			setcookie( 'roster_pass',$row['hash'],0,'/' );
 			$this->allow_login = $row['account_id'];
-			$this->message = '<span style="font-size:10px;color:red;">Logged in ' . $this->user . ':</span><form style="display:inline;" name="roster_logout" action="' . $this->logOutPage . '" method="post"><span style="font-size:10px;color:#FFFFFF"><input type="hidden" name="logout" value="1" />[<a href="javascript:document.roster_logout.submit();">Logout</a>]</span></form><br />';
+ 			$this->message = '<span style="font-size:10px;color:red;">Logged in ' . $this->user . ':</span><form style="display:inline;" name="roster_logout" action="' . $this->logOutPage . '" method="post"><span style="font-size:10px;color:#FFFFFF"><input type="hidden" name="logout" value="1" />[<a href="javascript:document.roster_logout.submit();">Logout</a>]</span></form><br />';
 
 			$roster->db->free_result($result);
 			return;
@@ -189,11 +203,11 @@ class accountUser
 		$this->message = '<span style="font-size:10px;color:red;">Invalid password</span><br />';
 		return;
 	}
-
+	
 	function loginUser($user, $password)
 	{
 		global $roster, $addon;
-
+		
 		if ($user != '' && $password != '')
 		{
 			$this->user = $user;
@@ -204,11 +218,8 @@ class accountUser
 				if ($this->countVisit)
 				{
 					$this->regVisit($user, $password);
-				}
-				$this->getGroupID();
-				$this->getUserInfo($user, $password);
+				}	
 				$this->setUser();
-				$this->setRosterAccess();
 			}
 			else
 			{
@@ -219,12 +230,12 @@ class accountUser
 		{
 			$this->message = $roster->locale->act['account_user']['msg11'];
 		}
-	}
-
+	}	
+	
 	function loginSaver()
 	{
 		global $roster, $addon;
-
+		
 		if ($this->saveLogin == 'no')
 		{
 			if (isset($_COOKIE[$this->cookieName]))
@@ -239,56 +250,54 @@ class accountUser
 		else
 		{
 			$expire = time()+2592000;
-		}
+		}		
 		$cookie_str = $this->user . chr(31) . base64_encode($this->userPass);
 		setcookie($this->cookieName, $cookie_str, $expire, $this->cookiePath);
 	}
-
+	
 	function loginReader()
 	{
 		global $roster, $addon;
-
+		
 		if (isset($_COOKIE[$this->cookieName]))
 		{
 			$cookie_parts = explode(chr(31), $_COOKIE[$this->cookieName]);
 			$this->user = $cookie_parts[0];
 			$this->userPass = base64_decode($cookie_parts[1]);
 			$this->isCookie = true;
-		}
+		}			 
 	}
-
+	
 	function regVisit($login, $pass)
 	{
 		global $roster, $addon;
-
+		
 		$visit_sql = sprintf("UPDATE %s SET `extra_info` = '%s' WHERE `uname` = '%s' AND `pass` = '%s'", $this->userTable, date('Y-m-d H:i:s'), $login, md5($pass));
 		$roster->db->query($visit_sql);
 	}
-
-	function logOut()
+	
+	function logOut() 
 	{
 		global $roster, $addon;
-
+		
 		unset($_SESSION['uid']);
 		unset($_SESSION['user']);
 		unset($_SESSION['userPass']);
 		unset($_SESSION['groupID']);
 		unset($_SESSION['userFName']);
 		unset($_SESSION['isLoggedIn']);
-
-
+		
+		
 		setcookie( 'roster_pass','',time()-86400,'/' );
 		$this->allow_login = 0;
 		$this->message = '<span style="font-size:10px;color:red;">Logged out</span><br />';
-
-
-		header('Location: ' . $this->mainPage);
+		
 	}
-
+	
 	function accessPage($refer = '', $qs = '', $level)
 	{
 		global $roster, $addon;
-
+		
 		$refer_qs = $refer;
 		$refer_qs .= ($qs != '') ? '?' . $qs : '';
 		if (isset($_SESSION['user']) && isset($_SESSION['userPass']))
@@ -303,48 +312,64 @@ class accountUser
 				}
 				$_SESSION['groupID'] = $this->groupID;
 			}
-
 			if (!$this->checkUser())
 			{
 				$_SESSION['referer'] = $refer_qs;
-				header('Location: ' . $this->loginPage);
+				if ($roster->config['seo_url'] == 1)
+				{
+					header('Location: ' . $this->loginRed);
+				}
+				else
+				{
+					header('Location: ' . $this->loginForm);
+				}
 			}
 			if ($_SESSION['groupID'] < $level)
 			{
-				header('Location: ' . $this->denyAccessPage . '&level=' . $level);
+				header('Location: ' . $this->denyAccessPage . '&amp;level=' . $level);
 			}
 		}
 		else
-		{
+		{ 
 			$_SESSION['referer'] = $refer_qs;
-			header('Location: ' . $this->loginPage);
+			if ($roster->config['seo_url'] == 1)
+			{
+				header('Location: ' . $this->loginRed);
+			}
+			else
+			{
+				header('Location: ' . $this->loginForm);
+			}
 		}
 	}
-
+	
 	function getUserInfo($user, $pass)
 	{
 		global $roster, $addon;
-
-		$sql_info = sprintf("SELECT `fname`, `extra_info`, `email`, `uid` FROM %s WHERE `uname` = '%s' AND `pass` = '%s'", $this->userTable, $user, md5($userPass));
-		$res_info = $roster->db->query($sql_info);
-		if (!$res_info)
+		
+		$sql_info = sprintf("SELECT * FROM %s WHERE `uname` = '%s' AND `pass` = '%s'", $this->userTable, $user, md5($pass));
+		$row = $roster->db->query($sql_info);
+		
+		if (!$row)
 		{
-			die_quietly($roster->db->error, 'Accounts Auth', __FILE__,__LINE__,$query);
+			die_quietly($roster->db->error, 'Accounts User Info Error', __FILE__,__LINE__,$row);
 		}
-		$row = $roster->db->fetch($res_info);
-
-		$this->uid = $row['uid'];
-		$this->userFName = $row['fname'];
-		$this->userInfo = $row['extra_info'];
-		$this->userEMail = $row['email'];
-
-		$roster->db->free_result($res_info);
+		
+		$this->uid = $roster->db->result($row, 0, 'uid');
+		$this->groupID = $roster->db->result($row, 0, 'group_id');
+		$this->isActive = $roster->db->result($row, 0, 'active');
+		$this->userFName = $roster->db->result($row, 0, 'fname');
+		$this->userLName = $roster->db->result($row, 0, 'lname');
+		$this->userInfo = $roster->db->result($row, 0, 'extra_info');
+		$this->userEMail = $roster->db->result($row, 0, 'email');
+		
+		$roster->db->free_result($row);
 	}
-
+	
 	function updateUser($newPass, $newConfirm, $newFName, $newLName, $newInfo, $newMail)
 	{
 		global $roster, $addon;
-
+		
 		if ($newPass != '')
 		{
 			if ($this->checkNewPass($newPass, $newConfirm))
@@ -388,7 +413,7 @@ class accountUser
 			$updateEMail = false;
 			$newMail = '';
 		}
-		$upd_sql = sprintf("UPDATE %s SET `pass` = %s, `fname` = %s, `lname` = %s, `extra_info` = %s, `tmp_mail` = %s WHERE `uid` = %d",
+		$upd_sql = sprintf("UPDATE %s SET `pass` = %s, `fname` = %s, `lname` = %s, `extra_info` = %s, `tmp_mail` = %s WHERE `uid` = %d", 
 		$this->userTable,
 		$this->ins_string(md5($ins_password)),
 		$this->ins_string($newFName),
@@ -419,7 +444,7 @@ class accountUser
 				{
 					$roster->db->query(sprintf("UPDATE %s SET `tmp_mail` = ''", $this->userTable));
 					$this->message = $roster->locale->act['account_user']['msg14'];
-				}
+				} 
 			}
 		}
 		else
@@ -427,11 +452,11 @@ class accountUser
 			$this->message = $roster->locale->act['account_user']['msg15'];
 		}
 	}
-
+	
 	function checkNewPass($pass, $passConfirm)
 	{
 		global $roster, $addon;
-
+		
 		if ($pass == $passConfirm)
 		{
 			if (strlen($pass) >= $addon['config']['pass_length'])
@@ -440,7 +465,7 @@ class accountUser
 			}
 			else
 			{
-				$this->message = sprintf($roster->locale->act['account_user']['msg32'], $addon['config']['pass_length']);
+			    $this->message = sprintf($roster->locale->act['account_user']['msg32'], $addon['config']['pass_length']);
 				return false;
 			}
 		}
@@ -448,13 +473,13 @@ class accountUser
 		{
 			$this->message = $roster->locale->act['account_user']['msg38'];
 			return false;
-		}
+		}	
 	}
-
+	
 	function checkEMail($mail_address)
 	{
 		global $roster, $addon;
-
+		
 		if (preg_match("/^[0-9a-z]+(([\.\-_])[0-9a-z]+)*@[0-9a-z]+(([\.\-])[0-9a-z-]+)*\.[a-z]{2,4}$/i", $mail_address))
 		{
 			return true;
@@ -464,11 +489,11 @@ class accountUser
 			return false;
 		}
 	}
-
+	
 	function ins_string($value, $type = '')
 	{
 		global $roster, $addon;
-
+		
 		$value = (!get_magic_quotes_gpc()) ? addslashes($value) : $value;
 		switch ($type)
 		{
@@ -480,11 +505,11 @@ class accountUser
 		}
 		return $value;
 	}
-
+	
 	function registerUser($first_uname, $first_pass, $confirmPass, $first_fname, $first_lname, $first_info, $first_email)
 	{
 		global $roster, $addon;
-
+		
 		if ($this->checkNewPass($first_pass, $confirmPass))
 		{
 			if (strlen($first_uname) >= $addon['config']['uname_length'])
@@ -499,7 +524,7 @@ class accountUser
 					}
 					else
 					{
-						$sql = sprintf("INSERT INTO %s (`uid`, `uname`, `pass`, `fname`, `lname`, `extra_info`, `email`, `group_id`, `active`) VALUES (NULL, %s, %s, %s, %s, %s, %s, %d, '0')",
+						$sql = sprintf("INSERT INTO %s (`uid`, `uname`, `pass`, `fname`, `lname`, `extra_info`, `email`, `group_id`, `active`) VALUES (NULL, %s, %s, %s, %s, %s, %s, %d, '0')", 
 						$this->userTable,
 						$this->ins_string($first_uname),
 						$this->ins_string(md5($first_pass)),
@@ -536,15 +561,15 @@ class accountUser
 			}
 			else
 			{
-				$this->message = sprintf($roster->locale->act['account_user']['msg17'], $addon['config']['uname_length']);
+			    $this->message = sprintf($roster->locale->act['account_user']['msg17'], $addon['config']['uname_length']);
 			}
 		}
 	}
-
+	
 	function validateEMail($validation_key, $key_id)
 	{
 		global $roster, $addon;
-
+		
 		if ($validation_key != '' && strlen($validation_key) == 32 && $key_id > 0)
 		{
 			$this->uid = $key_id;
@@ -570,11 +595,11 @@ class accountUser
 			$this->message = $roster->locale->act['account_user']['msg21'];
 		}
 	}
-
+	
 	function activateAccount($activate_key, $key_id)
 	{
 		global $roster, $addon;
-
+		
 		if ($activate_key != '' && strlen($activate_key) == 32 && $key_id > 0)
 		{
 			$this->uid = $key_id;
@@ -621,16 +646,16 @@ class accountUser
 			$this->message = $roster->locale->act['account_user']['msg21'];
 		}
 	}
-
+	
 	function sendConfirmation($uid)
 	{
 		global $roster, $addon;
-
+		
 		$sql = sprintf("SELECT `email` FROM %s WHERE `uid` = %d", $this->userTable, $uid);
 		$userEMail = $roster->db->result($roster->db->query($sql), 0, 'email');
-
+		
 		$message = sprintf($roster->locale->act['account_user']['msg37'], $this->user, $this->loginPageExt, $this->adminName);
-
+		
 		if ($this->sendMail($userEMail, $message))
 		{
 			return true;
@@ -640,16 +665,16 @@ class accountUser
 			return false;
 		}
 	}
-
+	
 	function sendMail($mail_address, $message)
 	{
 		global $roster, $addon;
-
+		
 		if (!$message)
 		{
 			$message = sprintf($roster->locale->act['account_user']['msg29'], $this->user, $this->loginPageExt, $this->uid, md5($this->userPass));
 		}
-
+		
 		$header = "From: \"" . $this->webmasterName . "\" <" . $this->webmasterMail . ">\r\n";
 		$header .= "MIME-Version: 1.0\r\n";
 		$header .= "Mailer: Olaf's mail script version 1.11\r\n";
@@ -672,13 +697,13 @@ class accountUser
 		else
 		{
 			return false;
-		}
+		} 
 	}
-
+	
 	function forgotPass($forgot_email)
-	{
+	{ 
 		global $roster, $addon;
-
+		
 		if ($this->checkEMail($forgot_email))
 		{
 			$this->userEMail = $forgot_email;
@@ -694,9 +719,9 @@ class accountUser
 					$this->user = $roster->db->result($forgot_result, 0, 'uname');
 					$this->uid = $roster->db->result($forgot_result, 0, 'uid');
 					$this->userPass = $roster->db->result($forgot_result, 0, 'pass');
-
+					
 					$roster->db->free_result($forgot_result);
-
+					
 					$message = sprintf($roster->locale->act['account_user']['msg35'], $this->user, $this->activationPageExt, $this->uid, md5($this->userPass));
 					if ($this->sendMail($this->userEMail, $message))
 					{
@@ -718,11 +743,11 @@ class accountUser
 			$this->message = $roster->locale->act['account_user']['msg16'];
 		}
 	}
-
+	
 	function checkActivationPass($controle_str, $uid)
 	{
 		global $roster, $addon;
-
+		
 		if ($controle_str != '' && strlen($controle_str) == 32 && $uid > 0)
 		{
 			$this->userPass = $controle_str;
@@ -741,16 +766,16 @@ class accountUser
 			}
 		}
 		else
-			{
+		{
 			$this->message = $roster->locale->act['account_user']['msg21'];
 			return false;
 		}
 	}
-
+	
 	function activateNewPass($new_pass, $new_confirm, $old_pass, $user_id)
 	{
 		global $roster, $addon;
-
+		
 		if ($this->checkNewPassword($new_pass, $new_confirm))
 		{
 			$sql_new_pass = sprintf("UPDATE %s SET `pass` = '%s' WHERE `pass` = '%s' AND `uid` = %d", $this->userTable, md5($new_pass), md5($old_pass), $user_id);
