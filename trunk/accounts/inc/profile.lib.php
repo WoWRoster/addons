@@ -1,33 +1,34 @@
-<?php
-/**
+<?php 
+/** 
  * Dev.PKComp.net WoWRoster Addon
- *
- * LICENSE: Licensed under the Creative Commons
- *          "Attribution-NonCommercial-ShareAlike 2.5" license
- *
- * @copyright  2005-2007 Pretty Kitty Development
- * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5"
- * @link       http://dev.pkcomp.net
- * @package    Accounts
- * @subpackage Profile
+ * 
+ * LICENSE: Licensed under the Creative Commons 
+ *          "Attribution-NonCommercial-ShareAlike 2.5" license 
+ * 
+ * @copyright  2005-2007 Pretty Kitty Development 
+ * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5" 
+ * @link       http://dev.pkcomp.net 
+ * @package    Accounts 
+ * @subpackage Profile 
  */
 if( !defined('IN_ROSTER') )
 {
-	exit('Detected invalid access to this file!');
+    exit('Detected invalid access to this file!');
 }
 
 include_once ($addon['inc_dir'] . 'user.lib.php');
 
 class userProfile extends accountUser
 {
-	var $profileTable = utable;
-
+	
+	var $profileTable = utable; 
+	
 	var $uid;
 	var $city;
 	var $country;
 	var $homepage;
 	var $notes;
-
+	
 	function createFormField($formelement, $label, $length = 25, $required = false)
 	{
 		$form_field = '<label for="' . $formelement . '">' . $label . "</label>\n";
@@ -45,9 +46,9 @@ class userProfile extends accountUser
 			$form_field .= '';
 		}
 		$form_field .= ($required) ? "\">*<br />\n" : "\"><br />\n";
-		return $form_field;
+		return $form_field;		
 	}
-
+	
 	function createTextArea($text_field, $label)
 	{
 		$textarea = '<label for="' . $text_field . '">' . $label . "</label>\n";
@@ -62,12 +63,12 @@ class userProfile extends accountUser
 		}
 		else
 		{
-			$textarea .= '';
+			$textarea .= "";
 		}
 		$textarea .= "</textarea><br />\n";
-		return $textarea;
+		return $textarea;		
 	}
-
+	
 	function saveProfileDate($ident = '', $lname = '', $city = '', $country = '', $hp = '', $notes = '')
 	{
 		if ($_SESSION['is_rec'])
@@ -88,7 +89,7 @@ class userProfile extends accountUser
 			$this->message = $roster->locale->act['account_profile']['msg3'];
 		}
 	}
-
+	
 	function getProfileData()
 	{
 		$this->getUserInfo();
@@ -97,8 +98,8 @@ class userProfile extends accountUser
 		$result = $roster->db->query($sql) or die ($roster->db->errno() . ':' . $roster->db->error());
 		if ($roster->db->num_rows($result) == 0)
 		{
-			$_SESSION['is_rec'] = false;
-		$this->message = $roster->locale->act['account_profile']['msg1'];
+			$_SESSION['is_rec'] = false;			
+			$this->message = $roster->locale->act['account_profile']['msg1'];
 		}
 		else
 		{

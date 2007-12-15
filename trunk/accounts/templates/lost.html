@@ -1,0 +1,27 @@
+<!-- BEGIN accounts_lost -->
+{accounts_lost.BORDER_START}
+<table class="bodyline" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<th class="membersHeader">
+			{accounts_lost.FORGOT_TXT}
+		</th>
+	</tr>
+	<tr>
+	<form name="lostPass" method="post" action="{accounts_lost.FORM_LINK}">
+		<td class="membersRow1">
+			<span style="float:left">{accounts_lost.EMAIL_TXT}:</span>
+			<span style="float:right"><input type="text" name="email" class="wowinput192"></span>
+		</td>
+	</tr>
+	<tr>
+		<td class="membersHeader">
+			<center><input type="submit" name="Submit" value="{accounts_lost.SUBMIT}"></center>
+		</td>
+	</tr>
+	</form>
+</table>
+{accounts_lost.BORDER_END}
+<p><b>{accounts_lost.MESSAGE}</b></p>
+<p>&nbsp;</p>
+<p><a href="{accounts_lost.LOGIN_LINK}">{accounts_lost.LOGIN_TXT}</a></p>
+<!-- END accounts_lost -->
