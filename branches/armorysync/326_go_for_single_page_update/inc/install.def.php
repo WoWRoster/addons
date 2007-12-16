@@ -29,7 +29,7 @@ class armorysyncInstall
 	var $active = true;
 	var $icon = 'inv_misc_missilesmall_blue';
 
-	var $version = '2.6.0.326';
+	var $version = '2.6.0.330';
 	var $wrnet_id = '0';
 
 	var $fullname = 'Armory Sync';
@@ -81,6 +81,7 @@ class armorysyncInstall
 		$installer->add_config("'1200', 'armorysync_synchcutofftime', '1', 'text{4|4', 'armorysync_conf'");
 		$installer->add_config("'1250', 'armorysync_use_ajax', '1', 'radio{On^1|Off^0', 'armorysync_conf'");
 		$installer->add_config("'1300', 'armorysync_reloadwaittime', '5', 'text{4|4', 'armorysync_conf'");
+		$installer->add_config("'1325', 'armorysync_fetch_method', '1', 'select{per Character^1|per Page^0', 'armorysync_conf'");
 		$installer->add_config("'1350', 'armorysync_fetch_timeout', '8', 'text{2|2', 'armorysync_conf'");
 		$installer->add_config("'1360', 'armorysync_skip_start', '0', 'radio{On^1|Off^0', 'armorysync_conf'");
 		$installer->add_config("'1370', 'armorysync_status_hide', '0', 'radio{On^1|Off^0', 'armorysync_conf'");
@@ -166,7 +167,7 @@ class armorysyncInstall
 							 `character_info` tinyint(1) default NULL,
 							 `skill_info` int(11) default NULL,
 							 `reputation_info` int(11) default NULL,
-							 `equipment_info` int(11) default NULL,
+							 `equipment_info` varchar(11) default NULL,
 							 `talent_info` int(11) default NULL,
 							 `starttimeutc` datetime default NULL,
 							 `stoptimeutc` datetime default NULL,
@@ -301,6 +302,33 @@ class armorysyncInstall
 		if ( version_compare('2.6.0.273', $oldversion,'>') == true ) {
 			$installer->update_config('1250', 'config_value=1');
 		}
+
+		if ( version_compare('2.6.0.330', $oldversion,'>') == true ) {
+				$installer->add_config("'1325', 'armorysync_fetch_method', '1', 'select{per Character^1|per Page^0', 'armorysync_conf'");
+				$installer->drop_table( $installer->table('jobqueue') );
+				$installer->create_table(
+						$installer->table('jobqueue'),
+									"
+									 `job_id` int(11) unsigned NOT NULL,
+									 `member_id` int(11) unsigned NOT NULL,
+									 `name` varchar(64) NOT NULL,
+									 `guild_id` int(11) NOT NULL,
+									 `guild_name` varchar(64) NOT NULL,
+									 `server` varchar(32) NOT NULL,
+									 `region` char(2) NOT NULL,
+									 `guild_info` int(11) unsigned default NULL,
+									 `character_info` tinyint(1) default NULL,
+									 `skill_info` int(11) default NULL,
+									 `reputation_info` int(11) default NULL,
+									 `equipment_info` varchar(11) default NULL,
+									 `talent_info` int(11) default NULL,
+									 `starttimeutc` datetime default NULL,
+									 `stoptimeutc` datetime default NULL,
+									 `log` text,
+									 PRIMARY KEY  (`job_id`,`member_id`)
+									" );
+		}
+
 		return true;
 	}
 
