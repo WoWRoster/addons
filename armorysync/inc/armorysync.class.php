@@ -39,15 +39,171 @@ class ArmorySync extends ArmorySyncBase {
     var $debugmessages = array();
     var $errormessages = array();
 
+	var $updateDone = false;
+
     var $datas = array();
 
-    var $status = array(    'guildInfo' => 0,
-                            'characterInfo' => 0,
-                            'skillInfo' => 0,
-                            'reputationInfo' => 0,
-                            'equipmentInfo' => 0,
-                            'talentInfo' => 0,
+    var $status = array(    'guildInfo' => null,
+                            'characterInfo' => null,
+                            'skillInfo' => null,
+                            'reputationInfo' => null,
+                            'equipmentInfo' => null,
+                            'talentInfo' => null,
                         );
+
+    /**
+     * syncronises one member with blizzards armory
+     *
+     * @param string $server
+     * @param int $memberId
+     * @return bool
+     */
+    function synchMemberByIDPerPage( $server, $memberId = 0, $memberName = false, $region = false, $guildId = 0 ) {
+        global $addon, $roster, $update;
+
+        $this->server = $server;
+        $this->memberId = $memberId;
+        $this->memberName = $memberName;
+        $this->region = $region;
+        $this->guildId = $guildId;
+
+		$cacheTagJob = 'job_'.$server.$memberId.$region.$guildId;
+		$cacheTagData = 'data_'.$server.$memberId.$region.$guildId;
+		$cacheTagStatus = 'status_'.$server.$memberId.$region.$guildId;
+		$cacheTagRetry = 'retry_'.$server.$memberId.$region.$guildId;
+
+		$retry = 1;
+		if ( $roster->cache->check($cacheTagRetry) ) {
+			$retry = $roster->cache->get($cacheTagRetry);
+		}
+		$ret = false;
+
+		if ( $roster->cache->check($cacheTagJob) ) {
+			$steps = $roster->cache->get($cacheTagJob);
+			$this->data = $roster->cache->get($cacheTagData);
+			$this->status = $roster->cache->get($cacheTagStatus);
+			$step = array_shift($steps);
+
+			switch ( $step ) {
+				case 'Skill' :
+					$ret = $this->_getSkillInfo();
+					break;
+
+				case 'Reputation' :
+					$ret = $this->_getReputationInfo();
+					break;
+
+				case 'Equip' :
+					$cacheTagSlot = 'slot_'.$server.$memberId.$region.$guildId;
+					$slot = 0;
+
+					if ( $roster->cache->check($cacheTagSlot) ) {
+						$slot = $roster->cache->get($cacheTagSlot);
+					}
+
+					while ( ! isset( $this->data["Equipment"][$this->_getItemSlot( $slot )] ) ) {
+						$slot++;
+						if ( $slot >= 18 ) {
+							break;
+						}
+					}
+
+					if ( $slot < 19 ) {
+						$ret = $this->_getEquipmentInfo( $this->_getItemSlot( $slot ) );
+					}
+
+					if ( $ret == true && $retry < 4 ) {
+						$slot++;
+						while ( ! isset( $this->data["Equipment"][$this->_getItemSlot( $slot )] ) ) {
+							$slot++;
+							if ( $slot >= 19 ) {
+								break;
+							}
+						}
+
+						if ( $slot < 19 ) {
+							$roster->cache->put( $slot, $cacheTagSlot );
+							array_unshift( $steps, $step );
+						} else {
+							$roster->cache->cleanCache( 'obj_'. md5( $cacheTagSlot));
+						}
+					}
+
+					break;
+
+				case 'Talents' :
+					$ret = $this->_getTalentInfo();
+					break;
+
+				case 'Update' :
+					if ( $this->status['characterInfo'] ) {
+						include_once(ROSTER_LIB . 'update.lib.php');
+						$update = new update;
+						$update->fetchAddonData();
+						$update->uploadData['characterprofiler']['myProfile'][$this->server]['Character'][$this->data['Name']] = $this->data;
+						$this->message = $update->processMyProfile();
+						$tmp = explode( "\n", $this->message);
+						$this->message = implode( '', $tmp);
+						$this->updateDone = true;
+
+						$roster->cache->cleanCache( 'obj_'. md5( $cacheTagJob));
+						$roster->cache->cleanCache( 'obj_'. md5( $cacheTagData));
+						$roster->cache->cleanCache( 'obj_'. md5( $cacheTagStatus));
+						$roster->cache->cleanCache( 'obj_'. md5( $cacheTagRetry));
+
+						if ( strpos( $this->message, sprintf($roster->locale->act['upload_data'],$roster->locale->act['char'],$memberName,$server,$region)) ) {
+							$this->_debug( 1, true, 'Synced armory data for '. $this->memberName. ' with roster',  'OK' );
+							return true;
+						} else {
+							$this->_debug( 1, false, 'Synced armory data for '. $this->memberName. ' with roster',  'Failed' );
+							return false;
+						}
+					} else {
+						$this->message = "No infos for ". $this->memberName. "<br>Character has probalby not been updated for a while";
+						$this->_debug( 1, false, 'Synced armory data '. $this->memberName. ' with roster',  'Failed' );
+						return false;
+					}
+					break;
+			}
+			if ( $ret == true ) {
+				$retry = 1;
+			}
+			if ( $ret == false && $retry < 4 ) {
+				$this->_debug( 0, false, "Char: ". $memberName. " Step: ". $step. ( $step == 'Equip' ? " Slot: ". $this->_getItemSlot( $slot ) : "" ). " failed", "Retry: ". $retry);
+				array_unshift( $steps, $step );
+				$retry++;
+			}
+			if ( $retry >= 4 ) {
+				$this->_debug( 0, false, "Step: ". $step. " failed", "I give up");
+				$retry = 1;
+			}
+			$roster->cache->put( $retry, $cacheTagRetry );
+			$roster->cache->put( $steps, $cacheTagJob );
+			$roster->cache->put( $this->data, $cacheTagData );
+			$roster->cache->put( $this->status, $cacheTagStatus );
+		} else {
+			$ret = $this->_getCharacterInfo();
+			if ( $ret == false && $retry < 3 ) {
+				$roster->cache->put( $retry, $cacheTagRetry );
+			} elseif ( $retry >= 3 ) {
+				$this->status = array(    'guildInfo' => 0,
+									'characterInfo' => 0,
+									'skillInfo' => 0,
+									'reputationInfo' => 0,
+									'equipmentInfo' => 0,
+									'talentInfo' => 0,
+								);
+				$this->updateDone = true;
+				$roster->cache->cleanCache( 'obj_'. md5( $cacheTagRetry));
+				$this->_debug( 1, false, 'Synced armory data '. $this->memberName. ' with roster',  'Failed' );
+			} else {
+				$roster->cache->put( $retry, $cacheTagRetry );
+				$roster->cache->put( $this->data, $cacheTagData );
+				$roster->cache->put( $this->status, $cacheTagStatus );
+				$roster->cache->put( array( 'Skill', 'Reputation', 'Equip', 'Talents', 'Update' ), $cacheTagJob );
+			}
+		}
+    }
 
     /**
      * syncronises one member with blizzards armory
@@ -126,11 +282,48 @@ class ArmorySync extends ArmorySyncBase {
      */
     function _getRosterData() {
 
-        $this->_getCharacterInfo();
+        $retry = 0;
+		while ( ! $this->_getCharacterInfo() ) {
+			$retry++;
+			if ( $retry == 3 ) {
+				continue;
+			}
+		}
         if ( $this->status['characterInfo'] ) {
-            $this->_getSkillInfo();
-            $this->_getReputationInfo();
-            $this->_getTalentInfo();
+	        $retry = 0;
+            while ( ! $this->_getSkillInfo() ) {
+				$retry++;
+				if ( $retry == 3 ) {
+					continue;
+				}
+			}
+	        $retry = 0;
+            while ( ! $this->_getReputationInfo() ) {
+				$retry++;
+				if ( $retry == 3 ) {
+					continue;
+				}
+			}
+			for ( $i = 0; $i <= 18; $i++ ) {
+				$slot = $this->_getItemSlot( $i );
+				if ( isset( $this->data["Equipment"][$slot] ) ) {
+					$retry = 0;
+					while ( ! $this->_getEquipmentInfo( $slot ) ) {
+						$retry++;
+						if ( $retry == 3 ) {
+							continue;
+						}
+					}
+				}
+			}
+	        $retry = 0;
+            while ( ! $this->_getTalentInfo() ) {
+				$retry++;
+				if ( $retry == 3 ) {
+					continue;
+				}
+			}
+			$this->updateDone = true;
             $this->_debug( 1, $this->data, 'Parsed all armory data',  'OK' );
         } else {
             $this->_debug( 1, $this->data, 'Parsed all armory data',  'Failed' );
@@ -336,7 +529,8 @@ class ArmorySync extends ArmorySyncBase {
             $this->data["CPversion"] = '2.6.0';
 
             $this->data["Honor"]["Lifetime"]["HK"] = $tab->pvp->lifetimehonorablekills->value;
-            $this->data["Honor"]["Lifetime"]["Name"] = $char->title;
+            //$this->data["Honor"]["Lifetime"]["Name"] = $char->title;
+			$this->data["Honor"]["Lifetime"]["Name"] = str_replace( ' %s', '', $tab->title->value);
             $this->data["Honor"]["Session"] = array();
             $this->data["Honor"]["Yesterday"] = array();
             $this->data["Honor"]["Current"] = array();
@@ -374,27 +568,30 @@ class ArmorySync extends ArmorySyncBase {
             $this->data["Attributes"]["Melee"]["HitRating"] = $tab->melee->hitRating->value . ":0:0";
             $this->data["Attributes"]["Melee"]["CritRating"] = $tab->melee->critChance->rating . ":0:0";
             $this->data["Attributes"]["Melee"]["HasteRating"] = $tab->melee->mainHandSpeed->hasteRating . ":0:0";
+			$this->data["Attributes"]["Melee"]["Expertise"] = $tab->melee->expertise->rating . ":0:0";
 
             $this->data["Attributes"]["Melee"]["CritChance"] = $tab->melee->critChance->percent;
             $this->data["Attributes"]["Melee"]["AttackPowerDPS"] = $tab->melee->power->increasedDps;
 
-            if ( $tab->melee->mainHandWeaponSkill->value > 0 ) {
+            //if ( $tab->melee->mainHandWeaponSkill->value > 0 ) {
 
                 $this->data["Attributes"]["Melee"]["MainHand"]["AttackSpeed"] = $tab->melee->mainHandDamage->speed;
                 $this->data["Attributes"]["Melee"]["MainHand"]["AttackDPS"] = $tab->melee->mainHandDamage->dps;
-                $this->data["Attributes"]["Melee"]["MainHand"]["AttackSkill"] = $tab->melee->mainHandWeaponSkill->value;
+                //$this->data["Attributes"]["Melee"]["MainHand"]["AttackSkill"] = $tab->melee->mainHandWeaponSkill->value;
                 $this->data["Attributes"]["Melee"]["MainHand"]["DamageRange"] = $tab->melee->mainHandDamage->min . ":" . $tab->melee->mainHandDamage->max;
-                $this->data["Attributes"]["Melee"]["MainHand"]["AttackRating"] = $tab->melee->mainHandWeaponSkill->rating;
-            }
+                //$this->data["Attributes"]["Melee"]["MainHand"]["AttackRating"] = $tab->melee->mainHandWeaponSkill->rating;
+				$this->data["Attributes"]["Melee"]["MainHand"]["AttackRating"] = $tab->melee->hitRating->value;
+            //}
 
-            if ( $tab->melee->offHandWeaponSkill->value > 0 ) {
+            //if ( $tab->melee->offHandWeaponSkill->value > 0 ) {
 
                 $this->data["Attributes"]["Melee"]["OffHand"]["AttackSpeed"] = $tab->melee->offHandDamage->speed;
                 $this->data["Attributes"]["Melee"]["OffHand"]["AttackDPS"] = $tab->melee->offHandDamage->dps;
-                $this->data["Attributes"]["Melee"]["OffHand"]["AttackSkill"] = $tab->melee->offHandWeaponSkill->value;
+                //$this->data["Attributes"]["Melee"]["OffHand"]["AttackSkill"] = $tab->melee->offHandWeaponSkill->value;
                 $this->data["Attributes"]["Melee"]["OffHand"]["DamageRange"] = $tab->melee->offHandDamage->min . ":" . $tab->melee->mainHandDamage->max;
-                $this->data["Attributes"]["Melee"]["OffHand"]["AttackRating"] = $tab->melee->offHandWeaponSkill->rating;
-            }
+                //$this->data["Attributes"]["Melee"]["OffHand"]["AttackRating"] = $tab->melee->offHandWeaponSkill->rating;
+				$this->data["Attributes"]["Melee"]["OffHand"]["AttackRating"] = $tab->melee->hitRating->value;
+            //}
 
             // ??? $this->data["Attributes"]["Melee"]["DamageRangeTooltip"] = "";
             // ??? $this->data["Attributes"]["Melee"]["AttackPowerTooltip"] = "";
@@ -454,7 +651,23 @@ class ArmorySync extends ArmorySyncBase {
             $this->data["Attributes"]["Spell"]["School"]["Shadow"] = $tab->spell->bonusDamage->shadow->value;
             $this->data["Attributes"]["Spell"]["School"]["Nature"] = $tab->spell->bonusDamage->nature->value;
 
+			if ( $this->_checkContent( $tab, array( 'buffs', 'spell' ) ) ) {
+				foreach ( $tab->buffs->spell as $spell ) {
+					$buffName = $spell->name;
+					$this->data["Attributes"]["Buffs"][$buffName]["Name"] = $buffName;
+					$this->data["Attributes"]["Buffs"][$buffName]["Icon"] = $spell->icon;
+					$this->data["Attributes"]["Buffs"][$buffName]["Tooltip"] = $spell->effect;
+				}
+			}
 
+			if ( $this->_checkContent( $tab, array( 'debuffs', 'spell' ) ) ) {
+				foreach ( $tab->debuffs->spell as $spell ) {
+					$buffName = $spell->name;
+					$this->data["Attributes"]["Buffs"][$buffName]["Name"] = $buffName;
+					$this->data["Attributes"]["Buffs"][$buffName]["Icon"] = $spell->icon;
+					$this->data["Attributes"]["Buffs"][$buffName]["Tooltip"] = $spell->effect;
+				}
+			}
 
             $this->data["TalentPoints"] = ($char->level > 0) ? $char->level - $tab->talentSpec->treeOne - $tab->talentSpec->treeTwo - $tab->talentSpec->treeThree - 9 : 0;
             $this->data["Race"] = $char->race;
@@ -521,14 +734,31 @@ class ArmorySync extends ArmorySyncBase {
             $this->status['characterInfo'] = 1;
             $this->status['guildInfo'] = 1;
 
-            $this->_debug( 1, true, 'Parsed character infos',  'OK' );
+			if ( $this->_checkContent( $tab, array( 'items', 'item' ) ) ) {
+				$equip = $tab->items->item;
+				foreach($equip as $item) {
 
-            if ( $this->_checkContent( $tab, array( 'items', 'item' ) ) ) {
-                $equip = $tab->items->item;
-                $this->_getEquipmentInfo( $equip );
-            }
+					$slot = $this->_getItemSlot($item->slot);
+					$this->data["Equipment"][$slot] = array();
+
+					$this->data["Equipment"][$slot]['Item'] = $item->id;
+					$this->data["Equipment"][$slot]['Icon'] = $item->icon;
+					$this->data["Equipment"][$slot]['Item'] .= ":". $item->permanentenchant;
+					$this->data["Equipment"][$slot]['Item'] .= ":". "0"; // GemId0
+					$this->data["Equipment"][$slot]['Item'] .= ":". "0"; // GemId1
+					$this->data["Equipment"][$slot]['Item'] .= ":". "0"; // GemId2
+					$this->data["Equipment"][$slot]['Item'] .= ":". "0"; // ???
+					$this->data["Equipment"][$slot]['Item'] .= ":". "0"; // ???
+					$this->data["Equipment"][$slot]['Item'] .= ":". $item->seed;
+				}
+			}
+
+            $this->_debug( 1, true, 'Char: '. $this->memberName. ' Parsed character infos',  'OK' );
+			return true;
+
         } else {
-            $this->_debug( 1, false, 'Parsed character infos',  'Failed' );
+            $this->_debug( 1, false, 'Char: '. $this->memberName. ' Parsed character infos',  'Failed' );
+			return false;
         }
     }
 
@@ -536,50 +766,44 @@ class ArmorySync extends ArmorySyncBase {
      * fetches character equipment info
      *
      */
-    function _getEquipmentInfo( $equip = array() ) {
+    function _getEquipmentInfo( $slot = false ) {
         global $roster, $addon;
 
-        include_once(ROSTER_LIB . 'armory.class.php');
+		$equipcount = count( array_keys($this->data["Equipment"]) );
 
-        foreach($equip as $item) {
-
-            $slot = $this->_getItemSlot($item->slot);
-            $this->data["Equipment"][$slot] = array();
-
-            $this->data["Equipment"][$slot]['Item'] = $item->id;
-
-            $this->data["Equipment"][$slot]['Icon'] = $item->icon;
-
-
+		if ( ! $slot == false && isset($this->data["Equipment"][$slot]) ) {
+	        include_once(ROSTER_LIB . 'armory.class.php');
             $armory = new RosterArmory;
             $armory->region = $this->region;
             $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
-            $content = $this->_parseData( $armory->fetchItemTooltip( $item->id, $roster->config['locale'], $this->memberName, $this->server ) );
+			$id = array_shift( explode( ":", $this->data["Equipment"][$slot]["Item"]));
 
-            if ( $this->_checkContent( $content, array( 'itemTooltips', 'itemTooltip' ) ) ) {
+            $content = $this->_parseData( $armory->fetchItemTooltip( $id, $roster->config['locale'], $this->memberName, $this->server ) );
+			$itemToolTipHtml = $this->_getItemTooltip( $id );
+
+            if ( $this->_checkContent( $content, array( 'itemTooltips', 'itemTooltip' ) ) && $itemToolTipHtml != false ) {
 
                 $tooltip = $content->itemTooltips->itemTooltip;
                 $this->data["Equipment"][$slot]['Name'] = $tooltip->name->_CDATA;
                 $this->data["Equipment"][$slot]['Color'] = $this->_getItemColor($tooltip->overallQualityId->_CDATA);
-                $this->data["Equipment"][$slot]['Tooltip'] = $this->_getItemTooltip( $item->id );
-            }
-            $this->data["Equipment"][$slot]['Item'] .= ":". $item->permanentenchant;
-            $this->data["Equipment"][$slot]['Item'] .= ":". "0"; // GemId0
-            $this->data["Equipment"][$slot]['Item'] .= ":". "0"; // GemId1
-            $this->data["Equipment"][$slot]['Item'] .= ":". "0"; // GemId2
-            $this->data["Equipment"][$slot]['Item'] .= ":". "0"; // ???
-            $this->data["Equipment"][$slot]['Item'] .= ":". "0"; // ???
-            $this->data["Equipment"][$slot]['Item'] .= ":". $item->seed;
-            $this->status['equipmentInfo'] += 1;
-        }
-        if ( $this->status['equipmentInfo'] > 0 ) {
-            $this->_debug( 1, true, 'Parsed equipment info', 'OK' );
-        } else {
-            $this->_debug( 1, false, 'Parsed equipment info', 'Failed' );
-        }
+                $this->data["Equipment"][$slot]['Tooltip'] = $itemToolTipHtml; //$this->_getItemTooltip( $id );
+				if ( ! isset($this->status['equipmentInfo']) ) {
+					$this->status['equipmentInfo'] = "1/". $equipcount;
+				} else {
+					$tmp = array_shift( explode( "/", $this->status['equipmentInfo']));
+					$tmp++;
+					$this->status['equipmentInfo'] = $tmp. "/". $equipcount;
+				}
+				$this->_debug( 1, true, 'Char: '. $this->memberName. ' Slot: '. $slot. ' Parsed equipment details', 'OK' );
+				return true;
+			} else {
+				$this->_debug( 1, false, 'Char: '. $this->memberName. ' Slot: '. $slot. ' Parsed equipment details', 'Failed' );
+				return false;
+			}
+		}
 
-    }
+	}
 
     /**
      * fetches character skill info
@@ -620,9 +844,12 @@ class ArmorySync extends ArmorySyncBase {
 
                 $this->data["Skills"][$type]["Order"] = $this->_getSkillOrder($type);
             }
-            $this->_debug( 1, true, 'Parsed skill info', 'OK' );
+            $this->_debug( 1, true, 'Char: '. $this->memberName. ' Parsed skill info', 'OK' );
+			return true;
         } else {
-            $this->_debug( 1, false, 'Parsed skill info', 'Failed' );
+			$this->status['skillInfo'] = 0;
+            $this->_debug( 1, false, 'Char: '. $this->memberName. ' Parsed skill info', 'Failed' );
+			return false;
         }
     }
 
@@ -669,9 +896,12 @@ class ArmorySync extends ArmorySyncBase {
                     $this->_setFactionRep( $factionType, $factionRep->faction);
                 }
             }
-            $this->_debug( 1, true, 'Parsed reputation info', 'OK' );
+            $this->_debug( 1, true, 'Char: '. $this->memberName. ' Parsed reputation info', 'OK' );
+			return true;
         } else {
-            $this->_debug( 1, false, 'Parsed reputation info', 'Failed' );
+			$this->status['reputationInfo'] = 0;
+            $this->_debug( 1, false, 'Char: '. $this->memberName. ' Parsed reputation info', 'Failed' );
+			return false;
         }
     }
 
@@ -748,9 +978,12 @@ class ArmorySync extends ArmorySyncBase {
                     }
                     $this->data["Talents"][$talentTree]["PointsSpent"] = $pointsSpent[$talentTree];
             }
-            $this->_debug( 1, true, 'Parsed talent info', 'OK' );
+            $this->_debug( 1, true, 'Char: '. $this->memberName. ' Parsed talent info', 'OK' );
+			return true;
         } else {
-            $this->_debug( 1, false, 'Parsed talent info', 'Failed' );
+			$this->status['talentInfo'] = 0;
+            $this->_debug( 1, false, 'Char: '. $this->memberName. ' Parsed talent info', 'Failed' );
+			return false;
         }
     }
     // Helper functions
@@ -858,7 +1091,7 @@ class ArmorySync extends ArmorySyncBase {
                 $this->_finalClass( $tag );
             }
         }
-        $this->_debug( 3, '', 'Made simple class', 'OK' );
+        $this->_debug( 4, '', 'Made simple class', 'OK' );
     }
 
     /**
@@ -873,7 +1106,7 @@ class ArmorySync extends ArmorySyncBase {
         $node->setArray($attribs);
         $node->setProp("_TAGNAME", $tag);
         $this->datas[] = $node;
-        $this->_debug( 3, '', 'Initialized simple class', 'OK' );
+        $this->_debug( 4, '', 'Initialized simple class', 'OK' );
     }
 
 
@@ -909,7 +1142,7 @@ class ArmorySync extends ArmorySyncBase {
                 }
             }
         }
-        $this->_debug( 3, '', 'Finalized simple class', 'OK' );
+        $this->_debug( 4, '', 'Finalized simple class', 'OK' );
     }
 
     /**
