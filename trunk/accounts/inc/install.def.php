@@ -28,7 +28,7 @@ class accountsInstall
     var $active = true; 
     var $icon = 'inv_misc_groupneedmore'; 
 
-    var $version = '1.9.9.46'; 
+    var $version = '1.9.9.49'; 
 	var $wrnet_id = '0';
 
     var $fullname = 'Accounts'; 
@@ -126,7 +126,8 @@ class accountsInstall
 			`guild_id` INT(11) unsigned NOT NULL default '0',
 			`group_id` smallint(6) NOT NULL default '1',
 			`is_main` smallint(6) NOT NULL default '0',
-			UNIQUE KEY `member_id`(`member_id`),
+			`realm` varchar(32) NOT NULL default '',
+			PRIMARY KEY (`member_id`),
 			INDEX KEY `uid` (`uid`)");
 
 		$installer->create_table( $installer->table('page_perms'),"

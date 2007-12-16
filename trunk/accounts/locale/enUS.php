@@ -142,4 +142,26 @@ $lang['account_profile']['msg1'] = "There is no profile data at the moment.";
 $lang['account_profile']['msg2'] = "Your profile data is up to date.";
 $lang['account_profile']['msg3'] = "There was an error during update, please try again.";
 
+// Memberslist Wordings
+$lang['online_at_update']       = 'Online at Update';
+$lang['second']                 = '%s second ago';
+$lang['seconds']                = '%s seconds ago';
+$lang['minute']                 = '%s minute ago';
+$lang['minutes']                = '%s minutes ago';
+$lang['hour']                   = '%s hour ago';
+$lang['hours']                  = '%s hours ago';
+$lang['day']                    = '%s day ago';
+$lang['days']                   = '%s days ago';
+$lang['week']                   = '%s week ago';
+$lang['weeks']                  = '%s weeks ago';
+$lang['month']                  = '%s month ago';
+$lang['months']                 = '%s months ago';
+$lang['year']                   = '%s year ago';
+$lang['years']                  = '%s years ago';
+
+$lang['servertype']				= 'Realm Type';
+$lang['serverstatus']			= 'Realm Status';
+$lang['serverpop']				= 'Realm Population';
+
+$lang['xp_to_go']               = '%1$s XP until level %2$s';
 ?>
