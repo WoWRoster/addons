@@ -2,6 +2,17 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[333]
+- fixed ["Honor"]["Lifetime"]["Name"]
+- fixed ["Attributes"]["Melee"]["MainHand"]["AttackRating"]
+- fixed $this->data["Attributes"]["Melee"]["OffHand"]["AttackRating"]
+- implemented Buffs and Debuffs
+
+svn[332]
+- Implemented per page updates
+- Implemented up to two retrys of page fetching
+- Changed loglevels and there infos a little
+
 svn [326]
 - switched back itemtooltip parsing (damn bliz. last week they changes all <br> tags to <br/> and all html umlauts to nativ utf8-. Now they rolled back)
 

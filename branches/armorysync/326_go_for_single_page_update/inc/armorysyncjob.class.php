@@ -229,9 +229,9 @@ class ArmorySyncJob extends ArmorySyncBase {
             }
         } else {
             $ret = $this->$functions['update_status']();
-            if ( $ret ) {
-                $ret = $this->$functions['update_status']();
-            }
+            //if ( $ret ) {
+            //    $ret = $this->$functions['update_status']();
+            //}
             $this->$functions['show_status']();
             if ( $ret ) {
                 $this->$functions['link']();

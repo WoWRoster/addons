@@ -29,7 +29,7 @@ class armorysyncInstall
 	var $active = true;
 	var $icon = 'inv_misc_missilesmall_blue';
 
-	var $version = '2.6.0.330';
+	var $version = '2.6.0.333';
 	var $wrnet_id = '0';
 
 	var $fullname = 'Armory Sync';

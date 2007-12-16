@@ -529,7 +529,8 @@ class ArmorySync extends ArmorySyncBase {
             $this->data["CPversion"] = '2.6.0';
 
             $this->data["Honor"]["Lifetime"]["HK"] = $tab->pvp->lifetimehonorablekills->value;
-            $this->data["Honor"]["Lifetime"]["Name"] = $char->title;
+            //$this->data["Honor"]["Lifetime"]["Name"] = $char->title;
+			$this->data["Honor"]["Lifetime"]["Name"] = str_replace( ' %s', '', $tab->title->value);
             $this->data["Honor"]["Session"] = array();
             $this->data["Honor"]["Yesterday"] = array();
             $this->data["Honor"]["Current"] = array();
@@ -567,27 +568,30 @@ class ArmorySync extends ArmorySyncBase {
             $this->data["Attributes"]["Melee"]["HitRating"] = $tab->melee->hitRating->value . ":0:0";
             $this->data["Attributes"]["Melee"]["CritRating"] = $tab->melee->critChance->rating . ":0:0";
             $this->data["Attributes"]["Melee"]["HasteRating"] = $tab->melee->mainHandSpeed->hasteRating . ":0:0";
+			$this->data["Attributes"]["Melee"]["Expertise"] = $tab->melee->expertise->rating . ":0:0";
 
             $this->data["Attributes"]["Melee"]["CritChance"] = $tab->melee->critChance->percent;
             $this->data["Attributes"]["Melee"]["AttackPowerDPS"] = $tab->melee->power->increasedDps;
 
-            if ( $tab->melee->mainHandWeaponSkill->value > 0 ) {
+            //if ( $tab->melee->mainHandWeaponSkill->value > 0 ) {
 
                 $this->data["Attributes"]["Melee"]["MainHand"]["AttackSpeed"] = $tab->melee->mainHandDamage->speed;
                 $this->data["Attributes"]["Melee"]["MainHand"]["AttackDPS"] = $tab->melee->mainHandDamage->dps;
-                $this->data["Attributes"]["Melee"]["MainHand"]["AttackSkill"] = $tab->melee->mainHandWeaponSkill->value;
+                //$this->data["Attributes"]["Melee"]["MainHand"]["AttackSkill"] = $tab->melee->mainHandWeaponSkill->value;
                 $this->data["Attributes"]["Melee"]["MainHand"]["DamageRange"] = $tab->melee->mainHandDamage->min . ":" . $tab->melee->mainHandDamage->max;
-                $this->data["Attributes"]["Melee"]["MainHand"]["AttackRating"] = $tab->melee->mainHandWeaponSkill->rating;
-            }
+                //$this->data["Attributes"]["Melee"]["MainHand"]["AttackRating"] = $tab->melee->mainHandWeaponSkill->rating;
+				$this->data["Attributes"]["Melee"]["MainHand"]["AttackRating"] = $tab->melee->hitRating->value;
+            //}
 
-            if ( $tab->melee->offHandWeaponSkill->value > 0 ) {
+            //if ( $tab->melee->offHandWeaponSkill->value > 0 ) {
 
                 $this->data["Attributes"]["Melee"]["OffHand"]["AttackSpeed"] = $tab->melee->offHandDamage->speed;
                 $this->data["Attributes"]["Melee"]["OffHand"]["AttackDPS"] = $tab->melee->offHandDamage->dps;
-                $this->data["Attributes"]["Melee"]["OffHand"]["AttackSkill"] = $tab->melee->offHandWeaponSkill->value;
+                //$this->data["Attributes"]["Melee"]["OffHand"]["AttackSkill"] = $tab->melee->offHandWeaponSkill->value;
                 $this->data["Attributes"]["Melee"]["OffHand"]["DamageRange"] = $tab->melee->offHandDamage->min . ":" . $tab->melee->mainHandDamage->max;
-                $this->data["Attributes"]["Melee"]["OffHand"]["AttackRating"] = $tab->melee->offHandWeaponSkill->rating;
-            }
+                //$this->data["Attributes"]["Melee"]["OffHand"]["AttackRating"] = $tab->melee->offHandWeaponSkill->rating;
+				$this->data["Attributes"]["Melee"]["OffHand"]["AttackRating"] = $tab->melee->hitRating->value;
+            //}
 
             // ??? $this->data["Attributes"]["Melee"]["DamageRangeTooltip"] = "";
             // ??? $this->data["Attributes"]["Melee"]["AttackPowerTooltip"] = "";
@@ -647,7 +651,23 @@ class ArmorySync extends ArmorySyncBase {
             $this->data["Attributes"]["Spell"]["School"]["Shadow"] = $tab->spell->bonusDamage->shadow->value;
             $this->data["Attributes"]["Spell"]["School"]["Nature"] = $tab->spell->bonusDamage->nature->value;
 
+			if ( $this->_checkContent( $tab, array( 'buffs', 'spell' ) ) ) {
+				foreach ( $tab->buffs->spell as $spell ) {
+					$buffName = $spell->name;
+					$this->data["Attributes"]["Buffs"][$buffName]["Name"] = $buffName;
+					$this->data["Attributes"]["Buffs"][$buffName]["Icon"] = $spell->icon;
+					$this->data["Attributes"]["Buffs"][$buffName]["Tooltip"] = $spell->effect;
+				}
+			}
 
+			if ( $this->_checkContent( $tab, array( 'debuffs', 'spell' ) ) ) {
+				foreach ( $tab->debuffs->spell as $spell ) {
+					$buffName = $spell->name;
+					$this->data["Attributes"]["Buffs"][$buffName]["Name"] = $buffName;
+					$this->data["Attributes"]["Buffs"][$buffName]["Icon"] = $spell->icon;
+					$this->data["Attributes"]["Buffs"][$buffName]["Tooltip"] = $spell->effect;
+				}
+			}
 
             $this->data["TalentPoints"] = ($char->level > 0) ? $char->level - $tab->talentSpec->treeOne - $tab->talentSpec->treeTwo - $tab->talentSpec->treeThree - 9 : 0;
             $this->data["Race"] = $char->race;
@@ -741,54 +761,6 @@ class ArmorySync extends ArmorySyncBase {
 			return false;
         }
     }
-
-    ///**
-    // * fetches character equipment info
-    // *
-    // */
-    //function _getEquipmentInfo( $equip = array() ) {
-    //    global $roster, $addon;
-    //
-    //    include_once(ROSTER_LIB . 'armory.class.php');
-    //
-    //    foreach($equip as $item) {
-    //
-    //        $slot = $this->_getItemSlot($item->slot);
-    //        $this->data["Equipment"][$slot] = array();
-    //
-    //        $this->data["Equipment"][$slot]['Item'] = $item->id;
-    //
-    //        $this->data["Equipment"][$slot]['Icon'] = $item->icon;
-    //
-    //
-    //        //$armory = new RosterArmory;
-    //        //$armory->region = $this->region;
-    //        //$armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
-    //        //
-    //        //$content = $this->_parseData( $armory->fetchItemTooltip( $item->id, $roster->config['locale'], $this->memberName, $this->server ) );
-    //        //
-    //        //if ( $this->_checkContent( $content, array( 'itemTooltips', 'itemTooltip' ) ) ) {
-    //        //
-    //        //    $tooltip = $content->itemTooltips->itemTooltip;
-    //        //    $this->data["Equipment"][$slot]['Name'] = $tooltip->name->_CDATA;
-    //        //    $this->data["Equipment"][$slot]['Color'] = $this->_getItemColor($tooltip->overallQualityId->_CDATA);
-    //        //    $this->data["Equipment"][$slot]['Tooltip'] = $this->_getItemTooltip( $item->id );
-    //        //}
-    //        $this->data["Equipment"][$slot]['Item'] .= ":". $item->permanentenchant;
-    //        $this->data["Equipment"][$slot]['Item'] .= ":". "0"; // GemId0
-    //        $this->data["Equipment"][$slot]['Item'] .= ":". "0"; // GemId1
-    //        $this->data["Equipment"][$slot]['Item'] .= ":". "0"; // GemId2
-    //        $this->data["Equipment"][$slot]['Item'] .= ":". "0"; // ???
-    //        $this->data["Equipment"][$slot]['Item'] .= ":". "0"; // ???
-    //        $this->data["Equipment"][$slot]['Item'] .= ":". $item->seed;
-    //    }
-    //    //if ( $this->status['equipmentInfo'] > 0 ) {
-    //        $this->_debug( 1, true, 'Parsed equipment info', 'OK' );
-    //    //} else {
-    //    //    $this->_debug( 1, false, 'Parsed equipment info', 'Failed' );
-    //    //}
-    //
-    //}
 
     /**
      * fetches character equipment info
@@ -1276,10 +1248,10 @@ class ArmorySync extends ArmorySyncBase {
             $content = str_replace($roster->locale->act['bindings']['bind_on_pickup'], $roster->locale->act['bindings']['bind'], $content);
             $content = str_replace($roster->locale->act['bindings']['bind_on_equip'], $roster->locale->act['bindings']['bind'], $content);
 
-            $this->_debug( 1, $content, 'Fetched item tooltip', 'OK' );
+            $this->_debug( 2, $content, 'Fetched item tooltip', 'OK' );
             return $content;
         }
-        $this->_debug( 1, '', 'Fetched item tooltip', 'Failed' );
+        $this->_debug( 2, '', 'Fetched item tooltip', 'Failed' );
         return false;
     }
 
