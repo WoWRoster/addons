@@ -16,6 +16,10 @@
     exit('Detected invalid access to this file!');
 }
 
+$addon = getaddon('accounts');
+include_once ('user.lib.php');
+$accounts = new accountUser;
+
 class RosterLogin
 {
 	var $allow_login;
@@ -34,21 +38,18 @@ class RosterLogin
 	 */
 	function RosterLogin($script_filename = '')
 	{
-		global $roster;
-		
-		include_once ('user.lib.php');
-
-		$accounts = new accountUser;
+		global $roster, $addon, $accounts;
 		
 		$this->script_filename = makelink($script_filename);
 		
 		if( isset( $_POST['logout'] ) && $_POST['logout'] == '1' )
 		{
+			
 			$accounts->logOut();
 		}
 		elseif( isset($_SESSION['user']) && isset($_SESSION['isLoggedIn']))
 		{
-			header('Location: ' . $this->script_filename);
+			$this->getAuthorized();
 		}
     	elseif( isset($_GET['act_key']) && isset($_GET['uid']))
 		{ // these two variables are required for activating/updating the account/password
@@ -72,21 +73,32 @@ class RosterLogin
 
 	function getAuthorized()
 	{
+		if( isset($_SESSION['groupID']) && isset($_SESSION['isLoggedIn']))
+		{
+			$this->allow_login = $_SESSION['groupID'];
+		}
+		else
+		{
+			$this->allow_login = 0;
+		}
+		
 		return $this->allow_login;
 	}
 
 	function getMessage()
 	{
-		return $this->message;
+		global $roster, $addon, $accounts;
+		
+		return $accounts->message;
 	}
 
 	function getLoginForm()
 	{
-		global $roster;
+		global $roster, $addon, $accounts;
 
-		include_once ('user.lib.php');
-
-		$accounts = new accountUser;
+		//$addon = getaddon('accounts');
+		//include_once ('user.lib.php');
+		//$accounts = new accountUser;
 		
 		$roster->output['show_menu']['account_menu'] = 1;  // Display the button listing
 	 

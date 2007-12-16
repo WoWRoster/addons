@@ -85,7 +85,7 @@ class accountsUpdate
 		$this->messages .= '<li><span style="color:yellow">Getting Character Information...</span></li><br />' . "\n";
 		
 		// --[ Fetch full member data ]--
-		$query = "SELECT `name`, `guild_id` FROM `" . $roster->db->table('players') . "` WHERE `member_id` = '" . $member_id . "';";
+		$query = "SELECT `name`, `guild_id`, `server` FROM `" . $roster->db->table('players') . "` WHERE `member_id` = '" . $member_id . "';";
 		$result = $roster->db->query( $query );
 
 		if ( !$result )
@@ -112,6 +112,7 @@ class accountsUpdate
 		$this->chars[$member_id]['name'] = $member_name;
 		$this->chars[$member_id]['guild_id'] = $row['guild_id'];
 		$this->chars[$member_id]['group_id'] = $_SESSION['groupID'];
+		$this->chars[$member_id]['realm'] = $row['server'];
 
 		$this->messages .= ' - <span style="color:green;">' . $member_name . ' will be updated.</span><br/>';
 		
@@ -152,6 +153,7 @@ class accountsUpdate
 			$char['name'] = $mid['name'];
 			$char['guid'] = $mid['guild_id'];
 			$char['gid'] = $mid['group_id'];
+			$char['realm'] = $mid['realm'];
 			
 			// And the update code
 			$sql = "SELECT `uid` FROM `" . $roster->db->table('user_link', $this->data['basename']) . "` WHERE `member_id` = '" . $char['id'] . "';";
@@ -160,7 +162,7 @@ class accountsUpdate
 			
 			if($row == 0)
 			{
-				$query = "INSERT INTO `" . $roster->db->table('user_link',$this->data['basename']) . "` SET `uid` = '" . $char['uid'] . "', `member_id` = '" . $char['id'] . "', `guild_id` = '" . $char['guid'] . "', `group_id` = '" . $char['gid'] . "';";
+				$query = "INSERT INTO `" . $roster->db->table('user_link',$this->data['basename']) . "` SET `uid` = '" . $char['uid'] . "', `member_id` = '" . $char['id'] . "', `guild_id` = '" . $char['guid'] . "', `group_id` = '" . $char['gid'] . "', `realm` = '" . $char['realm'] . "';";
 				
 				if( $roster->db->query($query) )
 				{
@@ -174,7 +176,7 @@ class accountsUpdate
 			}
 			else
 			{
-				$query = "UPDATE `" . $roster->db->table('user_link',$this->data['basename']) . "` SET `guild_id` = '" . $char['guid'] . "', `group_id` = '" . $char['gid'] . "';";
+				$query = "UPDATE `" . $roster->db->table('user_link',$this->data['basename']) . "` SET `guild_id` = '" . $char['guid'] . "', `group_id` = '" . $char['gid'] . "', `realm` = '" . $char['realm'] . "';";
 				
 				if( $roster->db->query($query) )
 				{

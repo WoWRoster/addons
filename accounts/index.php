@@ -345,6 +345,177 @@ function charPage()
 {
 	global $roster, $addon;
 
+	include_once (ROSTER_ADDONS . 'memberslist/inc/memberslist.php');
+
+	$charlist = new memberslist(array('group_alts'=>-1));
+	
+	$uid = $_SESSION['uid'];
+
+$mainQuery =
+	'SELECT '.
+	'`user_link`.`uid`, '.
+	'`user_link`.`member_id`, '.
+	'`members`.`member_id`, '.
+	'`members`.`name`, '.
+	'`members`.`class`, '.
+	'`members`.`level`, '.
+	'`members`.`zone`, '.
+	'`members`.`online`, '.
+	'`members`.`last_online`, '.
+	"UNIX_TIMESTAMP(`members`.`last_online`) AS 'last_online_stamp', ".
+	"DATE_FORMAT(  DATE_ADD(`members`.`last_online`, INTERVAL ".$roster->config['localtimeoffset']." HOUR ), '".$roster->locale->act['timeformat']."' ) AS 'last_online_format', ".
+	'`members`.`note`, '.
+	'`members`.`guild_title`, '.
+
+	'`guild`.`update_time`, '.
+
+	"IF( `members`.`note` IS NULL OR `members`.`note` = '', 1, 0 ) AS 'nisnull', ".
+	'`members`.`officer_note`, '.
+	"IF( `members`.`officer_note` IS NULL OR `members`.`officer_note` = '', 1, 0 ) AS 'onisnull', ".
+	'`members`.`guild_rank`, '.
+
+	'`players`.`server`, '.
+	'`players`.`race`, '.
+	'`players`.`sex`, '.
+	'`players`.`exp`, '.
+	'`players`.`clientLocale`, '.
+
+	'`players`.`lifetimeRankName`, '.
+	'`players`.`lifetimeHighestRank`, '.
+	"IF( `players`.`lifetimeHighestRank` IS NULL OR `players`.`lifetimeHighestRank` = '0', 1, 0 ) AS 'risnull', ".
+	'`players`.`hearth`, '.
+	"IF( `players`.`hearth` IS NULL OR `players`.`hearth` = '', 1, 0 ) AS 'hisnull', ".
+	"UNIX_TIMESTAMP( `players`.`dateupdatedutc`) AS 'last_update_stamp', ".
+	"DATE_FORMAT(  DATE_ADD(`players`.`dateupdatedutc`, INTERVAL ".$roster->config['localtimeoffset']." HOUR ), '".$roster->locale->act['timeformat']."' ) AS 'last_update_format', ".
+	"IF( `players`.`dateupdatedutc` IS NULL OR `players`.`dateupdatedutc` = '', 1, 0 ) AS 'luisnull', ".
+
+	'`proftable`.`professions`, '.
+	'`talenttable`.`talents` '.
+
+	'FROM `'.$roster->db->table('user_link',$addon['basename']).'` AS user_link '.
+	'LEFT JOIN `'.$roster->db->table('members').'` AS members ON `user_link`.`member_id` = `members`.`member_id` '.
+	'LEFT JOIN `'.$roster->db->table('players').'` AS players ON `members`.`member_id` = `players`.`member_id` '.
+	"LEFT JOIN (SELECT `member_id` , GROUP_CONCAT( CONCAT( `skill_name` , '|', `skill_level` ) ORDER BY `skill_order`) AS 'professions' ".
+		'FROM `'.$roster->db->table('skills').'` '.
+		'GROUP BY `member_id`) AS proftable ON `members`.`member_id` = `proftable`.`member_id` '.
+
+	"LEFT JOIN (SELECT `member_id` , GROUP_CONCAT( CONCAT( `tree` , '|', `pointsspent` , '|', `background` ) ORDER BY `order`) AS 'talents' ".
+		'FROM `'.$roster->db->table('talenttree').'` '.
+		'GROUP BY `member_id`) AS talenttable ON `members`.`member_id` = `talenttable`.`member_id` '.
+
+	'LEFT JOIN `'.$roster->db->table('guild').'` AS guild ON `members`.`guild_id` = `guild`.`guild_id` '.
+	'WHERE `user_link`.`uid` = "'.$uid.'"'.
+	'ORDER BY IF(`members`.`member_id` = `user_link`.`member_id`,1,0), ';
+
+$always_sort = ' `members`.`level` DESC, `members`.`name` ASC';
+
+$addon = getaddon('memberslist');
+
+$FIELD['name'] = array (
+	'lang_field' => 'name',
+	'order'    => array( '`members`.`name` ASC' ),
+	'order_d'    => array( '`members`.`name` DESC' ),
+	'value' => array($charlist,'name_value'),
+	'js_type' => 'ts_string',
+	'display' => 3,
+);
+
+$FIELD['class'] = array (
+	'lang_field' => 'class',
+	'order'    => array( '`members`.`class` ASC' ),
+	'order_d'    => array( '`members`.`class` DESC' ),
+	'value' => array($charlist,'class_value'),
+	'js_type' => 'ts_string',
+	'display' => $addon['config']['member_class'],
+);
+
+$FIELD['level'] = array (
+	'lang_field' => 'level',
+	'order_d'    => array( '`members`.`level` ASC' ),
+	'value' => array($charlist,'level_value'),
+	'js_type' => 'ts_number',
+	'display' => $addon['config']['member_level'],
+);
+
+$FIELD['guild_title'] = array (
+	'lang_field' => 'title',
+	'order' => array( '`members`.`guild_rank` ASC' ),
+	'order_d' => array( '`members`.`guild_rank` DESC' ),
+	'js_type' => 'ts_number',
+	'jsort' => 'guild_rank',
+	'display' => $addon['config']['member_gtitle'],
+);
+
+$FIELD['lifetimeRankName'] = array (
+	'lang_field' => 'currenthonor',
+	'order' => array( 'risnull', '`players`.`lifetimeHighestRank` DESC' ),
+	'order_d' => array( 'risnull', '`players`.`lifetimeHighestRank` ASC' ),
+	'value' => array($charlist,'honor_value'),
+	'js_type' => 'ts_number',
+	'display' => $addon['config']['member_hrank'],
+);
+
+$FIELD['professions'] = array (
+	'lang_field' => 'professions',
+	'value' => 'tradeskill_icons',
+	'js_type' => '',
+	'display' => $addon['config']['member_prof'],
+);
+
+$FIELD['hearth'] = array (
+	'lang_field' => 'hearthed',
+	'order' => array( 'hisnull', 'hearth ASC' ),
+	'order_d' => array( 'hisnull', 'hearth DESC' ),
+	'js_type' => 'ts_string',
+	'display' => $addon['config']['member_hearth'],
+);
+
+$FIELD['zone'] = array (
+	'lang_field' => 'lastzone',
+	'order' => array( '`members`.`zone` ASC' ),
+	'order_d' => array( '`members`.`zone` DESC' ),
+	'js_type' => 'ts_string',
+	'display' => $addon['config']['member_zone'],
+);
+
+$FIELD['last_online'] = array (
+	'lang_field' => 'lastonline',
+	'order' => array( '`members`.`last_online` DESC' ),
+	'order_d' => array( '`members`.`last_online` ASC' ),
+	'value' => array($charlist,'last_online_value'),
+	'js_type' => 'ts_date',
+	'display' => $addon['config']['member_online'],
+);
+
+$FIELD['last_update_format'] = array (
+	'lang_field' => 'lastupdate',
+	'order' => array( 'luisnull','`players`.`dateupdatedutc` DESC' ),
+	'order_d' => array( 'luisnull','`players`.`dateupdatedutc` ASC' ),
+	'jsort' => 'last_update_stamp',
+	'js_type' => 'ts_date',
+	'display' => $addon['config']['member_update'],
+);
+
+$FIELD['note'] = array (
+	'lang_field' => 'note',
+	'order' => array( 'nisnull','`members`.`note` ASC' ),
+	'order_d' => array( 'nisnull','`members`.`note` DESC' ),
+	'value' => 'note_value',
+	'js_type' => 'ts_string',
+	'display' => $addon['config']['member_note'],
+);
+
+$FIELD['officer_note'] = array (
+	'lang_field' => 'onote',
+	'order' => array( 'onisnull','`members`.`note` ASC' ),
+	'order_d' => array( 'onisnull','`members`.`note` DESC' ),
+	'value' => 'note_value',
+	'js_type' => 'ts_string',
+	'display' => $addon['config']['member_onote'],
+);
+
+$charlist->prepareData($mainQuery, $always_sort, $FIELD, 'charlist');
+	
 	$chars_page = new accountUser;
 	if ($chars_page->usePerms == 1)
 	{
@@ -355,10 +526,13 @@ function charPage()
 
 	$roster->tpl->assign_block_vars('accounts_chars', array(
 		'BORDER_START' => border('sblue','start', $roster->locale->act['accounts_chars_page']),
+		'CHARS_LIST' => $charlist->makeMembersList(),
 		'BORDER_END' => border('sblue','end'),
 		)
 	);
 
+	$addon = getaddon('accounts');
+	
 	$roster->tpl->set_filenames(array('accounts_chars' => $addon['basename'] . '/chars.html'));
 	$roster->tpl->display('accounts_chars');
 
@@ -367,6 +541,80 @@ function charPage()
 function guildsPage()
 {
 	global $roster, $addon;
+
+	include_once (ROSTER_ADDONS . 'memberslist/inc/memberslist.php');
+
+	$guildlist = new memberslist(array('group_alts'=>-1));
+	
+	$uid = $_SESSION['uid'];
+
+	$mainQuery =
+		'SELECT '.
+		'`user_link`.`uid`, '.
+		'`user_link`.`guild_id`, '.
+		'`user_link`.`member_id`, '.
+		'`members`.`member_id`, '.
+		'`members`.`guild_id`, '.
+		'`guild`.`guild_name`, '.
+		'`guild`.`guild_id`, '.
+		'`guild`.`faction`, '.
+		'`guild`.`factionEn`, '.
+		'`guild`.`guild_num_members`, '.
+		'`guild`.`guild_num_accounts`, '.
+		'`guild`.`guild_motd` '.
+
+		'FROM `'.$roster->db->table('user_link',$addon['basename']).'` AS user_link '.
+		'LEFT JOIN `'.$roster->db->table('members').'` AS members ON `user_link`.`member_id` = `members`.`member_id`'.
+		'LEFT JOIN `'.$roster->db->table('guild').'` AS guild ON `members`.`guild_id` = `guild`.`guild_id`'.
+		'WHERE `user_link`.`uid` = "' . $uid . '" '.
+		'ORDER BY IF(`guild`.`guild_id` = `user_link`.`guild_id`,1,0),';
+
+	$always_sort = ' `guild`.`guild_name` ASC';
+
+	$FIELD['guild_name'] = array (
+		'lang_field' => 'guild',
+		'order' => array( '`guild`.`guild_name` ASC' ),
+		'order_d' => array( '`guild`.`guild_name` DESC' ),
+		'value' => 'guild_value',
+		'js_type' => 'ts_string',
+		'display' => 3,
+	);
+
+	$FIELD['faction'] = array (
+		'lang_field' => 'faction',
+		'order' => array( '`guild`.`faction` ASC' ),
+		'order_d' => array( '`guild`.`faction` DESC' ),
+		'value' => 'faction_value',
+		'js_type' => 'ts_string',
+		'display' => 2,
+	);
+
+	$FIELD['guild_num_members'] = array (
+		'lang_field' => 'members',
+		'order' => array( '`guild`.`guild_num_members` ASC' ),
+		'order_d' => array( '`guild`.`guild_num_members` DESC' ),
+		'js_type' => 'ts_number',
+		'display' => 2,
+	);
+
+	$FIELD['guild_num_accounts'] = array (
+		'lang_field' => 'accounts',
+		'order' => array( '`guild`.`guild_num_accounts` ASC' ),
+		'order_d' => array( '`guild`.`guild_num_accounts` DESC' ),
+		'js_type' => 'ts_number',
+		'display' => 2,
+	);
+
+	$FIELD['guild_motd'] = array (
+		'lang_field' => 'motd',
+		'order' => array( '`guild`.`guild_motd` ASC' ),
+		'order_d' => array( '`guild`.`guild_motd` DESC' ),
+		'value' => 'note_value',
+		'js_type' => 'ts_string',
+		'display' => 2,
+	);
+
+$guildlist->prepareData($mainQuery, $always_sort, $FIELD, 'guildlist');
 
 	$guilds_page = new accountUser;
 	if ($guilds_page->usePerms == 1)
@@ -378,6 +626,7 @@ function guildsPage()
 
 	$roster->tpl->assign_block_vars('accounts_guilds', array(
 		'BORDER_START' => border('sblue','start', $roster->locale->act['accounts_guilds_page']),
+		'GUILD_LIST' => $guildlist->makeMembersList(),
 		'BORDER_END' => border('sblue','end'),
 		)
 	);
@@ -391,6 +640,80 @@ function realmsPage()
 {
 	global $roster, $addon;
 
+	include_once (ROSTER_ADDONS . 'memberslist/inc/memberslist.php');
+
+	$realmlist = new memberslist(array('group_alts'=>-1));
+	
+	$uid = $_SESSION['uid'];
+
+	$mainQuery =
+		'SELECT '.
+		'`user_link`.`uid`, '.
+		'`user_link`.`member_id`, '.
+		'`user_link`.`realm`, '.
+		'`members`.`member_id`, '.
+		'`members`.`server`, '.
+		'`realm`.`server_name`, '.
+		'`realm`.`server_region`, '.
+		'`realm`.`servertype`, '.
+		'`realm`.`serverstatus`, '.
+		'`realm`.`serverpop` '.
+
+		'FROM `'.$roster->db->table('user_link', $addon['basename']).'` AS user_link '.
+		'LEFT JOIN `'.$roster->db->table('members').'` AS members ON `user_link`.`member_id` = `members`.`member_id` '.
+		'LEFT JOIN `'.$roster->db->table('realmstatus').'` AS realm ON `members`.`server` = `realm`.`server_name` '.
+		'WHERE `user_link`.`uid` = "' . $uid . '" '.
+		'ORDER BY IF(`realm`.`server_name` = `user_link`.`realm`,1,0),';
+
+	$always_sort = ' `realm`.`server_name` ASC';
+
+	$FIELD['realm_name'] = array (
+		'lang_field' => 'realm',
+		'order' => array( '`realm`.`server_name` ASC' ),
+		'order_d' => array( '`realm`.`server_name` DESC' ),
+		'value' => 'realm_value',
+		'js_type' => 'ts_string',
+		'display' => 3,
+	);
+
+	$FIELD['realm_region'] = array (
+		'lang_field' => 'region',
+		'order' => array( '`realm`.`server_region` ASC' ),
+		'order_d' => array( '`realm`.`server_region` DESC' ),
+		'value' => 'region_value',
+		'js_type' => 'ts_string',
+		'display' => 2,
+	);
+
+	$FIELD['servertype'] = array (
+		'lang_field' => 'servertype',
+		'order' => array( '`realm`.`servertype` ASC' ),
+		'order_d' => array( '`realm`.`servertype` DESC' ),
+		'value' => 'servertype_value',
+		'js_type' => 'ts_string',
+		'display' => 2,
+	);
+
+	$FIELD['serverstatus'] = array (
+		'lang_field' => 'serverstatus',
+		'order' => array( '`realm`.`serverstatus` ASC' ),
+		'order_d' => array( '`realm`.`serverstatus` DESC' ),
+		'value' => 'serverstatus_value',
+		'js_type' => 'ts_string',
+		'display' => 2,
+	);
+
+	$FIELD['serverpop'] = array (
+		'lang_field' => 'serverpop',
+		'order' => array( '`realm`.`serverpop` ASC' ),
+		'order_d' => array( '`realm`.`serverpop` DESC' ),
+		'value' => 'serverpop_value',
+		'js_type' => 'ts_string',
+		'display' => 2,
+	);
+
+$realmlist->prepareData($mainQuery, $always_sort, $FIELD, 'realmlist');
+
 	$realms_page = new accountUser;
 	if ($realms_page->usePerms == 1)
 	{
@@ -401,6 +724,7 @@ function realmsPage()
 
 	$roster->tpl->assign_block_vars('accounts_realms', array(
 		'BORDER_START' => border('sblue','start', $roster->locale->act['accounts_realms_page']),
+		'REALMS_LIST' => $realmlist->makeMembersList(),
 		'BORDER_END' => border('sblue','end'),
 		)
 	);
@@ -463,4 +787,233 @@ function mainPage()
 	$roster->tpl->set_filenames(array('accounts_index' => $addon['basename'] . '/index.html'));
 	$roster->tpl->display('accounts_index');
 
+}
+
+/**
+ * Controls Output of the Tradeskill Icons Column
+ *
+ * @param array $row - of character data
+ * @return string - Formatted output
+ */
+function tradeskill_icons ( $row )
+{
+	global $roster;
+
+	$addon = getaddon('memberslist');
+
+	$cell_value ='';
+
+	// Don't proceed for characters without data
+	if ($row['clientLocale'] == '')
+	{
+		return '<div>&nbsp;</div>';
+	}
+
+	$lang = $row['clientLocale'];
+
+	$profs = explode(',',$row['professions']);
+	foreach ( $profs as $prof )
+	{
+		$r_prof = explode('|',$prof);
+		$toolTip = (isset($r_prof[1]) ? str_replace(':','/',$r_prof[1]) : '');
+		$toolTiph = $r_prof[0];
+
+		if( $r_prof[0] == $roster->locale->wordings[$lang]['riding'] )
+		{
+			if( $row['class']==$roster->locale->wordings[$lang]['Paladin'] || $row['class']==$roster->locale->wordings[$lang]['Warlock'] )
+			{
+				$icon = $roster->locale->wordings[$lang]['ts_ridingIcon'][$row['class']];
+			}
+			else
+			{
+				$icon = $roster->locale->wordings[$lang]['ts_ridingIcon'][$row['race']];
+			}
+		}
+		else
+		{
+			$icon = isset($roster->locale->wordings[$lang]['ts_iconArray'][$r_prof[0]])?$roster->locale->wordings[$lang]['ts_iconArray'][$r_prof[0]]:'';
+		}
+
+		// Don't add professions we don't have an icon for. This keeps other skills out.
+		if ($icon != '')
+		{
+			$icon = '<img class="membersRowimg" width="'.$addon['config']['icon_size'].'" height="'.$addon['config']['icon_size'].'" src="'.$roster->config['interface_url'].'Interface/Icons/'.$icon.'.'.$roster->config['img_suffix'].'" alt="" '.makeOverlib($toolTip,$toolTiph,'',2,'',',RIGHT,WRAP').' />';
+
+			if( active_addon('info') )
+			{
+				$cell_value .= '<a href="' . makelink('char-info-recipes&amp;a=c:' . $row['member_id'] . '#' . strtolower(str_replace(' ','',$r_prof[0]))) . '">' . $icon . '</a>';
+			}
+			else
+			{
+				$cell_value .= $icon;
+			}
+		}
+	}
+	return $cell_value;
+}
+
+/**
+ * Controls Output of a Note Column
+ *
+ * @param array $row - of character data
+ * @return string - Formatted output
+ */
+function note_value ( $row, $field )
+{
+	global $roster;
+
+	$addon = getaddon('memberslist');
+
+	if( !empty($row[$field]) )
+	{
+		$note = htmlspecialchars(nl2br($row[$field]));
+
+		if( $addon['config']['compress_note'] )
+		{
+			$note = '<img src="'.$roster->config['img_url'].'note.gif" style="cursor:help;" '.makeOverlib($note,$roster->locale->act['note'],'',1,'',',WRAP').' alt="" />';
+		}
+		else
+		{
+			$value = $note;
+		}
+	}
+	else
+	{
+		$note = '&nbsp;';
+		if( $addon['config']['compress_note'] )
+		{
+			$note = '<img src="'.$roster->config['img_url'].'no_note.gif" alt="No Note" />';
+		}
+		else
+		{
+			$value = $note;
+		}
+	}
+
+	return '<div style="display:none; ">'.htmlentities($row[$field]).'</div>'.$note;
+}
+
+/**
+ * Controls Output of the Guild Name Column
+ *
+ * @param array $row
+ * @return string - Formatted output
+ */
+function guild_value ( $row, $field )
+{
+	global $roster;
+
+	if( $row['guild_id'] )
+	{
+		return '<div style="display:none; ">' . $row['guild_name'] . '</div><a href="' . makelink('guild-memberslist&amp;a=g:' . $row['guild_id']) . '">' . $row['guild_name'] . '</a></div>';
+	}
+	else
+	{
+		return '<div style="display:none; ">' . $row['guild_name'] . '</div>' . $row['guild_name'];
+	}
+}
+
+/**
+ * Controls Output of the Realm Name Column
+ *
+ * @param array $row
+ * @return string - Formatted output
+ */
+function realm_value ( $row, $field )
+{
+	global $roster;
+
+	return '<div style="display:none; ">' . $row['server_name'] . '</div>' . $row['server_name'];
+}
+
+/**
+ * Controls Output of the Region Name Column
+ *
+ * @param array $row
+ * @return string - Formatted output
+ */
+function region_value ( $row, $field )
+{
+	global $roster;
+
+	return '<div style="display:none; ">' . $row['server_region'] . '</div>' . $row['server_region'];
+}
+
+/**
+ * Controls Output of the Region Name Column
+ *
+ * @param array $row
+ * @return string - Formatted output
+ */
+function servertype_value ( $row, $field )
+{
+	global $roster;
+
+	return '<div style="display:none; ">' . $row['servertype'] . '</div>' . $row['servertype'];
+}
+
+/**
+ * Controls Output of the Region Name Column
+ *
+ * @param array $row
+ * @return string - Formatted output
+ */
+function serverstatus_value ( $row, $field )
+{
+	global $roster;
+
+	return '<div style="display:none; ">' . $row['serverstatus'] . '</div>' . $row['serverstatus'];
+}
+
+/**
+ * Controls Output of the Region Name Column
+ *
+ * @param array $row
+ * @return string - Formatted output
+ */
+function serverpop_value ( $row, $field )
+{
+	global $roster;
+
+	return '<div style="display:none; ">' . $row['serverpop'] . '</div>' . $row['serverpop'];
+}
+
+
+/**
+ * Controls Output of the Faction Column
+ *
+ * @param array $row
+ * @return string - Formatted output
+ */
+function faction_value ( $row, $field )
+{
+	global $roster;
+
+	$addon = getaddon('memberslist');
+	
+	if ( $row['factionEn'] )
+	{
+		$faction = ( isset($row['factionEn']) ? $row['factionEn'] : '' );
+
+		switch( substr($faction,0,1) )
+		{
+			case 'A':
+				$icon = '<img src="' . $roster->config['img_url'] . 'icon_alliance.png" alt="" width="' . $addon['config']['icon_size'] . '" height="' . $addon['config']['icon_size'] . '"/> ';
+				break;
+			case 'H':
+				$icon = '<img src="' . $roster->config['img_url'] . 'icon_horde.png" alt="" width="' . $addon['config']['icon_size'] . '" height="' . $addon['config']['icon_size'] . '"/> ';
+				break;
+			default:
+				$icon = '<img src="' . $roster->config['img_url'] . 'icon_neutral.png" alt="" width="' . $addon['config']['icon_size'] . '" height="' . $addon['config']['icon_size'] . '"/> ';
+				break;
+		}
+	}
+	else
+	{
+		$icon = '';
+	}
+
+	$cell_value = $icon . $row['faction'];
+
+	return '<div style="display:none; ">' . $row['faction'] . '</div>' . $cell_value;
 }

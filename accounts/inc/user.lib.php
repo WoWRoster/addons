@@ -36,6 +36,7 @@ class accountUser
 	var $cookiePath = ROSTER_BASE; 
 	var $isCookie;
 	var $isLoggedIn;
+	var $allow_login;
 	var $isActive;
 	
 	var $adminGroup = adminlevel;
