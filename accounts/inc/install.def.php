@@ -128,7 +128,7 @@ class accountsInstall
 			`is_main` smallint(6) NOT NULL default '0',
 			`realm` varchar(32) NOT NULL default '',
 			PRIMARY KEY (`member_id`),
-			INDEX KEY `uid` (`uid`)");
+			KEY `uid` (`uid`)");
 
 		$installer->create_table( $installer->table('page_perms'),"
 			`pid` INT(11) NOT NULL auto_increment,
