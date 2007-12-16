@@ -169,12 +169,12 @@ class ArmorySyncJobAjax extends ArmorySyncJob {
                 if ( $memberlist && $key !== 'guild_info' ) {
                     continue;
                 }
-                if ( isset( $member[$key] ) && $member[$key] == 1 ) {
+                if ( isset( $member[$key] ) && $member[$key] == 1 && ( $key == 'guild_info' || $key == 'character_info' ) ) {
 					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), ROSTER_PATH. "img/pvp-win.gif" );
-                } elseif ( isset( $member[$key] ) && $member[$key] >= 1 ) {
-					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => 'as_status_'. $key. '_'. $id), $member[$key] );
-                } elseif ( isset( $member[$key] ) ) {
+                } elseif ( isset( $member[$key] ) && $member[$key] == 0 ) {
 					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), ROSTER_PATH. "img/pvp-loss.gif" );
+                } elseif ( isset( $member[$key] ) && ( $key != 'character_info' || ( $memberlist && $key == 'guild_info' ) || ( ! $memberlist && $key != 'guild_info' ) ) ) {
+					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => 'as_status_'. $key. '_'. $id), $member[$key] );
                 } else {
 					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), ROSTER_PATH. "img/blue-question-mark.gif" );
                 }

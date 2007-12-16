@@ -98,7 +98,7 @@ class ArmorySyncJob extends ArmorySyncBase {
      */
     function _isRequiredRosterVersion() {
         $ret = version_compare( ARMORYSYNC_REQUIRED_ROSTER_VERSION, ROSTER_VERSION, '<=');
-        $this->_debug( 1, $ret, 'Check required Roster version', $ret ? 'OK': 'Failed' );
+        $this->_debug( 2, $ret, 'Check required Roster version', $ret ? 'OK': 'Failed' );
         return $ret;
     }
 
@@ -122,7 +122,7 @@ class ArmorySyncJob extends ArmorySyncBase {
     function _isRequiredArmorySyncVersion() {
         global $addon;
         $ret =  version_compare( ARMORYSYNC_VERSION, $addon['version'], '<=');
-        $this->_debug( 1, $ret, 'Check required ArmorySync version', $ret ? 'OK': 'Failed' );
+        $this->_debug( 2, $ret, 'Check required ArmorySync version', $ret ? 'OK': 'Failed' );
         return $ret;
     }
 
@@ -229,9 +229,9 @@ class ArmorySyncJob extends ArmorySyncBase {
             }
         } else {
             $ret = $this->$functions['update_status']();
-            if ( $ret ) {
-                $ret = $this->$functions['update_status']();
-            }
+            //if ( $ret ) {
+            //    $ret = $this->$functions['update_status']();
+            //}
             $this->$functions['show_status']();
             if ( $ret ) {
                 $this->$functions['link']();
@@ -432,7 +432,7 @@ class ArmorySyncJob extends ArmorySyncBase {
             $this->_debug( 0, array( '$_GET' => $_GET, '$_POST' => $_POST, 'scope' => $roster->scope, 'data' => $roster->data ), 'Checking environment', 'Failed');
             return;
         }
-        $this->_debug( 1, array( '$_GET' => $_GET, '$_POST' => $_POST, 'scope' => $roster->scope, 'data' => $roster->data ), 'Checking environment', 'OK');
+        $this->_debug( 2, array( '$_GET' => $_GET, '$_POST' => $_POST, 'scope' => $roster->scope, 'data' => $roster->data ), 'Checking environment', 'OK');
     }
 
     /**
@@ -660,12 +660,12 @@ class ArmorySyncJob extends ArmorySyncBase {
                 if ( $memberlist && $key !== 'guild_info' ) {
                     continue;
                 }
-                if ( isset( $member[$key] ) && $member[$key] == 1 ) {
+                if ( isset( $member[$key] ) && $member[$key] == 1 && ( $key == 'guild_info' || $key == 'character_info' ) ) {
                     $array[strtoupper($key)] = "<img src=\"". ROSTER_PATH. "img/pvp-win.gif\" alt=\"\"/>";
-                } elseif ( isset( $member[$key] ) && $member[$key] >= 1 ) {
-                    $array[strtoupper($key)] = $member[$key];
-                } elseif ( isset( $member[$key] ) ) {
+                } elseif ( isset( $member[$key] ) && $member[$key] == 0 ) {
                     $array[strtoupper($key)] = "<img src=\"". ROSTER_PATH. "img/pvp-loss.gif\" alt=\"\" />";
+                } elseif ( isset( $member[$key] ) && ( $key != 'character_info' || ( $memberlist && $key == 'guild_info' ) || ( ! $memberlist && $key != 'guild_info' ) ) ) {
+                    $array[strtoupper($key)] = $member[$key];
                 } else {
                     $array[strtoupper($key)] = "<img src=\"". ROSTER_PATH. "img/blue-question-mark.gif\" alt=\"?\" />";
                 }
@@ -942,7 +942,7 @@ class ArmorySyncJob extends ArmorySyncBase {
      * @param int $jobid
      */
     function _updateStatus( $jobid = 0 ) {
-        global $roster;
+        global $roster, $addon;
 
         $this->_init();
         $this->active_member = $this->_isPostSyncStatus( $this->jobid );
@@ -969,17 +969,25 @@ class ArmorySyncJob extends ArmorySyncBase {
             $this->_debug( 1, $ret, 'Updated charcter job status', $ret ? 'OK': 'FINISHED');
             return $ret;
         } else {
-            if ( ! $this->ArmorySync->synchMemberByID( $active_member['server'], $active_member['member_id'], $active_member['name'], $active_member['region'], $active_member['guild_id']) ) {
-                $this->dataNotAccepted = 1;
-            }
+			if ( $addon['config']['armorysync_fetch_method'] == 0 ) {
+				if ( ! $this->ArmorySync->synchMemberByIDPerPage( $active_member['server'], $active_member['member_id'], $active_member['name'], $active_member['region'], $active_member['guild_id']) ) {
+					$this->dataNotAccepted = 1;
+				}
+			} else {
+				if ( ! $this->ArmorySync->synchMemberByID( $active_member['server'], $active_member['member_id'], $active_member['name'], $active_member['region'], $active_member['guild_id']) ) {
+					$this->dataNotAccepted = 1;
+				}
+			}
 
-            $this->active_member['guild_info'] = $this->ArmorySync->status['guildInfo'];
-            $this->active_member['character_info'] = $this->ArmorySync->status['characterInfo'];;
-            $this->active_member['skill_info'] = $this->ArmorySync->status['skillInfo'];;
-            $this->active_member['reputation_info'] = $this->ArmorySync->status['reputationInfo'];;
-            $this->active_member['equipment_info'] = $this->ArmorySync->status['equipmentInfo'];;
-            $this->active_member['talent_info'] = $this->ArmorySync->status['talentInfo'];;
-            $this->active_member['stoptimeutc'] = gmdate('Y-m-d H:i:s');
+            $this->active_member['guild_info'] = isset($this->ArmorySync->status['guildInfo']) ? $this->ArmorySync->status['guildInfo'] : null;
+            $this->active_member['character_info'] = isset($this->ArmorySync->status['characterInfo']) ? $this->ArmorySync->status['characterInfo'] : null;
+            $this->active_member['skill_info'] = isset($this->ArmorySync->status['skillInfo']) ? $this->ArmorySync->status['skillInfo'] : null;
+            $this->active_member['reputation_info'] = isset($this->ArmorySync->status['reputationInfo']) ? $this->ArmorySync->status['reputationInfo'] : null;
+            $this->active_member['equipment_info'] = isset($this->ArmorySync->status['equipmentInfo']) ? $this->ArmorySync->status['equipmentInfo'] : null;
+            $this->active_member['talent_info'] = isset($this->ArmorySync->status['talentInfo']) ? $this->ArmorySync->status['talentInfo'] : null;
+			if ( $this->ArmorySync->updateDone == true ) {
+				$this->active_member['stoptimeutc'] = gmdate('Y-m-d H:i:s');
+			}
             $this->active_member['log'] = $this->ArmorySync->message;
             if ( $this->_updateMemberJobStatus( $this->jobid, $this->active_member ) ) {
                 $this->members = $this->_getMembersFromJobqueue( $this->jobid );
@@ -1148,7 +1156,7 @@ class ArmorySyncJob extends ArmorySyncBase {
         } else {
             $ret = true;
         }
-        $this->_debug( 1, $ret, 'Checked authentication', $ret ? 'OK' : 'Failed');
+        $this->_debug( 2, $ret, 'Checked authentication', $ret ? 'OK' : 'Failed');
         return $ret;
     }
 
@@ -1200,7 +1208,7 @@ class ArmorySyncJob extends ArmorySyncBase {
 </script>
 ';
         }
-        $this->_debug( 1, htmlspecialchars($header), 'Printed reload java code', $header ? 'OK' : 'Failed');
+        $this->_debug( 2, htmlspecialchars($header), 'Printed reload java code', $header ? 'OK' : 'Failed');
         $this->header .= $header;
     }
 
@@ -1596,7 +1604,7 @@ class ArmorySyncJob extends ArmorySyncBase {
         isset ( $member['character_info'] ) ? $set .= "character_info=". $member['character_info']. ", " : 1;
         isset ( $member['skill_info'] ) ? $set .= "skill_info=". $member['skill_info']. ", " : 1;
         isset ( $member['reputation_info'] ) ? $set .= "reputation_info=". $member['reputation_info']. ", " : 1;
-        isset ( $member['equipment_info'] ) ? $set .= "equipment_info=". $member['equipment_info']. ", " : 1;
+        isset ( $member['equipment_info'] ) ? $set .= "equipment_info=". '"'. $member['equipment_info']. '"'. ", " : 1;
         isset ( $member['talent_info'] ) ? $set .= "talent_info=". $member['talent_info']. ", " : 1;
 
         isset ( $member['starttimeutc'] ) ? $set .= "starttimeutc=".'"'. $roster->db->escape($member['starttimeutc']). '"'.", " : 1;

@@ -35,6 +35,7 @@ $lang['admin']['armorysync_synchcutofftime']	= 'Sync cutoff time|Zeit in Tagen.<
 $lang['admin']['armorysync_use_ajax']	= 'Benutze AJAX|Benutze AJAX für Status Updates oder nicht.';
 $lang['admin']['armorysync_reloadwaittime']	= 'Reload wait time|Zeit in Sekunden.<br />Zeit in Sekunden bevor die nächste Synchronisierung angestossen wird.';
 $lang['admin']['armorysync_fetch_timeout'] = 'Armory Fetch timeout|Zeit in Sekunden bis das Herunterladen<br />einer einzelnen XML Datei abgebrochen wird.';
+$lang['admin']['armorysync_fetch_method'] = 'Armory Fetch method|Per char will do a reload per Character.<br />Per page will do a reload after every page that is fetched from the armory.';
 $lang['admin']['armorysync_skip_start'] = 'Überspringe die Startseite|Überspringe die Startseite bei <b>ArmorySync</b> updates.';
 $lang['admin']['armorysync_status_hide'] = 'Verstecke das Statusfenster initial|Versteckt das Status Fenster von <b>ArmorySync</b> beim ersten Laden.';
 $lang['admin']['armorysync_protectedtitle']	= "Geschützer Gildentitel|Charaktere mit diesen Gildentiteln sind davor geschützt,<br />durch einen Abgleich der Mitgliederliste gegen die Armory gelöscht zu werden.<br />Dieses Problem besteht häufig mit Bank Charakteren.<br />Mehrfachnennung durch trennen mit \",\" möglich. Z.B. Banker,Lager";
