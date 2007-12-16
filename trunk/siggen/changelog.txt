@@ -2,36 +2,41 @@
 
 SigGen Change Log
 
-Changes 0.3.322 => 0.3.0.327
-Changed tab content initialization in anticipation for new js code
 
-Changes 0.3.321 => 0.3.0.322
-Changed back to using member= for id
-- a=c: will still work, but member= overrides it
-Changed saved images back to name@rc-realm.ext
-Preview images will not show if there are no siggen config rows (might never happen but you never know)
-
-Changes 0.3.320 => 0.3.0.321
-Fixed preview image
-- The link still needs to reflect the link settings
-Fixed missing ` in installer sql
-
-Changes 0.3.0b3 => 0.3.0.320
-Now using $roster->anchor instead of member=
-SigGen display on character page now shows the url with the image extension when SEO mode is enabled in Roster
-Added config to show different kinds of links on SigGen display page (default, force seo, saved)
-SigGen now saves images based on member id, this is to resolve the accent problem
-Fixed "The install definition file for siggen did not contain a correct installation class"
-Added clear saved directory setting, this will clear the save directory on a guild auto-save
-Removed av.php and sig.php, these are legacy files and are no longer needed
+12.16.07 - v0.3.0.328
+ * SigGen
+   o Changed: Tab content initialization for Roster build 1527
 
 
-10.28.07 - v0.3.0.320
+
+12.05.07 - v0.3.0.322
+ * SigGen
+   o Changed: Now using member= for id, again
+     + a=c: will still work, but member= overrides it
+   o Changed: Saved images back to name@rc-realm.ext
+   o Changed: Preview images will not show if there are no siggen config rows (might never happen but you never know)
+
+
+
+11.29.07 - v0.3.0.321
+ * SigGen
+   o Fixed: Preview image
+     + The link still needs to reflect the link settings
+   o Fixed: Missing ` in installer sql
+
+
+
+11.28.07 - v0.3.0.320
  * Important Changes
    o Ported to Roster 2.0
    o Supports multi guild and public abilities in Roster
    o Accessing an image uses member= with either a member id, name, name@realm, or name@RC-realm
      + name= access is now gone for good. Don't bother me about it
+   o Images for auto save are now saved as Charname@RC-Realm.ext (ext is the chosen image extention)
+ * SigGen
+   o Changed: SigGen display on character page now shows the url with the image extension when SEO mode is enabled in Roster
+   o Changed: Removed av.php and sig.php, these are legacy files and are no longer needed
+   o Fixed: Fixed "The install definition file for siggen did not contain a correct installation class"
  * SigGen Generator
    o Fixed: etag dating, I have no idea why db_ver was added to the date
    o Changed: Access to SigGen image generator now uses the roster addon framework
@@ -39,9 +44,12 @@ Removed av.php and sig.php, these are legacy files and are no longer needed
      + roster/index.php?p=util-siggen-signature&member=##
      + (SEO) roster/util/siggen/signature/member=##.ext
      + This also means the path access sig.php/Name.png does not currently work
+   o Changed: SigGen now saves images based on member id, this is to resolve the accent problem
  * SigGen Config
    o Added: Clear Saved Directory setting
      + This will clear the save directory on a guild auto-save
+   o Added: Added config to show different kinds of links on SigGen display page (default, force seo, saved)
+   o Added: Clear saved directory setting, this will clear the save directory on a guild auto-save
    o Fixed: Settings Import will now show the correct error message instead of %1$s
    o Fixed: Updated some tooltips that haven't been updated in some time
    o Fixed: Notice error when no preview image is selected
