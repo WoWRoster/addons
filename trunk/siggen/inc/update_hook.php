@@ -91,6 +91,16 @@ class siggenUpdate
 		$this->messages = '';
 	}
 
+	function guild_pre( $data )
+	{
+		if( $sigdata['clear'] )
+		{
+			$sigdata['save_dir'] = str_replace( '/',DIR_SEP,$sigdata['save_dir'] );
+			$sigdata['save_dir'] = str_replace( '%r',ROSTER_BASE,$sigdata['save_dir'] );
+			$sigdata['save_dir'] = str_replace( '%s',SIGGEN_DIR,$sigdata['save_dir'] );
+			$this->cleardir($sigdata['save_dir']);
+		}
+	}
 
 	function guild( $data , $memberid )
 	{
@@ -100,13 +110,6 @@ class siggenUpdate
 		{
 			if( $sigdata['guild_trigger'] )
 			{
-				if( $sigdata['clear'] )
-				{
-					$sigdata['save_dir'] = str_replace( '/',DIR_SEP,$sigdata['save_dir'] );
-					$sigdata['save_dir'] = str_replace( '%r',ROSTER_BASE,$sigdata['save_dir'] );
-					$sigdata['save_dir'] = str_replace( '%s',SIGGEN_DIR,$sigdata['save_dir'] );
-					$this->cleardir($sigdata['save_dir']);
-				}
 				$this->generate($memberid, $config, $sigdata);
 			}
 		}

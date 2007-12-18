@@ -312,6 +312,7 @@ if( isset($_GET['format']) )
 		$sig_race   = str_replace( ' ','',strtolower( getEnglishValue($playersData['race'],$sig_char_locale) ) );
 		$sig_gender = strtolower( getEnglishValue($playersData['sex'],$sig_char_locale) );
 
+
 		// Remove crap from pvprankicon
 		if( $playersData['lifetimeHighestRank'] > 0 )
 		{
@@ -816,12 +817,12 @@ if( isset($_GET['format']) )
 	{
 		global $roster;
 
-		if( !is_null($locale) )
+		if( is_null($locale) )
 		{
 			$locale = $roster->config['locale'];
 		}
 
-		if( array_key_exists($keyword,$roster->locale->wordings[$locale]['translate']) )
+		if( isset($roster->locale->wordings[$locale]['translate'][$keyword]) )
 		{
 			return $roster->locale->wordings[$locale]['translate'][$keyword];
 		}
@@ -829,9 +830,9 @@ if( isset($_GET['format']) )
 		{
 			foreach( $roster->multilanguages as $lang )
 			{
-				if( array_key_exists($keyword,$roster->locale->wordings[$lang]) )
+				if( isset($roster->locale->wordings[$lang][$keyword]) )
 				{
-					return $roster->locale->wordings[$lang]['translate'][$keyword];
+					return $roster->locale->wordings[$lang][$keyword];
 				}
 			}
 		}
