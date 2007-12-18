@@ -237,7 +237,7 @@ class ArmorySyncJob extends ArmorySyncBase {
                 $this->$functions['link']();
             }
         }
-        $this->_debug( 1, null, 'Finnished sync job', 'OK');
+        $this->_debug( 1, null, 'Finished sync job', 'OK');
     }
 
     /**
@@ -1094,7 +1094,7 @@ class ArmorySyncJob extends ArmorySyncBase {
         $offset = $roster->config['localtimeoffset'] * 60 * 60;
         $stamp = strtotime( $time );
         $stamp += $offset;
-        $ret = date("d.m H:i:s", $stamp);
+        $ret = date($roster->locale->act['phptimeformat'], $stamp);
         $this->_debug( $ret ? 3 : 0, $ret, 'Fetched localized time', $ret ? 'OK' : 'Failed');
         return $ret;
     }
