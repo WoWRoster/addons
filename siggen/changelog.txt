@@ -3,6 +3,13 @@
 SigGen Change Log
 
 
+12.17.07 - v0.3.0.339
+ * SigGen
+   o Fixed: Update hook, moved clear directory into guild_pre(), since leaving it in guild() would clear the dir for each member
+   o Fixed: getEnglishValue() was incorrectly checking if !is_null($locale)
+
+
+
 12.16.07 - v0.3.0.328
  * SigGen
    o Changed: Tab content initialization for Roster build 1527
