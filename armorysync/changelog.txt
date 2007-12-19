@@ -2,6 +2,12 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+-svn[341]
+- Fixed item tooltip parsing (Big thx to zanix)
+
+svn[340]
+- Changed time stamp output so it uses the php format set in the current locale
+
 svn[335]
 - merge from branch 326_go_for_single_page_update
 

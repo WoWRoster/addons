@@ -29,8 +29,8 @@ class armorysyncInstall
 	var $active = true;
 	var $icon = 'inv_misc_missilesmall_blue';
 
-	var $version = '2.6.0.335';
-	var $wrnet_id = '0';
+	var $version = '2.6.0.341';
+	var $wrnet_id = '122';
 
 	var $fullname = 'Armory Sync';
 	var $description = 'Syncronizes chars with Blizzard\'s Armory';
