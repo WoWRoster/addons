@@ -2,6 +2,9 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+-svn[342]
+- implemented workaround for german class Jäger in item tooltip parsing
+
 -svn[341]
 - Fixed item tooltip parsing (Big thx to zanix)
 

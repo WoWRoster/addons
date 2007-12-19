@@ -1243,6 +1243,10 @@ class ArmorySync extends ArmorySyncBase {
 			$content = str_replace('&nbsp;', ' ', $content );
 			$content = preg_replace('/\s\s+/', '', $content );
 
+            // This is an ugly workaround for an encoding error in the armory
+			$content = preg_replace('/J.+?ger/', 'Jäger', $content );
+            // This is an ugly workaround for an encoding error in the armory
+
             $content = strip_tags( $content );
 
             $content = str_replace("%__BRTAG%", "\n", $content );
