@@ -1236,9 +1236,12 @@ class ArmorySync extends ArmorySyncBase {
         if ( $content = $armory->fetchItemTooltipHTML( $itemId, $roster->config['locale'], $this->memberName, $this->server ) ) {
 
             $content = str_replace("\n", "", $content );
+			$content = str_replace("\t", "", $content );
             $content = str_replace('<span class="tooltipRight">', "\t", $content );
             $content = str_replace("<br/>", "%__BRTAG%", $content );
             $content = str_replace("<br>", "%__BRTAG%", $content );
+			$content = str_replace('&nbsp;', ' ', $content );
+			$content = preg_replace('/\s\s+/', '', $content );
 
             $content = strip_tags( $content );
 
