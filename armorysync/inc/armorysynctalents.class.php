@@ -55,7 +55,7 @@ class ArmorySyncTalents extends ArmorySyncBase {
 
     function _getData( $content = false ) {
 
-        $check = eval( $content );
+        $check = @eval( $content );
 
         $ret = array(
                         'tree' => $tree,

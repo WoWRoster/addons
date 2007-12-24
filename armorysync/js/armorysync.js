@@ -240,26 +240,45 @@ function _doUpdateErrorMessages(infoError) {
         var target = infoError[0].getAttribute('target');
         var errorTable = document.getElementById(target);
 
+        var errorTableCreated = false;
+
         if ( errorTable == null ) {
 
-            errorTable = _ceateErrorTable();
+            errorTable = _createErrorTable();
             rowClass = 2;
+            errorTableCreated = true;
         }
 
         if ( errorTable != null ) {
 
-            var errorTableTBody = errorTable.getElementsByTagName('tbody')[0];
+            if ( ! errorTableCreated ) {
+                var errorTableTBody = errorTable.getElementsByTagName('tbody')[0];
 
-            if ( errorTableTBody != null ) {
+                if ( errorTableTBody != null ) {
 
-                var errorTableTrs = errorTableTBody.getElementsByTagName('tr');
-                var k = errorTableTrs.length - 1;
-                rowClass = errorTableTrs[k].getElementsByTagName('td')[0].className.substr(10,1);
+                    var errorTableTrs = errorTableTBody.getElementsByTagName('tr');
+                    var k = errorTableTrs.length - 1;
+                    var _test = errorTableTrs[k].getElementsByTagName('td')[0].className.substr(10,1);
+                    rowClass = errorTableTrs[k].getElementsByTagName('td')[0].className.substr(10,1);
 
-            } else {
+                } else {
 
-                rowClass = 2;
+                    var errorTableTrs = errorTable.getElementsByTagName('tr');
+
+                    if ( errorTableTrs != null ) {
+                        var k = errorTableTrs.length - 1;
+                        var _test = errorTableTrs[k].getElementsByTagName('td')[0].className.substr(10,1);
+                        rowClass = errorTableTrs[k].getElementsByTagName('td')[0].className.substr(10,1);
+
+                        if ( rowClass == null ) {
+                            rowClass = 2;
+                        }
+                    } else {
+                        rowClass = 2;
+                    }
+                }
             }
+
 
             for (var i = 0; i < infoCount; i++) {
 
@@ -333,7 +352,7 @@ function _doReload(messages) {
     }
 }
 
-function _ceateErrorTable() {
+function _createErrorTable() {
 
     var headers = new Array('Line', 'Time', 'File', 'Class', 'Function', 'Info', 'Status');
     var newTr = document.createElement('tr');
