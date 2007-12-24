@@ -2,10 +2,21 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
--svn[342]
+svn[344]
+- fixed rowClass detection in armorysynch.js
+- fixed retry handling in equip infos/synchMemberByIDPerPage
+- fixed retry handling in _getRosterData
+- implemented retrys in checkCharInfo
+- implemented retrys in checkGuildInfo
+- implemented retrys in _getGuildInfo
+
+svn[343]
+- Fixed small html error
+
+svn[342]
 - implemented workaround for german class Jäger in item tooltip parsing
 
--svn[341]
+svn[341]
 - Fixed item tooltip parsing (Big thx to zanix)
 
 svn[340]

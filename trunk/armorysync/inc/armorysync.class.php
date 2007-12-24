@@ -174,8 +174,12 @@ class ArmorySync extends ArmorySyncBase {
 				$retry++;
 			}
 			if ( $retry >= 4 ) {
-				$this->_debug( 0, false, "Step: ". $step. " failed", "I give up");
+				$this->_debug( 0, false, "Char: ". $memberName. "Step: ". $step. ( $step == 'Equip' ? " Slot: ". $this->_getItemSlot( $slot ) : "" ). " failed", "I give up");
 				$retry = 1;
+				if ( $step == 'Equip' ) {
+					$slot++;
+					$roster->cache->put( $slot, $cacheTagSlot );
+				}
 			}
 			$roster->cache->put( $retry, $cacheTagRetry );
 			$roster->cache->put( $steps, $cacheTagJob );
@@ -185,6 +189,7 @@ class ArmorySync extends ArmorySyncBase {
 			$ret = $this->_getCharacterInfo();
 			if ( $ret == false && $retry < 3 ) {
 				$roster->cache->put( $retry, $cacheTagRetry );
+				$this->_debug( 0, false, "Char: ". $memberName. " Step: Char failed", "Retry: ". $retry);
 			} elseif ( $retry >= 3 ) {
 				$this->status = array(    'guildInfo' => 0,
 									'characterInfo' => 0,
@@ -195,7 +200,7 @@ class ArmorySync extends ArmorySyncBase {
 								);
 				$this->updateDone = true;
 				$roster->cache->cleanCache( 'obj_'. md5( $cacheTagRetry));
-				$this->_debug( 1, false, 'Synced armory data '. $this->memberName. ' with roster',  'Failed' );
+				$this->_debug( 0, false, 'Synced armory data '. $this->memberName. ' with roster',  'Failed' );
 			} else {
 				$roster->cache->put( $retry, $cacheTagRetry );
 				$roster->cache->put( $this->data, $cacheTagData );
@@ -286,22 +291,23 @@ class ArmorySync extends ArmorySyncBase {
 		while ( ! $this->_getCharacterInfo() ) {
 			$retry++;
 			if ( $retry == 3 ) {
-				continue;
+				break;
 			}
 		}
+		$this->updateDone = true;
         if ( $this->status['characterInfo'] ) {
 	        $retry = 0;
             while ( ! $this->_getSkillInfo() ) {
 				$retry++;
 				if ( $retry == 3 ) {
-					continue;
+					break;
 				}
 			}
 	        $retry = 0;
             while ( ! $this->_getReputationInfo() ) {
 				$retry++;
 				if ( $retry == 3 ) {
-					continue;
+					break;
 				}
 			}
 			for ( $i = 0; $i <= 18; $i++ ) {
@@ -311,7 +317,7 @@ class ArmorySync extends ArmorySyncBase {
 					while ( ! $this->_getEquipmentInfo( $slot ) ) {
 						$retry++;
 						if ( $retry == 3 ) {
-							continue;
+							break;
 						}
 					}
 				}
@@ -320,12 +326,18 @@ class ArmorySync extends ArmorySyncBase {
             while ( ! $this->_getTalentInfo() ) {
 				$retry++;
 				if ( $retry == 3 ) {
-					continue;
+					break;
 				}
 			}
-			$this->updateDone = true;
             $this->_debug( 1, $this->data, 'Parsed all armory data',  'OK' );
         } else {
+			$this->status = array(  'guildInfo' => 0,
+									'characterInfo' => 0,
+									'skillInfo' => 0,
+									'reputationInfo' => 0,
+									'equipmentInfo' => 0,
+									'talentInfo' => 0,
+								);
             $this->_debug( 1, $this->data, 'Parsed all armory data',  'Failed' );
         }
     }
@@ -343,108 +355,125 @@ class ArmorySync extends ArmorySyncBase {
         $armory->region = $this->region;
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
-        $content = $this->_parseData( $armory->fetchGuild( $this->memberName, $roster->config['locale'], $this->server ) );
-        if ( $this->_checkContent( $content, array( 'guildInfo', 'guild' ) ) ) {
-            $guild = $content->guildInfo->guild;
+        $ret = false;
+		$retry = 1;
+		while ( $ret == false ) {
 
-            //$this->data['Ranks'] = $this->_getGuildRanks( $roster->data['guild_id'] );
-            //$this->data['timestamp']['init']['datakey'] = $roster->data['region'];
-            $this->data['Ranks'] = $this->_getGuildRanks( $this->guildId );
-            $this->data['timestamp']['init']['datakey'] = $this->region;
-            $this->data['timestamp']['init']['TimeStamp'] = time();
-            $this->data['timestamp']['init']['Date'] = date('Y-m-d H:i:s');
-            $this->data['timestamp']['init']['DateUTC'] = gmdate('Y-m-d H:i:s');
+			$content = $this->_parseData( $armory->fetchGuild( $this->memberName, $roster->config['locale'], $this->server ) );
+			if ( $this->_checkContent( $content, array( 'guildInfo', 'guild' ) ) ) {
+				$guild = $content->guildInfo->guild;
 
-            $this->data['GPprovider'] = "armorysync";
-            $this->data['GPversion'] = "2.6.0";
-            //$this->data['name'] = $roster->data['guild_name'];
-            $this->data['name'] = $this->memberName;
-            $this->data['Info'] = ''; //$roster->data['guild_info_text'];
+				//$this->data['Ranks'] = $this->_getGuildRanks( $roster->data['guild_id'] );
+				//$this->data['timestamp']['init']['datakey'] = $roster->data['region'];
+				$this->data['Ranks'] = $this->_getGuildRanks( $this->guildId );
+				$this->data['timestamp']['init']['datakey'] = $this->region;
+				$this->data['timestamp']['init']['TimeStamp'] = time();
+				$this->data['timestamp']['init']['Date'] = date('Y-m-d H:i:s');
+				$this->data['timestamp']['init']['DateUTC'] = gmdate('Y-m-d H:i:s');
 
-            //$members = $this->_getGuildMembers( $roster->data['guild_id'] );
-            $members = $this->_getGuildMembers( $this->guildId );
+				$this->data['GPprovider'] = "armorysync";
+				$this->data['GPversion'] = "2.6.0";
+				//$this->data['name'] = $roster->data['guild_name'];
+				$this->data['name'] = $this->memberName;
+				$this->data['Info'] = ''; //$roster->data['guild_info_text'];
 
-            $min = 60;
-            $hour = 60 * $min;
-            $day = 24 * $hour;
-            $month = 30 * $day;
-            $year = 365 * $day;
+				//$members = $this->_getGuildMembers( $roster->data['guild_id'] );
+				$members = $this->_getGuildMembers( $this->guildId );
 
-            foreach ( $guild->members->character as $char ) {
-                $player = array();
-                $player['name'] = $char->name;
-                $player['Class'] = $char->class;
-                if ( substr($player["Class"] ,0,1) == 'J' && substr($player["Class"] ,-3) == 'ger' ) {
-                        $player["Class"] = utf8_encode('Jäger');
-                }
-                $player['Level'] = $char->level;
-                $player['Rank'] = $char->rank;
-                if ( array_key_exists ( $char->name, $members ) ) {
-                    $player['Note'] = $members[$char->name]['note'];
-                    $player['Zone'] = $members[$char->name]['zone'];
-                    $player['Status'] = $members[$char->name]['status'];
-                    $player['Online'] = "0";
+				$min = 60;
+				$hour = 60 * $min;
+				$day = 24 * $hour;
+				$month = 30 * $day;
+				$year = 365 * $day;
 
-                    $curtime = time();
-                    $diff = $curtime - strtotime( $members[$char->name]['last_online'] );
-                    $years = floor( $diff / $year );
-                    $diff -= $years * $year;
-                    $months = floor( $diff / $month );
-                    $diff -= $months * $month;
-                    $days = floor ( $diff / $day );
-                    $diff -= $days * $day;
-                    $hours = floor ( $diff / $hour );
+				foreach ( $guild->members->character as $char ) {
+					$player = array();
+					$player['name'] = $char->name;
+					$player['Class'] = $char->class;
+					if ( substr($player["Class"] ,0,1) == 'J' && substr($player["Class"] ,-3) == 'ger' ) {
+							$player["Class"] = utf8_encode('Jäger');
+					}
+					$player['Level'] = $char->level;
+					$player['Rank'] = $char->rank;
+					if ( array_key_exists ( $char->name, $members ) ) {
+						$player['Note'] = $members[$char->name]['note'];
+						$player['Zone'] = $members[$char->name]['zone'];
+						$player['Status'] = $members[$char->name]['status'];
+						$player['Online'] = "0";
 
-                    $player['LastOnline'] = $years. ":". $months. ":". $days. ":". $hours;
+						$curtime = time();
+						$diff = $curtime - strtotime( $members[$char->name]['last_online'] );
+						$years = floor( $diff / $year );
+						$diff -= $years * $year;
+						$months = floor( $diff / $month );
+						$diff -= $months * $month;
+						$days = floor ( $diff / $day );
+						$diff -= $days * $day;
+						$hours = floor ( $diff / $hour );
 
-                    $members[$char->name]['done'] = 1;
-                } else {
-                    $player['Online'] = "1";
-                }
-                $this->data['Members'][$char->name] = $player;
-                $this->status['guildInfo'] += 1;
-            }
+						$player['LastOnline'] = $years. ":". $months. ":". $days. ":". $hours;
 
-			if ( isset($roster->addon_data['guildbank']) && $roster->addon_data['guildbank']['active'] == 1 ) {
-				$guildbank = getaddon('guildbank');
+						$members[$char->name]['done'] = 1;
+					} else {
+						$player['Online'] = "1";
+					}
+					$this->data['Members'][$char->name] = $player;
+					if ( ! isset($this->status['guildInfo']) ) {
+						$this->status['guildInfo'] = 1;
+					} else {
+						$this->status['guildInfo'] += 1;
+					}
+				}
+
+				if ( isset($roster->addon_data['guildbank']) && $roster->addon_data['guildbank']['active'] == 1 ) {
+					$guildbank = getaddon('guildbank');
+				}
+
+				foreach ( $members as $member ) {
+					if ( ! array_key_exists( 'done', $member ) ) {
+						if ( is_int( array_search( $member['guild_title'], explode( ',', $addon['config']['armorysync_protectedtitle'] ) ) )
+							||
+							( isset($guildbank) && strstr($member[$guildbank['config']['banker_fieldname']], $guildbank['config']['banker_rankname']) )
+							) {
+
+							$player['name'] = $member['name'];
+							$player['Class'] = $member['class'];
+							$player['Level'] = $member['level'];
+							$player['Rank'] = $member['guild_rank'];
+							$player['Note'] = $member['note'];
+							$player['Zone'] = $member['zone'];
+							$player['Status'] = $member['status'];
+							$player['Online'] = "0";
+
+							$curtime = time();
+							$diff = $curtime - strtotime( $member['last_online'] );
+							$years = floor( $diff / $year );
+							$diff -= $years * $year;
+							$months = floor( $diff / $month );
+							$diff -= $months * $month;
+							$days = floor ( $diff / $day );
+							$diff -= $days * $day;
+							$hours = floor ( $diff / $hour );
+
+							$player['LastOnline'] = $years. ":". $months. ":". $days. ":". $hours;
+
+							$this->data['Members'][$member['name']] = $player;
+						}
+					}
+				}
+				$ret = true;
+			} else {
+				$ret = false;
+				$this->status['guildInfo'] = 0;
+				$this->_debug( 1, $this->data, 'Parsed guild info',  'Retry: '. $retry );
 			}
-
-            foreach ( $members as $member ) {
-                if ( ! array_key_exists( 'done', $member ) ) {
-                    if ( is_int( array_search( $member['guild_title'], explode( ',', $addon['config']['armorysync_protectedtitle'] ) ) )
-						||
-						( isset($guildbank) && strstr($member[$guildbank['config']['banker_fieldname']], $guildbank['config']['banker_rankname']) )
-						) {
-
-                        $player['name'] = $member['name'];
-                        $player['Class'] = $member['class'];
-                        $player['Level'] = $member['level'];
-                        $player['Rank'] = $member['guild_rank'];
-                        $player['Note'] = $member['note'];
-                        $player['Zone'] = $member['zone'];
-                        $player['Status'] = $member['status'];
-                        $player['Online'] = "0";
-
-                        $curtime = time();
-                        $diff = $curtime - strtotime( $member['last_online'] );
-                        $years = floor( $diff / $year );
-                        $diff -= $years * $year;
-                        $months = floor( $diff / $month );
-                        $diff -= $months * $month;
-                        $days = floor ( $diff / $day );
-                        $diff -= $days * $day;
-                        $hours = floor ( $diff / $hour );
-
-                        $player['LastOnline'] = $years. ":". $months. ":". $days. ":". $hours;
-
-                        $this->data['Members'][$member['name']] = $player;
-                    }
-                }
-            }
-            $this->_debug( 1, $this->data, 'Parsed guild info',  'OK' );
-        } else {
-            $this->_debug( 1, $this->data, 'Parsed guild info',  'Failed' );
-        }
+			$retry++;
+			if ( $retry > 3 ) {
+				break;
+			}
+		}
+		$this->_debug( 1, $ret, 'Parsed guild info',  $ret == true ? 'OK' : 'I give up' );
+		return $ret;
     }
 
     /**
@@ -459,14 +488,23 @@ class ArmorySync extends ArmorySyncBase {
         $armory->region = $region;
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
-        $content = $this->_parseData( $armory->fetchGuild( $name, $roster->config['locale'], $server ) );
-        if ( $this->_checkContent( $content, array( 'guildInfo', 'guild' ) ) ) {
-            $this->_debug( 1, true, 'Checked guild on existence',  'OK' );
-            return true;
-        } else {
-            $this->_debug( 1, false, 'Checked guild on existence',  'Failed' );
-            return false;
-        }
+        $ret = false;
+		$retry = 1;
+		while ( $ret == false ) {
+			$content = $this->_parseData( $armory->fetchGuild( $name, $roster->config['locale'], $server ) );
+			if ( $this->_checkContent( $content, array('guildInfo', 'guild' ) ) ) {
+				$ret = true;
+			} else {
+				$this->_debug( 1, false, 'Checked guild on existence',  'Retry: '. $retry );
+				$ret = false;
+			}
+			$retry++;
+			if ( $retry > 3 ) {
+				break;
+			}
+		}
+		$this->_debug( 1, $ret, 'Checked guild on existence',  $ret == true ? 'OK' : 'I give up' );
+		return $ret;
     }
 
     /**
@@ -482,14 +520,23 @@ class ArmorySync extends ArmorySyncBase {
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 		$this->_setUserAgent($armory);
 
-        $content = $this->_parseData( $armory->fetchCharacter( $name, $roster->config['locale'], $server ) );
-        if ( $this->_checkContent( $content, array('characterInfo', 'characterTab' ) ) ) {
-            $this->_debug( 1, true, 'Checked char on existence',  'OK' );
-            return true;
-        } else {
-            $this->_debug( 1, false, 'Checked char on existence',  'Failed' );
-            return false;
-        }
+        $ret = false;
+		$retry = 1;
+		while ( $ret == false ) {
+			$content = $this->_parseData( $armory->fetchCharacter( $name, $roster->config['locale'], $server ) );
+			if ( $this->_checkContent( $content, array('characterInfo', 'characterTab' ) ) ) {
+				$ret = true;
+			} else {
+				$this->_debug( 1, false, 'Checked char on existence',  'Retry: '. $retry );
+				$ret = false;
+			}
+			$retry++;
+			if ( $retry > 3 ) {
+				break;
+			}
+		}
+		$this->_debug( 1, $ret, 'Checked char on existence',  $ret == true ? 'OK' : 'I give up' );
+		return $ret;
     }
 
     /**
@@ -757,6 +804,8 @@ class ArmorySync extends ArmorySyncBase {
 			return true;
 
         } else {
+            $this->status['characterInfo'] = 0;
+            $this->status['guildInfo'] = 0;
             $this->_debug( 1, false, 'Char: '. $this->memberName. ' Parsed character infos',  'Failed' );
 			return false;
         }
