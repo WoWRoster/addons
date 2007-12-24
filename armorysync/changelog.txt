@@ -2,6 +2,9 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[345]
+- updated contants.php and install.def.php
+
 svn[344]
 - fixed rowClass detection in armorysynch.js
 - fixed retry handling in equip infos/synchMemberByIDPerPage
