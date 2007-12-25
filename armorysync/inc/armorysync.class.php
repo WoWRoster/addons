@@ -746,11 +746,23 @@ class ArmorySync extends ArmorySyncBase {
             }
             $this->data["Sex"] = $char->gender;
 
-            // This is an ugly workaround for an encoding error in the armory
+            // This is an ugly workaround for a "What do I kmnow" thing in the armory / french Homme
+			if ( $this->data["Sex"] == "(M)" ) {
+				$this->data["Sex"] = "Homme";
+			}
+            // This is an ugly workaround for a "What do I kmnow" thing in the armory / french Homme
+
+            // This is an ugly workaround for a "What do I kmnow" thing in the armory / french Femme
+			if ( $this->data["Sex"] == "(F)" ) {
+				$this->data["Sex"] = "Femme";
+			}
+            // This is an ugly workaround for a "What do I kmnow" thing in the armory / french Femme
+
+            // This is an ugly workaround for an encoding error in the armory / german Männlich
             if ( substr($this->data["Sex"],0,1) == 'M' && substr($this->data["Sex"],-6) == 'nnlich' ) {
                     $this->data["Sex"] = utf8_encode('Männlich');
             }
-            // This is an ugly workaround for an encoding error in the armory
+            // This is an ugly workaround for an encoding error in the armory / german Männlich
 
             $this->data["SexId"] = $char->genderId;
 
