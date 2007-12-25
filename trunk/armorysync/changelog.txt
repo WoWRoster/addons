@@ -2,6 +2,9 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[347]
+- fixed french character sex
+
 svn[346]
 - updated contants.php and install.def.php(this time both)
 
