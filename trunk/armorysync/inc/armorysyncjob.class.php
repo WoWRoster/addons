@@ -1146,7 +1146,7 @@ class ArmorySyncJob extends ArmorySyncBase {
         }
 
         $roster_login = new RosterLogin();
-        if( $roster_login->getAuthorized() < $addon['config'][$scope] )
+        if( $roster_login->getAuthorized( $addon['config'][$scope] ) )
         {
             print
             '<span class="title_text">'. $this->title. '</span><br />'.
