@@ -1,31 +1,55 @@
-<?php
+<?php 
 /** 
- * Dev.PKComp.net WoWRoster Addon
+ * Dev.PKComp.net Accounts Addon
  * 
  * LICENSE: Licensed under the Creative Commons 
  *          "Attribution-NonCommercial-ShareAlike 2.5" license 
  * 
  * @copyright  2005-2007 Pretty Kitty Development 
+ * @author	   mdeshane
  * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5" 
  * @link       http://dev.pkcomp.net 
  * @package    Accounts 
- * @subpackage Config File 
- */
+ * @subpackage Conf File
+ */ 
+ 
 if( !defined('IN_ROSTER') )
 {
-	exit('Detected invalid access to this file!');
+    exit('Detected invalid access to this file!');
 }
 
-define('utable',$roster->db->table('user', $addon['basename']));
-define('linktable',$roster->db->table('user_link', $addon['basename']));
-define('savelogin',$addon['config']['save_login']);
-define('cookiename',$addon['config']['cookie_name']);
-define('autoact',$addon['config']['auto_act']);
-define('admincopy',$addon['config']['admin_copy']);
-define('adminmail',$addon['config']['admin_mail']);
-define('adminname',$addon['config']['admin_name']);
-define('adminlevel',$addon['config']['admin_level']);
-define('minaccess',$addon['config']['min_access']);
-define('useperms',$addon['config']['use_perms']);
-define('roster_locale',$roster->config['locale']);
- 
+if( !isset($addon))
+{
+	$addon = getaddon('accounts');
+}
+
+if( !isset($accounts))
+{
+	include_once( $addon['inc_dir'] . 'accounts.lib.php' );
+	$accounts = new accounts;
+
+	if( !isset($accounts->plugin))
+	{
+		include_once( $addon['inc_dir'] . 'plugin.lib.php');
+		$accounts->plugin = new accountsPlugin;
+	}
+
+	if( !isset($accounts->admin))
+	{
+		include_once( $addon['inc_dir'] . 'admin.lib.php');
+		$accounts->admin = new accountsAdmin;
+	}
+
+	if( !isset($accounts->page))
+	{
+		include_once( $addon['inc_dir'] . 'page.lib.php');
+		$accounts->page = new accountsPage;
+	}
+
+	if( !isset($accounts->user))
+	{
+		include_once( $addon['inc_dir'] . 'user.lib.php');
+		$accounts->user = new accountsUser;
+	}
+}
+?>

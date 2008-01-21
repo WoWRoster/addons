@@ -18,12 +18,23 @@ if( !defined('IN_ROSTER') )
 
 include_once ($addon['inc_dir'] . 'admin.lib.php');
 
-$admin_update = new userAdmin;
+$tab1 = explode('|',$roster->locale->act['admin']['acc_display']);
+$tab2 = explode('|',$roster->locale->act['admin']['acc_perms']);
+$tab3 = explode('|',$roster->locale->act['admin']['acc_user']);
+$tab4 = explode('|',$roster->locale->act['admin']['acc_plugin']);
+$tab5 = explode('|',$roster->locale->act['admin']['acc_recruit']);
 
-if ($admin_update->usePerms == 1)
-{
-	$admin_update->accessPage($_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $admin_update->adminGroup); // check page permissions
-}
+$menu = messagebox('
+<ul class="tab_menu">
+	<li><a href="' . makelink('rostercp-addon-accounts') . '" rel="acc_display" style="cursor:help;"' . makeOverlib($tab1[1],$tab1[0],'',1,'',',WRAP') . '>' . $tab1[0] . '</a></li>
+	<li><a href="' . makelink('rostercp-addon-accounts') . '" rel="acc_perms" style="cursor:help;"' . makeOverlib($tab2[1],$tab2[0],'',1,'',',WRAP') . '>' . $tab2[0] . '</a></li>
+	<li class="selected"><a href="' . makelink('rostercp-addon-accounts-admin') . '" style="cursor:help;"' . makeOverlib($tab3[1],$tab3[0],'',1,'',',WRAP') . '>' . $tab3[0] . '</a></li>
+	<li><a href="' . makelink('rostercp-addon-accounts-plugin') . '" style="cursor:help;"' . makeOverlib($tab4[1],$tab4[0],'',1,'',',WRAP') . '>' . $tab4[0] . '</a></li>
+	<li><a href="' . makelink('rostercp-addon-accounts') . '" rel="acc_recruit" style="cursor:help;"' . makeOverlib($tab5[1],$tab5[0],'',1,'',',WRAP') . '>' . $tab5[0] . '</a></li>
+</ul>
+',$roster->locale->act['roster_config_menu'],'sgray','145px');
+
+$admin_update = $accounts->admin;
 
 if (isset($_POST['Submit']))
 {
@@ -53,7 +64,7 @@ elseif (isset($_GET['uid']) && intval($_GET['uid']) > 0)
 $error = $admin_update->message; // error message
 
 echo '<!-- Begin Admin Form -->';
-echo border('sgold','start', $roster->locale->act['accounts_user_admin']);
+echo border('sgold','start', $roster->locale->act['acc_user_admin']);
 echo '<table class="bodyline" cellspacing="0" cellpadding="0" width="100%">';
 echo     '<tr>';
 echo     '<form name="userAdmin" method="post" action="' . makelink() . '">';
@@ -61,7 +72,7 @@ echo     '<form name="userAdmin" method="post" action="' . makelink() . '">';
 if ($admin_update->userFound == true)
 {     
 	echo         '<td class="membersRow1">';
-    echo             '<span style="float:left">' . $roster->locale->act['account_uname'] . ':</span>';
+    echo             '<span style="float:left">' . $roster->locale->act['acc_uname'] . ':</span>';
     echo             '<span style="float:right"><input type="text" name="user" class="wowinput128" value="' . $admin_update->uname . '"></span>';
 	echo         '</td>';
 	echo     '</tr>';
@@ -73,7 +84,7 @@ if ($admin_update->userFound == true)
 	echo     '</tr>';
 	echo     '<tr>';
 	echo         '<td class="membersRow1">';
-    echo             '<span style="float:left">' . $roster->locale->act['account_email'] . '</span>';
+    echo             '<span style="float:left">' . $roster->locale->act['acc_email'] . '</span>';
     echo             '<span style="float:right"><input type="text" name="userEMail" class="wowinput128" value="' . $admin_update->oldUserEMail . '"></span>';
 	echo         '</td>';
 	echo     '</tr>';
@@ -105,13 +116,13 @@ if ($admin_update->userFound == true)
 else
 {
 	echo         '<td class="membersRow1">';
-	echo			 '<span style="float:left">' . $roster->locale->act['account_uname'] . ':</span>';
+	echo			 '<span style="float:left">' . $roster->locale->act['acc_uname'] . ':</span>';
     echo             '<span style="float:right"><input type="text" name="uname" class="wowinput128"></span>';
 	echo         '</td>';
 	echo     '</tr>';
 	echo     '<tr>';
 	echo         '<td class="membersRow2">';
-    echo             '<span style="float:left">' . $roster->locale->act['account_email'] . '</span>';
+    echo             '<span style="float:left">' . $roster->locale->act['acc_email'] . '</span>';
     echo             '<span style="float:right"><input type="text" name="userEMail" class="wowinput192"></span>';
 	echo         '</td>';
 	echo     '</tr>';
@@ -127,5 +138,5 @@ echo '</table>';
 echo border('sgold','end');
 echo '<p><b>' . (isset($error)) ? $error : "&nbsp;" . '</b></p>';
 echo '<p>&nbsp;</p>';
-echo '<p><a href="' . makelink('util-accounts-index') . '">' . $roster->locale->act['account_main_page'] . '</a></p><br />';
+echo '<p><a href="' . makelink('util-accounts') . '">' . $roster->locale->act['acc_main_page'] . '</a></p><br />';
 echo '<!-- End Admin Form -->';

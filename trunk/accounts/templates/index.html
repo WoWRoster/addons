@@ -1,12 +1,9 @@
 <!-- BEGIN accounts_index -->
-<center>Welcome <a href="{accounts_index.USER_LINK}"><span id="username">{accounts_index.FNAME}</span></a>, you are logged in. [<a href="{accounts_index.LOGOUT}">logout</a>]</center>
+{accounts_index.MESSAGE}
 <br />
 {accounts_index.BORDER_START}
 <br />
-User: {accounts_index.USER}<br />
-First Name: {accounts_index.FNAME}<br />
-Last Name: {accounts_index.LNAME}<br />
-User Group: {accounts_index.GROUPID}<br />
-User E-mail: {accounts_index.EMAIL}<br />
+{accounts_index.WELCOME_TXT}<br />
+<p><a href="{accounts_index.REGISTER_LINK}">{accounts_index.REG_CLICK}</a></p>
 {accounts_index.BORDER_END}
 <!-- END accounts_index -->

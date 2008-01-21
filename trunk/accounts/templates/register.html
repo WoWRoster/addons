@@ -7,7 +7,7 @@
 		</th>
 	</tr>
 	<tr>
-	<form name="regForm" method="post" action="{accounts_register.FORM_LINK}">
+	<form name="regForm" method="post" enctype="multipart/form-data" action="{accounts_register.FORM_LINK}">
 		<td class="membersRow1">
 			<span style="float:left">{accounts_register.UNAME_TXT}:</span>
 			<span style="float:right"><input type="text" name="user" class="wowinput128">*</span>
@@ -45,8 +45,8 @@
 	</tr>
 	<tr>
 		<td class="membersRow1">
-			<span style="float:left">{accounts_register.EXTRA_TXT}:</span>
-			<span style="float:right"><input type="text" name="info" class="wowinput192"></span>
+			<span style="float:left">{accounts_register.GROUP_TXT}:</span>
+			<span style="float:right"><input type="password" name="groupPass" class="wowinput128"></span>
 		</td>
 	</tr>
 	<tr>
