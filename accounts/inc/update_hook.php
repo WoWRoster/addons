@@ -72,7 +72,7 @@ class accountsUpdate
 	 */ 
 	function char( $data , $member_id )
 	{
-		global $roster;
+		global $roster, $addon, $accounts;
 		
 		// --[ Check if this update type is enabled ]--
 		if($_SESSION['isLoggedIn'] == false)
@@ -108,10 +108,10 @@ class accountsUpdate
 
 		// --[ Add record to the cache of chars we'll be updating ]--
 		$this->chars[$member_id]['id'] = $member_id;
-		$this->chars[$member_id]['uid'] = $_SESSION['uid'];
+		$this->chars[$member_id]['uid'] = $accounts->user->info['uid'];
 		$this->chars[$member_id]['name'] = $member_name;
 		$this->chars[$member_id]['guild_id'] = $row['guild_id'];
-		$this->chars[$member_id]['group_id'] = $_SESSION['groupID'];
+		$this->chars[$member_id]['group_id'] = $accounts->user->info['group_id'];
 		$this->chars[$member_id]['realm'] = $row['server'];
 
 		$this->messages .= ' - <span style="color:green;">' . $member_name . ' will be updated.</span><br/>';
@@ -127,7 +127,7 @@ class accountsUpdate
 	 */
 	function char_post( $data )
 	{
-		global $roster;
+		global $roster, $addon, $accounts;
 		
 		// --[ Check if this update type is enabled ]--
 		if($_SESSION['isLoggedIn'] == false)

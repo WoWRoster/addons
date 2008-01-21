@@ -16,9 +16,7 @@ if( !defined('IN_ROSTER') )
     exit('Detected invalid access to this file!');
 }
 
-include_once ($addon['inc_dir'] . 'user.lib.php');
-
-class userAdmin extends accountUser
+class accountsAdmin extends accounts
 {	
 	var $userFound = false;
 	var $levels = array();
@@ -30,19 +28,19 @@ class userAdmin extends accountUser
 
 	function getUserData($for_user, $type = 'uid')
 	{
-	    global $roster;
+	    global $roster, $addon, $accounts;
 		
 		if ($type == 'uname')
 		{
-			$sql = sprintf("SELECT `uid`, `uname`, `email`, `group_id`, `active` FROM %s WHERE `uname` = '%s'", $this->userTable, trim($for_user));
+			$sql = sprintf("SELECT `uid`, `uname`, `email`, `group_id`, `active` FROM %s WHERE `uname` = '%s'", $accounts->db['usertable'], trim($for_user));
 		}
 		elseif ($type == 'email')
 		{
-			$sql = sprintf("SELECT `uid`, `uname`, `email`, `group_id`, `active` FROM %s WHERE `email` = '%s'", $this->userTable, $for_user);
+			$sql = sprintf("SELECT `uid`, `uname`, `email`, `group_id`, `active` FROM %s WHERE `email` = '%s'", $accounts->db['usertable'], $for_user);
 		}
 		elseif ($type == 'uid')
 		{
-			$sql = sprintf("SELECT `uid`, `uname`, `email`, `group_id`, `active` FROM %s WHERE `uid` = %d", $this->userTable, intval($for_user));
+			$sql = sprintf("SELECT `uid`, `uname`, `email`, `group_id`, `active` FROM %s WHERE `uid` = %d", $accounts->db['usertable'], intval($for_user));
 		}
 		else
 		{
@@ -69,7 +67,7 @@ class userAdmin extends accountUser
 	
 	function updateUserByAdmin($user, $new_level, $user_id, $def_pass, $new_email, $active, $confirmation = 'no')
 	{
-		global $roster;
+		global $roster, $addon, $accounts;
 	
 		$this->userFound = true;
 		$this->userGroupID = $new_level;
@@ -79,12 +77,12 @@ class userAdmin extends accountUser
 		}
 		else
 		{
-			if ($this->checkEMail($new_email))
+			if ($accounts->user->checkEMail($new_email))
 			{
 				$sql = "UPDATE %s SET `group_id` = %d, `email` = '%s', `active` = '%s'";
 				$sql .= ($def_pass != '') ? sprintf(", `pass` = '%s'", md5($def_pass)) : '';
 				$sql .= " WHERE `uid` = %d";
-				$sql_compl = sprintf($sql, $this->userTable, $new_level, $new_email, $active, $user_id);
+				$sql_compl = sprintf($sql, $accounts->db['usertable'], $new_level, $new_email, $active, $user_id);
 				if ($roster->db->query($sql_compl))
 				{
 					$this->message = 'Data has been modified for <b>' . $user . '</b>';
@@ -114,7 +112,7 @@ class userAdmin extends accountUser
 	
 	function accessLevelMenu($curr_level, $element_name = 'level')
 	{
-		global $roster;
+		global $roster, $addon, $accounts;
 		
 		if( count($this->levels) == 0 )
 		{
@@ -150,21 +148,11 @@ class userAdmin extends accountUser
 		$input_field .= '</select>';
 
 		return $input_field;
-		
-		//$menu = '<select name="' . $element_name . "\">\n";
-		//for ($i = minaccess; $i <= adminlevel; $i++)
-		//{
-			//$menu .= '  <option value="' . $i . '"';
-			//$menu .= ($curr_level == $i) ? ' selected>' : '>';
-			//$menu .= $i . "</option>\n";
-		//}
-		//$menu .= "</select>\n";
-		//return $menu;
 	}
 	
 	function activationSwitch($formelement = "activation")
 	{
-		global $roster;
+		global $roster, $addon, $accounts;
 	
 		$radio_group = '<span style="float:left"><label for="' . $formelement . "\">Active User:</label></span>\n";
 		$first = ($this->activation == '1') ? ' checked' : '';
