@@ -2,6 +2,12 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[350]
+- fixed auth method
+
+svn[348]
+- changed auth method
+
 svn[347]
 - fixed french character sex
 
