@@ -20,7 +20,8 @@ if( !defined('IN_ROSTER') )
 }
 
 require_once ($addon['dir'] . 'inc/armorysyncbase.class.php');
-require_once ($addon['dir'] . 'inc/simpleclass.lib.php');
+require_once(ROSTER_LIB . 'simple.class.php');
+//require_once ($addon['dir'] . 'inc/simpleclass.lib.php');
 
 
 class ArmorySync extends ArmorySyncBase {
@@ -33,11 +34,15 @@ class ArmorySync extends ArmorySyncBase {
 
     var $content = array();
     var $data = array();
+	var $gemList = array();
+	var $compareGem = array();
 
     var $message;
     var $debuglevel = 0;
     var $debugmessages = array();
     var $errormessages = array();
+
+	var $retrys = 2;
 
 	var $updateDone = false;
 
@@ -95,10 +100,13 @@ class ArmorySync extends ArmorySyncBase {
 
 				case 'Equip' :
 					$cacheTagSlot = 'slot_'.$server.$memberId.$region.$guildId;
-					$slot = 0;
+					$slot = -1;
 
 					if ( $roster->cache->check($cacheTagSlot) ) {
 						$slot = $roster->cache->get($cacheTagSlot);
+						if ( $slot == 'NULL' ) {
+							$slot = 0;
+						}
 					}
 
 					while ( ! isset( $this->data["Equipment"][$this->_getItemSlot( $slot )] ) ) {
@@ -108,7 +116,7 @@ class ArmorySync extends ArmorySyncBase {
 						}
 					}
 
-					if ( $slot < 19 ) {
+					if ( $slot <= 18 ) {
 						$ret = $this->_getEquipmentInfo( $this->_getItemSlot( $slot ) );
 					}
 
@@ -116,18 +124,31 @@ class ArmorySync extends ArmorySyncBase {
 						$slot++;
 						while ( ! isset( $this->data["Equipment"][$this->_getItemSlot( $slot )] ) ) {
 							$slot++;
-							if ( $slot >= 19 ) {
+							if ( $slot > 18 ) {
 								break;
 							}
 						}
 
-						if ( $slot < 19 ) {
+						if ( $slot <= 18 ) {
+							if ( $slot == 0 ) {
+								$slot = 'NULL';
+							}
 							$roster->cache->put( $slot, $cacheTagSlot );
 							array_unshift( $steps, $step );
 						} else {
 							$roster->cache->cleanCache( 'obj_'. md5( $cacheTagSlot));
 						}
+					} elseif ( $ret == false && $slot > 18 ) {
+						$roster->cache->cleanCache( 'obj_'. md5( $cacheTagSlot));
+
+						$roster->cache->put( $retry, $cacheTagRetry );
+						$roster->cache->put( $steps, $cacheTagJob );
+						$roster->cache->put( $this->data, $cacheTagData );
+						$roster->cache->put( $this->status, $cacheTagStatus );
+
+						return $this->synchMemberByIDPerPage( $server, $memberId, $memberName, $region, $guildId );
 					}
+
 
 					break;
 
@@ -188,9 +209,10 @@ class ArmorySync extends ArmorySyncBase {
 		} else {
 			$ret = $this->_getCharacterInfo();
 			if ( $ret == false && $retry < 3 ) {
-				$roster->cache->put( $retry, $cacheTagRetry );
 				$this->_debug( 0, false, "Char: ". $memberName. " Step: Char failed", "Retry: ". $retry);
-			} elseif ( $retry >= 3 ) {
+				$retry++;
+				$roster->cache->put( $retry, $cacheTagRetry );
+			} elseif ( $retry > 3 ) {
 				$this->status = array(    'guildInfo' => 0,
 									'characterInfo' => 0,
 									'skillInfo' => 0,
@@ -200,6 +222,7 @@ class ArmorySync extends ArmorySyncBase {
 								);
 				$this->updateDone = true;
 				$roster->cache->cleanCache( 'obj_'. md5( $cacheTagRetry));
+				$this->_debug( 0, false, "Char: ". $memberName. " Step: Char failed", "I give up");
 				$this->_debug( 0, false, 'Synced armory data '. $this->memberName. ' with roster',  'Failed' );
 			} else {
 				$roster->cache->put( $retry, $cacheTagRetry );
@@ -282,53 +305,123 @@ class ArmorySync extends ArmorySyncBase {
     }
 
     /**
+     * executes a given method till it returns true or retrys are exceeded
+     *
+     */
+    function _doMethodWithRetrys( $function = false, $arg1 = false, $arg2 = false, $arg3 = false ) {
+		global $roster, $addon;
+
+		$ret = false;
+		if ( method_exists($this, $function)) {
+			$retry = 0;
+			while ( ! ( $ret = $this->$function($arg1, $arg2, $arg3) ) ) {
+				$retry++;
+				if ( $retry > $this->retrys ) {
+					break;
+				}
+			}
+		}
+		return $ret;
+	}
+
+    /**
      * fetches seperate parts of the character sheet
      *
      */
     function _getRosterData() {
+		global $roster, $addon;
 
-        $retry = 0;
-		while ( ! $this->_getCharacterInfo() ) {
-			$retry++;
-			if ( $retry == 3 ) {
-				break;
-			}
-		}
+		$this->_doMethodWithRetrys('_getCharacterInfo');
 		$this->updateDone = true;
         if ( $this->status['characterInfo'] ) {
-	        $retry = 0;
-            while ( ! $this->_getSkillInfo() ) {
-				$retry++;
-				if ( $retry == 3 ) {
-					break;
-				}
+
+			$this->_doMethodWithRetrys('_getSkillInfo');
+			$this->_doMethodWithRetrys('_getReputationInfo');
+
+			require_once(ROSTER_LIB . 'cache.php');
+			$cache = new RosterCache;
+			$cache->cache_dir = $addon['dir']. 'cache'. DIR_SEP;
+			$cache->object_ttl = 604800;
+
+			$gems = array();
+			$cacheTag = "gems";
+			$cacheWriteBack = false;
+
+			if ( $cache->check($cacheTag) ) {
+				$gems = $cache->get($cacheTag);
 			}
-	        $retry = 0;
-            while ( ! $this->_getReputationInfo() ) {
-				$retry++;
-				if ( $retry == 3 ) {
-					break;
-				}
-			}
-			for ( $i = 0; $i <= 18; $i++ ) {
+
+			for ( $i = -1; $i <= 18; $i++ ) {
 				$slot = $this->_getItemSlot( $i );
 				if ( isset( $this->data["Equipment"][$slot] ) ) {
-					$retry = 0;
-					while ( ! $this->_getEquipmentInfo( $slot ) ) {
-						$retry++;
-						if ( $retry == 3 ) {
-							break;
+
+					$this->_doMethodWithRetrys('_getEquipmentInfo', $slot);
+					if ( isset($this->data["Equipment"][$slot]['Gem'] ) ) {
+
+						foreach ( $this->data["Equipment"][$slot]['Gem'] as $key => $gem ) {
+
+							$needUnset = true;
+							if ( isset( $gems[$gem['Icon']] ) && isset( $gems[$gem['Icon']][$gem['_tmp_enchant']])) {
+
+								$this->data["Equipment"][$slot]['Gem'][$key] = $gems[$gem['Icon']][$gem['_tmp_enchant']];
+								$needUnset = false;
+								$this->_debug( 1, $this->data, 'Gem: '. $gems[$gem['Icon']][$gem['_tmp_enchant']]['Name']. ' - Got data from cache',  'OK' );
+							} elseif ( isset($roster->locale->act['gems'][$gem['Icon']]) ) {
+
+								$gemType = $roster->locale->act['gems'][$gem['Icon']];
+								$this->gemList = array();
+
+								if ( is_array( $gemType ) ) {
+									foreach ( $gemType as $type ) {
+										$this->_doMethodWithRetrys('_getGemList', $gem, $type);
+									}
+								} else {
+									$this->_doMethodWithRetrys('_getGemList', $gem, $gemType);
+								}
+
+								if ( count(array_keys($this->gemList)) ) {
+									foreach ( $this->gemList as $searchListGem ) {
+
+										$this->_doMethodWithRetrys('_getGemInfo', $searchListGem);
+										if ( is_object($this->compareGem) ) {
+											if ( $this->_compareGemInfo( $slot, $key, $gem ) ) {
+
+												$gemTooltip = str_replace("\n", "<br>", $this->_doMethodWithRetrys('_getItemTooltip', $searchListGem->id));
+												if ( $gemTooltip ) {
+
+													$this->data["Equipment"][$slot]['Gem'][$key]['Tooltip'] = $gemTooltip;
+													$needUnset = false;
+													if ( ! isset($gems[$gem['Icon']][$gem['_tmp_enchant']]) ) {
+
+														$gems[$gem['Icon']][$gem['_tmp_enchant']] = $this->data["Equipment"][$slot]['Gem'][$key];
+														$cacheWriteBack = true;
+													}
+												}
+												break;
+											}
+										}
+									}
+								}
+							} else {
+								$this->_debug( 1, $this->data, 'Unlocalized gem found for icon: '. $gem['Icon'],  'PROBLEM' );
+							}
+							if ( $needUnset ) {
+								unset( $this->data["Equipment"][$slot]['Gem'][$key] );
+							} else {
+								$itemIdArray = explode(':', $this->data["Equipment"][$slot]['Item']);
+								$gemId = array_shift(explode(':', $this->data["Equipment"][$slot]['Gem'][$key]['Item']));
+								$itemIdArray[$key+1] = $gemId;
+								$this->data["Equipment"][$slot]['Item'] = implode(':', $itemIdArray);
+							}
 						}
 					}
 				}
 			}
-	        $retry = 0;
-            while ( ! $this->_getTalentInfo() ) {
-				$retry++;
-				if ( $retry == 3 ) {
-					break;
-				}
+			if ( $cacheWriteBack ) {
+				$gems = $cache->put($gems, $cacheTag);
 			}
+
+			$this->_doMethodWithRetrys('_getTalentInfo');
             $this->_debug( 1, $this->data, 'Parsed all armory data',  'OK' );
         } else {
 			$this->status = array(  'guildInfo' => 0,
@@ -359,7 +452,9 @@ class ArmorySync extends ArmorySyncBase {
 		$retry = 1;
 		while ( $ret == false ) {
 
-			$content = $this->_parseData( $armory->fetchGuild( $this->memberName, $roster->config['locale'], $this->server ) );
+			//$content = $this->_parseData( $armory->fetchGuild( $this->memberName, $roster->config['locale'], $this->server ) );
+			//$content = $armory->fetchGuildSimpleClass( $this->memberName, $roster->config['locale'], $this->server );
+			$content = $armory->fetchArmory( $armory->guildInfo, false, $this->memberName, $this->server, false,'simpleClass' );
 			if ( $this->_checkContent( $content, array( 'guildInfo', 'guild' ) ) ) {
 				$guild = $content->guildInfo->guild;
 
@@ -491,7 +586,9 @@ class ArmorySync extends ArmorySyncBase {
         $ret = false;
 		$retry = 1;
 		while ( $ret == false ) {
-			$content = $this->_parseData( $armory->fetchGuild( $name, $roster->config['locale'], $server ) );
+			//$content = $this->_parseData( $armory->fetchGuild( $name, $roster->config['locale'], $server ) );
+			$content = $armory->fetchArmory( $armory->guildInfo, false, $this->memberName, $this->server, false,'simpleClass' );
+
 			if ( $this->_checkContent( $content, array('guildInfo', 'guild' ) ) ) {
 				$ret = true;
 			} else {
@@ -523,7 +620,9 @@ class ArmorySync extends ArmorySyncBase {
         $ret = false;
 		$retry = 1;
 		while ( $ret == false ) {
-			$content = $this->_parseData( $armory->fetchCharacter( $name, $roster->config['locale'], $server ) );
+			//$content = $this->_parseData( $armory->fetchCharacter( $name, $roster->config['locale'], $server ) );
+			$content = $armory->fetchArmory( $armory->guildInfo, $this->memberName, false, $server, false, 'simpleClass' );
+
 			if ( $this->_checkContent( $content, array('characterInfo', 'characterTab' ) ) ) {
 				$ret = true;
 			} else {
@@ -553,7 +652,8 @@ class ArmorySync extends ArmorySyncBase {
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 		$this->_setUserAgent($armory);
 
-        $content = $this->_parseData( $armory->fetchCharacter( $this->memberName, $roster->config['locale'], $this->server ) );
+        //$content = $this->_parseData( $armory->fetchCharacter( $this->memberName, $roster->config['locale'], $this->server ) );
+		$content = $armory->fetchArmory( $armory->characterInfo, $this->memberName, false, $this->server, false, 'simpleClass' );
         if ( $this->_checkContent($content, array('characterInfo', 'character' ) ) &&
 			 $this->_checkContent($content, array('characterInfo', 'characterTab' ) ) ) {
 
@@ -800,8 +900,9 @@ class ArmorySync extends ArmorySyncBase {
 					$slot = $this->_getItemSlot($item->slot);
 					$this->data["Equipment"][$slot] = array();
 
-					$this->data["Equipment"][$slot]['Item'] = $item->id;
 					$this->data["Equipment"][$slot]['Icon'] = $item->icon;
+
+					$this->data["Equipment"][$slot]['Item'] = $item->id;
 					$this->data["Equipment"][$slot]['Item'] .= ":". $item->permanentenchant;
 					$this->data["Equipment"][$slot]['Item'] .= ":". "0"; // GemId0
 					$this->data["Equipment"][$slot]['Item'] .= ":". "0"; // GemId1
@@ -831,6 +932,9 @@ class ArmorySync extends ArmorySyncBase {
         global $roster, $addon;
 
 		$equipcount = count( array_keys($this->data["Equipment"]) );
+		if ( ! isset($this->status['equipmentInfo']) ) {
+			$this->status['equipmentInfo'] = "0/". $equipcount;
+		}
 
 		if ( ! $slot == false && isset($this->data["Equipment"][$slot]) ) {
 	        include_once(ROSTER_LIB . 'armory.class.php');
@@ -840,7 +944,8 @@ class ArmorySync extends ArmorySyncBase {
 
 			$id = array_shift( explode( ":", $this->data["Equipment"][$slot]["Item"]));
 
-            $content = $this->_parseData( $armory->fetchItemTooltip( $id, $roster->config['locale'], $this->memberName, $this->server ) );
+            //$content1 = $this->_parseData( $armory->fetchItemTooltip( $id, $roster->config['locale'], $this->memberName, $this->server ) );
+			$content = $armory->fetchArmory( $armory->itemTooltip, $this->memberName, false, $this->server, $id, 'simpleClass' );
 			$itemToolTipHtml = $this->_getItemTooltip( $id );
 
             if ( $this->_checkContent( $content, array( 'itemTooltips', 'itemTooltip' ) ) && $itemToolTipHtml != false ) {
@@ -848,7 +953,26 @@ class ArmorySync extends ArmorySyncBase {
                 $tooltip = $content->itemTooltips->itemTooltip;
                 $this->data["Equipment"][$slot]['Name'] = $tooltip->name->_CDATA;
                 $this->data["Equipment"][$slot]['Color'] = $this->_getItemColor($tooltip->overallQualityId->_CDATA);
-                $this->data["Equipment"][$slot]['Tooltip'] = $itemToolTipHtml; //$this->_getItemTooltip( $id );
+                $this->data["Equipment"][$slot]['Tooltip'] = $itemToolTipHtml;
+
+				if ( $this->_checkContent( $tooltip, array( 'socketData', 'socket' ) ) ) {
+
+					if ( is_array($tooltip->socketData->socket) ) {
+						$t = 1;
+						foreach ( $tooltip->socketData->socket as $gem ) {
+
+							$this->data["Equipment"][$slot]['Gem'][$t]['Icon'] = $gem->icon;
+							$this->data["Equipment"][$slot]['Gem'][$t]['_tmp_enchant'] = $gem->enchant;
+							$t++;
+						}
+					} elseif ( is_object($tooltip->socketData->socket) ) {
+
+						$gem = $tooltip->socketData->socket;
+						$this->data["Equipment"][$slot]['Gem'][1]['Icon'] = $gem->icon;
+						$this->data["Equipment"][$slot]['Gem'][1]['_tmp_enchant'] = $gem->enchant;
+					}
+				}
+
 				if ( ! isset($this->status['equipmentInfo']) ) {
 					$this->status['equipmentInfo'] = "1/". $equipcount;
 				} else {
@@ -863,7 +987,109 @@ class ArmorySync extends ArmorySyncBase {
 				return false;
 			}
 		}
+	}
 
+    /**
+     * fetches list of gems
+     *
+     */
+    function _getGemList( $gem = array(), $gemType = false ) {
+		global $roster, $addon;
+
+		include_once(ROSTER_LIB . 'armory.class.php');
+		$armory = new RosterArmory;
+		$armory->region = $this->region;
+		$armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
+
+		$content = $armory->fetchArmory( $armory->search, false, false, false, $gemType, 'simpleClass' );
+
+		if ( $this->_checkContent( $content, array( 'armorySearch', 'searchResults', 'items', 'item' ) ) ) {
+
+			$matchCount = 0;
+			foreach ( $content->armorySearch->searchResults->items->item as $item ) {
+
+				if ( $item->icon == $gem['Icon'] ) {
+					$this->gemList[] = $item;
+					$matchCount++;
+				}
+			}
+			if ( $matchCount ) {
+				$this->_debug( 1, true, 'GemType: '. $gemType. ' lookup. Found '. $matchCount. ' matching gem(s)', 'OK' );
+				return true;
+			} else {
+				$this->_debug( 1, true, 'GemType: '. $gemType. ' lookup. No matching gems found. Check your locale file!', 'Failed' );
+				return true;
+			}
+		} else {
+			$this->_debug( 1, true, 'GemType: '. $gemType. ' lookup', 'Failed' );
+			return false;
+		}
+	}
+
+    /**
+     * fetches gem info
+     *
+     */
+    function _getGemInfo( $gem = array() ) {
+		global $roster, $addon;
+
+		$this->compareGem = array();
+
+		include_once(ROSTER_LIB . 'armory.class.php');
+		$armory = new RosterArmory;
+		$armory->region = $this->region;
+		$armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
+
+		$checkGem = $armory->fetchArmory( $armory->itemTooltip, false, false, false, $gem->id, 'simpleClass' );
+
+		if ( $this->_checkContent($checkGem, array('itemTooltips', 'itemTooltip')) ) {
+			$this->compareGem = $checkGem->itemTooltips->itemTooltip;
+			$this->_debug( 1, true, 'Gem: '. $gem->name. ' Parsed gem info', 'OK' );
+			return true;
+		} elseif ( $this->_checkContent($checkGem, array('page')) ) {
+			if ( is_object($checkGem->page) ) {
+				if ( $this->_checkContent($checkGem, array('page', 'itemTooltips', 'itemTooltip')) ) {
+					$this->compareGem = $checkGem->page->itemTooltips->itemTooltip;
+					$this->_debug( 1, true, 'Gem: '. $gem->name. ' Parsed gem info', 'OK' );
+					return true;
+				}
+			} elseif ( is_array($checkGem->page) ) {
+				$page = array_pop( $checkGem->page );
+				if ( $this->_checkContent($page, array('itemTooltips', 'itemTooltip')) ) {
+					$this->compareGem = $page->itemTooltips->itemTooltip;
+					$this->_debug( 1, true, 'Gem: '. $gem->name. ' Parsed gem info', 'OK' );
+					return true;
+				}
+			}
+		}
+		$this->_debug( 1, true, 'Gem: '. $gem->name. ' Parsed gem info', 'Failed' );
+		return false;
+	}
+
+    /**
+     * compares gem info and sets to socket if matches
+     *
+     */
+    function _compareGemInfo( $slot = false, $key = 1, $gem = array() ) {
+
+		if ( $this->compareGem->gemProperties->_CDATA == $gem['_tmp_enchant'] ) {
+
+			$this->data["Equipment"][$slot]['Gem'][$key]['Name'] = $this->compareGem->name->_CDATA;
+			$this->data["Equipment"][$slot]['Gem'][$key]['Item'] = $this->compareGem->id->_CDATA. ":0:0:0:0:0:0:0";
+			$this->data["Equipment"][$slot]['Gem'][$key]['Color'] = $this->_getItemColor($this->compareGem->overallQualityId->_CDATA);
+			unset( $this->data["Equipment"][$slot]['Gem'][$key]['_tmp_enchant'] );
+
+			$idA = explode( ':', $this->data["Equipment"][$slot]['Item'] );
+			$idA[1 + $key] = $this->compareGem->id->_CDATA;
+			$this->data["Equipment"][$slot]['Item'] = implode( ':', $idA );
+
+			$this->_debug( 1, true, 'Gem: '. $this->compareGem->name->_CDATA. ' Matched gem properties', 'OK' );
+			return true;
+		} else {
+
+			$this->_debug( 1, false, 'Gem: '. $this->compareGem->name->_CDATA. ' Mismatched gem properties', 'OK' );
+			return false;
+		}
 	}
 
     /**
@@ -878,7 +1104,8 @@ class ArmorySync extends ArmorySyncBase {
         $armory->region = $this->region;
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
-        $content = $this->_parseData( $armory->fetchCharacterSkills( $this->memberName, $roster->config['locale'], $this->server ) );
+        //$content = $this->_parseData( $armory->fetchCharacterSkills( $this->memberName, $roster->config['locale'], $this->server ) );
+		$content = $armory->fetchArmory( $armory->characterSkills, $this->memberName, false, $this->server, false, 'simpleClass' );
 
         if ( $this->_checkContent( $content, array( 'characterInfo', 'skillTab' ) ) ) {
 
@@ -926,7 +1153,8 @@ class ArmorySync extends ArmorySyncBase {
         $armory->region = $this->region;
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
-        $content = $this->_parseData( $armory->fetchCharacterReputation( $this->memberName, $roster->config['locale'], $this->server ) );
+        //$content = $this->_parseData( $armory->fetchCharacterReputation( $this->memberName, $roster->config['locale'], $this->server ) );
+		$content = $armory->fetchArmory( $armory->characterReputation, $this->memberName, false, $this->server, false, 'simpleClass' );
 
         if ( $this->_checkContent( $content, array( 'characterInfo', 'reputationTab') ) ) {
 
@@ -978,7 +1206,8 @@ class ArmorySync extends ArmorySyncBase {
         $armory->region = $this->region;
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
-        $content = $this->_parseData( $armory->fetchCharacterTalents( $this->memberName, $roster->config['locale'], $this->server ) );
+        //$content = $this->_parseData( $armory->fetchCharacterTalents( $this->memberName, $roster->config['locale'], $this->server ) );
+		$content = $armory->fetchArmory( $armory->characterTalents, $this->memberName, false, $this->server, false, 'simpleClass' );
 
         if ( $this->_checkContent( $content, array( 'characterInfo', 'talentTab') ) ) {
 
@@ -1294,11 +1523,15 @@ class ArmorySync extends ArmorySyncBase {
         $armory->region = $this->region;
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
-        if ( $content = $armory->fetchItemTooltipHTML( $itemId, $roster->config['locale'], $this->memberName, $this->server ) ) {
+        //if ( $content = $armory->fetchItemTooltipHTML( $itemId, $roster->config['locale'], $this->memberName, $this->server ) ) {
+		if ( $content = $armory->fetchArmory( $armory->itemTooltip, $this->memberName, false, $this->server, $itemId, 'html' ) ) {
 
+			$html = $content;
             $content = str_replace("\n", "", $content );
+            $content = str_replace("\r", "", $content );
 			$content = str_replace("\t", "", $content );
-            $content = str_replace('<span class="tooltipRight">', "\t", $content );
+            //$content = str_replace('<span class="tooltipRight">', "\t", $content );
+			$content = preg_replace('/<img class="socketImg p".*?>(.*?)<br>/', '|cffffffff${1}|r<br>', $content );
             $content = str_replace("<br/>", "%__BRTAG%", $content );
             $content = str_replace("<br>", "%__BRTAG%", $content );
 			$content = str_replace('&nbsp;', ' ', $content );
@@ -1308,13 +1541,38 @@ class ArmorySync extends ArmorySyncBase {
 			$content = preg_replace('/J.+?ger/', 'Jäger', $content );
             // This is an ugly workaround for an encoding error in the armory
 
+			$tmpA = explode( "%__BRTAG%", $content);
+
+			$content = '';
+			foreach ( $tmpA as $tmp ) {
+				$tmp = preg_replace( '/(.*?)<span class="tooltipRight">(.*?)<\/span>(.*)/', "\${1}\${3}\t\${2}", $tmp );
+				$content .= $tmp. "\n";
+			}
+
             $content = strip_tags( $content );
 
             $content = str_replace("%__BRTAG%", "\n", $content );
+			$content = preg_replace('/\s+\n/', "\n", $content );
             $content = utf8_encode($this->_unhtmlentities( $content ));
-            //$content = mb_convert_encoding( $content, "UTF-8", "HTML-ENTITIES");
             $content = str_replace($roster->locale->act['bindings']['bind_on_pickup'], $roster->locale->act['bindings']['bind'], $content);
             $content = str_replace($roster->locale->act['bindings']['bind_on_equip'], $roster->locale->act['bindings']['bind'], $content);
+
+			if ( $roster->locale->curlocale == 'frFR' ) {
+				$content = preg_replace( '/(\d+) Armure/', "Armure: \${1}", $content );
+				$content = preg_replace( '/(\d+) Blocage/', "Bloquer: \${1}", $content );
+				$content = preg_replace( '/Classes : (.+)/', "Classes  : \${1}", $content );
+				$content = preg_replace( '/Durabilit.*?:/', utf8_encode('Durabilité:'), $content);
+				$content = preg_replace( '/\+\s(\d+)/', "+\${1}", $content );
+
+			}
+
+			$test = "|". str_replace( "\n", "|\n|", $content). "|";
+			$test = str_replace( "\t", "|\n|", $test);
+			$test1 = htmlentities($test);
+			$test2 = utf8_decode($test);
+			$test3 = utf8_encode($test);
+
+			$cmp = "html=>\n". $html. "\n\nResult=>\n". $content. "\n\nhtmlentities=>\n". $test1. "\n\nutf8_decode=>\n". $test2. "\n\nutf8_encode=>\n". $test3;
 
             $this->_debug( 2, $content, 'Fetched item tooltip', 'OK' );
             return $content;
@@ -1415,6 +1673,8 @@ class ArmorySync extends ArmorySyncBase {
     function _getItemSlot($value) {
         $ret = '';
         switch ($value) {
+			case -1: $ret = "Ammo";
+				break;
             case 0: $ret = "Head";
 				break;
             case 1: $ret = "Neck";

@@ -2,6 +2,9 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[351]
+- implemented gem tooltips for per character update
+
 svn[350]
 - fixed auth method
 

@@ -215,3 +215,27 @@ $lang['roster_deprecated_message'] = "<br />Du benutzt <b>WoWRoster</b><br /><br
 
 $lang['armorysync_not_upgraded'] = "<b>ArmorySync</b> nicht aktualisiert";
 $lang['armorysync_not_upgraded_message'] = "<br />Du hast <b>ArmorySync</b><br /><br />Version: <strong style=\"color:green;\" >%s</strong><br /><br />installiert. Zur Zeit ist noch <b>ArmorySync</b><br /><br />Version <strong style=\"color:red;\" >%s</strong><br /><br />im <b>WoWRoster</b> registriert.<br /><br />Bitte gehe in die <b>WoWRoster</b> Konfiguration<br />und aktualisiere dein <b>ArmorySync</b><br />&nbsp;";
+
+$lang['gems'] = array(
+	// bop gems
+	"inv_jewelcrafting_crimsonspinel_02" => "Kailees Rose",
+	"inv_jewelcrafting_lionseye_02" => "Bernsteinblut",
+	// Meta gems
+	"inv_misc_gem_diamond_05" => "Himmelsfeuerdiamant",
+	"inv_misc_gem_diamond_06" => "Erdsturmdiamant",
+	"inv_misc_gem_diamond_07" => "Himmelsfeuerdiamant",
+	// Rare gems
+	"inv_jewelcrafting_dawnstone_03" => "Dämmerstein",
+	"inv_jewelcrafting_livingruby_03" => "Lebendiger Rubin",
+	"inv_jewelcrafting_nightseye_03" => array ( "Nachtauge", "Tansanit" ),
+	"inv_jewelcrafting_nobletopaz_03" => "Edeltopas",
+	"inv_jewelcrafting_starofelune_03" => "Stern der Elune",
+	"inv_jewelcrafting_talasite_03" => "Talasit",
+	// Common gems
+	"inv_misc_gem_bloodgem_02" => "Blutgranat",
+	"inv_misc_gem_flamespessarite_02" => "Flammenspessarit",
+	"inv_misc_gem_ebondraenite_02" => "Schattendraenit",
+	"inv_misc_gem_goldendraenite_02" => "Golddraenit",
+
+
+);
