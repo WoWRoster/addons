@@ -64,7 +64,7 @@ class siggenUpdate
 		$this->data = $data;
 
 		// Read SigGen Config data from Database
-		$config_str = "SELECT `config_id`,`trigger`,`guild_trigger`,`uniup_compat`,`main_image_size_w`,`main_image_size_h`,`clear_dir`,`save_images_dir` FROM `" . $roster->db->table('config',$this->data['basename']) . "`;";
+		$config_str = "SELECT `config_id`,`trigger`,`guild_trigger`,`uniup_compat`,`main_image_size_w`,`main_image_size_h`,`cleardir`,`save_images_dir` FROM `" . $roster->db->table('config',$this->data['basename']) . "`;";
 
 		$config_sql = $roster->db->query($config_str);
 		if( $config_sql )
@@ -74,7 +74,7 @@ class siggenUpdate
 				$this->gendata[$row['config_id']]['trigger'] = $row['trigger'];
 				$this->gendata[$row['config_id']]['guild_trigger'] = $row['guild_trigger'];
 				$this->gendata[$row['config_id']]['uniup'] = $row['uniup_compat'];
-				$this->gendata[$row['config_id']]['clear'] = $row['clear_dir'];
+				$this->gendata[$row['config_id']]['clear'] = $row['cleardir'];
 				$this->gendata[$row['config_id']]['save_dir'] = $row['save_images_dir'];
 				$this->gendata[$row['config_id']]['w'] = ($row['main_image_size_w']*0.2);
 				$this->gendata[$row['config_id']]['h'] = ($row['main_image_size_h']*0.2);

@@ -3,6 +3,11 @@
 SigGen Change Log
 
 
+01.26.2008 - v0.3.0.353
+ * SigGen
+   o Fixed: Changed SigGen Config and the update hook to use cleardir not clear_dir
+
+
 01.25.2008 - v0.3.0.352
  * SigGen
    o Added: .htaccess url for SigGen image display

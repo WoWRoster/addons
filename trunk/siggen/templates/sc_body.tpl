@@ -192,9 +192,9 @@ if( $allow_save )
 		<tr>
 			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'This will clear the saved directory when &quot;Auto-save images on guild update&quot; is active<br />Useful to clear out old saved images','Clear Saved Directory' ); ?></td>
 			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><label>
-				<input type="radio" class="checkBox" name="clear_dir" value="1" <?php print ( $configData['clear_dir'] ? 'checked="checked"' : '' ); ?> />
+				<input type="radio" class="checkBox" name="cleardir" value="1" <?php print ( $configData['cleardir'] ? 'checked="checked"' : '' ); ?> />
 				Yes</label> <label>
-				<input type="radio" class="checkBox" name="clear_dir" value="0" <?php print ( !$configData['clear_dir'] ? 'checked="checked"' : '' ); ?> />
+				<input type="radio" class="checkBox" name="cleardir" value="0" <?php print ( !$configData['cleardir'] ? 'checked="checked"' : '' ); ?> />
 				No</label></td>
 		</tr>
 		<tr>
@@ -233,7 +233,7 @@ else
 				<input name="save_suffix" type="hidden" value="<?php print $configData['save_suffix']; ?>" />
 				<input name="trigger" type="hidden" value="0" />
 				<input name="guild_trigger" type="hidden" value="0" />
-				<input name="clear_dir" type="hidden" value="<?php print $configData['clear_dir']; ?>" />
+				<input name="cleardir" type="hidden" value="<?php print $configData['cleardir']; ?>" />
 				<input name="uniup_compat" type="hidden" value="<?php print $configData['uniup_compat']; ?>" /></td>
 		</tr>
 	</table>
