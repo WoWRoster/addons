@@ -59,7 +59,12 @@ if( $config_sql && $roster->db->num_rows($config_sql) > 0 )
 
 		$roster->config['seo_url'] = ( $row['link_type'] == 'forceseo' ? 1 : $curr_seo );
 
-		if( $row['link_type'] == 'saved' )
+		if( $row['link_type'] == 'short' )
+		{
+			print messagebox('<img src="' . str_replace('.html', '.' . $row['image_type'], makelink('util-' . $addon['basename'] . '-' . $row['config_id'] . '&amp;member=' . $member_str)) . '" alt="" width="' . $row['main_image_size_w'] . '" height="' . $row['main_image_size_h'] . '" /><br />'
+				. ROSTER_URL . $row['config_id'] . '/' . $member_str . '.' . $row['image_type']) . '<br />';
+		}
+		elseif( $row['link_type'] == 'saved' )
 		{
 			print messagebox('<img src="' . str_replace('.html', '.' . $row['image_type'], makelink('util-' . $addon['basename'] . '-' . $row['config_id'] . '&amp;member=' . $member_str)) . '" alt="" width="' . $row['main_image_size_w'] . '" height="' . $row['main_image_size_h'] . '" /><br />'
 				. $save_loc . $member_str . '.' . $row['image_type'], ucfirst($row['config_id']),'sblue','100%') . '<br />';

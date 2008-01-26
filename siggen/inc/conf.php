@@ -66,7 +66,7 @@ if( !defined('ROSTER_SIGCONFIGTABLE') )
 
 
 // ----[ Database version DO NOT CHANGE!! ]-----------------
-$sc_db_ver = '1.6';
+$sc_db_ver = '1.7';
 
 
 
