@@ -3,6 +3,14 @@
 SigGen Change Log
 
 
+01.25.2008 - v0.3.0.352
+ * SigGen
+   o Added: .htaccess url for SigGen image display
+   o Fixed: "Data truncated for column 'clear_dir'"
+   o Fixed: Update hook error "There was an error in addon siggen in method ---"
+
+
+
 12.17.07 - v0.3.0.339
  * SigGen
    o Fixed: Update hook, moved clear directory into guild_pre(), since leaving it in guild() would clear the dir for each member

@@ -397,6 +397,7 @@ $linklist = array(
 	'Default' => 'default',
 	'Force SEO' => 'forceseo',
 	'Saved Directory' => 'saved',
+	'Short' => 'short',
 );
 
 // Get list of columns for background selection

@@ -97,7 +97,7 @@ if ( !defined('IN_ROSTER') )
 			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="font_dir" type="text" value="<?php print $configData['font_dir']; ?>" size="20" maxlength="64" /></td>
 		</tr>
 		<tr>
-			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Set the links that are displayed on the character page<br /><br />- &quot;Default&quot; Shows the default link, based on Roster SEO settings<br />- &quot;Force SEO&quot; Force the display of the SEO link<br />- &quot;Save Directory&quot; Show the link to the saved generated image','Show Link' ); ?></td>
+			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Set the links that are displayed on the character page<br /><br />- &quot;Default&quot; Shows the default link, based on Roster SEO settings<br />- &quot;Force SEO&quot; Force the display of the SEO link<br />- &quot;Save Directory&quot; Show the link to the saved generated image<br />- &quot;Short&quot; Show the short, mod_rewrite url<br />&nbsp;&nbsp; (link requires edits to Roster\\\'s .htaccess file)','Show Link' ); ?></td>
 			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionList($linklist,$configData['link_type'],'link_type' ); ?></td>
 		</tr>
 		<tr>

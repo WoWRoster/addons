@@ -153,6 +153,7 @@ class siggenUpdate
 				else
 				{
 					$this->messages .= '- Could not save ' . $config . ": function readfile() failed\n";
+					return false;
 				}
 
 				unset($temp);
@@ -161,8 +162,11 @@ class siggenUpdate
 			{
 				$this->messages .= 'Cannot save ' . $config . ", &quot;allow_url_fopen&quot; is disabled on your server\n"
 								.  "Disable &quot;UniUploader Fix&quot; in RosterCP->SigGen\n";
+				return false;
 			}
 		}
+
+		return true;
 	}
 
 	/**
