@@ -3,6 +3,12 @@
 SigGen Change Log
 
 
+01.28.2008 - v0.3.0.355
+ * SigGen
+   o Fixed: Some more fixes to cleardir, this time in the update hook
+     This is still not completely fixed
+
+
 01.26.2008 - v0.3.0.353
  * SigGen
    o Fixed: Changed SigGen Config and the update hook to use cleardir not clear_dir

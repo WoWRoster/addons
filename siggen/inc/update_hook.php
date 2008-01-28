@@ -75,7 +75,12 @@ class siggenUpdate
 				$this->gendata[$row['config_id']]['guild_trigger'] = $row['guild_trigger'];
 				$this->gendata[$row['config_id']]['uniup'] = $row['uniup_compat'];
 				$this->gendata[$row['config_id']]['clear'] = $row['cleardir'];
+
+				$row['save_images_dir'] = str_replace( '/',DIR_SEP,$row['save_images_dir'] );
+				$row['save_images_dir'] = str_replace( '%r',ROSTER_BASE,$row['save_images_dir'] );
+				$row['save_images_dir'] = str_replace( '%s',$this->data['dir'],$row['save_images_dir'] );
 				$this->gendata[$row['config_id']]['save_dir'] = $row['save_images_dir'];
+
 				$this->gendata[$row['config_id']]['w'] = ($row['main_image_size_w']*0.2);
 				$this->gendata[$row['config_id']]['h'] = ($row['main_image_size_h']*0.2);
 			}
@@ -93,13 +98,14 @@ class siggenUpdate
 
 	function guild_pre( $data )
 	{
-		if( $sigdata['clear'] )
+		foreach( $this->gendata as $config )
 		{
-			$sigdata['save_dir'] = str_replace( '/',DIR_SEP,$sigdata['save_dir'] );
-			$sigdata['save_dir'] = str_replace( '%r',ROSTER_BASE,$sigdata['save_dir'] );
-			$sigdata['save_dir'] = str_replace( '%s',SIGGEN_DIR,$sigdata['save_dir'] );
-			$this->cleardir($sigdata['save_dir']);
+			if( $config['clear'] )
+			{
+				$this->cleardir($save_dir);
+			}
 		}
+		return true;
 	}
 
 	function guild( $data , $memberid )
