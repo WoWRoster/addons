@@ -67,7 +67,7 @@ class ArmorySyncJobAjax extends ArmorySyncJob {
         $ret = $this->$functions['update_status']();
 
         $status = $this->$functions['get_ajax_status']();
-        $this->_debug( 1, null, 'Started ajax status update', 'OK');
+        $this->_debug( 2, null, 'Started ajax status update', 'OK');
 
         $result = "\n";
         if ( count( $this->errormessages ) > 0 ) {
@@ -197,7 +197,7 @@ class ArmorySyncJobAjax extends ArmorySyncJob {
 				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'overlib', 'overlibType' => 'memberlistLog', 'targetId' => 'as_status_log_'. $id ), str_replace("'", '"', $member['log'] ) );
             }
         }
-        $this->_debug( 1, htmlspecialchars($result), 'Prepared ajax status', 'OK');
+        $this->_debug( 2, htmlspecialchars($result), 'Prepared ajax status', 'OK');
         return $result;
     }
 
