@@ -966,7 +966,7 @@ class ArmorySyncJob extends ArmorySyncBase {
             if ( $cleanup ) {
                 $this->_cleanUpJob( $this->jobid );
             }
-            $this->_debug( 1, $ret, 'Updated charcter job status', $ret ? 'OK': 'FINISHED');
+            $this->_debug( $ret ? 2 : 1, $ret, 'Updated charcter job status', $ret ? 'OK': 'FINISHED');
             return $ret;
         } else {
 			if ( $addon['config']['armorysync_fetch_method'] == 0 ) {
@@ -992,7 +992,7 @@ class ArmorySyncJob extends ArmorySyncBase {
             if ( $this->_updateMemberJobStatus( $this->jobid, $this->active_member ) ) {
                 $this->members = $this->_getMembersFromJobqueue( $this->jobid );
                 list ( $this->done, $this->total ) = $this->_getJobProgress($this->jobid);
-                $this->_debug( 1, true, 'Updated charcter job status', 'OK');
+                $this->_debug( 2, true, 'Updated charcter job status', 'OK');
                 return true;
             } else {
                 $this->_debug( 0, false, 'Updated charcter job status', 'Failed');

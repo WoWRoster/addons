@@ -42,6 +42,9 @@ class ArmorySync extends ArmorySyncBase {
     var $debugmessages = array();
     var $errormessages = array();
 
+	var $ppUpdate = array();
+	var $ppProgress = false;
+
 	var $retrys = 2;
 
 	var $updateDone = false;
@@ -63,7 +66,465 @@ class ArmorySync extends ArmorySyncBase {
      * @param int $memberId
      * @return bool
      */
+    function ArmorySync() {
+		$this->ppUpdate = array(
+				'jobs' => array(
+					array( 'type' => 'charInfo', 'retry' => 0 ),
+					array( 'type' => 'skillInfo', 'retry' => 0 ),
+					array( 'type' => 'repInfo', 'retry' => 0 ),
+					array( 'type' => 'equipInfo', 'retry' => 0, 'subjobs' => array() ),
+					array( 'type' => 'talentInfo', 'retry' => 0 ),
+					array( 'type' => 'update', 'retry' => 0 ),
+				),
+				'data' => array(),
+				'status' => array(),
+		);
+	}
+
+    /**
+     * syncronises one member with blizzards armory
+     *
+     * @param string $server
+     * @param int $memberId
+     * @return bool
+     */
     function synchMemberByIDPerPage( $server, $memberId = 0, $memberName = false, $region = false, $guildId = 0 ) {
+        global $addon, $roster;
+
+        $this->server = $server;
+        $this->memberId = $memberId;
+        $this->memberName = $memberName;
+        $this->region = $region;
+        $this->guildId = $guildId;
+
+		require_once(ROSTER_LIB . 'cache.php');
+		$cache = new RosterCache;
+		$cache->cache_dir = $addon['dir']. 'cache'. DIR_SEP;
+		$cache->object_ttl = 600;
+
+		$cacheTag = 'job_'.$server.$memberId.$region.$guildId;
+
+		if ( $cache->check($cacheTag) ) {
+			$this->ppUpdate = $cache->get($cacheTag);
+			$this->data = $this->ppUpdate['data'];
+			$this->status = $this->ppUpdate['status'];
+			unset($this->ppUpdate['data']);
+		}
+
+		$step = $this->ppUpdate['jobs'][0];
+
+		switch ($step['type']) {
+			case 'charInfo':
+				$this->_ppCharInfo();
+				break;
+			case 'skillInfo':
+				$this->_ppSkillInfo();
+				break;
+			case 'repInfo':
+				$this->_ppRepInfo();
+				break;
+			case 'equipInfo';
+				$this->_ppEquipInfo();
+				break;
+			case 'talentInfo':
+				$this->_ppTalentInfo();
+				break;
+			case 'update':
+				$this->_ppUpdate();
+				break;
+		}
+
+		if ( ! $this->updateDone ) {
+			$this->ppUpdate['data'] = $this->data;
+			$this->ppUpdate['status'] = $this->status;
+			$cache->put($this->ppUpdate, $cacheTag);
+		} else {
+			$cache->cleanCache( 'obj_'. md5( $cacheTag));
+		}
+	}
+
+    /**
+     * char info part of per page update
+     *
+     */
+	function _ppCharInfo() {
+		$ret = $this->_getCharacterInfo();
+
+		if ( $ret ) {
+			foreach ( array_keys($this->data["Equipment"]) as $slot ) {
+				$this->ppUpdate['jobs'][3]['subjobs'][] = array( 'type' => 'itemInfo', 'slot' => $slot, 'retry' => 0);
+			}
+			array_shift($this->ppUpdate['jobs']);
+		} elseif ( $this->ppUpdate['jobs'][0]['retry'] < $this->retrys ) {
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: CharInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
+			$this->ppUpdate['jobs'][0]['retry']++;
+		} else {
+			$tmp = array_pop($this->ppUpdate['jobs']);
+			$this->ppUpdate['jobs'] = array($tmp);
+			$this->status = array(
+								'guildInfo' => 0,
+								'characterInfo' => 0,
+								'skillInfo' => 0,
+								'reputationInfo' => 0,
+								'equipmentInfo' => 0,
+								'talentInfo' => 0,
+							);
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: CharInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: CharInfo failed", "I give up");
+		}
+	}
+
+    /**
+     * skill info part of per page update
+     *
+     */
+	function _ppSkillInfo() {
+		$ret = $this->_getSkillInfo();
+		if ( $ret ) {
+			array_shift($this->ppUpdate['jobs']);
+		} elseif ( $this->ppUpdate['jobs'][0]['retry'] < $this->retrys ) {
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: SkillInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
+			$this->ppUpdate['jobs'][0]['retry']++;
+		} else {
+			array_shift($this->ppUpdate['jobs']);
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: SkillInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: SkillInfo failed", "I give up");
+		}
+	}
+
+    /**
+     * reputation info part of per page update
+     *
+     */
+	function _ppRepInfo() {
+		$ret = $this->_getReputationInfo();
+		if ( $ret ) {
+			array_shift($this->ppUpdate['jobs']);
+		} elseif ( $this->ppUpdate['jobs'][0]['retry'] < $this->retrys ) {
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: RepInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
+			$this->ppUpdate['jobs'][0]['retry']++;
+		} else {
+			array_shift($this->ppUpdate['jobs']);
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: RepInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: RepInfo failed", "I give up");
+		}
+	}
+
+    /**
+     * char info part of per page update
+     *
+     */
+	function _ppEquipInfo() {
+		$subStep = $this->ppUpdate['jobs'][0]['subjobs'][0];
+
+		switch ($subStep['type']) {
+			case 'itemInfo':
+				$this->_ppItemInfo($subStep);
+				break;
+			case 'itemTooltip':
+				$this->_ppItemTooltip($subStep);
+				break;
+			case 'gemCheckCache':
+				$this->_ppGemCheckCache($subStep);
+				break;
+			case 'gemSearch':
+				$this->_ppGemSearch($subStep);
+				break;
+		}
+
+		if ( count(array_keys($this->ppUpdate['jobs'][0]['subjobs'])) == 0 ) {
+			array_shift($this->ppUpdate['jobs']);
+		}
+	}
+
+    /**
+     * char info part of per page update
+     *
+     */
+	function _ppItemInfo( $subStep = false ) {
+		$ret = $this->_getEquipmentInfo($subStep['slot']);
+
+		if ( $ret ) {
+			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
+			array_unshift($this->ppUpdate['jobs'][0]['subjobs'], array( 'type' => 'itemTooltip', 'slot' => $subStep['slot'], 'retry' => 0 ) );
+			//$this->_debug( 1, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Fetched", "OK");
+		} elseif ( $this->ppUpdate['jobs'][0]['subjobs'][0]['retry'] < $this->retrys ) {
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Failed", "Retry: ". $this->ppUpdate['jobs'][0]['subjobs'][0]['retry']);
+			$this->ppUpdate['jobs'][0]['subjobs'][0]['retry']++;
+		} else {
+			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Failed", "Retry: ". $this->ppUpdate['jobs'][0]['subjobs'][0]['retry']);
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Failed", "I give up");
+		}
+	}
+
+    /**
+     * char info part of per page update
+     *
+     */
+	function _ppItemTooltip( $subStep = false ) {
+		$ret = $this->_getEquipmentTooltip($subStep['slot']);
+
+		if ( $ret ) {
+			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
+			if ( isset($this->data['Equipment'][$subStep['slot']]['Gem']) ) {
+				foreach ( array_reverse(array_keys($this->data['Equipment'][$subStep['slot']]['Gem'])) as $gemSlot ) {
+					array_unshift($this->ppUpdate['jobs'][0]['subjobs'], array( 'type' => 'gemCheckCache', 'slot' => $subStep['slot'], 'gemSlot' => $gemSlot, 'retry' => 0 ));
+				}
+
+			}
+			//$this->_debug( 1, false, "Char: ". $this->memberName. " Step: ItemTooltip Slot: ". $subStep['slot']. " - Fetched", "OK");
+		} elseif ( $this->ppUpdate['jobs'][0]['subjobs'][0]['retry'] < $this->retrys ) {
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Failed", "Retry: ". $this->ppUpdate['jobs'][0]['subjobs'][0]['retry']);
+			$this->ppUpdate['jobs'][0]['subjobs'][0]['retry']++;
+		} else {
+			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Failed", "Retry: ". $this->ppUpdate['jobs'][0]['subjobs'][0]['retry']);
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Failed", "I give up");
+		}
+	}
+
+    /**
+     * gem search part of per page update
+     *
+     */
+	function _ppGemSearch( $subStep = false ) {
+
+		if ( count(array_keys($subStep['gemList'])) ) {
+			$this->_ppGemSearchArmory($subStep);
+		} elseif ( count(array_keys($subStep['compareGems'])) ) {
+			$this->_ppGemFetchAndCompare($subStep);
+		} elseif ( count(array_keys($subStep['gemTooltip']))) {
+			$this->_ppGemFetchTooltip($subStep);
+		} else {
+			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
+		}
+
+	}
+
+    /**
+     * gem search part of per page update
+     *
+     */
+	function _ppGemFetchTooltip( $subStep = false ) {
+
+		$gem = $this->data['Equipment'][$subStep['slot']]['Gem'][$subStep['gemSlot']];
+		$id = array_shift(explode(':', $gem['Item']));
+
+		$gemTooltip = str_replace("\n", "<br>", $this->_getItemTooltip($id));
+
+		if ( $gemTooltip ) {
+			$this->data['Equipment'][$subStep['slot']]['Gem'][$subStep['gemSlot']]['Tooltip'] = $gemTooltip;
+			//$this->_debug( 1, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemTooltip: ". $gem['Name']. " - Fetched", "OK");
+			$this->_ppGemToCache($this->data['Equipment'][$subStep['slot']]['Gem'][$subStep['gemSlot']]);
+			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
+		} elseif( $this->ppUpdate['jobs'][0]['subjobs'][0]['gemTooltip'][0]['retry'] < $this->retrys ) {
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemTooltip: ". $gem['Name']. " - Failed", "Retry: ". $this->ppUpdate['jobs'][0]['subjobs'][0]['gemTooltip'][0]['retry'] );
+			$this->ppUpdate['jobs'][0]['subjobs'][0]['gemTooltip'][0]['retry']++;
+		} else {
+			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemTooltip: ". $gem['Name']. " - Failed", "I give up" );
+		}
+	}
+
+    /**
+     * gem search part of per page update
+     *
+     */
+	function _ppGemFetchAndCompare( $subStep = false ) {
+		$compareGem = $subStep['compareGems'][0];
+		$slot = $subStep['slot'];
+		$gemSlot = $subStep['gemSlot'];
+
+		$ret = $this->_getGemInfo($compareGem);
+
+		if ( $ret ) {
+			array_shift($this->ppUpdate['jobs'][0]['subjobs'][0]['compareGems']);
+
+			//$this->_debug( 1, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemSlot: ". $gemSlot. " GemInfo: ". $compareGem->name. " - Fetched", "OK");
+
+			$gem = $this->data['Equipment'][$slot]['Gem'][$gemSlot];
+
+			$compareRet = $this->_compareGemInfo($slot, $gemSlot, $gem);
+
+			if ( $compareRet ) {
+				$this->ppUpdate['jobs'][0]['subjobs'][0]['compareGems'] = array();
+				$this->ppUpdate['jobs'][0]['subjobs'][0]['gemTooltip'] = array( 'type' => 'gemTooltip', 'slot' => $subStep['slot'], 'gemSlot' => $subStep['gemSlot'], 'retry' => 0 );
+			}
+
+		} elseif( $subStep['compareGems'][0]['retry'] < $this->retrys ) {
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemSlot: ". $gemSlot. " GemInfo: ". $compareGem->name. " - Failed", "Retry: ". $this->ppUpdate['jobs'][0]['subjobs'][0]['compareGem'][0]['retry']);
+			$this->ppUpdate['jobs'][0]['subjobs'][0]['compareGems'][0]['retry']++;
+		} else {
+			array_shift($this->ppUpdate['jobs'][0]['subjobs'][0]['compareGems']);
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemSlot: ". $gemSlot. " GemInfo: ". $compareGem->name. " - Failed", "I give up");
+
+		}
+	}
+
+    /**
+     * gem armory search part of per page update
+     *
+     */
+	function _ppGemSearchArmory( $subStep = false ) {
+		$gem = $this->data['Equipment'][$subStep['slot']]['Gem'][$subStep['gemSlot']];
+		$gemType = $subStep['gemList'][0]['gemType'];
+		$ret = $this->_getGemList( $gem, $gemType );
+
+		if ( $ret ) {
+			array_shift($this->ppUpdate['jobs'][0]['subjobs'][0]['gemList']);
+
+			foreach ( $this->gemList as $gemFound ) {
+				array_push($this->ppUpdate['jobs'][0]['subjobs'][0]['compareGems'], $gemFound );
+			}
+			//$this->_debug( 1, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemSearch: ". $gemType. " - Done", "OK");
+		} elseif( $subStep['gemList'][0]['retry'] < $this->retrys ) {
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemSearch: ". $gemType. " - Failed", "Retry: ". $subStep['gemList'][0]['retry']);
+			$this->ppUpdate['jobs'][0]['subjobs'][0]['gemList'][0]['retry']++;
+
+		} else {
+			array_shift($subStep['gemList']);
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemSearch: ". $gemType. " - Failed", "I give up");
+		}
+	}
+
+    /**
+     * gem cache check part of per page update
+     *
+     */
+	function _ppGemToCache( $gem = false ) {
+		global $roster, $addon;
+
+		require_once(ROSTER_LIB . 'cache.php');
+		$cache = new RosterCache;
+		$cache->cache_dir = $addon['dir']. 'cache'. DIR_SEP;
+		$cache->object_ttl = 604800;
+
+		$gems = array();
+		$cacheTag = "gems";
+
+		if ( $cache->check($cacheTag) ) {
+			$gems = $cache->get($cacheTag);
+		}
+
+		$icon = $gem['Icon'];
+		$enchant = $gem['_tmp_enchant'];
+
+		$gems[$icon][$enchant] = $gem;
+
+		$cache->put( $gems, $cacheTag );
+		$this->_debug( 1, null, "GemInfo: ". $gem['Name']. " - Put to cache", "OK");
+	}
+
+    /**
+     * gem cache check part of per page update
+     *
+     */
+	function _ppGemCheckCache( $subStep = false ) {
+		global $roster, $addon;
+
+		require_once(ROSTER_LIB . 'cache.php');
+		$cache = new RosterCache;
+		$cache->cache_dir = $addon['dir']. 'cache'. DIR_SEP;
+		$cache->object_ttl = 604800;
+
+		$gems = array();
+		$cacheTag = "gems";
+
+		if ( $cache->check($cacheTag) ) {
+			$gems = $cache->get($cacheTag);
+		}
+
+		$icon = $this->data['Equipment'][$subStep['slot']]['Gem'][$subStep['gemSlot']]['Icon'];
+		$enchant = $this->data['Equipment'][$subStep['slot']]['Gem'][$subStep['gemSlot']]['_tmp_enchant'];
+		if ( isset($gems[$icon]) && isset($gems[$icon][$enchant]) ) {
+			$this->data['Equipment'][$subStep['slot']]['Gem'][$subStep['gemSlot']] = $gems[$icon][$enchant];
+			$idA = explode( ':', $this->data["Equipment"][$subStep['slot']]['Item'] );
+			$idA[1 + $subStep['gemSlot']] = array_shift( explode(':', $gems[$icon][$enchant]['Item']));
+			$this->data["Equipment"][$subStep['slot']]['Item'] = implode( ':', $idA );
+
+			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
+			$this->_debug( 1, false, "Char: ". $this->memberName. " Slot: ". $subStep['slot']. " Geminfo: ". $this->data['Equipment'][$subStep['slot']]['Gem'][$subStep['gemSlot']]['Name']. " - Got info from cache", "OK");
+		} else {
+			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
+
+			if ( isset($roster->locale->act['gems'][$icon]) ) {
+				$gemType = $roster->locale->act['gems'][$icon];
+				array_unshift($this->ppUpdate['jobs'][0]['subjobs'], array( 'type' => 'gemSearch', 'slot' => $subStep['slot'], 'gemSlot' => $subStep['gemSlot'], 'gemList' => array(), 'compareGems' => array(), 'retry' => 0) );
+				if ( is_array($gemType) ) {
+					foreach ( $gemType as $gem ) {
+						array_unshift($this->ppUpdate['jobs'][0]['subjobs'][0]['gemList'], array('type' => 'gemList', 'gemType' => $gem, 'retry' => 0 ) );
+					}
+				} else {
+					array_unshift($this->ppUpdate['jobs'][0]['subjobs'][0]['gemList'], array('type' => 'gemList', 'gemType' => $gemType, 'retry' => 0 ) );
+				}
+				$this->_debug( 1, false, "Char: ". $this->memberName. " Slot: ". $subStep['slot']. " Geminfo: ". $this->data['Equipment'][$subStep['slot']]['Gem'][$subStep['gemSlot']]['Icon']. " - No info from cache", "OK");
+			} else {
+				$this->_debug( 0, $gem['Icon'], 'Unlocalized gem found for icon: '. $icon,  'PROBLEM' );
+			}
+
+		}
+
+	}
+
+    /**
+     * Talent info part of per page update
+     *
+     */
+	function _ppTalentInfo() {
+		$ret = $this->_getTalentInfo();
+		if ( $ret ) {
+			array_shift($this->ppUpdate['jobs']);
+		} elseif ( $this->ppUpdate['jobs'][0]['retry'] < $this->retrys ) {
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: TalentInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
+			$this->ppUpdate['jobs'][0]['retry']++;
+		} else {
+			array_shift($this->ppUpdate['jobs']);
+			$this->ppProgress = true;
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: TalentInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: TalentInfo failed", "I give up");
+		}
+	}
+
+    /**
+     * Talent info part of per page update
+     *
+     */
+	function _ppUpdate() {
+		global $roster, $addon;
+
+		if ( $this->status['characterInfo'] ) {
+			include_once(ROSTER_LIB . 'update.lib.php');
+			$update = new update;
+			$update->fetchAddonData();
+			$update->uploadData['characterprofiler']['myProfile'][$this->server]['Character'][$this->data['Name']] = $this->data;
+			$this->message = $update->processMyProfile();
+			$tmp = explode( "\n", $this->message);
+			$this->message = implode( '', $tmp);
+			$this->updateDone = true;
+
+			if ( strpos( $this->message, sprintf($roster->locale->act['upload_data'],$roster->locale->act['char'],$this->memberName,$this->server,$this->region)) ) {
+				$this->_debug( 1, true, 'Synced armory data for '. $this->memberName. ' with roster',  'OK' );
+				return true;
+			} else {
+				$this->_debug( 1, false, 'Synced armory data for '. $this->memberName. ' with roster',  'Failed' );
+				return false;
+			}
+		} else {
+			$this->message = "No infos for ". $this->memberName. "<br>Character has probalby not been updated for a while";
+			$this->_debug( 1, false, 'Synced armory data '. $this->memberName. ' with roster',  'Failed' );
+			return false;
+		}
+	}
+
+    /**
+     * syncronises one member with blizzards armory
+     *
+     * @param string $server
+     * @param int $memberId
+     * @return bool
+     */
+    function synchMemberByIDPerPageXXX( $server, $memberId = 0, $memberName = false, $region = false, $guildId = 0 ) {
         global $addon, $roster, $update;
 
         $this->server = $server;
@@ -100,6 +561,7 @@ class ArmorySync extends ArmorySyncBase {
 
 				case 'Equip' :
 					$cacheTagSlot = 'slot_'.$server.$memberId.$region.$guildId;
+					$cacheTagGem = 'gem_'.$server.$memberId.$region.$guildId;
 					$slot = -1;
 
 					if ( $roster->cache->check($cacheTagSlot) ) {
@@ -116,27 +578,51 @@ class ArmorySync extends ArmorySyncBase {
 						}
 					}
 
-					if ( $slot <= 18 ) {
+					if ( $roster->cache->check($cacheTagGem) ) {
+						$gem = $roster->cache->get($cacheTagGem);
+					}
+
+					if ( $gem ) {
+						require_once(ROSTER_LIB . 'cache.php');
+						$cache = new RosterCache;
+						$cache->cache_dir = $addon['dir']. 'cache'. DIR_SEP;
+						$cache->object_ttl = 604800;
+
+						$gemCacheTag = 'gems';
+
+						if ( $cache->check($gemCacheTag) ) {
+							$gems = $cache->get($cacheTag);
+						}
+
+
+
+					} elseif ( $slot <= 18 ) {
 						$ret = $this->_getEquipmentInfo( $this->_getItemSlot( $slot ) );
 					}
 
 					if ( $ret == true && $retry < 4 ) {
-						$slot++;
-						while ( ! isset( $this->data["Equipment"][$this->_getItemSlot( $slot )] ) ) {
-							$slot++;
-							if ( $slot > 18 ) {
-								break;
-							}
-						}
 
-						if ( $slot <= 18 ) {
-							if ( $slot == 0 ) {
-								$slot = 'NULL';
-							}
-							$roster->cache->put( $slot, $cacheTagSlot );
-							array_unshift( $steps, $step );
+						if ( isset( $this->data['Equipment']['Gem']) ) {
+							$gem = 1;
+							$roster->cache->put( $gem, $cacheTagGem );
 						} else {
-							$roster->cache->cleanCache( 'obj_'. md5( $cacheTagSlot));
+							$slot++;
+							while ( ! isset( $this->data["Equipment"][$this->_getItemSlot( $slot )] ) ) {
+								$slot++;
+								if ( $slot > 18 ) {
+									break;
+								}
+							}
+
+							if ( $slot <= 18 ) {
+								if ( $slot == 0 ) {
+									$slot = 'NULL';
+								}
+								$roster->cache->put( $slot, $cacheTagSlot );
+								array_unshift( $steps, $step );
+							} else {
+								$roster->cache->cleanCache( 'obj_'. md5( $cacheTagSlot));
+							}
 						}
 					} elseif ( $ret == false && $slot > 18 ) {
 						$roster->cache->cleanCache( 'obj_'. md5( $cacheTagSlot));
@@ -356,6 +842,9 @@ class ArmorySync extends ArmorySyncBase {
 				if ( isset( $this->data["Equipment"][$slot] ) ) {
 
 					$this->_doMethodWithRetrys('_getEquipmentInfo', $slot);
+					if ( isset($this->data["Equipment"][$slot]['Name']) ) {
+						$this->_doMethodWithRetrys('_getEquipmentTooltip', $slot);
+					}
 					if ( isset($this->data["Equipment"][$slot]['Gem'] ) ) {
 
 						foreach ( $this->data["Equipment"][$slot]['Gem'] as $key => $gem ) {
@@ -403,7 +892,7 @@ class ArmorySync extends ArmorySyncBase {
 									}
 								}
 							} else {
-								$this->_debug( 1, $this->data, 'Unlocalized gem found for icon: '. $gem['Icon'],  'PROBLEM' );
+								$this->_debug( 0, $gem['Icon'], 'Unlocalized gem found for icon: '. $gem['Icon'],  'PROBLEM' );
 							}
 							if ( $needUnset ) {
 								unset( $this->data["Equipment"][$slot]['Gem'][$key] );
@@ -944,16 +1433,16 @@ class ArmorySync extends ArmorySyncBase {
 
 			$id = array_shift( explode( ":", $this->data["Equipment"][$slot]["Item"]));
 
-            //$content1 = $this->_parseData( $armory->fetchItemTooltip( $id, $roster->config['locale'], $this->memberName, $this->server ) );
 			$content = $armory->fetchArmory( $armory->itemTooltip, $this->memberName, false, $this->server, $id, 'simpleClass' );
-			$itemToolTipHtml = $this->_getItemTooltip( $id );
+			//$itemToolTipHtml = $this->_getItemTooltip( $id );
 
-            if ( $this->_checkContent( $content, array( 'itemTooltips', 'itemTooltip' ) ) && $itemToolTipHtml != false ) {
+            //if ( $this->_checkContent( $content, array( 'itemTooltips', 'itemTooltip' ) ) && $itemToolTipHtml != false ) {
+            if ( $this->_checkContent( $content, array( 'itemTooltips', 'itemTooltip' ) ) ) {
 
                 $tooltip = $content->itemTooltips->itemTooltip;
                 $this->data["Equipment"][$slot]['Name'] = $tooltip->name->_CDATA;
                 $this->data["Equipment"][$slot]['Color'] = $this->_getItemColor($tooltip->overallQualityId->_CDATA);
-                $this->data["Equipment"][$slot]['Tooltip'] = $itemToolTipHtml;
+                //$this->data["Equipment"][$slot]['Tooltip'] = $itemToolTipHtml;
 
 				if ( $this->_checkContent( $tooltip, array( 'socketData', 'socket' ) ) ) {
 
@@ -986,6 +1475,21 @@ class ArmorySync extends ArmorySyncBase {
 				$this->_debug( 1, false, 'Char: '. $this->memberName. ' Slot: '. $slot. ' Parsed equipment details', 'Failed' );
 				return false;
 			}
+		}
+	}
+
+    /**
+     * fetches character equipment info
+     *
+     */
+    function _getEquipmentTooltip( $slot = false ) {
+		$id = array_shift( explode(':', $this->data["Equipment"][$slot]['Item']) );
+		if ( $this->data["Equipment"][$slot]['Tooltip'] = $this->_getItemTooltip($id) ) {
+			$this->_debug( 1, true, 'Char: '. $this->memberName. ' Slot: '. $slot. ' Fetched equipment tooltip', 'OK' );
+			return true;
+		} else {
+			$this->_debug( 1, true, 'Char: '. $this->memberName. ' Slot: '. $slot. ' Fetched equipment tooltip', 'Failed' );
+			return false;
 		}
 	}
 
@@ -1077,7 +1581,7 @@ class ArmorySync extends ArmorySyncBase {
 			$this->data["Equipment"][$slot]['Gem'][$key]['Name'] = $this->compareGem->name->_CDATA;
 			$this->data["Equipment"][$slot]['Gem'][$key]['Item'] = $this->compareGem->id->_CDATA. ":0:0:0:0:0:0:0";
 			$this->data["Equipment"][$slot]['Gem'][$key]['Color'] = $this->_getItemColor($this->compareGem->overallQualityId->_CDATA);
-			unset( $this->data["Equipment"][$slot]['Gem'][$key]['_tmp_enchant'] );
+			//unset( $this->data["Equipment"][$slot]['Gem'][$key]['_tmp_enchant'] );
 
 			$idA = explode( ':', $this->data["Equipment"][$slot]['Item'] );
 			$idA[1 + $key] = $this->compareGem->id->_CDATA;
