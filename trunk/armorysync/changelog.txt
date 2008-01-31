@@ -2,6 +2,13 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[359]
+- added roster error notices to armorysync ajax notices (to see notices during ajax updates)
+- implemented character faction and factionEN
+- various small bugfixes
+- removed simpleclass.php
+- added a priest icon
+
 svn[358]
 - Updated all locales with gem array
 
