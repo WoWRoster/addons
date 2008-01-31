@@ -260,3 +260,8 @@ $lang['gems'] = array(
 	"inv_misc_gem_topaz_02" => "Schimmernder Schmuckdämmerstein",
 	"inv_misc_gem_topaz_03" => "Bernstein",
 );
+
+$lang['faction_to_en'] = array(
+	"Allianz" => "Alliance",
+	"Horde" => "Horde",
+);

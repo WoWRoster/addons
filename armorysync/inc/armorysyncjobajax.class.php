@@ -90,6 +90,34 @@ class ArmorySyncJobAjax extends ArmorySyncJob {
             }
         }
 
+		if( is_array($roster->error->report) )
+		{
+			foreach( $roster->error->report as $file => $errors )
+			{
+				$roster->tpl->assign_block_vars('php_debug', array(
+					'FILE' => substr($file, strlen(ROSTER_BASE)),
+					)
+				);
+				foreach( $errors as $error )
+				{
+					$result .= $this->_xmlEncode(
+						'errormessage', array( 'target' => 'armorysync_error_table'), null,
+						array(
+							array('emesg', array( 'type' => 'line' ), null),
+							array('emesg', array( 'type' => 'time' ), null),
+							array('emesg', array( 'type' => 'file' ), substr($file, strlen(ROSTER_BASE))),
+							array('emesg', array( 'type' => 'class' ), null),
+							array('emesg', array( 'type' => 'function' ), null),
+							array('emesg', array( 'type' => 'info' ), $error),
+							array('emesg', array( 'type' => 'as_status' ), null),
+							array('edata', array( 'type' => 'args' ), null),
+							array('edata', array( 'type' => 'ret' ), null),
+						)
+					 );
+				}
+			}
+		}
+
         if ( $addon['config']['armorysync_debuglevel'] > 0 && count( $this->debugmessages ) > 0 ) {
             foreach ( $this->debugmessages as $message ) {
 
@@ -162,41 +190,44 @@ class ArmorySyncJobAjax extends ArmorySyncJob {
 
         $member = $this->active_member;
 
-        $id = $memberlist ? $member['guild_id'] : $member['member_id'];
+        if ( $member ) {
+			$id = $memberlist ? $member['guild_id'] : $member['member_id'];
 
-        if ( $id ) {
-            foreach ( array( 'guild_info', 'character_info', 'skill_info', 'reputation_info', 'equipment_info', 'talent_info' ) as $key ) {
-                if ( $memberlist && $key !== 'guild_info' ) {
-                    continue;
-                }
-                if ( isset( $member[$key] ) && $member[$key] == 1 && ( $key == 'guild_info' || $key == 'character_info' ) ) {
-					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), ROSTER_PATH. "img/pvp-win.gif" );
-                } elseif ( isset( $member[$key] ) && $member[$key] == 0 ) {
-					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), ROSTER_PATH. "img/pvp-loss.gif" );
-                } elseif ( isset( $member[$key] ) && ( $key != 'character_info' || ( $memberlist && $key == 'guild_info' ) || ( ! $memberlist && $key != 'guild_info' ) ) ) {
-					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => 'as_status_'. $key. '_'. $id), $member[$key] );
-                } else {
-					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), ROSTER_PATH. "img/blue-question-mark.gif" );
-                }
-            }
+			if ( $id ) {
+				foreach ( array( 'guild_info', 'character_info', 'skill_info', 'reputation_info', 'equipment_info', 'talent_info' ) as $key ) {
+					if ( $memberlist && $key !== 'guild_info' ) {
+						continue;
+					}
+					if ( isset( $member[$key] ) && $member[$key] == 1 && ( $key == 'guild_info' || $key == 'character_info' ) ) {
+						$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), ROSTER_PATH. "img/pvp-win.gif" );
+					} elseif ( isset( $member[$key] ) && $member[$key] == 0 ) {
+						$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), ROSTER_PATH. "img/pvp-loss.gif" );
+					} elseif ( isset( $member[$key] ) && ( $key != 'character_info' || ( $memberlist && $key == 'guild_info' ) || ( ! $memberlist && $key != 'guild_info' ) ) ) {
+						$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => 'as_status_'. $key. '_'. $id), $member[$key] );
+					} else {
+						$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_'. $key. '_'. $id ), ROSTER_PATH. "img/blue-question-mark.gif" );
+					}
+				}
 
-			if ( isset( $member['starttimeutc'] ) ) {
-				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => "as_status_starttimeutc_". $id), $this->_getLocalisedTime($member['starttimeutc']) );
+				if ( isset( $member['starttimeutc'] ) ) {
+					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => "as_status_starttimeutc_". $id), $this->_getLocalisedTime($member['starttimeutc']) );
+				}
+
+				if (isset( $member['stoptimeutc'] ) ) {
+					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => "as_status_stoptimeutc_". $id), $this->_getLocalisedTime($member['stoptimeutc']) );
+				}
+
+				if ( !$memberlist && $member['log'] ) {
+					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_log_'. $id ), ROSTER_PATH. "img/note.gif" );
+					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'overlib', 'overlibType' => 'charLog', 'targetId' => 'as_status_log_'. $id ), str_replace("'", '"', $member['log'] ) );
+
+				} elseif( $member['log'] ) {
+					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_log_'. $id ), ROSTER_PATH. "img/note.gif" );
+					$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'overlib', 'overlibType' => 'memberlistLog', 'targetId' => 'as_status_log_'. $id ), str_replace("'", '"', $member['log'] ) );
+				}
 			}
+		}
 
-			if (isset( $member['stoptimeutc'] ) ) {
-				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'text', 'targetId' => "as_status_stoptimeutc_". $id), $this->_getLocalisedTime($member['stoptimeutc']) );
-			}
-
-            if ( !$memberlist && $member['log'] ) {
-				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_log_'. $id ), ROSTER_PATH. "img/note.gif" );
-				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'overlib', 'overlibType' => 'charLog', 'targetId' => 'as_status_log_'. $id ), str_replace("'", '"', $member['log'] ) );
-
-            } elseif( $member['log'] ) {
-				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'image', 'targetId' => 'as_status_log_'. $id ), ROSTER_PATH. "img/note.gif" );
-				$result .= $this->_xmlEncode('statusInfo', array( 'type' => 'overlib', 'overlibType' => 'memberlistLog', 'targetId' => 'as_status_log_'. $id ), str_replace("'", '"', $member['log'] ) );
-            }
-        }
         $this->_debug( 2, htmlspecialchars($result), 'Prepared ajax status', 'OK');
         return $result;
     }
@@ -226,15 +257,21 @@ class ArmorySyncJobAjax extends ArmorySyncJob {
 			}
 			if ( $multi ) {
 				$tag .= " multipart=\"1\">\n";
-			} elseif ( count(array_keys($subs)) > 0 ) {
+			} elseif ( is_array($subs) && count(array_keys($subs)) > 0 ) {
 				$tag .= ">\n";
 			} else {
 				$tag .= ">";
 			}
 
-			foreach ( $subs as $sub ) {
-				list( $subTag, $subAttributes, $subContent, $subSubs ) = $sub;
-				$tag .= $this->_xmlEncode( $subTag, $subAttributes, $subContent, $subSubs );
+			if ( is_array($subs) ) {
+				foreach ( $subs as $sub ) {
+					list( $subTag, $subAttributes, $subContent ) = $sub;
+					$subSubs = array();
+					if ( is_array($sub) && isset($sub[3]) ) {
+						$subSubs = $sub[3];
+					}
+					$tag .= $this->_xmlEncode( $subTag, $subAttributes, $subContent, $subSubs );
+				}
 			}
 
 			if ( $multi ) {
@@ -250,7 +287,7 @@ class ArmorySyncJobAjax extends ArmorySyncJob {
 				$tag .= $encContent;
 			}
 
-			if ( $multi || count(array_keys($subs)) > 0 ) {
+			if ( $multi || is_array($subs) && count(array_keys($subs)) > 0 ) {
 				$tag .= $indent. "</". $tagname. ">\n";
 			} else {
 				$tag .= "</". $tagname. ">\n";

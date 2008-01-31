@@ -20,9 +20,6 @@ if( !defined('IN_ROSTER') )
 }
 
 require_once ($addon['dir'] . 'inc/armorysyncbase.class.php');
-require_once(ROSTER_LIB . 'simple.class.php');
-//require_once ($addon['dir'] . 'inc/simpleclass.lib.php');
-
 
 class ArmorySync extends ArmorySyncBase {
 
@@ -249,12 +246,12 @@ class ArmorySync extends ArmorySyncBase {
 		if ( $ret ) {
 			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
 			array_unshift($this->ppUpdate['jobs'][0]['subjobs'], array( 'type' => 'itemTooltip', 'slot' => $subStep['slot'], 'retry' => 0 ) );
-			//$this->_debug( 1, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Fetched", "OK");
 		} elseif ( $this->ppUpdate['jobs'][0]['subjobs'][0]['retry'] < $this->retrys ) {
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Failed", "Retry: ". $this->ppUpdate['jobs'][0]['subjobs'][0]['retry']);
 			$this->ppUpdate['jobs'][0]['subjobs'][0]['retry']++;
 		} else {
 			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
+			unset($this->data['Equipment'][$subStep['slot']]);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Failed", "Retry: ". $this->ppUpdate['jobs'][0]['subjobs'][0]['retry']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Failed", "I give up");
 		}
@@ -275,12 +272,12 @@ class ArmorySync extends ArmorySyncBase {
 				}
 
 			}
-			//$this->_debug( 1, false, "Char: ". $this->memberName. " Step: ItemTooltip Slot: ". $subStep['slot']. " - Fetched", "OK");
 		} elseif ( $this->ppUpdate['jobs'][0]['subjobs'][0]['retry'] < $this->retrys ) {
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Failed", "Retry: ". $this->ppUpdate['jobs'][0]['subjobs'][0]['retry']);
 			$this->ppUpdate['jobs'][0]['subjobs'][0]['retry']++;
 		} else {
 			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
+			unset($this->data['Equipment'][$subStep['slot']]);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Failed", "Retry: ". $this->ppUpdate['jobs'][0]['subjobs'][0]['retry']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Failed", "I give up");
 		}
@@ -317,7 +314,6 @@ class ArmorySync extends ArmorySyncBase {
 
 		if ( $gemTooltip ) {
 			$this->data['Equipment'][$subStep['slot']]['Gem'][$subStep['gemSlot']]['Tooltip'] = $gemTooltip;
-			//$this->_debug( 1, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemTooltip: ". $gem['Name']. " - Fetched", "OK");
 			$this->_ppGemToCache($this->data['Equipment'][$subStep['slot']]['Gem'][$subStep['gemSlot']]);
 			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
 		} elseif( $this->ppUpdate['jobs'][0]['subjobs'][0]['gemTooltip'][0]['retry'] < $this->retrys ) {
@@ -325,6 +321,7 @@ class ArmorySync extends ArmorySyncBase {
 			$this->ppUpdate['jobs'][0]['subjobs'][0]['gemTooltip'][0]['retry']++;
 		} else {
 			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
+			unset($this->data['Equipment'][$subStep['slot']]['Gem'][$subStep['gemSlot']]);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemTooltip: ". $gem['Name']. " - Failed", "I give up" );
 		}
 	}
@@ -343,10 +340,7 @@ class ArmorySync extends ArmorySyncBase {
 		if ( $ret ) {
 			array_shift($this->ppUpdate['jobs'][0]['subjobs'][0]['compareGems']);
 
-			//$this->_debug( 1, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemSlot: ". $gemSlot. " GemInfo: ". $compareGem->name. " - Fetched", "OK");
-
 			$gem = $this->data['Equipment'][$slot]['Gem'][$gemSlot];
-
 			$compareRet = $this->_compareGemInfo($slot, $gemSlot, $gem);
 
 			if ( $compareRet ) {
@@ -379,7 +373,6 @@ class ArmorySync extends ArmorySyncBase {
 			foreach ( $this->gemList as $gemFound ) {
 				array_push($this->ppUpdate['jobs'][0]['subjobs'][0]['compareGems'], $gemFound );
 			}
-			//$this->_debug( 1, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemSearch: ". $gemType. " - Done", "OK");
 		} elseif( $subStep['gemList'][0]['retry'] < $this->retrys ) {
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemSearch: ". $gemType. " - Failed", "Retry: ". $subStep['gemList'][0]['retry']);
 			$this->ppUpdate['jobs'][0]['subjobs'][0]['gemList'][0]['retry']++;
@@ -464,9 +457,7 @@ class ArmorySync extends ArmorySyncBase {
 			} else {
 				$this->_debug( 0, $gem['Icon'], 'Unlocalized gem found for icon: '. $icon,  'PROBLEM' );
 			}
-
 		}
-
 	}
 
     /**
@@ -646,65 +637,67 @@ class ArmorySync extends ArmorySyncBase {
 					$this->_doMethodWithRetrys('_getEquipmentInfo', $slot);
 					if ( isset($this->data["Equipment"][$slot]['Name']) ) {
 						$this->_doMethodWithRetrys('_getEquipmentTooltip', $slot);
-					}
-					if ( isset($this->data["Equipment"][$slot]['Gem'] ) ) {
+						if ( isset($this->data["Equipment"][$slot]['Gem'] ) ) {
 
-						foreach ( $this->data["Equipment"][$slot]['Gem'] as $key => $gem ) {
+							foreach ( $this->data["Equipment"][$slot]['Gem'] as $key => $gem ) {
 
-							$needUnset = true;
-							if ( isset( $gems[$gem['Icon']] ) && isset( $gems[$gem['Icon']][$gem['_tmp_enchant']])) {
+								$needUnset = true;
+								if ( isset( $gems[$gem['Icon']] ) && isset( $gems[$gem['Icon']][$gem['_tmp_enchant']])) {
 
-								$this->data["Equipment"][$slot]['Gem'][$key] = $gems[$gem['Icon']][$gem['_tmp_enchant']];
-								$needUnset = false;
-								$this->_debug( 1, $this->data, 'Gem: '. $gems[$gem['Icon']][$gem['_tmp_enchant']]['Name']. ' - Got data from cache',  'OK' );
-							} elseif ( isset($roster->locale->act['gems'][$gem['Icon']]) ) {
+									$this->data["Equipment"][$slot]['Gem'][$key] = $gems[$gem['Icon']][$gem['_tmp_enchant']];
+									$needUnset = false;
+									$this->_debug( 1, $this->data, 'Gem: '. $gems[$gem['Icon']][$gem['_tmp_enchant']]['Name']. ' - Got data from cache',  'OK' );
+								} elseif ( isset($roster->locale->act['gems'][$gem['Icon']]) ) {
 
-								$gemType = $roster->locale->act['gems'][$gem['Icon']];
-								$this->gemList = array();
+									$gemType = $roster->locale->act['gems'][$gem['Icon']];
+									$this->gemList = array();
 
-								if ( is_array( $gemType ) ) {
-									foreach ( $gemType as $type ) {
-										$this->_doMethodWithRetrys('_getGemList', $gem, $type);
+									if ( is_array( $gemType ) ) {
+										foreach ( $gemType as $type ) {
+											$this->_doMethodWithRetrys('_getGemList', $gem, $type);
+										}
+									} else {
+										$this->_doMethodWithRetrys('_getGemList', $gem, $gemType);
 									}
-								} else {
-									$this->_doMethodWithRetrys('_getGemList', $gem, $gemType);
-								}
 
-								if ( count(array_keys($this->gemList)) ) {
-									foreach ( $this->gemList as $searchListGem ) {
+									if ( count(array_keys($this->gemList)) ) {
+										foreach ( $this->gemList as $searchListGem ) {
 
-										$this->_doMethodWithRetrys('_getGemInfo', $searchListGem);
-										if ( is_object($this->compareGem) ) {
-											if ( $this->_compareGemInfo( $slot, $key, $gem ) ) {
+											$this->_doMethodWithRetrys('_getGemInfo', $searchListGem);
+											if ( is_object($this->compareGem) ) {
+												if ( $this->_compareGemInfo( $slot, $key, $gem ) ) {
 
-												$gemTooltip = str_replace("\n", "<br>", $this->_doMethodWithRetrys('_getItemTooltip', $searchListGem->id));
-												if ( $gemTooltip ) {
+													$gemTooltip = str_replace("\n", "<br>", $this->_doMethodWithRetrys('_getItemTooltip', $searchListGem->id));
+													if ( $gemTooltip ) {
 
-													$this->data["Equipment"][$slot]['Gem'][$key]['Tooltip'] = $gemTooltip;
-													$needUnset = false;
-													if ( ! isset($gems[$gem['Icon']][$gem['_tmp_enchant']]) ) {
+														$this->data["Equipment"][$slot]['Gem'][$key]['Tooltip'] = $gemTooltip;
+														$needUnset = false;
+														if ( ! isset($gems[$gem['Icon']][$gem['_tmp_enchant']]) ) {
 
-														$gems[$gem['Icon']][$gem['_tmp_enchant']] = $this->data["Equipment"][$slot]['Gem'][$key];
-														$cacheWriteBack = true;
+															$gems[$gem['Icon']][$gem['_tmp_enchant']] = $this->data["Equipment"][$slot]['Gem'][$key];
+															$cacheWriteBack = true;
+														}
 													}
+													break;
 												}
-												break;
 											}
 										}
 									}
+								} else {
+									$this->_debug( 0, $gem['Icon'], 'Unlocalized gem found for icon: '. $gem['Icon'],  'PROBLEM' );
 								}
-							} else {
-								$this->_debug( 0, $gem['Icon'], 'Unlocalized gem found for icon: '. $gem['Icon'],  'PROBLEM' );
-							}
-							if ( $needUnset ) {
-								unset( $this->data["Equipment"][$slot]['Gem'][$key] );
-							} else {
-								$itemIdArray = explode(':', $this->data["Equipment"][$slot]['Item']);
-								$gemId = array_shift(explode(':', $this->data["Equipment"][$slot]['Gem'][$key]['Item']));
-								$itemIdArray[$key+1] = $gemId;
-								$this->data["Equipment"][$slot]['Item'] = implode(':', $itemIdArray);
+								if ( $needUnset ) {
+									unset( $this->data["Equipment"][$slot]['Gem'][$key] );
+								} else {
+									$itemIdArray = explode(':', $this->data["Equipment"][$slot]['Item']);
+									$gemId = array_shift(explode(':', $this->data["Equipment"][$slot]['Gem'][$key]['Item']));
+									$itemIdArray[$key+1] = $gemId;
+									$this->data["Equipment"][$slot]['Item'] = implode(':', $itemIdArray);
+								}
 							}
 						}
+					} else {
+						unset($this->data["Equipment"][$slot]);
 					}
 				}
 			}
@@ -1146,7 +1139,15 @@ class ArmorySync extends ArmorySyncBase {
             $this->data["Attributes"]["Spell"]["School"]["Nature"] = $tab->spell->bonusDamage->nature->value;
 
 			if ( $this->_checkContent( $tab, array( 'buffs', 'spell' ) ) ) {
-				foreach ( $tab->buffs->spell as $spell ) {
+				if ( is_array($tab->buffs->spell) ) {
+					foreach ( $tab->buffs->spell as $spell ) {
+						$buffName = $spell->name;
+						$this->data["Attributes"]["Buffs"][$buffName]["Name"] = $buffName;
+						$this->data["Attributes"]["Buffs"][$buffName]["Icon"] = $spell->icon;
+						$this->data["Attributes"]["Buffs"][$buffName]["Tooltip"] = $spell->effect;
+					}
+				} else {
+					$spell = $tab->buffs->spell;
 					$buffName = $spell->name;
 					$this->data["Attributes"]["Buffs"][$buffName]["Name"] = $buffName;
 					$this->data["Attributes"]["Buffs"][$buffName]["Icon"] = $spell->icon;
@@ -1155,8 +1156,15 @@ class ArmorySync extends ArmorySyncBase {
 			}
 
 			if ( $this->_checkContent( $tab, array( 'debuffs', 'spell' ) ) ) {
-				foreach ( $tab->debuffs->spell as $spell ) {
-					$buffName = $spell->name;
+				if ( is_array($tab->debuffs->spell) ) {
+					foreach ( $tab->debuffs->spell as $spell ) {
+						$buffName = $spell->name;
+						$this->data["Attributes"]["Buffs"][$buffName]["Name"] = $buffName;
+						$this->data["Attributes"]["Buffs"][$buffName]["Icon"] = $spell->icon;
+						$this->data["Attributes"]["Buffs"][$buffName]["Tooltip"] = $spell->effect;
+					}
+				} else {
+					$spell = $tab->debuffs->spell;
 					$this->data["Attributes"]["Buffs"][$buffName]["Name"] = $buffName;
 					$this->data["Attributes"]["Buffs"][$buffName]["Icon"] = $spell->icon;
 					$this->data["Attributes"]["Buffs"][$buffName]["Tooltip"] = $spell->effect;
@@ -1180,6 +1188,8 @@ class ArmorySync extends ArmorySyncBase {
 
             $this->data["ClassId"] = $char->classId;
             $this->data["ClassEn"] = $roster->locale->act['class_to_en'][$this->data["Class"]];
+			$this->data["Faction"] = $char->faction;
+			$this->data["FactionEn"] = $roster->locale->act['faction_to_en'][$char->faction];
             $this->data["Health"] = $tab->characterBars->health->effective;
             $this->data["Mana"] = $tab->characterBars->secondBar->effective;
             if ( $tab->characterBars->secondBar->type == "m" ) {
@@ -1320,7 +1330,7 @@ class ArmorySync extends ArmorySyncBase {
 						$t = 1;
 						foreach ( $tooltip->socketData->socket as $gem ) {
 
-							if ( $gem->icon ) {
+							if ( $gem->hasProp('icon') && $gem->icon ) {
 								$this->data["Equipment"][$slot]['Gem'][$t]['Icon'] = $gem->icon;
 								$this->data["Equipment"][$slot]['Gem'][$t]['_tmp_enchant'] = $gem->enchant;
 							}
@@ -1329,7 +1339,7 @@ class ArmorySync extends ArmorySyncBase {
 					} elseif ( is_object($tooltip->socketData->socket) ) {
 
 						$gem = $tooltip->socketData->socket;
-						if ( $gem->icon ) {
+						if ( $gem->hasProp('icon') && $gem->icon ) {
 							$this->data["Equipment"][$slot]['Gem'][1]['Icon'] = $gem->icon;
 							$this->data["Equipment"][$slot]['Gem'][1]['_tmp_enchant'] = $gem->enchant;
 						}
@@ -1457,7 +1467,7 @@ class ArmorySync extends ArmorySyncBase {
      */
     function _compareGemInfo( $slot = false, $key = 1, $gem = array() ) {
 
-		if ( $this->compareGem->gemProperties->_CDATA == $gem['_tmp_enchant'] ) {
+		if ( $this->compareGem->hasProp('gemProperties') && $this->compareGem->gemProperties->_CDATA == $gem['_tmp_enchant'] ) {
 
 			$this->data["Equipment"][$slot]['Gem'][$key]['Name'] = $this->compareGem->name->_CDATA;
 			$this->data["Equipment"][$slot]['Gem'][$key]['Item'] = $this->compareGem->id->_CDATA. ":0:0:0:0:0:0:0";
@@ -1652,6 +1662,8 @@ class ArmorySync extends ArmorySyncBase {
             $pointsSpent = array();
             $dl_talentTree = array();
 
+			$this->status['talentInfo'] = 0;
+
             for ($i = 0; $i < sizeof($talentArray); $i++) {
                     $talentName = $talents['talent'][$i][1];
                     $talentX = $talents['talent'][$i][3];
@@ -1667,7 +1679,11 @@ class ArmorySync extends ArmorySyncBase {
                                                    ];
                     $talentTreeOrder =  $i <= $talents['treeStartStop'][0] ? 1 :
                                         ( $i <= $talents['treeStartStop'][1] ? 2 : 3 );
-                    $talentPic = $talentIcons[$class][$talentTreeOrder][$talentX][$talentY];
+					if ( isset($talentIcons[$class][$talentTreeOrder][$talentX][$talentY]) ) {
+						$talentPic = $talentIcons[$class][$talentTreeOrder][$talentX][$talentY];
+					} else {
+						$this->_debug( 0, null, 'Char: '. $this->memberName. ' - No talent icon found for '. $class. ' '. $talentTreeOrder. '/'. $talentX. '/'. $talentY, 'PROBLEM' );
+					}
                     if ( array_key_exists ( $talentTree, $pointsSpent ) ) {
                         $pointsSpent[$talentTree] += $talentRank;
                     } else {

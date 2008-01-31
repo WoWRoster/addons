@@ -261,3 +261,8 @@ $lang['gems'] = array(
 	"inv_misc_gem_topaz_02" => "Gleaming Ornate Dawnstone",
 	"inv_misc_gem_topaz_03" => "Amber",
 );
+
+$lang['faction_to_en'] = array(
+	"Alliance" => "Alliance",
+	"Horde" => "Horde",
+);
