@@ -45,6 +45,8 @@ class ArmorySync extends ArmorySyncBase {
 	var $ppUpdate = array();
 	var $ppProgress = false;
 
+	var $simpleParser;
+
 	var $retrys = 2;
 
 	var $updateDone = false;
@@ -601,8 +603,10 @@ class ArmorySync extends ArmorySyncBase {
 			while ( ! ( $ret = $this->$function($arg1, $arg2, $arg3) ) ) {
 				$retry++;
 				if ( $retry > $this->retrys ) {
+					$this->_debug( 0, null, 'Method: '. $function. " returned false",  'I give up' );
 					break;
 				}
+				$this->_debug( 1, null, 'Method: '. $function. " returned false - Retrying",  'Retry: '. $retry );
 			}
 		}
 		return $ret;
@@ -739,10 +743,24 @@ class ArmorySync extends ArmorySyncBase {
 		$retry = 1;
 		while ( $ret == false ) {
 
-			//$content = $this->_parseData( $armory->fetchGuild( $this->memberName, $roster->config['locale'], $this->server ) );
-			//$content = $armory->fetchGuildSimpleClass( $this->memberName, $roster->config['locale'], $this->server );
-			$content = $armory->fetchArmory( $armory->guildInfo, false, $this->memberName, $this->server, false,'simpleClass' );
+			$content = array();
+			$cacheTag = 'guildInfo'. $this->memberName. $this->server. $this->region. 'xml';
+			$fromCache = false;
+
+			if ( $roster->cache->check($cacheTag) ) {
+				$this->_initSimpleParser();
+				$content = $this->simpleParser->parse($roster->cache->get($cacheTag));
+				$fromCache = true;
+			} else {
+				$content = $armory->fetchArmory( $armory->guildInfo, false, $this->memberName, $this->server, false,'simpleClass' );
+			}
+
 			if ( $this->_checkContent( $content, array( 'guildInfo', 'guild' ) ) ) {
+
+				if ( ! $fromCache ) {
+					$roster->cache->put($armory->xml, $cacheTag);
+				}
+
 				$guild = $content->guildInfo->guild;
 
 				//$this->data['Ranks'] = $this->_getGuildRanks( $roster->data['guild_id'] );
@@ -873,10 +891,24 @@ class ArmorySync extends ArmorySyncBase {
         $ret = false;
 		$retry = 1;
 		while ( $ret == false ) {
-			//$content = $this->_parseData( $armory->fetchGuild( $name, $roster->config['locale'], $server ) );
-			$content = $armory->fetchArmory( $armory->guildInfo, false, $this->memberName, $this->server, false,'simpleClass' );
+			$content = array();
+			$cacheTag = 'guildInfo'. $this->memberName. $server. $region. 'xml';
+			$fromCache = false;
+
+			if ( $roster->cache->check($cacheTag) ) {
+				$this->_initSimpleParser();
+				$content = $this->simpleParser->parse($roster->cache->get($cacheTag));
+				$fromCache = true;
+			} else {
+				$content = $armory->fetchArmory( $armory->guildInfo, false, $this->memberName, $this->server, false,'simpleClass' );
+			}
 
 			if ( $this->_checkContent( $content, array('guildInfo', 'guild' ) ) ) {
+
+				if ( ! $fromCache ) {
+					$roster->cache->put($armory->xml, $cacheTag);
+				}
+
 				$ret = true;
 			} else {
 				$this->_debug( 1, false, 'Checked guild on existence',  'Retry: '. $retry );
@@ -907,10 +939,24 @@ class ArmorySync extends ArmorySyncBase {
         $ret = false;
 		$retry = 1;
 		while ( $ret == false ) {
-			//$content = $this->_parseData( $armory->fetchCharacter( $name, $roster->config['locale'], $server ) );
-			$content = $armory->fetchArmory( $armory->guildInfo, $this->memberName, false, $server, false, 'simpleClass' );
+			$content = array();
+			$cacheTag = 'characterInfo'. $this->memberName. $server. $region. 'xml';
+			$fromCache = false;
+
+			if ( $roster->cache->check($cacheTag) ) {
+				$this->_initSimpleParser();
+				$content = $this->simpleParser->parse($roster->cache->get($cacheTag));
+				$fromCache = true;
+			} else {
+				$content = $armory->fetchArmory( $armory->characterInfo, $this->memberName, false, $server, false, 'simpleClass' );
+			}
 
 			if ( $this->_checkContent( $content, array('characterInfo', 'characterTab' ) ) ) {
+
+				if ( ! $fromCache ) {
+					$roster->cache->put($armory->xml, $cacheTag);
+				}
+
 				$ret = true;
 			} else {
 				$this->_debug( 1, false, 'Checked char on existence',  'Retry: '. $retry );
@@ -939,12 +985,26 @@ class ArmorySync extends ArmorySyncBase {
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 		$this->_setUserAgent($armory);
 
-        //$content = $this->_parseData( $armory->fetchCharacter( $this->memberName, $roster->config['locale'], $this->server ) );
-		$content = $armory->fetchArmory( $armory->characterInfo, $this->memberName, false, $this->server, false, 'simpleClass' );
+		$content = array();
+		$cacheTag = 'characterInfo'. $this->memberName. $this->server. $this->region. 'xml';
+		$fromCache = false;
+
+		if ( $roster->cache->check($cacheTag) ) {
+			$this->_initSimpleParser();
+			$content = $this->simpleParser->parse($roster->cache->get($cacheTag));
+			$fromCache = true;
+		} else {
+			$content = $armory->fetchArmory( $armory->characterInfo, $this->memberName, false, $this->server, false, 'simpleClass' );
+		}
+
         if ( $this->_checkContent($content, array('characterInfo', 'character' ) ) &&
 			 $this->_checkContent($content, array('characterInfo', 'characterTab' ) ) ) {
 
-            $char = $content->characterInfo->character;
+            if ( ! $fromCache ) {
+				$roster->cache->put($armory->xml, $cacheTag);
+			}
+
+			$char = $content->characterInfo->character;
             $tab = $content->characterInfo->characterTab;
 
             $rank = $this->_getMemberRank( $this->memberId );
@@ -1231,11 +1291,23 @@ class ArmorySync extends ArmorySyncBase {
 
 			$id = array_shift( explode( ":", $this->data["Equipment"][$slot]["Item"]));
 
-			$content = $armory->fetchArmory( $armory->itemTooltip, $this->memberName, false, $this->server, $id, 'simpleClass' );
-			//$itemToolTipHtml = $this->_getItemTooltip( $id );
+			$content = array();
+			$cacheTag = 'itemTooltip'. $this->memberName. $this->server. $this->region. $id. 'xml';
+			$fromCache = false;
 
-            //if ( $this->_checkContent( $content, array( 'itemTooltips', 'itemTooltip' ) ) && $itemToolTipHtml != false ) {
+			if ( $roster->cache->check($cacheTag) ) {
+				$this->_initSimpleParser();
+				$content = $this->simpleParser->parse($roster->cache->get($cacheTag));
+				$fromCache = true;
+			} else {
+				$content = $armory->fetchArmory( $armory->itemTooltip, $this->memberName, false, $this->server, $id, 'simpleClass' );
+			}
+
             if ( $this->_checkContent( $content, array( 'itemTooltips', 'itemTooltip' ) ) ) {
+
+				if ( ! $fromCache ) {
+					$roster->cache->put($armory->xml, $cacheTag);
+				}
 
                 $tooltip = $content->itemTooltips->itemTooltip;
                 $this->data["Equipment"][$slot]['Name'] = $tooltip->name->_CDATA;
@@ -1248,15 +1320,19 @@ class ArmorySync extends ArmorySyncBase {
 						$t = 1;
 						foreach ( $tooltip->socketData->socket as $gem ) {
 
-							$this->data["Equipment"][$slot]['Gem'][$t]['Icon'] = $gem->icon;
-							$this->data["Equipment"][$slot]['Gem'][$t]['_tmp_enchant'] = $gem->enchant;
+							if ( $gem->icon ) {
+								$this->data["Equipment"][$slot]['Gem'][$t]['Icon'] = $gem->icon;
+								$this->data["Equipment"][$slot]['Gem'][$t]['_tmp_enchant'] = $gem->enchant;
+							}
 							$t++;
 						}
 					} elseif ( is_object($tooltip->socketData->socket) ) {
 
 						$gem = $tooltip->socketData->socket;
-						$this->data["Equipment"][$slot]['Gem'][1]['Icon'] = $gem->icon;
-						$this->data["Equipment"][$slot]['Gem'][1]['_tmp_enchant'] = $gem->enchant;
+						if ( $gem->icon ) {
+							$this->data["Equipment"][$slot]['Gem'][1]['Icon'] = $gem->icon;
+							$this->data["Equipment"][$slot]['Gem'][1]['_tmp_enchant'] = $gem->enchant;
+						}
 					}
 				}
 
@@ -1308,18 +1384,25 @@ class ArmorySync extends ArmorySyncBase {
 		if ( $this->_checkContent( $content, array( 'armorySearch', 'searchResults', 'items', 'item' ) ) ) {
 
 			$matchCount = 0;
-			foreach ( $content->armorySearch->searchResults->items->item as $item ) {
-
+			if ( is_array($content->armorySearch->searchResults->items->item) ) {
+				foreach ( $content->armorySearch->searchResults->items->item as $item ) {
+					if ( $item->icon == $gem['Icon'] ) {
+						$this->gemList[] = $item;
+						$matchCount++;
+					}
+				}
+			} else {
+				$item = $content->armorySearch->searchResults->items->item;
 				if ( $item->icon == $gem['Icon'] ) {
 					$this->gemList[] = $item;
 					$matchCount++;
 				}
 			}
 			if ( $matchCount ) {
-				$this->_debug( 1, true, 'GemType: '. $gemType. ' lookup. Found '. $matchCount. ' matching gem(s)', 'OK' );
+				$this->_debug( 1, true, 'GemType: '. $gemType. ' lookup. - Found '. $matchCount. ' matching gem(s)', 'OK' );
 				return true;
 			} else {
-				$this->_debug( 1, true, 'GemType: '. $gemType. ' lookup. No matching gems found. Check your locale file!', 'Failed' );
+				$this->_debug( 1, true, 'GemType: '. $gemType. ' lookup. - No matching gems found. Check your locale file!', 'Failed' );
 				return true;
 			}
 		} else {
@@ -1342,29 +1425,29 @@ class ArmorySync extends ArmorySyncBase {
 		$armory->region = $this->region;
 		$armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
-		$checkGem = $armory->fetchArmory( $armory->itemTooltip, false, false, false, $gem->id, 'simpleClass' );
+		$content = array();
+		$cacheTag = 'itemTooltip'. $gem->id. 'xml';
+		$fromCache = false;
 
-		if ( $this->_checkContent($checkGem, array('itemTooltips', 'itemTooltip')) ) {
-			$this->compareGem = $checkGem->itemTooltips->itemTooltip;
-			$this->_debug( 1, true, 'Gem: '. $gem->name. ' Parsed gem info', 'OK' );
-			return true;
-		} elseif ( $this->_checkContent($checkGem, array('page')) ) {
-			if ( is_object($checkGem->page) ) {
-				if ( $this->_checkContent($checkGem, array('page', 'itemTooltips', 'itemTooltip')) ) {
-					$this->compareGem = $checkGem->page->itemTooltips->itemTooltip;
-					$this->_debug( 1, true, 'Gem: '. $gem->name. ' Parsed gem info', 'OK' );
-					return true;
-				}
-			} elseif ( is_array($checkGem->page) ) {
-				$page = array_pop( $checkGem->page );
-				if ( $this->_checkContent($page, array('itemTooltips', 'itemTooltip')) ) {
-					$this->compareGem = $page->itemTooltips->itemTooltip;
-					$this->_debug( 1, true, 'Gem: '. $gem->name. ' Parsed gem info', 'OK' );
-					return true;
-				}
-			}
+		if ( $roster->cache->check($cacheTag) ) {
+			$this->_initSimpleParser();
+			$content = $this->simpleParser->parse($roster->cache->get($cacheTag));
+			$fromCache = true;
+		} else {
+			$content = $armory->fetchArmory( $armory->itemTooltip, false, false, false, $gem->id, 'simpleClass' );
 		}
-		$this->_debug( 1, true, 'Gem: '. $gem->name. ' Parsed gem info', 'Failed' );
+
+		if ( $this->_checkContent($content, array('itemTooltips', 'itemTooltip')) ) {
+
+            if ( ! $fromCache ) {
+				$roster->cache->put($armory->xml, $cacheTag);
+			}
+
+			$this->compareGem = $content->itemTooltips->itemTooltip;
+			$this->_debug( 1, true, 'Gem: '. $gem->name. ' - Parsed gem info', 'OK' );
+			return true;
+		}
+		$this->_debug( 1, true, 'Gem: '. $gem->name. ' - Parsed gem info', 'Failed' );
 		return false;
 	}
 
@@ -1385,11 +1468,11 @@ class ArmorySync extends ArmorySyncBase {
 			$idA[1 + $key] = $this->compareGem->id->_CDATA;
 			$this->data["Equipment"][$slot]['Item'] = implode( ':', $idA );
 
-			$this->_debug( 1, true, 'Gem: '. $this->compareGem->name->_CDATA. ' Matched gem properties', 'OK' );
+			$this->_debug( 1, true, 'Gem: '. $this->compareGem->name->_CDATA. ' - Matched gem properties', 'OK' );
 			return true;
 		} else {
 
-			$this->_debug( 1, false, 'Gem: '. $this->compareGem->name->_CDATA. ' Mismatched gem properties', 'OK' );
+			$this->_debug( 1, false, 'Gem: '. $this->compareGem->name->_CDATA. ' - Mismatched gem properties', 'OK' );
 			return false;
 		}
 	}
@@ -1406,10 +1489,23 @@ class ArmorySync extends ArmorySyncBase {
         $armory->region = $this->region;
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
-        //$content = $this->_parseData( $armory->fetchCharacterSkills( $this->memberName, $roster->config['locale'], $this->server ) );
-		$content = $armory->fetchArmory( $armory->characterSkills, $this->memberName, false, $this->server, false, 'simpleClass' );
+		$content = array();
+		$cacheTag = 'characterSkills'. $this->memberName. $this->server. $this->region. 'xml';
+		$fromCache = false;
+
+		if ( $roster->cache->check($cacheTag) ) {
+			$this->_initSimpleParser();
+			$content = $this->simpleParser->parse($roster->cache->get($cacheTag));
+			$fromCache = true;
+		} else {
+			$content = $armory->fetchArmory( $armory->characterSkills, $this->memberName, false, $this->server, false, 'simpleClass' );
+		}
 
         if ( $this->_checkContent( $content, array( 'characterInfo', 'skillTab' ) ) ) {
+
+            if ( ! $fromCache ) {
+				$roster->cache->put($armory->xml, $cacheTag);
+			}
 
             $skillSets = $content->characterInfo->skillTab->skillCategory;
 
@@ -1455,10 +1551,23 @@ class ArmorySync extends ArmorySyncBase {
         $armory->region = $this->region;
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
-        //$content = $this->_parseData( $armory->fetchCharacterReputation( $this->memberName, $roster->config['locale'], $this->server ) );
-		$content = $armory->fetchArmory( $armory->characterReputation, $this->memberName, false, $this->server, false, 'simpleClass' );
+		$content = array();
+		$cacheTag = 'characterReputation'. $this->memberName. $this->server. $this->region. 'xml';
+		$fromCache = false;
+
+		if ( $roster->cache->check($cacheTag) ) {
+			$this->_initSimpleParser();
+			$content = $this->simpleParser->parse($roster->cache->get($cacheTag));
+			$fromCache = true;
+		} else {
+			$content = $armory->fetchArmory( $armory->characterReputation, $this->memberName, false, $this->server, false, 'simpleClass' );
+		}
 
         if ( $this->_checkContent( $content, array( 'characterInfo', 'reputationTab') ) ) {
+
+            if ( ! $fromCache ) {
+				$roster->cache->put($armory->xml, $cacheTag);
+			}
 
             $factionReputation = $content->characterInfo->reputationTab->factionCategory;
 
@@ -1508,10 +1617,23 @@ class ArmorySync extends ArmorySyncBase {
         $armory->region = $this->region;
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
-        //$content = $this->_parseData( $armory->fetchCharacterTalents( $this->memberName, $roster->config['locale'], $this->server ) );
-		$content = $armory->fetchArmory( $armory->characterTalents, $this->memberName, false, $this->server, false, 'simpleClass' );
+		$content = array();
+		$cacheTag = 'characterTalents'. $this->memberName. $this->server. $this->region. 'xml';
+		$fromCache = false;
+
+		if ( $roster->cache->check($cacheTag) ) {
+			$this->_initSimpleParser();
+			$content = $this->simpleParser->parse($roster->cache->get($cacheTag));
+			$fromCache = true;
+		} else {
+			$content = $armory->fetchArmory( $armory->characterTalents, $this->memberName, false, $this->server, false, 'simpleClass' );
+		}
 
         if ( $this->_checkContent( $content, array( 'characterInfo', 'talentTab') ) ) {
+
+            if ( ! $fromCache ) {
+				$roster->cache->put($armory->xml, $cacheTag);
+			}
 
             $armoryTalents = $content->characterInfo->talentTab->talentTree->value;
             $talentArray = preg_split('//', $armoryTalents, -1, PREG_SPLIT_NO_EMPTY);
@@ -1743,8 +1865,21 @@ class ArmorySync extends ArmorySyncBase {
         $armory->region = $this->region;
         $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
-        //if ( $content = $armory->fetchItemTooltipHTML( $itemId, $roster->config['locale'], $this->memberName, $this->server ) ) {
-		if ( $content = $armory->fetchArmory( $armory->itemTooltip, $this->memberName, false, $this->server, $itemId, 'html' ) ) {
+		$content = array();
+		$cacheTag = 'itemTooltip'. $this->memberName. $this->server. $this->region. $itemId. 'html';
+		$fromCache = false;
+
+		if ( $roster->cache->check($cacheTag) ) {
+			$content = $roster->cache->get($cacheTag);
+			$fromCache = true;
+		} else {
+			$content = $armory->fetchArmory( $armory->itemTooltip, $this->memberName, false, $this->server, $itemId, 'html' );
+		}
+		if ( $content ) {
+
+			if ( ! $fromCache ) {
+				$roster->cache->put($content, $cacheTag);
+			}
 
 			$html = $content;
             $content = str_replace("\n", "", $content );
@@ -2240,5 +2375,20 @@ class ArmorySync extends ArmorySyncBase {
         }
     }
 
+	/**
+	 * Private function that includes simpleparser class if needed and then creates
+	 * a new SimpleParser() object if needed
+	 *
+	 * @return void
+	 */
+	function _initSimpleParser()
+	{
+		if( !is_object($this->simpleParser) )
+		{
+			require_once(ROSTER_LIB . 'simpleparser.class.php');
+			$this->simpleParser = new simpleParser();
+		}
+
+	}
 
 }

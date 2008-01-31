@@ -2,6 +2,12 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[358]
+- Updated all locales with gem array
+
+svn[357]
+- removed some item parser methods. Have all been ported to armory.class.php
+
 svn[356]
 - implemented gem tooltips for per page update
 
