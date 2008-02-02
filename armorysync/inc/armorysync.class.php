@@ -20,6 +20,7 @@ if( !defined('IN_ROSTER') )
 }
 
 require_once ($addon['dir'] . 'inc/armorysyncbase.class.php');
+require_once(ROSTER_LIB . 'simpleparser.class.php');
 
 class ArmorySync extends ArmorySyncBase {
 
@@ -129,7 +130,9 @@ class ArmorySync extends ArmorySyncBase {
 				$this->_ppTalentInfo();
 				break;
 			case 'update':
-				$this->_ppUpdate();
+				$ret = $this->_ppUpdate();
+				$cache->cleanCache( 'obj_'. md5( $cacheTag));
+				return $ret;
 				break;
 		}
 
