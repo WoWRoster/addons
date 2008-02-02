@@ -2,6 +2,10 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[361]
+- fixed __php_incomplete_class error
+- fixed chars not added to update table in per page update
+
 svn[359]
 - added roster error notices to armorysync ajax notices (to see notices during ajax updates)
 - implemented character faction and factionEN
