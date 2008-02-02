@@ -102,7 +102,7 @@ class siggenUpdate
 		{
 			if( $config['clear'] )
 			{
-				$this->cleardir($save_dir);
+				$this->cleardir($config['save_dir']);
 			}
 		}
 		return true;

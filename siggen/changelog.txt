@@ -3,6 +3,11 @@
 SigGen Change Log
 
 
+02.01.2008 - v0.3.0.360
+ * SigGen
+   o - Fixed: Fixed notice error during lua updates
+
+
 01.28.2008 - v0.3.0.355
  * SigGen
    o Fixed: Some more fixes to cleardir, this time in the update hook
