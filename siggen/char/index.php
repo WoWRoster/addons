@@ -54,6 +54,7 @@ if( $config_sql && $roster->db->num_rows($config_sql) > 0 )
 		$siggen_saved_find = array('/', '%r', '%s');
 		$siggen_saved_rep  = array(DIR_SEP, ROSTER_URL, $addon['url_full']);
 		$save_loc = str_replace('\\','/',str_replace($siggen_saved_find,$siggen_saved_rep,$row['save_images_dir']));
+		$image_link = '<img src="' . str_replace('.html', '.' . $row['image_type'], makelink('util-' . $addon['basename'] . '-' . $row['config_id'] . '&amp;member=' . $member_str . '&amp;saveonly=0')) . '" alt="" width="' . $row['main_image_size_w'] . '" height="' . $row['main_image_size_h'] . '" />';
 
 		$curr_seo = $roster->config['seo_url'];
 
@@ -61,18 +62,15 @@ if( $config_sql && $roster->db->num_rows($config_sql) > 0 )
 
 		if( $row['link_type'] == 'short' )
 		{
-			print messagebox('<img src="' . str_replace('.html', '.' . $row['image_type'], makelink('util-' . $addon['basename'] . '-' . $row['config_id'] . '&amp;member=' . $member_str)) . '" alt="" width="' . $row['main_image_size_w'] . '" height="' . $row['main_image_size_h'] . '" /><br />'
-				. ROSTER_URL . $row['config_id'] . '/' . $member_str . '.' . $row['image_type']) . '<br />';
+			print messagebox($image_link . '<br />' . ROSTER_URL . $row['config_id'] . '/' . $member_str . '.' . $row['image_type']) . '<br />';
 		}
 		elseif( $row['link_type'] == 'saved' )
 		{
-			print messagebox('<img src="' . str_replace('.html', '.' . $row['image_type'], makelink('util-' . $addon['basename'] . '-' . $row['config_id'] . '&amp;member=' . $member_str)) . '" alt="" width="' . $row['main_image_size_w'] . '" height="' . $row['main_image_size_h'] . '" /><br />'
-				. $save_loc . $member_str . '.' . $row['image_type'], ucfirst($row['config_id']),'sblue','100%') . '<br />';
+			print messagebox($image_link . '<br />' . $save_loc . $member_str . '.' . $row['image_type'], ucfirst($row['config_id']),'sblue','100%') . '<br />';
 		}
 		else
 		{
-			print messagebox('<img src="' . str_replace('.html', '.' . $row['image_type'], makelink('util-' . $addon['basename'] . '-' . $row['config_id'] . '&amp;member=' . $member_str . '&amp;saveonly=0')) . '" alt="" width="' . $row['main_image_size_w'] . '" height="' . $row['main_image_size_h'] . '" /><br />'
-				. str_replace('.html', '.' . $row['image_type'], makelink('util-' . $addon['basename'] . '-' . $row['config_id'] . '&amp;member=' . $member_str,true)), ucfirst($row['config_id']),'sblue','100%') . '<br />';
+			print messagebox($image_link . '<br />' . str_replace('.html', '.' . $row['image_type'], makelink('util-' . $addon['basename'] . '-' . $row['config_id'] . '&amp;member=' . $member_str,true)), ucfirst($row['config_id']),'sblue','100%') . '<br />';
 		}
 
 		$roster->config['seo_url'] = $curr_seo;
