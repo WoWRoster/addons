@@ -477,7 +477,6 @@ if( !empty($messages) )
 
 // ----[ Render the entire page ]---------------------------
 $header .= '<span class="title_text">' . sprintf($roster->locale->act['title_siggen_config'],$addon['version']) . '</span><br />'
-		.  $roster_login->getMessage() . '<br />'
 		.  $messages;
 
 $all_body = ",'radioOn','radioOff','checkboxOn','checkboxOff'";

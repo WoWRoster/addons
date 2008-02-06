@@ -5,7 +5,10 @@ SigGen Change Log
 
 02.01.2008 - v0.3.0.360
  * SigGen
-   o - Fixed: Fixed notice error during lua updates
+   o Fixed: Notice error during lua updates
+   o Changed: Simplified character images view code
+ * SigGen Config
+   o Fixed: Removed getMessage() 
 
 
 01.28.2008 - v0.3.0.355
