@@ -39,17 +39,29 @@ if ( !defined('IN_ROSTER') )
 ?>
 
 <!-- Begin Config Select Box -->
-  <form action="<?php print makelink(); ?>" method="post" enctype="multipart/form-data" name="config_select" onsubmit="submitonce(this)">
 <?php print border('sgreen','start','Select Config Mode'); ?>
-    <table width="145" class="sc_table" cellspacing="0" cellpadding="2">
-      <tr>
-        <td class="sc_row_right2" colspan="2">Current Mode: <span class="titletext"><?php print $config_name; ?></span></td>
-      </tr>
-      <tr>
-        <td class="sc_row1"><?php print $functions->createOptionList($config_list,$config_name,'config_name',3,'',false); ?></td>
-        <td class="sc_row_right1" align="right"><input type="submit" value="Go" /></td>
-      </tr>
-    </table>
+		<table width="150" class="sc_table" cellspacing="0" cellpadding="2">
+			<tr>
+				<td class="sc_row_right2">Current Mode: <span class="titletext"><?php print $config_name; ?></span></td>
+			</tr>
+			<tr>
+				<td class="sc_row_right1"><form action="<?php print makelink(); ?>" method="post" enctype="multipart/form-data" name="config_select" onsubmit="submitonce(this)">
+					<?php print $functions->createOptionList($config_list,$config_name,'config_name',3,'',false); ?>
+					<input type="hidden" name="config_mode" value="switch" />
+					<input type="submit" value="Go" /></form></td>
+			</tr>
+			<tr>
+				<td class="sc_row_right2"><form action="<?php print makelink(); ?>" method="post" enctype="multipart/form-data" name="config_delete" onsubmit="submitonce(this)">
+					<input type="hidden" name="config_mode" value="delete" />
+					<input type="hidden" name="config_name" value="<?php print $config_name; ?>" />
+					<input type="submit" value="Delete Current" /></form></td>
+			</tr>
+			<tr>
+				<td class="sc_row_right1"><form action="<?php print makelink(); ?>" method="post" enctype="multipart/form-data" name="config_new" onsubmit="submitonce(this)">
+					<input type="text" maxlength="20" size="15" value="*create new*" name="config_name" onclick="clickclear(this, '*create new*')" onblur="clickrecall(this,'*create new*')" />
+					<input type="hidden" name="config_mode" value="new" />
+					<input type="submit" value="New" /></form></td>
+			</tr>
+		</table>
 <?php print border('sgreen','end'); ?>
-  </form>
 <!-- End Config Select Box -->

@@ -91,7 +91,7 @@ $lang['fatal_error'] = '<span class="red">Fatal Error</span>';
 $lang['no_gd_error'] = 'GD Functions are not available<br />SigGen REQUIRES GD with FreeType support';
 $lang['config_notfound'] = 'SigGen &quot;Configuration&quot; file not included';
 $lang['functions_notfound'] = 'SigGen Config &quot;Functions Class&quot; file not found<br />[<span class="green">%1$s</span>]';
-$lang['upgrade'] = 'Please upgrade SigGen via RosterCP-&gt;Manage Addons';
+$lang['upgrade_siggen'] = 'Please upgrade SigGen via RosterCP-&gt;Manage Addons';
 $lang['saved_folder_created'] = 'Saved Signatures folder created';
 $lang['saved_folder_not_created_manual'] = 'Saved Signatures folder COULD NOT be created<br />Create it manually';
 $lang['saved_folder_chmoded'] = 'Saved Signatures folder is now writable';
@@ -138,3 +138,10 @@ $lang['import_mustbe_right'] = 'The file must be [<span class="green">%1$s</span
 $lang['import_upload_success'] = 'SigGen import successful';
 $lang['import_upload_failed'] = 'SigGen import failed';
 $lang['import_upload_failed_ver'] = 'SigGen import failed<br />Import file version does not match current version<br /><div align="right">This version [<span class="green">%1$s</span>]<br />File version [<span class="red">%2$s</span>]';
+
+$lang['config_exists'] = '%1$s config already exists, choose another name';
+$lang['config_created'] = '%1$s config created';
+$lang['config_deleted'] = '%1$s config deleted';
+$lang['config_cannot_delete'] = 'You cannot delete a config mode that doesn\'t exist %1$s';
+$lang['config_cannot_delete_default'] = 'You cannot delete a default config';
+$lang['config_invalid'] = 'Config name contains invalid characters<br />Allowed characters are (a-z 0-9 _ -)';
