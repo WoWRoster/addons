@@ -3,7 +3,7 @@
 SigGen Change Log
 
 
-02.01.2008 - v0.3.1.363
+02.06.2008 - v0.3.1.363
  * Important Note
    Clear Directory is still broken, it WILL remove ALL images in the saved directory regardless of which guild is updated
  * SigGen
@@ -17,7 +17,7 @@ SigGen Change Log
    o Fixed: Notice error during lua updates
    o Changed: Simplified character images view code
  * SigGen Config
-   o Fixed: Removed getMessage() 
+   o Fixed: Removed getMessage()
 
 
 01.28.2008 - v0.3.0.355
