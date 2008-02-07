@@ -46,7 +46,6 @@ class SigConfigClass
 	var $message;
 	var $sql_debug;
 
-
 	/**
 	 * Check directory status
 	 *
@@ -729,7 +728,14 @@ class SigConfigClass
 			{
 				include_once( $sql_file );
 
-				$sql = $create_sql['reset'][$config_id];
+				if( in_array($config_id,array('avatar','signature')) )
+				{
+					$sql = $create_sql['reset'][$config_id];
+				}
+				else
+				{
+					$sql = sprintf($create_sql['reset']['default'],$config_id);
+				}
 
 				$roster->db->query($sql) or errorMode( 'resetDefaults: ' . $roster->db->error() );
 
@@ -743,6 +749,93 @@ class SigConfigClass
 		else
 		{
 			$this->setMessage($roster->locale->act['reset_checkbox']);
+		}
+	}
+
+
+
+	/**
+	 * Creates a new config mode
+	 *
+	 * @param string  Config ID
+	 * @return bool   Success or not
+	 */
+	function new_config( $name )
+	{
+		global $roster;
+
+		$exists = $this->getDbData(ROSTER_SIGCONFIGTABLE , '`config_id`' , "`config_id` = '$name'");
+
+		if( $exists == '' )
+		{
+			if( preg_match('/[^a-z0-9_-]/', $name) )
+			{
+				$this->setMessage($roster->locale->act['config_invalid']);
+				return false;
+			}
+			else
+			{
+				$sql_file = SIGGEN_DIR . 'inc/sql.inc';
+
+				if( file_exists($sql_file) )
+				{
+					include_once( $sql_file );
+
+					$sql = sprintf($create_sql['reset']['default'],$name);
+
+					$roster->db->query($sql) or errorMode( 'new_config: ' . $roster->db->error() );
+
+					$this->setMessage(sprintf($roster->locale->act['config_created'],$name));
+					return true;
+				}
+				else
+				{
+					$this->setMessage(sprintf($roster->locale->act['cannot_find_file'],$sql_file));
+					return false;
+				}
+			}
+		}
+		else
+		{
+			$this->setMessage(sprintf($roster->locale->act['config_exists'],$name));
+			return false;
+		}
+	}
+
+
+
+	/**
+	 * Deletes a config mode
+	 *
+	 * @param string  Config ID
+	 * @return bool   Success or not
+	 */
+	function delete_config( $name )
+	{
+		global $roster;
+
+		if( in_array($name,array('avatar','signature')) )
+		{
+			$this->setMessage($roster->locale->act['config_cannot_delete_default']);
+			return false;
+		}
+		else
+		{
+			$exists = $this->getDbData(ROSTER_SIGCONFIGTABLE , '`config_id`' , "`config_id` = '$name'");
+
+			if( $exists != '' )
+			{
+				$sql = "DELETE FROM `" . ROSTER_SIGCONFIGTABLE . "` WHERE `config_id` = '$name';";
+				$roster->db->query($sql) or errorMode( 'delete_config: ' . $roster->db->error() );
+
+				$this->setMessage(sprintf($roster->locale->act['config_deleted'],$name));
+				return true;
+			}
+			else
+			{
+				$this->setMessage(sprintf($roster->locale->act['config_cannot_delete'],$name));
+				return false;
+			}
 		}
 	}
 

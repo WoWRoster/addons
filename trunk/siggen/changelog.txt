@@ -3,6 +3,15 @@
 SigGen Change Log
 
 
+02.01.2008 - v0.3.1.363
+ * Important Note
+   Clear Directory is still broken, it WILL remove ALL images in the saved directory regardless of which guild is updated
+ * SigGen
+   o Added: Ability to add new config modes and delete them
+   o Changed: Put back in 'save_char_convert' to convert accents in saved images
+   o Fixed: Reset to defaults function
+
+
 02.01.2008 - v0.3.0.360
  * SigGen
    o Fixed: Notice error during lua updates

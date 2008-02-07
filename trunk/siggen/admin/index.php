@@ -69,19 +69,36 @@ else
 
 
 // ----[ Get the post/cookie variables ]--------------------
-if( isset( $_POST['config_name'] ) )
+if( isset($_POST['config_mode']) && $_POST['config_mode'] == 'switch' )
 {
 	$config_name = $_POST['config_name'];
-	setcookie( $addon['basename'] . '_configname',$config_name,0,'/' );
+	setcookie($addon['basename'] . '_configname',$config_name,0,'/');
 }
-elseif( isset( $_COOKIE[$addon['basename'] . '_configname'] ) )
+elseif( isset($_COOKIE[$addon['basename'] . '_configname']) )
 {
 	$config_name = $_COOKIE[$addon['basename'] . '_configname'];
 }
 else
 {
 	$config_name = 'signature';
-	setcookie( $addon['basename'] . '_configname',$config_name,0,'/' );
+	setcookie($addon['basename'] . '_configname',$config_name,0,'/');
+}
+
+// Delete/Create configs
+if( isset($_POST['config_mode']) )
+{
+	switch( $_POST['config_mode'] )
+	{
+		case 'new':
+			$functions->new_config($_POST['config_name']);
+			break;
+
+		case 'delete':
+			$functions->delete_config($_POST['config_name']);
+			$config_name = 'signature';
+			setcookie($addon['basename'] . '_configname',$config_name,0,'/');
+			break;
+	}
 }
 
 // Name to test siggen with
@@ -119,7 +136,7 @@ $checkData = $functions->getDbData( (ROSTER_SIGCONFIGTABLE) , '*' , "`config_id`
 // ----[ Check db version for upgrade ]---------------------
 if( $checkData['db_ver'] != $sc_db_ver )
 {
-	print errorMode($roster->locale->act['upgrade']);
+	print errorMode($roster->locale->act['upgrade_siggen']);
 	return;
 }
 

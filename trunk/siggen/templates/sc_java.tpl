@@ -43,6 +43,18 @@ if ( !defined('IN_ROSTER') )
 <!--
 	var siggen_menu=new tabcontent('siggen_menu');
 	siggen_menu.init();
+
+	function clickclear(thisfield, defaulttext) {
+		if (thisfield.value == defaulttext) {
+			thisfield.value = '';
+		}
+	}
+
+	function clickrecall(thisfield, defaulttext) {
+		if (thisfield.value == '') {
+			thisfield.value = defaulttext;
+		}
+	}
 //-->
 </script>
 <script type="text/javascript" src="<?php echo ROSTER_PATH; ?>js/color_functions.js"></script>
