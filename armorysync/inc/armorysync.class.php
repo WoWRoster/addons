@@ -381,7 +381,7 @@ class ArmorySync extends ArmorySyncBase {
 			$this->ppUpdate['jobs'][0]['subjobs'][0]['gemList'][0]['retry']++;
 
 		} else {
-			array_shift($subStep['gemList']);
+			array_shift($this->ppUpdate['jobs'][0]['subjobs'][0]['gemList']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemSearch: ". $gemType. " - Failed", "I give up");
 		}
 	}
@@ -448,7 +448,7 @@ class ArmorySync extends ArmorySyncBase {
 
 			if ( isset($roster->locale->act['gems'][$icon]) ) {
 				$gemType = $roster->locale->act['gems'][$icon];
-				array_unshift($this->ppUpdate['jobs'][0]['subjobs'], array( 'type' => 'gemSearch', 'slot' => $subStep['slot'], 'gemSlot' => $subStep['gemSlot'], 'gemList' => array(), 'compareGems' => array(), 'retry' => 0) );
+				array_unshift($this->ppUpdate['jobs'][0]['subjobs'], array( 'type' => 'gemSearch', 'slot' => $subStep['slot'], 'gemSlot' => $subStep['gemSlot'], 'gemList' => array(), 'compareGems' => array(), 'gemTooltip' => array(), 'retry' => 0) );
 				if ( is_array($gemType) ) {
 					foreach ( $gemType as $gem ) {
 						array_unshift($this->ppUpdate['jobs'][0]['subjobs'][0]['gemList'], array('type' => 'gemList', 'gemType' => $gem, 'retry' => 0 ) );
@@ -487,7 +487,7 @@ class ArmorySync extends ArmorySyncBase {
      *
      */
 	function _ppUpdate() {
-		global $roster, $addon;
+		global $roster, $addon, $update;
 
 		if ( $this->status['characterInfo'] ) {
 			include_once(ROSTER_LIB . 'update.lib.php');
@@ -888,7 +888,7 @@ class ArmorySync extends ArmorySyncBase {
 		$retry = 1;
 		while ( $ret == false ) {
 			$content = array();
-			$cacheTag = 'guildInfo'. $this->memberName. $server. $region. 'xml';
+			$cacheTag = 'guildInfo'. $name. $server. $region. 'xml';
 			$fromCache = false;
 
 			if ( $roster->cache->check($cacheTag) ) {
@@ -896,7 +896,7 @@ class ArmorySync extends ArmorySyncBase {
 				$content = $this->simpleParser->parse($roster->cache->get($cacheTag));
 				$fromCache = true;
 			} else {
-				$content = $armory->fetchArmory( $armory->guildInfo, false, $this->memberName, $this->server, false,'simpleClass' );
+				$content = $armory->fetchArmory( $armory->guildInfo, false, $name, $server, false,'simpleClass' );
 			}
 
 			if ( $this->_checkContent( $content, array('guildInfo', 'guild' ) ) ) {
@@ -936,7 +936,7 @@ class ArmorySync extends ArmorySyncBase {
 		$retry = 1;
 		while ( $ret == false ) {
 			$content = array();
-			$cacheTag = 'characterInfo'. $this->memberName. $server. $region. 'xml';
+			$cacheTag = 'characterInfo'. $name. $server. $region. 'xml';
 			$fromCache = false;
 
 			if ( $roster->cache->check($cacheTag) ) {
@@ -944,7 +944,7 @@ class ArmorySync extends ArmorySyncBase {
 				$content = $this->simpleParser->parse($roster->cache->get($cacheTag));
 				$fromCache = true;
 			} else {
-				$content = $armory->fetchArmory( $armory->characterInfo, $this->memberName, false, $server, false, 'simpleClass' );
+				$content = $armory->fetchArmory( $armory->characterInfo, $name, false, $server, false, 'simpleClass' );
 			}
 
 			if ( $this->_checkContent( $content, array('characterInfo', 'characterTab' ) ) ) {
@@ -1906,7 +1906,8 @@ class ArmorySync extends ArmorySyncBase {
 			$content = str_replace("\t", "", $content );
             //$content = str_replace('<span class="tooltipRight">', "\t", $content );
 			$content = preg_replace('/<img class="socketImg p".*?>(.*?)<br>/', '|cffffffff${1}|r<br>', $content );
-            $content = str_replace("<br/>", "%__BRTAG%", $content );
+			//$content = preg_replace('/(?<=<span class="">)(\+\d+&nbsp;</span><span class="">\w+)(?=</span>)/' , '|cffffffff${1}|r', $content );
+			$content = str_replace("<br/>", "%__BRTAG%", $content );
             $content = str_replace("<br>", "%__BRTAG%", $content );
 			$content = str_replace('&nbsp;', ' ', $content );
 			$content = preg_replace('/\s\s+/', '', $content );
@@ -1920,12 +1921,14 @@ class ArmorySync extends ArmorySyncBase {
 			$content = '';
 			foreach ( $tmpA as $tmp ) {
 				$tmp = preg_replace( '/(.*?)<span class="tooltipRight">(.*?)<\/span>(.*)/', "\${1}\${3}\t\${2}", $tmp );
-				$content .= $tmp. "\n";
+				$content .= $tmp. "%__BRTAG%";
 			}
 
             $content = strip_tags( $content );
 
-            $content = str_replace("%__BRTAG%", "\n", $content );
+
+
+			$content = str_replace("%__BRTAG%", "\n", $content );
 			$content = preg_replace('/\s+\n/', "\n", $content );
             $content = utf8_encode($this->_unhtmlentities( $content ));
             $content = str_replace($roster->locale->act['bindings']['bind_on_pickup'], $roster->locale->act['bindings']['bind'], $content);
@@ -2265,7 +2268,7 @@ class ArmorySync extends ArmorySyncBase {
             $this->_debug( 3, $array, 'Fetched guild members from DB', 'OK' );
             return $array;
         } else {
-            $this->_debug( 3, $array, 'Fetched guild members from DB', 'Failed' );
+            $this->_debug( 3, array(), 'Fetched guild members from DB', 'Failed' );
             return array();
         }
     }

@@ -263,7 +263,7 @@ class ArmorySyncJob extends ArmorySyncBase {
                             if ( $this->_insertUploadRule( $name, $server, $region, 0 ) ) {
                                 if ( $this->_prepareUpdateMemberlist( $id, $name, $server, $region ) ) {
                                     $ret = $this->_updateStatusMemberlist();
-                                    $link = makelink('guild-armorysync-memberlist&guild='. $id);
+                                    $link = makelink('guild-armorysync-memberlist&a=g:'. $id);
                                     $this->_showStatusMemberlist();
                                     if ( $ret ) {
 										$this->util_type = 'addguild';
