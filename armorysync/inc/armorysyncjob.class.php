@@ -973,8 +973,12 @@ class ArmorySyncJob extends ArmorySyncBase {
 				if ( ! $this->ArmorySync->synchMemberByIDPerPage( $active_member['server'], $active_member['member_id'], $active_member['name'], $active_member['region'], $active_member['guild_id']) ) {
 					$this->dataNotAccepted = 1;
 				}
-			} else {
+			} elseif ( $addon['config']['armorysync_fetch_method'] == 1 ) {
 				if ( ! $this->ArmorySync->synchMemberByID( $active_member['server'], $active_member['member_id'], $active_member['name'], $active_member['region'], $active_member['guild_id']) ) {
+					$this->dataNotAccepted = 1;
+				}
+			} else {
+				if ( ! $this->ArmorySync->synchMemberByIDSmartSteps( $active_member['server'], $active_member['member_id'], $active_member['name'], $active_member['region'], $active_member['guild_id']) ) {
 					$this->dataNotAccepted = 1;
 				}
 			}
