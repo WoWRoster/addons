@@ -1,6 +1,8 @@
 ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
+svn[367]
+- added new fetch method to config
 
 svn[366]
 - prefixed gem ids with a 99 as gems overide themself in a mixed cp upload/armorysync environment
