@@ -311,7 +311,7 @@ class ArmorySync extends ArmorySyncBase {
 	function _ppGemFetchTooltip( $subStep = false ) {
 
 		$gem = $this->data['Equipment'][$subStep['slot']]['Gem'][$subStep['gemSlot']];
-		$id = array_shift(explode(':', $gem['Item']));
+		$id =  substr( array_shift(explode(':', $gem['Item'])), 2 );
 
 		$gemTooltip = str_replace("\n", "<br>", $this->_getItemTooltip($id));
 
@@ -1473,12 +1473,12 @@ class ArmorySync extends ArmorySyncBase {
 		if ( $this->compareGem->hasProp('gemProperties') && $this->compareGem->gemProperties->_CDATA == $gem['_tmp_enchant'] ) {
 
 			$this->data["Equipment"][$slot]['Gem'][$key]['Name'] = $this->compareGem->name->_CDATA;
-			$this->data["Equipment"][$slot]['Gem'][$key]['Item'] = $this->compareGem->id->_CDATA. ":0:0:0:0:0:0:0";
+			$this->data["Equipment"][$slot]['Gem'][$key]['Item'] = '99'. $this->compareGem->id->_CDATA. ":0:0:0:0:0:0:0";
 			$this->data["Equipment"][$slot]['Gem'][$key]['Color'] = $this->_getItemColor($this->compareGem->overallQualityId->_CDATA);
 			//unset( $this->data["Equipment"][$slot]['Gem'][$key]['_tmp_enchant'] );
 
 			$idA = explode( ':', $this->data["Equipment"][$slot]['Item'] );
-			$idA[1 + $key] = $this->compareGem->id->_CDATA;
+			$idA[1 + $key] = '99'. $this->compareGem->id->_CDATA;
 			$this->data["Equipment"][$slot]['Item'] = implode( ':', $idA );
 
 			$this->_debug( 1, true, 'Gem: '. $this->compareGem->name->_CDATA. ' - Matched gem properties', 'OK' );
