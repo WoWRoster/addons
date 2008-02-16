@@ -2,10 +2,12 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[366]
+- prefixed gem ids with a 99 as gems overide themself in a mixed cp upload/armorysync environment
+
 svn[365]
 - fixed looping in _ppGemSearchArmory
 - fixed some notices
-
 
 svn[361]
 - fixed __php_incomplete_class error
