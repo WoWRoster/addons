@@ -1,6 +1,11 @@
 ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
+
+svn[368]
+- implemented a smart update mode
+-- this one will automaticly detect when its close to max_execution_time and do a reload
+
 svn[367]
 - added new fetch method to config
 

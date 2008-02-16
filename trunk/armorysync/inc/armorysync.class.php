@@ -88,6 +88,108 @@ class ArmorySync extends ArmorySyncBase {
      * @param int $memberId
      * @return bool
      */
+    function synchMemberByIDSmartSteps( $server, $memberId = 0, $memberName = false, $region = false, $guildId = 0 ) {
+        global $addon, $roster;
+
+        $this->server = $server;
+        $this->memberId = $memberId;
+        $this->memberName = $memberName;
+        $this->region = $region;
+        $this->guildId = $guildId;
+
+		require_once(ROSTER_LIB . 'cache.php');
+		$cache = new RosterCache;
+		$cache->cache_dir = $addon['dir']. 'cache'. DIR_SEP;
+		$cache->object_ttl = 600;
+
+		$cacheTag = 'job_'.$server.$memberId.$region.$guildId;
+
+		if ( $cache->check($cacheTag) ) {
+			$this->ppUpdate = $cache->get($cacheTag);
+			$this->data = $this->ppUpdate['data'];
+			$this->status = $this->ppUpdate['status'];
+			unset($this->ppUpdate['data']);
+		}
+
+		$maxExTime = get_cfg_var('max_execution_time');
+		if ( $maxExTime < 10 ) {
+			$this->_debug( 0, false, "Your max_execution_time of ". $maxExTime . "secs is very low. Try per page update!", "Aborting");
+			$this->status = array(
+								'guildInfo' => 0,
+								'characterInfo' => 0,
+								'skillInfo' => 0,
+								'reputationInfo' => 0,
+								'equipmentInfo' => 0,
+								'talentInfo' => 0,
+							);
+			$this->updateDone = true;
+			return false;
+		}
+
+		$breakTime = $maxExTime - $addon['config']['armorysync_fetch_timeout'] - 1;
+		if ( $breakTime <= $addon['config']['armorysync_fetch_timeout'] ) {
+			$this->_debug( 0, false, "Your fetch timeout of ". $addon['config']['armorysync_fetch_timeout'] . "secs is very high. Try lowering it!", "Aborting");
+			$this->status = array(
+								'guildInfo' => 0,
+								'characterInfo' => 0,
+								'skillInfo' => 0,
+								'reputationInfo' => 0,
+								'equipmentInfo' => 0,
+								'talentInfo' => 0,
+							);
+			$this->updateDone = true;
+			return false;
+		}
+		$totalTime = round(format_microtime() - ROSTER_STARTTIME, 2);
+
+		while ( $totalTime < $breakTime ) {
+
+			$step = $this->ppUpdate['jobs'][0];
+
+			switch ($step['type']) {
+				case 'charInfo':
+					$this->_ppCharInfo();
+					break;
+				case 'skillInfo':
+					$this->_ppSkillInfo();
+					break;
+				case 'repInfo':
+					$this->_ppRepInfo();
+					break;
+				case 'equipInfo';
+					$this->_ppEquipInfo();
+					break;
+				case 'talentInfo':
+					$this->_ppTalentInfo();
+					break;
+				case 'update':
+					$ret = $this->_ppUpdate();
+					$cache->cleanCache( 'obj_'. md5( $cacheTag));
+					return $ret;
+					break;
+			}
+
+			$totalTime = round(format_microtime() - ROSTER_STARTTIME, 2);
+		}
+
+		$this->_debug( 1, false, "Char: ". $this->memberName. " - Getting close to max_execution_time", "Reloading");
+
+		if ( ! $this->updateDone ) {
+			$this->ppUpdate['data'] = $this->data;
+			$this->ppUpdate['status'] = $this->status;
+			$cache->put($this->ppUpdate, $cacheTag);
+		} else {
+			$cache->cleanCache( 'obj_'. md5( $cacheTag));
+		}
+	}
+
+    /**
+     * syncronises one member with blizzards armory
+     *
+     * @param string $server
+     * @param int $memberId
+     * @return bool
+     */
     function synchMemberByIDPerPage( $server, $memberId = 0, $memberName = false, $region = false, $guildId = 0 ) {
         global $addon, $roster;
 
@@ -171,6 +273,7 @@ class ArmorySync extends ArmorySyncBase {
 								'equipmentInfo' => 0,
 								'talentInfo' => 0,
 							);
+			$this->updateDone = true;
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: CharInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: CharInfo failed", "I give up");
 		}
