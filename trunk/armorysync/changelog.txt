@@ -2,6 +2,10 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[370]
+- fixed messages for non existing chars on char add
+- removed gem spencerite as it is unknown in the armory
+
 svn[369]
 - implemented option to not update on incomplete data
 - implemented cache dir writeable check

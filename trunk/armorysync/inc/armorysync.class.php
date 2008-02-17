@@ -1145,7 +1145,7 @@ class ArmorySync extends ArmorySyncBase {
 				$ret = false;
 			}
 			$retry++;
-			if ( $retry > 3 ) {
+			if ( $retry > $this->retrys ) {
 				break;
 			}
 		}
