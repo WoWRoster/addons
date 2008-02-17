@@ -48,6 +48,7 @@ class ArmorySync extends ArmorySyncBase {
 	var $retrys = 2;
 
 	var $updateDone = false;
+	var $dataIncomplete = false;
 
     var $datas = array();
 
@@ -67,6 +68,7 @@ class ArmorySync extends ArmorySyncBase {
      * @return bool
      */
     function ArmorySync() {
+		global $addon;
 		$this->ppUpdate = array(
 				'jobs' => array(
 					array( 'type' => 'charInfo', 'retry' => 0 ),
@@ -79,6 +81,7 @@ class ArmorySync extends ArmorySyncBase {
 				'data' => array(),
 				'status' => array(),
 		);
+		$this->retrys = $addon['config']['armorysync_fetch_retrys'];
 	}
 
     /**
@@ -149,6 +152,10 @@ class ArmorySync extends ArmorySyncBase {
 			switch ($step['type']) {
 				case 'charInfo':
 					$this->_ppCharInfo();
+					if ( $this->updateDone ) {
+						$cache->cleanCache( 'obj_'. md5( $cacheTag));
+						return false;
+					}
 					break;
 				case 'skillInfo':
 					$this->_ppSkillInfo();
@@ -168,7 +175,11 @@ class ArmorySync extends ArmorySyncBase {
 					return $ret;
 					break;
 			}
-
+			if ( !$addon['config']['armorysync_update_incomplete'] && $this->updateDone ) {
+				$this->_debug( 0, false, "Char: ". $this->memberName. " has incomplete data", "Aborting");
+				$cache->cleanCache( 'obj_'. md5( $cacheTag));
+				return false;
+			}
 			$totalTime = round(format_microtime() - ROSTER_STARTTIME, 2);
 		}
 
@@ -284,6 +295,7 @@ class ArmorySync extends ArmorySyncBase {
      *
      */
 	function _ppSkillInfo() {
+		global $addon;
 		$ret = $this->_getSkillInfo();
 		if ( $ret ) {
 			array_shift($this->ppUpdate['jobs']);
@@ -291,6 +303,9 @@ class ArmorySync extends ArmorySyncBase {
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: SkillInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
 			$this->ppUpdate['jobs'][0]['retry']++;
 		} else {
+			if ( !$addon['config']['armorysync_update_incomplete'] ) {
+				$this->updateDone = true;
+			}
 			array_shift($this->ppUpdate['jobs']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: SkillInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: SkillInfo failed", "I give up");
@@ -302,6 +317,7 @@ class ArmorySync extends ArmorySyncBase {
      *
      */
 	function _ppRepInfo() {
+		global $addon;
 		$ret = $this->_getReputationInfo();
 		if ( $ret ) {
 			array_shift($this->ppUpdate['jobs']);
@@ -309,6 +325,9 @@ class ArmorySync extends ArmorySyncBase {
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: RepInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
 			$this->ppUpdate['jobs'][0]['retry']++;
 		} else {
+			if ( !$addon['config']['armorysync_update_incomplete'] ) {
+				$this->updateDone = true;
+			}
 			array_shift($this->ppUpdate['jobs']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: RepInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: RepInfo failed", "I give up");
@@ -347,6 +366,7 @@ class ArmorySync extends ArmorySyncBase {
      *
      */
 	function _ppItemInfo( $subStep = false ) {
+		global $addon;
 		$ret = $this->_getEquipmentInfo($subStep['slot']);
 
 		if ( $ret ) {
@@ -356,6 +376,9 @@ class ArmorySync extends ArmorySyncBase {
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Failed", "Retry: ". $this->ppUpdate['jobs'][0]['subjobs'][0]['retry']);
 			$this->ppUpdate['jobs'][0]['subjobs'][0]['retry']++;
 		} else {
+			if ( !$addon['config']['armorysync_update_incomplete'] ) {
+				$this->updateDone = true;
+			}
 			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
 			unset($this->data['Equipment'][$subStep['slot']]);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Failed", "Retry: ". $this->ppUpdate['jobs'][0]['subjobs'][0]['retry']);
@@ -368,6 +391,7 @@ class ArmorySync extends ArmorySyncBase {
      *
      */
 	function _ppItemTooltip( $subStep = false ) {
+		global $addon;
 		$ret = $this->_getEquipmentTooltip($subStep['slot']);
 
 		if ( $ret ) {
@@ -382,6 +406,9 @@ class ArmorySync extends ArmorySyncBase {
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Failed", "Retry: ". $this->ppUpdate['jobs'][0]['subjobs'][0]['retry']);
 			$this->ppUpdate['jobs'][0]['subjobs'][0]['retry']++;
 		} else {
+			if ( !$addon['config']['armorysync_update_incomplete'] ) {
+				$this->updateDone = true;
+			}
 			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
 			unset($this->data['Equipment'][$subStep['slot']]);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Failed", "Retry: ". $this->ppUpdate['jobs'][0]['subjobs'][0]['retry']);
@@ -412,7 +439,7 @@ class ArmorySync extends ArmorySyncBase {
      *
      */
 	function _ppGemFetchTooltip( $subStep = false ) {
-
+		global $addon;
 		$gem = $this->data['Equipment'][$subStep['slot']]['Gem'][$subStep['gemSlot']];
 		$id =  substr( array_shift(explode(':', $gem['Item'])), 2 );
 
@@ -426,6 +453,9 @@ class ArmorySync extends ArmorySyncBase {
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemTooltip: ". $gem['Name']. " - Failed", "Retry: ". $this->ppUpdate['jobs'][0]['subjobs'][0]['gemTooltip'][0]['retry'] );
 			$this->ppUpdate['jobs'][0]['subjobs'][0]['gemTooltip'][0]['retry']++;
 		} else {
+			if ( !$addon['config']['armorysync_update_incomplete'] ) {
+				$this->updateDone = true;
+			}
 			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
 			unset($this->data['Equipment'][$subStep['slot']]['Gem'][$subStep['gemSlot']]);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemTooltip: ". $gem['Name']. " - Failed", "I give up" );
@@ -437,6 +467,7 @@ class ArmorySync extends ArmorySyncBase {
      *
      */
 	function _ppGemFetchAndCompare( $subStep = false ) {
+		global $addon;
 		$compareGem = $subStep['compareGems'][0];
 		$slot = $subStep['slot'];
 		$gemSlot = $subStep['gemSlot'];
@@ -458,6 +489,9 @@ class ArmorySync extends ArmorySyncBase {
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemSlot: ". $gemSlot. " GemInfo: ". $compareGem->name. " - Failed", "Retry: ". $this->ppUpdate['jobs'][0]['subjobs'][0]['compareGem'][0]['retry']);
 			$this->ppUpdate['jobs'][0]['subjobs'][0]['compareGems'][0]['retry']++;
 		} else {
+			if ( !$addon['config']['armorysync_update_incomplete'] ) {
+				$this->updateDone = true;
+			}
 			array_shift($this->ppUpdate['jobs'][0]['subjobs'][0]['compareGems']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemSlot: ". $gemSlot. " GemInfo: ". $compareGem->name. " - Failed", "I give up");
 
@@ -469,6 +503,7 @@ class ArmorySync extends ArmorySyncBase {
      *
      */
 	function _ppGemSearchArmory( $subStep = false ) {
+		global $addon;
 		$gem = $this->data['Equipment'][$subStep['slot']]['Gem'][$subStep['gemSlot']];
 		$gemType = $subStep['gemList'][0]['gemType'];
 		$ret = $this->_getGemList( $gem, $gemType );
@@ -484,6 +519,9 @@ class ArmorySync extends ArmorySyncBase {
 			$this->ppUpdate['jobs'][0]['subjobs'][0]['gemList'][0]['retry']++;
 
 		} else {
+			if ( !$addon['config']['armorysync_update_incomplete'] ) {
+				$this->updateDone = true;
+			}
 			array_shift($this->ppUpdate['jobs'][0]['subjobs'][0]['gemList']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemSearch: ". $gemType. " - Failed", "I give up");
 		}
@@ -561,6 +599,9 @@ class ArmorySync extends ArmorySyncBase {
 				}
 				$this->_debug( 1, false, "Char: ". $this->memberName. " Slot: ". $subStep['slot']. " Geminfo: ". $this->data['Equipment'][$subStep['slot']]['Gem'][$subStep['gemSlot']]['Icon']. " - No info from cache", "OK");
 			} else {
+				if ( !$addon['config']['armorysync_update_incomplete'] ) {
+					$this->updateDone = true;
+				}
 				$this->_debug( 0, $gem['Icon'], 'Unlocalized gem found for icon: '. $icon,  'PROBLEM' );
 			}
 		}
@@ -571,6 +612,7 @@ class ArmorySync extends ArmorySyncBase {
      *
      */
 	function _ppTalentInfo() {
+		global $addon;
 		$ret = $this->_getTalentInfo();
 		if ( $ret ) {
 			array_shift($this->ppUpdate['jobs']);
@@ -578,8 +620,10 @@ class ArmorySync extends ArmorySyncBase {
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: TalentInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
 			$this->ppUpdate['jobs'][0]['retry']++;
 		} else {
+			if ( !$addon['config']['armorysync_update_incomplete'] ) {
+				$this->updateDone = true;
+			}
 			array_shift($this->ppUpdate['jobs']);
-			$this->ppProgress = true;
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: TalentInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: TalentInfo failed", "I give up");
 		}
@@ -610,6 +654,7 @@ class ArmorySync extends ArmorySyncBase {
 				return false;
 			}
 		} else {
+			$this->updateDone = true;
 			$this->message = "No infos for ". $this->memberName. "<br>Character has probalby not been updated for a while";
 			$this->_debug( 1, false, 'Synced armory data '. $this->memberName. ' with roster',  'Failed' );
 			return false;
@@ -633,7 +678,11 @@ class ArmorySync extends ArmorySyncBase {
         $this->guildId = $guildId;
 
         $this->_getRosterData();
-        if ( $this->status['characterInfo'] ) {
+		$this->updateDone = true;
+		if ( !$addon['config']['armorysync_update_incomplete'] && $this->dataIncomplete ) {
+			$this->_debug( 0, $this->data, 'Incomplete data',  'Aborting' );
+			return false;
+		} elseif ( $this->status['characterInfo'] ) {
             include_once(ROSTER_LIB . 'update.lib.php');
             $update = new update;
             $update->fetchAddonData();
@@ -649,7 +698,7 @@ class ArmorySync extends ArmorySyncBase {
                 return false;
             }
         } else {
-            $this->message = "No infos for ". $this->memberName. "<br>Character has probalby not been updated for a while";
+            $this->message = "No infos for ". $this->memberName. "<br>Character has probably not been updated for a while";
             $this->_debug( 1, false, 'Synced armory data '. $this->memberName. ' with roster',  'Failed' );
             return false;
         }
@@ -720,8 +769,14 @@ class ArmorySync extends ArmorySyncBase {
 		$this->updateDone = true;
         if ( $this->status['characterInfo'] ) {
 
-			$this->_doMethodWithRetrys('_getSkillInfo');
-			$this->_doMethodWithRetrys('_getReputationInfo');
+			if ( !$this->_doMethodWithRetrys('_getSkillInfo') && !$addon['config']['armorysync_update_incomplete'] ) {
+				$this->dataIncomplete = true;
+				return;
+			}
+			if ( !$this->_doMethodWithRetrys('_getReputationInfo') && !$addon['config']['armorysync_update_incomplete'] ) {
+				$this->dataIncomplete = true;
+				return;
+			}
 
 			require_once(ROSTER_LIB . 'cache.php');
 			$cache = new RosterCache;
@@ -742,7 +797,10 @@ class ArmorySync extends ArmorySyncBase {
 
 					$this->_doMethodWithRetrys('_getEquipmentInfo', $slot);
 					if ( isset($this->data["Equipment"][$slot]['Name']) ) {
-						$this->_doMethodWithRetrys('_getEquipmentTooltip', $slot);
+						if ( !$this->_doMethodWithRetrys('_getEquipmentTooltip', $slot) && !$addon['config']['armorysync_update_incomplete'] ) {
+							$this->dataIncomplete = true;
+							return;
+						}
 						if ( isset($this->data["Equipment"][$slot]['Gem'] ) ) {
 
 							foreach ( $this->data["Equipment"][$slot]['Gem'] as $key => $gem ) {
@@ -767,12 +825,14 @@ class ArmorySync extends ArmorySyncBase {
 									}
 
 									if ( count(array_keys($this->gemList)) ) {
+										$gemFound = false;
 										foreach ( $this->gemList as $searchListGem ) {
 
 											$this->_doMethodWithRetrys('_getGemInfo', $searchListGem);
 											if ( is_object($this->compareGem) ) {
 												if ( $this->_compareGemInfo( $slot, $key, $gem ) ) {
 
+													$gemFound = true;
 													$gemTooltip = str_replace("\n", "<br>", $this->_doMethodWithRetrys('_getItemTooltip', $searchListGem->id));
 													if ( $gemTooltip ) {
 
@@ -783,10 +843,26 @@ class ArmorySync extends ArmorySyncBase {
 															$gems[$gem['Icon']][$gem['_tmp_enchant']] = $this->data["Equipment"][$slot]['Gem'][$key];
 															$cacheWriteBack = true;
 														}
+													} elseif ( !$addon['config']['armorysync_update_incomplete'] ) {
+														$this->dataIncomplete = true;
+														return;
 													}
 													break;
 												}
 											}
+										}
+										if ( !$gemFound ) {
+											$this->_debug( 0, $gem['Icon'], 'No gems found for icon '. $gem['Icon']. 'on Armory search. Check your locales! ',  'PROBLEM' );
+											if ( !$addon['config']['armorysync_update_incomplete'] ) {
+												$this->dataIncomplete = true;
+												return;
+											}
+										}
+									} else {
+										$this->_debug( 0, $gem['Icon'], 'No gems found for icon '. $gem['Icon']. 'on Armory search. Check your locales! ',  'PROBLEM' );
+										if ( !$addon['config']['armorysync_update_incomplete'] ) {
+											$this->dataIncomplete = true;
+											return;
 										}
 									}
 								} else {
@@ -804,6 +880,10 @@ class ArmorySync extends ArmorySyncBase {
 						}
 					} else {
 						unset($this->data["Equipment"][$slot]);
+						if ( !$addon['config']['armorysync_update_incomplete'] ) {
+							$this->dataIncomplete = true;
+							return;
+						}
 					}
 				}
 			}
@@ -811,7 +891,10 @@ class ArmorySync extends ArmorySyncBase {
 				$gems = $cache->put($gems, $cacheTag);
 			}
 
-			$this->_doMethodWithRetrys('_getTalentInfo');
+			if ( !$this->_doMethodWithRetrys('_getTalentInfo') && !$addon['config']['armorysync_update_incomplete'] ) {
+				$this->dataIncomplete = true;
+				return;
+			}
             $this->_debug( 1, $this->data, 'Parsed all armory data',  'OK' );
         } else {
 			$this->status = array(  'guildInfo' => 0,
