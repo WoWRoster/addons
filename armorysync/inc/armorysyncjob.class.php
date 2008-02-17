@@ -424,13 +424,13 @@ class ArmorySyncJob extends ArmorySyncBase {
                             }
                         } else {
                             $html = "&nbsp;&nbsp;".
-                                    $roster->locale->act['error_guild_insert'].
+                                    $roster->locale->act['error_char_insert'].
                                     "&nbsp;&nbsp;";
                             $out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
                         }
                     } else {
                         $html = "&nbsp;&nbsp;".
-                                $roster->locale->act['error_guild_notexist'].
+                                $roster->locale->act['error_char_notexist'].
                                 "&nbsp;&nbsp;";
                         $out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
                     }
