@@ -2,6 +2,12 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[369]
+- implemented option to not update on incomplete data
+- implemented cache dir writeable check
+- implemented a max_execution_time to low check on character update method
+- implemented number of retrys as option from config menu
+
 svn[368]
 - implemented a smart update mode
 -- this one will automaticly detect when its close to max_execution_time and do a reload

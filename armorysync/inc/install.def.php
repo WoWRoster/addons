@@ -29,7 +29,7 @@ class armorysyncInstall
 	var $active = true;
 	var $icon = 'inv_misc_missilesmall_blue';
 
-	var $version = '2.6.0.368';
+	var $version = '2.6.0.369';
 	var $wrnet_id = '122';
 
 	var $fullname = 'Armory Sync';
@@ -83,6 +83,8 @@ class armorysyncInstall
 		$installer->add_config("'1300', 'armorysync_reloadwaittime', '2', 'text{4|4', 'armorysync_conf'");
 		$installer->add_config("'1325', 'armorysync_fetch_method', '2', 'select{be smart^2|per Character^1|per Page^0', 'armorysync_conf'");
 		$installer->add_config("'1350', 'armorysync_fetch_timeout', '4', 'text{2|2', 'armorysync_conf'");
+		$installer->add_config("'1352', 'armorysync_fetch_retrys', '2', 'text{2|2', 'armorysync_conf'");
+		$installer->add_config("'1355', 'armorysync_update_incomplete', '1', 'radio{On^1|Off^0', 'armorysync_conf'");
 		$installer->add_config("'1360', 'armorysync_skip_start', '0', 'radio{On^1|Off^0', 'armorysync_conf'");
 		$installer->add_config("'1370', 'armorysync_status_hide', '0', 'radio{On^1|Off^0', 'armorysync_conf'");
 		$installer->add_config("'1400', 'armorysync_protectedtitle', 'Banker', 'text{64|20', 'armorysync_conf'");
@@ -303,19 +305,6 @@ class armorysyncInstall
 			$installer->update_config('1250', 'config_value=1');
 		}
 
-		if ( version_compare('2.6.0.367', $oldversion,'>') == true ) {
-			$installer->update_config('1325', 'form_type="select{be smart^2|per Character^1|per Page^0"');
-		}
-
-		if ( version_compare('2.6.0.368', $oldversion,'>') == true ) {
-			$installer->remove_config('1325');
-			$installer->remove_config('1300');
-			$installer->remove_config('1350');
-			$installer->add_config("'1300', 'armorysync_reloadwaittime', '2', 'text{4|4', 'armorysync_conf'");
-			$installer->add_config("'1325', 'armorysync_fetch_method', '2', 'select{be smart^2|per Character^1|per Page^0', 'armorysync_conf'");
-			$installer->add_config("'1350', 'armorysync_fetch_timeout', '4', 'text{2|2', 'armorysync_conf'");
-		}
-
 		if ( version_compare('2.6.0.330', $oldversion,'>') == true ) {
 				$installer->add_config("'1325', 'armorysync_fetch_method', '1', 'select{per Character^1|per Page^0', 'armorysync_conf'");
 				$installer->drop_table( $installer->table('jobqueue') );
@@ -340,6 +329,24 @@ class armorysyncInstall
 									 `log` text,
 									 PRIMARY KEY  (`job_id`,`member_id`)
 									" );
+		}
+
+		if ( version_compare('2.6.0.367', $oldversion,'>') == true ) {
+			$installer->update_config('1325', 'form_type="select{be smart^2|per Character^1|per Page^0"');
+		}
+
+		if ( version_compare('2.6.0.368', $oldversion,'>') == true ) {
+			$installer->remove_config('1325');
+			$installer->remove_config('1300');
+			$installer->remove_config('1350');
+			$installer->add_config("'1300', 'armorysync_reloadwaittime', '2', 'text{4|4', 'armorysync_conf'");
+			$installer->add_config("'1325', 'armorysync_fetch_method', '2', 'select{be smart^2|per Character^1|per Page^0', 'armorysync_conf'");
+			$installer->add_config("'1350', 'armorysync_fetch_timeout', '4', 'text{2|2', 'armorysync_conf'");
+		}
+
+		if ( version_compare('2.6.0.369', $oldversion,'>') == true ) {
+			$installer->add_config("'1352', 'armorysync_fetch_retrys', '2', 'text{2|2', 'armorysync_conf'");
+			$installer->add_config("'1355', 'armorysync_update_incomplete', '1', 'radio{On^1|Off^0', 'armorysync_conf'");
 		}
 
 		return true;

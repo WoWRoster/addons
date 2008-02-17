@@ -127,6 +127,70 @@ class ArmorySyncJob extends ArmorySyncBase {
     }
 
     /**
+     * Check if ArmorySync cache dir is writeable
+     *
+     */
+    function _isCacheWriteable() {
+        global $addon;
+		$dir = $addon['dir']. 'cache';
+        $ret = is_writable($dir);
+        $this->_debug( 2, $ret, 'Check ArmorySync cache dir writeable', $ret ? 'OK': 'Failed' );
+        return $ret;
+    }
+
+    /**
+     * Show error on cache dir not writeable
+     *
+     */
+    function _showErrorCacheNotWriteable() {
+        global $roster, $addon;
+
+        $html = $roster->locale->act['cache_not_writable_message'];
+        $out = messagebox( $html , "<span class=\"title_text\">". $roster->locale->act['cache_not_writable'].
+						  "</span>" , $style='sred' , '400px' );
+        $this->_debug( 3, $out, 'Printed error message', 'OK');
+        print $out;
+    }
+
+    /**
+     * Check if max_execution_time is high enough on Character update method
+     *
+     */
+    function _isMaxExTimeHighEnoughOnCharachterUpdate() {
+        global $addon;
+		$method = $addon['config']['armorysync_fetch_method'];
+		$maxExTime = get_cfg_var('max_execution_time');
+		$assumedFailedFetches = 50 / 100 * 20; // 20% of 50 fetches
+		$fetchTimeout = $addon['config']['armorysync_fetch_timeout'];
+		$retrys = $addon['config']['armorysync_fetch_retrys'];
+		$needed = $assumedFailedFetches * $fetchTimeout * $retrys;
+        $ret = $method == 1 && $maxExTime <= $needed ? false : true;
+        $this->_debug( 2, $ret, 'Check MaxExTime on Character Update method', $ret ? 'OK': 'Failed' );
+        return $ret;
+    }
+
+    /**
+     * Show error on cache dir not writeable
+     *
+     */
+    function _showErrorMexExTimeToLow() {
+        global $roster, $addon;
+
+		$maxExTime = get_cfg_var('max_execution_time');
+		$assumedFailedFetches = 50 / 100 * 20; // 20% of 50 fetches
+		$fetchTimeout = $addon['config']['armorysync_fetch_timeout'];
+		$retrys = $addon['config']['armorysync_fetch_retrys'];
+		$needed = $assumedFailedFetches * $fetchTimeout * $retrys;
+
+        $html = sprintf( $roster->locale->act['max_execution_time_low_message'],
+						$maxExTime, $fetchTimeout, $retrys, $needed);
+        $out = messagebox( $html , "<span class=\"title_text\">". $roster->locale->act['max_execution_time_low'].
+						  "</span>" , $style='sred' , '500px' );
+        $this->_debug( 3, $out, 'Printed error message', 'OK');
+        print $out;
+    }
+
+    /**
      * fetch insert jobid, fill jobqueue
      *
      */
@@ -147,6 +211,16 @@ class ArmorySyncJob extends ArmorySyncBase {
 
         if ( ! $this->_isRequiredArmorySyncVersion() ) {
             $this->_showErrorArmorySyncNotUpgraded();
+            return;
+        }
+
+        if ( ! $this->_isCacheWriteable() ) {
+            $this->_showErrorCacheNotWriteable();
+            return;
+        }
+
+        if ( ! $this->_isMaxExTimeHighEnoughOnCharachterUpdate() ) {
+            $this->_showErrorMexExTimeToLow();
             return;
         }
 

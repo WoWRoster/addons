@@ -35,7 +35,9 @@ $lang['admin']['armorysync_synchcutofftime']	= 'Sync cutoff time|Zeit in Tagen.<
 $lang['admin']['armorysync_use_ajax']	= 'Benutze AJAX|Benutze AJAX für Status Updates oder nicht.';
 $lang['admin']['armorysync_reloadwaittime']	= 'Reload wait time|Zeit in Sekunden.<br />Zeit in Sekunden bevor die nächste Synchronisierung angestossen wird.';
 $lang['admin']['armorysync_fetch_timeout'] = 'Armory Fetch timeout|Zeit in Sekunden bis das Herunterladen<br />einer einzelnen XML Datei abgebrochen wird.';
+$lang['admin']['armorysync_fetch_retrys'] = 'Armory Fetch Retrys|How many retrys on failed fetched.';
 $lang['admin']['armorysync_fetch_method'] = 'Armory Fetch method|Per char will do a reload per Character.<br />Per page will do a reload after every page that is fetched from the armory.';
+$lang['admin']['armorysync_update_incomplete'] = 'Update incomplete data|This option determines if characters with incomplete data will be updated';
 $lang['admin']['armorysync_skip_start'] = 'Überspringe die Startseite|Überspringe die Startseite bei <b>ArmorySync</b> updates.';
 $lang['admin']['armorysync_status_hide'] = 'Verstecke das Statusfenster initial|Versteckt das Status Fenster von <b>ArmorySync</b> beim ersten Laden.';
 $lang['admin']['armorysync_protectedtitle']	= "Geschützer Gildentitel|Charaktere mit diesen Gildentiteln sind davor geschützt,<br />durch einen Abgleich der Mitgliederliste gegen die Armory gelöscht zu werden.<br />Dieses Problem besteht häufig mit Bank Charakteren.<br />Mehrfachnennung durch trennen mit \",\" möglich. Z.B. Banker,Lager";
@@ -215,6 +217,12 @@ $lang['roster_deprecated_message'] = "<br />Du benutzt <b>WoWRoster</b><br /><br
 
 $lang['armorysync_not_upgraded'] = "<b>ArmorySync</b> nicht aktualisiert";
 $lang['armorysync_not_upgraded_message'] = "<br />Du hast <b>ArmorySync</b><br /><br />Version: <strong style=\"color:green;\" >%s</strong><br /><br />installiert. Zur Zeit ist noch <b>ArmorySync</b><br /><br />Version <strong style=\"color:red;\" >%s</strong><br /><br />im <b>WoWRoster</b> registriert.<br /><br />Bitte gehe in die <b>WoWRoster</b> Konfiguration<br />und aktualisiere dein <b>ArmorySync</b><br />&nbsp;";
+
+$lang['cache_not_writable'] = "ArmorySync cache dir is not writeable";
+$lang['cache_not_writable_message'] = "Your <b>ArmorySync</b> cache dir is not writeable.<br />Be sure to write enable it!";
+
+$lang['max_execution_time_low'] = "max_execution_time is to low";
+$lang['max_execution_time_low_message'] = "Your php max_execution_time of %s secs is to low.<br /><br />If you want to use Character update method with a fetch timout of %s secs and %s retrys<br />we will need at least a max_execution_time of %s secs.<br /><br />Please adjust max_execution_time or use smart update or per page update!";
 
 $lang['gems'] = array(
 	"inv_enchant_prismaticsphere" => "Prismasphäre",
