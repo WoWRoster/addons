@@ -2,6 +2,9 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[371]
+- fixed a sql error on realm update with guildless chars
+
 svn[370]
 - fixed messages for non existing chars on char add
 - removed gem spencerite as it is unknown in the armory

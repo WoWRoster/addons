@@ -1198,11 +1198,11 @@ class ArmorySyncJob extends ArmorySyncBase {
         $pb .= "</tr>";
         $pb .= "<tr id=\"progress_bar\">";
         if ( $perc ) {
-            $pb .= "	<td bgcolor=\"#660000\" height=\"12px\" width=\"$perc%\">" ;
+            $pb .= "	<td bgcolor=\"#660000\" height=\"12\" width=\"$perc%\">" ;
             $pb .= "	</td>";
         }
         if ( $per_left ) {
-            $pb .= "	<td bgcolor=\"#FFF7CE\" height=\"12px\" width=\"$per_left%\">";
+            $pb .= "	<td bgcolor=\"#FFF7CE\" height=\"12\" width=\"$per_left%\">";
             $pb .= "        </td>";
         }
         $pb .= "</tr>";
@@ -1450,7 +1450,7 @@ class ArmorySyncJob extends ArmorySyncBase {
                             $jobid. ", ".
                             ( $member['member_id'] ? $member['member_id'] : 0 ). ", ".
                             '"'.$roster->db->escape($member['name']). '"'.", ".
-                            $member['guild_id']. ", ".
+                            ( $member['guild_id'] ? $member['guild_id'] : 0 ). ", ".
                             '"'.$roster->db->escape($member['guild_name']). '"'.", ".
                             '"'.$roster->db->escape($member['server']). '"'.", ".
                             '"'.$roster->db->escape($member['region']). '"'.", ".
