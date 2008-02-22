@@ -2,6 +2,10 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[372]
+- fixed a array/object mismatch
+-- see http://www.wowroster.net/Forums/viewtopic/t=5012.html
+
 svn[371]
 - fixed a sql error on realm update with guildless chars
 
