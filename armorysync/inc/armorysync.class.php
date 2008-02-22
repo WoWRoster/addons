@@ -305,6 +305,10 @@ class ArmorySync extends ArmorySyncBase {
 		} else {
 			if ( !$addon['config']['armorysync_update_incomplete'] ) {
 				$this->updateDone = true;
+				$this->status['skillInfo'] = 0;
+				$this->status['reputationInfo'] = 0;
+				$this->status['equipmentInfo'] = 0;
+				$this->status['talentInfo'] = 0;
 			}
 			array_shift($this->ppUpdate['jobs']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: SkillInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
@@ -327,6 +331,9 @@ class ArmorySync extends ArmorySyncBase {
 		} else {
 			if ( !$addon['config']['armorysync_update_incomplete'] ) {
 				$this->updateDone = true;
+				$this->status['reputationInfo'] = 0;
+				$this->status['equipmentInfo'] = 0;
+				$this->status['talentInfo'] = 0;
 			}
 			array_shift($this->ppUpdate['jobs']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: RepInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
@@ -378,6 +385,7 @@ class ArmorySync extends ArmorySyncBase {
 		} else {
 			if ( !$addon['config']['armorysync_update_incomplete'] ) {
 				$this->updateDone = true;
+				$this->status['talentInfo'] = 0;
 			}
 			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
 			unset($this->data['Equipment'][$subStep['slot']]);
@@ -408,6 +416,7 @@ class ArmorySync extends ArmorySyncBase {
 		} else {
 			if ( !$addon['config']['armorysync_update_incomplete'] ) {
 				$this->updateDone = true;
+				$this->status['talentInfo'] = 0;
 			}
 			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
 			unset($this->data['Equipment'][$subStep['slot']]);
@@ -455,6 +464,7 @@ class ArmorySync extends ArmorySyncBase {
 		} else {
 			if ( !$addon['config']['armorysync_update_incomplete'] ) {
 				$this->updateDone = true;
+				$this->status['talentInfo'] = 0;
 			}
 			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
 			unset($this->data['Equipment'][$subStep['slot']]['Gem'][$subStep['gemSlot']]);
@@ -468,7 +478,7 @@ class ArmorySync extends ArmorySyncBase {
      */
 	function _ppGemFetchAndCompare( $subStep = false ) {
 		global $addon;
-		$compareGem = $subStep['compareGems'][0];
+		$compareGem = $subStep['compareGems'][0]['object'];
 		$slot = $subStep['slot'];
 		$gemSlot = $subStep['gemSlot'];
 
@@ -491,6 +501,7 @@ class ArmorySync extends ArmorySyncBase {
 		} else {
 			if ( !$addon['config']['armorysync_update_incomplete'] ) {
 				$this->updateDone = true;
+				$this->status['talentInfo'] = 0;
 			}
 			array_shift($this->ppUpdate['jobs'][0]['subjobs'][0]['compareGems']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemSlot: ". $gemSlot. " GemInfo: ". $compareGem->name. " - Failed", "I give up");
@@ -512,7 +523,7 @@ class ArmorySync extends ArmorySyncBase {
 			array_shift($this->ppUpdate['jobs'][0]['subjobs'][0]['gemList']);
 
 			foreach ( $this->gemList as $gemFound ) {
-				array_push($this->ppUpdate['jobs'][0]['subjobs'][0]['compareGems'], $gemFound );
+				array_push($this->ppUpdate['jobs'][0]['subjobs'][0]['compareGems'], array( 'type' => 'compareGem', 'object' => $gemFound, 'retry' => 0 ) );
 			}
 		} elseif( $subStep['gemList'][0]['retry'] < $this->retrys ) {
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemSearch: ". $gemType. " - Failed", "Retry: ". $subStep['gemList'][0]['retry']);
@@ -521,6 +532,7 @@ class ArmorySync extends ArmorySyncBase {
 		} else {
 			if ( !$addon['config']['armorysync_update_incomplete'] ) {
 				$this->updateDone = true;
+				$this->status['talentInfo'] = 0;
 			}
 			array_shift($this->ppUpdate['jobs'][0]['subjobs'][0]['gemList']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemSearch: ". $gemType. " - Failed", "I give up");
@@ -622,6 +634,7 @@ class ArmorySync extends ArmorySyncBase {
 		} else {
 			if ( !$addon['config']['armorysync_update_incomplete'] ) {
 				$this->updateDone = true;
+				$this->status['talentInfo'] = 0;
 			}
 			array_shift($this->ppUpdate['jobs']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: TalentInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
