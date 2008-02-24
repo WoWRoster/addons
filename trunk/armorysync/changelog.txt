@@ -2,6 +2,9 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[373]
+- fixed a str_replace bug in _getItemTooltip in armorysync.class.php
+
 svn[372]
 - fixed a array/object mismatch
 -- see http://www.wowroster.net/Forums/viewtopic/t=5012.html

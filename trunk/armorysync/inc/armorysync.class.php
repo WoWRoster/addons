@@ -2112,7 +2112,7 @@ class ArmorySync extends ArmorySyncBase {
 			$content = preg_replace('/\s\s+/', '', $content );
 
             // This is an ugly workaround for an encoding error in the armory
-			$content = preg_replace('/J.+?ger/', 'Jäger', $content );
+			$content = preg_replace('/J.{3}ger/', 'Jäger', $content );
             // This is an ugly workaround for an encoding error in the armory
 
 			$tmpA = explode( "%__BRTAG%", $content);
@@ -2142,13 +2142,30 @@ class ArmorySync extends ArmorySyncBase {
 
 			}
 
-			$test = "|". str_replace( "\n", "|\n|", $content). "|";
-			$test = str_replace( "\t", "|\n|", $test);
-			$test1 = htmlentities($test);
-			$test2 = utf8_decode($test);
-			$test3 = utf8_encode($test);
-
-			$cmp = "html=>\n". $html. "\n\nResult=>\n". $content. "\n\nhtmlentities=>\n". $test1. "\n\nutf8_decode=>\n". $test2. "\n\nutf8_encode=>\n". $test3;
+			//$test = "|". str_replace( "\n", "|\n|", $content). "|";
+			//$test = str_replace( "\t", "|\n|", $test);
+			//$test1 = htmlentities($test);
+			//$test2 = utf8_decode($test);
+			//$test3 = utf8_encode($test);
+			//$test4 = '|';
+			//$test5 = '|';
+			//
+			//$testtmp = str_replace( "\n", "", $content);
+			//$testtmp = str_replace( "\t", "", $testtmp);
+			//
+			//for ( $i = 0; $i < strlen($testtmp); $i++ ) {
+			//	$char = substr( $testtmp, $i, 1);
+			//	$test4 .= sprintf('%3s|', $char);
+			//	$test5 .= sprintf('%3d|', ord($char));
+			//}
+			//
+			//
+			//$cmp = "html=>\n". $html.
+			//		//"\n\nResult=>\n". $content.
+			//		//"\n\nhtmlentities=>\n". $test1.
+			//		//"\n\nutf8_decode=>\n". $test2.
+			//		//"\n\nutf8_encode=>\n". $test3.
+			//		"\n\nord=>\n". $test4. "\n". $test5;
 
             $this->_debug( 2, $content, 'Fetched item tooltip', 'OK' );
             return $content;
