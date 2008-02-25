@@ -2,6 +2,10 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[374]
+- fixed buff and debuff tooltips
+-- see http://www.wowroster.net/Forums/viewtopic/t=5046.html
+
 svn[373]
 - fixed a str_replace bug in _getItemTooltip in armorysync.class.php
 

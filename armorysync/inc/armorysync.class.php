@@ -1346,14 +1346,14 @@ class ArmorySync extends ArmorySyncBase {
 						$buffName = $spell->name;
 						$this->data["Attributes"]["Buffs"][$buffName]["Name"] = $buffName;
 						$this->data["Attributes"]["Buffs"][$buffName]["Icon"] = $spell->icon;
-						$this->data["Attributes"]["Buffs"][$buffName]["Tooltip"] = $spell->effect;
+						$this->data["Attributes"]["Buffs"][$buffName]["Tooltip"] = $buffName. "<br />". $spell->effect;
 					}
 				} else {
 					$spell = $tab->buffs->spell;
 					$buffName = $spell->name;
 					$this->data["Attributes"]["Buffs"][$buffName]["Name"] = $buffName;
 					$this->data["Attributes"]["Buffs"][$buffName]["Icon"] = $spell->icon;
-					$this->data["Attributes"]["Buffs"][$buffName]["Tooltip"] = $spell->effect;
+					$this->data["Attributes"]["Buffs"][$buffName]["Tooltip"] = $buffName. "<br />". $spell->effect;
 				}
 			}
 
@@ -1363,13 +1363,13 @@ class ArmorySync extends ArmorySyncBase {
 						$buffName = $spell->name;
 						$this->data["Attributes"]["Buffs"][$buffName]["Name"] = $buffName;
 						$this->data["Attributes"]["Buffs"][$buffName]["Icon"] = $spell->icon;
-						$this->data["Attributes"]["Buffs"][$buffName]["Tooltip"] = $spell->effect;
+						$this->data["Attributes"]["Buffs"][$buffName]["Tooltip"] = $buffName. "<br />". $spell->effect;
 					}
 				} else {
 					$spell = $tab->debuffs->spell;
 					$this->data["Attributes"]["Buffs"][$buffName]["Name"] = $buffName;
 					$this->data["Attributes"]["Buffs"][$buffName]["Icon"] = $spell->icon;
-					$this->data["Attributes"]["Buffs"][$buffName]["Tooltip"] = $spell->effect;
+					$this->data["Attributes"]["Buffs"][$buffName]["Tooltip"] = $buffName. "<br />". $spell->effect;
 				}
 			}
 
