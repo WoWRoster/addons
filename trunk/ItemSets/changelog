@@ -1,0 +1,8 @@
+ItemSets:
+ - added an admin setting to set the level minimum to display
+ - added additional sets: Arena Season 3, Tier 6 Raid, PvP Level 70 Set
+ - added honor/arenapoints requirements for all PvP Sets
+ - updated german translation
+ - fixes several php errors
+ - renamed all sets to the original names
+ - removed the so called Onyxia Set, because it never was a set 
