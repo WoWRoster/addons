@@ -1,4 +1,9 @@
-ItemSets:
+ItemSets 2.0.3.376:
+ - added french translation (thx foxbad)
+ - compatibility with Joomla component com_wowroster
+ - replaced submit button by javascript
+
+ItemSets 2.0.2:
  - added an admin setting to set the level minimum to display
  - added additional sets: Arena Season 3, Tier 6 Raid, PvP Level 70 Set
  - added honor/arenapoints requirements for all PvP Sets

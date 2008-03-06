@@ -7,7 +7,7 @@
  *
  * @copyright  2002-2007 WoWRoster.net
  * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5"
- * @version    2.0.1
+ * @version    2.0.3.376
  * @svn        SVN: $Id$
  * @link       http://www.wowroster.net/Forums/viewforum/f=35.html
  * @author     Gorgar, PoloDude, Zeryl, Munazz
@@ -31,7 +31,7 @@ class ItemSetsInstall
 	var $active = true;
 	var $icon = 'ability_mage_moltenarmor';
 	var $wrnet_id = '23';
-	var $version = '2.0.2';
+	var $version = '2.0.3';
  
 	var $fullname = 'ItemSets';
 	var $description = 'ItemSets_Desc';
@@ -41,7 +41,7 @@ class ItemSetsInstall
 		array(	"name"=> "Munazz",
 			"info"=> "2.0 Beta adapter"),
 		array(	"name"=> "Rouven",
-			"info"=> "2.0 Beta Optimization")
+			"info"=> "2.0.x releases")
 	);
  
  
