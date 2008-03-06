@@ -11,7 +11,7 @@
  *
  * @copyright  2004-2007 PoloDude
  * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5"
- * @version    2.0.2
+ * @version    2.0.3.376
  * @svn        SVN: $Id$
  * @author     Gorgar, PoloDude, Zeryl, Munazz, Rouven
  * @link       http://www.wowroster.net/Forums/viewforum/f=35.html
@@ -52,25 +52,25 @@ $all_sets = array_keys($roster->locale->act['ItemSets_Set']);
 sort($all_sets);
 $form = '';
 $form .= '<table cellpadding="0" cellspacing="0" class="membersList">';
-$form .= '<form action="" method="GET" name="myform">';
+$form .= '<form method="GET" name="myform" action="'. getFormAction() .'">';
 $form .= '<input type="hidden" name="p" value="realm-ItemSets" />';
 $form .= '<input type="hidden" name="realm" value="'.$roster->data['region'].'-'.$roster->data['server'].'" />';
 $form .= '<tr><th class="membersRow1">Tier:</th>';
 $form .= '<td class="membersRow1">';
-$form .= '<select name="tierselect" size="1">';
+$form .= '<select name="tierselect" size="1" onchange="window.location.href=this.options[this.selectedIndex].value">';
 for ($i = 0; $i < sizeof($all_sets); $i++) { 
 	if ($tier == $all_sets[$i]) $is_selected = 'selected';
 	else $is_selected = '';
-	$form .= '<option value="'.$all_sets[$i].'"'.$is_selected.'>'.$roster->locale->act[ $all_sets[$i] ].'</option>'; 
+	$form .= '<option value="'.makelink('realm-ItemSets', true).'&amp;classfilter='.$class.'&amp;tierselect='.$all_sets[$i].'"'.$is_selected.'>'.$roster->locale->act[ $all_sets[$i] ].'</option>'; 
 }
 $form .= '</select></td>';
 
 // Then get the class names
 $form .= '<td class="membersRow1">';
-$form .= '<select name="classfilter">';
+$form .= '<select name="classfilter" onchange="window.location.href=this.options[this.selectedIndex].value">';
 if ($class == '') $is_selected = ' selected';
 else $is_selected = '';
-$form .= '<option value="" '.$is_selected.'>'. $roster->locale->act['All_Classes'] .'</option>';
+$form .= '<option value="'.makelink('realm-ItemSets', true).'&amp;tierselect='.$tier.'" '.$is_selected.'>'. $roster->locale->act['All_Classes'] .'</option>';
 $classArray = array();
 $tmpArray = array_keys($roster->locale->act['ItemSets_Set']['Dungeon_1']);
 foreach ($tmpArray as $tmpClassname)
@@ -80,10 +80,9 @@ sort($classArray);
 foreach ($classArray as $tmpClassname){
 	if ($class == $tmpClassname) $is_selected = ' selected';
 	else $is_selected = '';
-	$form .= '<option value="'.$tmpClassname.'"'.$is_selected.'>'.$tmpClassname.'</option>';
+	$form .= '<option value="'.makelink('realm-ItemSets', true).'&amp;tierselect='.$tier.'&amp;classfilter='.$tmpClassname.'"'.$is_selected.'>'.$tmpClassname.'</option>';
 }
 $form .= '</select></td>';
-$form .= '<td class="membersRow1"><input type="submit" value="submit" /></td>';
 $form .= '</tr></form></table>';
 
 // Display the Selection Form in a box
@@ -235,7 +234,7 @@ while ($row = $roster->db->fetch($result, SQL_ASSOC)) {
 
 		// Display the member and set details in the first column
 		echo '<td><div class="membersKeyRowLeft'.$rownum.'">';
-		echo '<a href="index.php?p=char-info&a=c:'. $row['member_id'] .'">'. $row['name'] .'</a><br /><nobr>'.$row['class'].' ('.$row['level'].')</nobr><br />';
+		echo '<a href="'.makelink('char-info').'&amp;a=c:'. $row['member_id'] .'">'. $row['name'] .'</a><br /><nobr>'.$row['class'].' ('.$row['level'].')</nobr><br />';
 		if($tier=='PVP_Rare' || $tier=='PVP_Epic'){
 			echo '<span class="tooltipline" style="color:#0070dd; font-size: 10px;">'.$roster->locale->act['ItemSets_Set'][$tier][$guildFaction]['Name'][$row['class']].'</span></div>';
                 }else if($tier=='Dungeon_3' || $tier=='Tier_4' || $tier == 'Tier_5' || $tier == 'Tier_6' || $tier == 'Arena_1' || $tier == 'Arena_2' || $tier == 'Arena_3' || $tier=='PVP_Level70'){
