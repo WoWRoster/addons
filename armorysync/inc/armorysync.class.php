@@ -46,7 +46,7 @@ class ArmorySync extends ArmorySyncBase {
 	var $simpleParser;
 
 	var $retrys = 2;
-
+	var $cachehits = 0;
 	var $updateDone = false;
 	var $dataIncomplete = false;
 
@@ -71,6 +71,7 @@ class ArmorySync extends ArmorySyncBase {
 		global $addon;
 		$this->ppUpdate = array(
 				'jobs' => array(
+					array( 'type' => 'ddosGap' ),
 					array( 'type' => 'charInfo', 'retry' => 0 ),
 					array( 'type' => 'skillInfo', 'retry' => 0 ),
 					array( 'type' => 'repInfo', 'retry' => 0 ),
@@ -80,6 +81,7 @@ class ArmorySync extends ArmorySyncBase {
 				),
 				'data' => array(),
 				'status' => array(),
+				'gapStop' => 0,
 		);
 		$this->retrys = $addon['config']['armorysync_fetch_retrys'];
 	}
@@ -147,9 +149,23 @@ class ArmorySync extends ArmorySyncBase {
 
 		while ( $totalTime < $breakTime ) {
 
+			usleep(floor($addon['config']['armorysync_global_pause']*1000000));
+
 			$step = $this->ppUpdate['jobs'][0];
 
 			switch ($step['type']) {
+				case 'ddosGap':
+					if ( $this->ppUpdate['gapStop'] == 0 ) {
+						$this->ppUpdate['gapStop'] = round(format_microtime(), 2) + $addon['config']['armorysync_inter_char_pause'];
+					}
+					while ( round(format_microtime(), 2) < $this->ppUpdate['gapStop'] &&
+						    $totalTime < $breakTime ) {
+						usleep(100000);
+					}
+					if ( round(format_microtime(), 2) > $this->ppUpdate['gapStop'] ) {
+						array_shift( $this->ppUpdate['jobs'] );
+					}
+					break;
 				case 'charInfo':
 					$this->_ppCharInfo();
 					if ( $this->updateDone ) {
@@ -274,8 +290,6 @@ class ArmorySync extends ArmorySyncBase {
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: CharInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
 			$this->ppUpdate['jobs'][0]['retry']++;
 		} else {
-			$tmp = array_pop($this->ppUpdate['jobs']);
-			$this->ppUpdate['jobs'] = array($tmp);
 			$this->status = array(
 								'guildInfo' => 0,
 								'characterInfo' => 0,
@@ -287,6 +301,8 @@ class ArmorySync extends ArmorySyncBase {
 			$this->updateDone = true;
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: CharInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: CharInfo failed", "I give up");
+			$tmp = array_pop($this->ppUpdate['jobs']);
+			$this->ppUpdate['jobs'] = array($tmp);
 		}
 	}
 
@@ -310,9 +326,9 @@ class ArmorySync extends ArmorySyncBase {
 				$this->status['equipmentInfo'] = 0;
 				$this->status['talentInfo'] = 0;
 			}
-			array_shift($this->ppUpdate['jobs']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: SkillInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: SkillInfo failed", "I give up");
+			array_shift($this->ppUpdate['jobs']);
 		}
 	}
 
@@ -335,9 +351,9 @@ class ArmorySync extends ArmorySyncBase {
 				$this->status['equipmentInfo'] = 0;
 				$this->status['talentInfo'] = 0;
 			}
-			array_shift($this->ppUpdate['jobs']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: RepInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: RepInfo failed", "I give up");
+			array_shift($this->ppUpdate['jobs']);
 		}
 	}
 
@@ -387,10 +403,10 @@ class ArmorySync extends ArmorySyncBase {
 				$this->updateDone = true;
 				$this->status['talentInfo'] = 0;
 			}
-			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
-			unset($this->data['Equipment'][$subStep['slot']]);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Failed", "Retry: ". $this->ppUpdate['jobs'][0]['subjobs'][0]['retry']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Failed", "I give up");
+			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
+			unset($this->data['Equipment'][$subStep['slot']]);
 		}
 	}
 
@@ -418,10 +434,10 @@ class ArmorySync extends ArmorySyncBase {
 				$this->updateDone = true;
 				$this->status['talentInfo'] = 0;
 			}
-			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
-			unset($this->data['Equipment'][$subStep['slot']]);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Failed", "Retry: ". $this->ppUpdate['jobs'][0]['subjobs'][0]['retry']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " - Failed", "I give up");
+			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
+			unset($this->data['Equipment'][$subStep['slot']]);
 		}
 	}
 
@@ -466,9 +482,9 @@ class ArmorySync extends ArmorySyncBase {
 				$this->updateDone = true;
 				$this->status['talentInfo'] = 0;
 			}
+			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemTooltip: ". $gem['Name']. " - Failed", "I give up" );
 			array_shift($this->ppUpdate['jobs'][0]['subjobs']);
 			unset($this->data['Equipment'][$subStep['slot']]['Gem'][$subStep['gemSlot']]);
-			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemTooltip: ". $gem['Name']. " - Failed", "I give up" );
 		}
 	}
 
@@ -503,9 +519,8 @@ class ArmorySync extends ArmorySyncBase {
 				$this->updateDone = true;
 				$this->status['talentInfo'] = 0;
 			}
-			array_shift($this->ppUpdate['jobs'][0]['subjobs'][0]['compareGems']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemSlot: ". $gemSlot. " GemInfo: ". $compareGem->name. " - Failed", "I give up");
-
+			array_shift($this->ppUpdate['jobs'][0]['subjobs'][0]['compareGems']);
 		}
 	}
 
@@ -517,6 +532,7 @@ class ArmorySync extends ArmorySyncBase {
 		global $addon;
 		$gem = $this->data['Equipment'][$subStep['slot']]['Gem'][$subStep['gemSlot']];
 		$gemType = $subStep['gemList'][0]['gemType'];
+		$this->gemList = array();
 		$ret = $this->_getGemList( $gem, $gemType );
 
 		if ( $ret ) {
@@ -534,8 +550,8 @@ class ArmorySync extends ArmorySyncBase {
 				$this->updateDone = true;
 				$this->status['talentInfo'] = 0;
 			}
-			array_shift($this->ppUpdate['jobs'][0]['subjobs'][0]['gemList']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: ItemInfo Slot: ". $subStep['slot']. " GemSearch: ". $gemType. " - Failed", "I give up");
+			array_shift($this->ppUpdate['jobs'][0]['subjobs'][0]['gemList']);
 		}
 	}
 
@@ -636,9 +652,9 @@ class ArmorySync extends ArmorySyncBase {
 				$this->updateDone = true;
 				$this->status['talentInfo'] = 0;
 			}
-			array_shift($this->ppUpdate['jobs']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: TalentInfo failed", "Retry: ". $this->ppUpdate['jobs'][0]['retry']);
 			$this->_debug( 0, false, "Char: ". $this->memberName. " Step: TalentInfo failed", "I give up");
+			array_shift($this->ppUpdate['jobs']);
 		}
 	}
 
@@ -1188,6 +1204,7 @@ class ArmorySync extends ArmorySyncBase {
 			$this->_initSimpleParser();
 			$content = $this->simpleParser->parse($roster->cache->get($cacheTag));
 			$fromCache = true;
+			$this->_debug( 2, null, 'Cachehit: '. ++$this->cachehits, 'Cachehit' );
 		} else {
 			$content = $armory->fetchArmory( $armory->characterInfo, $this->memberName, false, $this->server, false, 'simpleClass' );
 		}
@@ -1511,6 +1528,7 @@ class ArmorySync extends ArmorySyncBase {
 				$this->_initSimpleParser();
 				$content = $this->simpleParser->parse($roster->cache->get($cacheTag));
 				$fromCache = true;
+				$this->_debug( 2, null, 'Cachehit: '. ++$this->cachehits, 'Cachehit' );
 			} else {
 				$content = $armory->fetchArmory( $armory->itemTooltip, $this->memberName, false, $this->server, $id, 'simpleClass' );
 			}
@@ -1638,13 +1656,14 @@ class ArmorySync extends ArmorySyncBase {
 		$armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
 		$content = array();
-		$cacheTag = 'itemTooltip'. $gem->id. 'xml';
+		$cacheTag = 'itemTooltip'. $gem->id. $this->region. 'xml';
 		$fromCache = false;
 
 		if ( $roster->cache->check($cacheTag) ) {
 			$this->_initSimpleParser();
 			$content = $this->simpleParser->parse($roster->cache->get($cacheTag));
 			$fromCache = true;
+			$this->_debug( 2, null, 'Cachehit: '. ++$this->cachehits, 'Cachehit' );
 		} else {
 			$content = $armory->fetchArmory( $armory->itemTooltip, false, false, false, $gem->id, 'simpleClass' );
 		}
@@ -1709,6 +1728,7 @@ class ArmorySync extends ArmorySyncBase {
 			$this->_initSimpleParser();
 			$content = $this->simpleParser->parse($roster->cache->get($cacheTag));
 			$fromCache = true;
+			$this->_debug( 2, null, 'Cachehit: '. ++$this->cachehits, 'Cachehit' );
 		} else {
 			$content = $armory->fetchArmory( $armory->characterSkills, $this->memberName, false, $this->server, false, 'simpleClass' );
 		}
@@ -1771,6 +1791,7 @@ class ArmorySync extends ArmorySyncBase {
 			$this->_initSimpleParser();
 			$content = $this->simpleParser->parse($roster->cache->get($cacheTag));
 			$fromCache = true;
+			$this->_debug( 2, null, 'Cachehit: '. ++$this->cachehits, 'Cachehit' );
 		} else {
 			$content = $armory->fetchArmory( $armory->characterReputation, $this->memberName, false, $this->server, false, 'simpleClass' );
 		}
@@ -1837,6 +1858,7 @@ class ArmorySync extends ArmorySyncBase {
 			$this->_initSimpleParser();
 			$content = $this->simpleParser->parse($roster->cache->get($cacheTag));
 			$fromCache = true;
+			$this->_debug( 2, null, 'Cachehit: '. ++$this->cachehits, 'Cachehit' );
 		} else {
 			$content = $armory->fetchArmory( $armory->characterTalents, $this->memberName, false, $this->server, false, 'simpleClass' );
 		}
@@ -1974,7 +1996,8 @@ class ArmorySync extends ArmorySyncBase {
 				break;
 		}
 
-		$userAgent .= '; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1';
+		//$userAgent .= '; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1';
+		$userAgent .= '; rv:1.8.1.12) Gecko/20080201 Firefox/2.0.0.12';
 		$armory->setUserAgent($userAgent);
 
 	}

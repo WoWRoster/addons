@@ -2,6 +2,12 @@ ArmorySync v2.6.0
 Package updated Month DD, YYYY
 $Id$
 
+svn[378]
+- fixed a cache problem with _getGemInfo. Added region to cache string
+- added a global pause
+- added a inter char pause
+- changes for new templating system with wowroster svn[1722]
+
 svn[374]
 - fixed buff and debuff tooltips
 -- see http://www.wowroster.net/Forums/viewtopic/t=5046.html
