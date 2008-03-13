@@ -655,7 +655,7 @@ class ArmorySyncJob extends ArmorySyncBase {
         $status = isset($_POST['StatusHidden']) ? $_POST['StatusHidden'] :
                     ( $addon['config']['armorysync_status_hide'] ? 'ON' : 'OFF' );
         $display = ( $status == 'ON' ) ? 'none' : '';
-        $icon = ROSTER_PATH. ( $status == 'ON' ? 'img/plus.gif' : 'img/minus.gif' );
+        $icon = $roster->config['theme_path']. ( $status == 'ON' ? '/images/plus.gif' : '/images/minus.gif' );
         $style = 'syellow';
 
         $roster->tpl->assign_vars(array(
