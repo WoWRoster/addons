@@ -68,7 +68,8 @@ $lang['admin']['acc_perms']		= 'Page Permissions|Set which groups can view which
 $lang['admin']['acc_user']		= 'User Config|Configure your account.';
 $lang['admin']['acc_plugin']	= 'Manage Plugins|Install plugins to extend the user system.';
 $lang['admin']['acc_recruit']	= 'Recruitment Config|Configure your recruitment settings.';
-$lang['admin']['acc_reg_conf']	= 'Registration Config|Configure the settings for user registration.';
+$lang['admin']['acc_register']	= 'Registration Config|Configure the settings for user registration.';
+$lang['admin']['acc_session']	= 'Session Config|Configure the settings for accounts sessions.';
 
 // Plugins Installer 
 $lang['pagebar_plugininst']		= 'Manage Plugins';
@@ -122,6 +123,9 @@ $lang['admin']['acc_rec_warrior']	= 'Warrior|Current recruitment level.';
 
 // Settings on registration config
 $lang['admin']['acc_reg_text']		= 'Registration Text|Edit the welcome text on registration.';
+
+// Settings on session config
+$lang['admin']['acc_sess_time']		= 'Session Time|Edit the length of time before a session is ended.';
 
 // User class messages
 $lang['acc_user']['msg10']			= "Username and/or password did not match to the database.";
@@ -214,3 +218,11 @@ $lang['mailbox'] 					= 'Mailbox';
 $lang['spellbook'] 					= 'Spellbook';
 $lang['talents'] 					= 'Talents';
 $lang['item_bonuses'] 				= 'Item Bonuses';
+
+// Recruitment Wordings
+$lang['acc_rec_form'] 				= 'Recruitment Status';
+$lang['acc_rec_txt'] 				= 'Current Recruitment Status:';
+
+// Application Wordings
+$lang['acc_app_form'] 				= 'Member Application';
+$lang['acc_app_txt'] 				= 'Please apply for guild membership.';

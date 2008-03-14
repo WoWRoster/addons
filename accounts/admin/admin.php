@@ -23,6 +23,8 @@ $tab2 = explode('|',$roster->locale->act['admin']['acc_perms']);
 $tab3 = explode('|',$roster->locale->act['admin']['acc_user']);
 $tab4 = explode('|',$roster->locale->act['admin']['acc_plugin']);
 $tab5 = explode('|',$roster->locale->act['admin']['acc_recruit']);
+$tab6 = explode('|',$roster->locale->act['admin']['acc_register']);
+$tab7 = explode('|',$roster->locale->act['admin']['acc_session']);
 
 $menu = messagebox('
 <ul class="tab_menu">
@@ -31,6 +33,8 @@ $menu = messagebox('
 	<li class="selected"><a href="' . makelink('rostercp-addon-accounts-admin') . '" style="cursor:help;"' . makeOverlib($tab3[1],$tab3[0],'',1,'',',WRAP') . '>' . $tab3[0] . '</a></li>
 	<li><a href="' . makelink('rostercp-addon-accounts-plugin') . '" style="cursor:help;"' . makeOverlib($tab4[1],$tab4[0],'',1,'',',WRAP') . '>' . $tab4[0] . '</a></li>
 	<li><a href="' . makelink('rostercp-addon-accounts') . '" rel="acc_recruit" style="cursor:help;"' . makeOverlib($tab5[1],$tab5[0],'',1,'',',WRAP') . '>' . $tab5[0] . '</a></li>
+	<li><a href="' . makelink('rostercp-addon-accounts') . '" rel="acc_register" style="cursor:help;"' . makeOverlib($tab6[1],$tab6[0],'',1,'',',WRAP') . '>' . $tab6[0] . '</a></li>
+	<li><a href="' . makelink('rostercp-addon-accounts') . '" rel="acc_session" style="cursor:help;"' . makeOverlib($tab7[1],$tab7[0],'',1,'',',WRAP') . '>' . $tab7[0] . '</a></li>
 </ul>
 ',$roster->locale->act['roster_config_menu'],'sgray','145px');
 

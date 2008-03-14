@@ -1194,7 +1194,7 @@ class memberslist
 				$icon = '<img src="' . $roster->config['img_url'] . 'downarrow2.gif" alt="' . $roster->locale->act['acc_rs']['maintenance'] . '"/> ';
 				break;
 			default:
-				$icon = '<img src="' . $roster->config['img_url'] . 'blue-question-mark.gif" alt="' . $roster->locale->act['rs']['error'] . '"/> ';
+				$icon = '<img src="' . $roster->config['img_url'] . 'blue-question-mark.gif" alt="' . $roster->locale->act['acc_rs']['error'] . '"/> ';
 				break;
 		}
 

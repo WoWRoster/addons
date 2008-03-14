@@ -28,9 +28,9 @@ $start = (isset($_GET['start']) ? $_GET['start'] : 0);
 
 $listing = $next = $prev = '';
 
-if(isset($_SESSION['uid']))
+if($accounts->session->getVal('uid') > 0)
 {
-	$uid = $_SESSION['uid'];
+	$uid = $accounts->session->getVal('uid');
 }
 else
 {
