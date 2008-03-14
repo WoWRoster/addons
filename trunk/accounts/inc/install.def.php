@@ -28,7 +28,7 @@ class accountsInstall
     var $active = true; 
     var $icon = 'inv_misc_groupneedmore'; 
 
-    var $version = '1.9.9.92'; 
+    var $version = '1.9.9.93'; 
 	var $wrnet_id = '0';
 
     var $fullname = 'Accounts'; 
@@ -59,20 +59,16 @@ class accountsInstall
         $installer->add_config("130,'acc_user','rostercp-addon-accounts-admin','makelink','menu'");
 		$installer->add_config("140,'acc_plugin','rostercp-addon-accounts-plugin','blockframe','menu'");
 		$installer->add_config("150,'acc_recruit','NULL','blockframe','menu'");
-		$installer->add_config("160,'acc_reg_conf','NULL','blockframe','menu'");
+		$installer->add_config("160,'acc_register','NULL','blockframe','menu'");
+		$installer->add_config("170,'acc_session','NULL','blockframe','menu'");
 
 		// Accounts config settings
 		$installer->add_config("1000, 'acc_char_conf', '1', 'radio{on^1|off^0', 'acc_display'");	
 		$installer->add_config("1010, 'acc_realm_conf', '1', 'radio{on^1|off^0', 'acc_display'");
 		$installer->add_config("1020, 'acc_guild_conf', '1', 'radio{on^1|off^0', 'acc_display'");
-		$installer->add_config("1030, 'acc_save_login', '1', 'radio{on^1|off^0', 'acc_display'");
-		$installer->add_config("1040, 'acc_cookie_name', 'wr_user', 'text{30|30', 'acc_display'");
-		$installer->add_config("1050, 'acc_auto_act', '1', 'radio{on^1|off^0', 'acc_display'");
-		$installer->add_config("1060, 'acc_admin_copy', '1', 'radio{on^1|off^0', 'acc_display'");
-		$installer->add_config("1070, 'acc_admin_mail', 'admin@yourroster.com', 'text{30|30', 'acc_display'");
-		$installer->add_config("1080, 'acc_admin_name', 'Roster Admin', 'text{30|30', 'acc_display'");
-		$installer->add_config("1090, 'acc_pass_length', '5', 'text{30|30', 'acc_display'");
-		$installer->add_config("1100, 'acc_uname_length', '5', 'text{30|30', 'acc_display'");
+		$installer->add_config("1030, 'acc_admin_mail', 'admin@yourroster.com', 'text{30|30', 'acc_display'");
+		$installer->add_config("1040, 'acc_admin_name', 'Roster Admin', 'text{30|30', 'acc_display'");
+		
 		
 		// Page Permissions settings
 		$installer->add_config("2000, 'acc_use_perms', '1', 'radio{on^1|off^0', 'acc_perms'");
@@ -108,7 +104,16 @@ class accountsInstall
 		$installer->add_config("5100, 'acc_rec_warrior', 'closed', 'select{High^high|Medium^medium|Low^low|Closed^closed', 'acc_recruit'");
 
 		// Registration settings
-		$installer->add_config("6000, 'acc_reg_text', 'Welcome to our site! Please register.', 'text{256|128', 'acc_reg_conf'");
+		$installer->add_config("6000, 'acc_reg_text', 'Welcome to our site! Please register.', 'text{256|128', 'acc_register'");
+		$installer->add_config("6010, 'acc_uname_length', '5', 'text{30|30', 'acc_register'");
+		$installer->add_config("6020, 'acc_pass_length', '5', 'text{30|30', 'acc_register'");
+		$installer->add_config("6030, 'acc_auto_act', '1', 'radio{on^1|off^0', 'acc_register'");
+		$installer->add_config("6040, 'acc_admin_copy', '1', 'radio{on^1|off^0', 'acc_register'");
+
+		// Session settings
+		$installer->add_config("7000, 'acc_sess_time', '15', 'text{30|4', 'acc_session'");
+		$installer->add_config("7010, 'acc_save_login', '1', 'radio{on^1|off^0', 'acc_session'");
+		$installer->add_config("7020, 'acc_cookie_name', 'wr_user', 'text{30|30', 'acc_session'");
 
 		// Build db tables
 		$installer->create_table($installer->table('user'),"
@@ -195,12 +200,26 @@ class accountsInstall
 			PRIMARY KEY (`id`)"
 			);
 
+		$installer->create_table($installer->table('session'),"
+			`SID` varchar(32) NOT NULL default '',
+			`lastact` INT(11) NOT NULL default '0',
+			`IP` varchar(32) NOT NULL default '',
+			`agent` varchar(255) NOT NULL default '',
+			`uid` INT(11) NOT NULL default '0',
+			`user` varchar(32) NOT NULL default '',
+			`pass` varchar(32) NOT NULL default '',
+			`groupID` smallint(6) NOT NULL default '0',
+			`isLoggedIn` varchar(10) NOT NULL default '0',
+			`_referer` varchar(255) NOT NULL default 'wowroster.net',
+			`_current` varchar(255) NOT NULL default 'wowroster.net',
+			PRIMARY KEY  (`SID`)"
+		);
+
 		//Account menu
 		$installer->add_menu_pane('acc_menu');
 		
 		// Roster menu links
         $installer->add_menu_button('acc_index','util','main');
-		$installer->add_menu_button('acc_register_bttn','acc_menu','util-accounts-register','inv_misc_note_02');
         $installer->add_menu_button('acc_characters','acc_menu','util-accounts-chars','spell_holy_divinespirit');
         $installer->add_menu_button('acc_guilds','acc_menu','util-accounts-guilds','inv_misc_tabardpvp_02'); 
         $installer->add_menu_button('acc_realms','acc_menu','util-accounts-realms','spell_holy_lightsgrace');
@@ -232,6 +251,15 @@ class accountsInstall
     { 
         global $installer, $roster; 
 
+        $sql = 'SELECT * FROM `' . $roster->db->table('config') . '` WHERE ( ( `' . $roster->db->table('config') . '` . `id` = 1055 ) ) LIMIT 0, 30 ';
+		$result = $roster->db->query($sql);
+		
+        if ($roster->db->result($result, 0, 'config_value') == 'accounts')
+        {
+        	$sql = 'UPDATE `' . $roster->db->table('config') . '` SET `config_value` = "roster" WHERE `id` = "1055" LIMIT 1 ';
+        	$roster->db->query($sql);
+        }
+
         $installer->remove_all_config(); 
         $installer->remove_all_menu_button();
 		$installer->remove_menu_pane('acc_menu');  
@@ -242,6 +270,7 @@ class accountsInstall
 		$installer->drop_table($installer->table('plugin_config'));
 		$installer->drop_table($installer->table('recruitment'));
 		$installer->drop_table($installer->table('applicants'));
+		$installer->drop_table($installer->table('session'));
 
         return true; 
     } 

@@ -32,6 +32,7 @@ class accounts
 		'email' => '',
 		'group_id' => '',
 		'active' => '',
+		'session' => '',
 		);
 
 	/**
@@ -61,6 +62,20 @@ class accounts
 	 * @var accountsPlugin
 	 */
 	var $plugin;
+
+	/**
+	 * Accounts Profile Class Object
+	 *
+	 * @var accountsProfile
+	 */
+	var $profile;
+
+	/**
+	 * Accounts Session Class Object
+	 *
+	 * @var accountsSession
+	 */
+	var $session;
 	
 	function accounts()
 	{
@@ -102,6 +117,7 @@ class accounts
 			'email' => 'email',
 			'group_id' => 'group_id',
 			'active' => 'active',
+			'session' => $roster->db->table('session',$addon['basename']),
 			);
 	}
 

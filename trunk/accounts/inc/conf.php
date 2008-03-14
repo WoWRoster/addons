@@ -34,6 +34,12 @@ if( !isset($accounts))
 		$accounts->plugin = new accountsPlugin;
 	}
 
+	if( !isset($accounts->session))
+	{
+		include_once( $addon['inc_dir'] . 'session.lib.php');
+		$accounts->session = new accountsSession;
+	}
+
 	if( !isset($accounts->admin))
 	{
 		include_once( $addon['inc_dir'] . 'admin.lib.php');
@@ -51,5 +57,12 @@ if( !isset($accounts))
 		include_once( $addon['inc_dir'] . 'user.lib.php');
 		$accounts->user = new accountsUser;
 	}
+
+	if( !isset($accounts->profile))
+	{
+		include_once( $addon['inc_dir'] . 'profile.lib.php');
+		$accounts->profile = new accountsProfile;
+	}
+
 }
 ?>

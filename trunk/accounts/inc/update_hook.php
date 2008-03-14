@@ -20,7 +20,7 @@ if ( !defined('IN_ROSTER') )
 /**
  * Accounts Update Hook
  *
- * @package    MembersList
+ * @package    Accounts
  * @subpackage UpdateHook
  */
 class accountsUpdate
@@ -75,7 +75,7 @@ class accountsUpdate
 		global $roster, $addon, $accounts;
 		
 		// --[ Check if this update type is enabled ]--
-		if($_SESSION['isLoggedIn'] == false)
+		if($accounts->session->getVal('isLoggedIn') == false)
 		{
 			// prevent the addon name from being displayed
 			$this->messages = '';
@@ -85,7 +85,7 @@ class accountsUpdate
 		$this->messages .= '<li><span style="color:yellow">Getting Character Information...</span></li><br />' . "\n";
 		
 		// --[ Fetch full member data ]--
-		$query = "SELECT `name`, `guild_id`, `server` FROM `" . $roster->db->table('players') . "` WHERE `member_id` = '" . $member_id . "';";
+		$query = "SELECT `name`, `guild_id`, `server`, `region` FROM `" . $roster->db->table('players') . "` WHERE `member_id` = '" . $member_id . "';";
 		$result = $roster->db->query( $query );
 
 		if ( !$result )
@@ -98,6 +98,9 @@ class accountsUpdate
 		{	
 				$roster->db->free_result( $result );
 				$member_name = $row['name'];
+				$guild_id = $row['guild_id'];
+				$realm = $row['server'];
+				$region = $row['region'];
 		}
 		else
 		{
@@ -106,91 +109,42 @@ class accountsUpdate
 			return false;
 		}
 
-		// --[ Add record to the cache of chars we'll be updating ]--
-		$this->chars[$member_id]['id'] = $member_id;
-		$this->chars[$member_id]['uid'] = $accounts->user->info['uid'];
-		$this->chars[$member_id]['name'] = $member_name;
-		$this->chars[$member_id]['guild_id'] = $row['guild_id'];
-		$this->chars[$member_id]['group_id'] = $accounts->user->info['group_id'];
-		$this->chars[$member_id]['realm'] = $row['server'];
+		// And the update code
+		$sql = "SELECT `uid` FROM `" . $roster->db->table('user_link', $this->data['basename']) . "` WHERE `member_id` = '" . $member_id . "';";
+		$result = $roster->db->query( $sql );
+		$row = $roster->db->fetch($result);
 
-		$this->messages .= ' - <span style="color:green;">' . $member_name . ' will be updated.</span><br/>';
-		
-		$this->messages .= "</ul>";
-		return true;
-	}
-	
-	/**
-	 * Char_post trigger
-	 * @param array $chars
-	 * Gets CP.lua characters data
-	 */
-	function char_post( $data )
-	{
-		global $roster, $addon, $accounts;
-		
-		// --[ Check if this update type is enabled ]--
-		if($_SESSION['isLoggedIn'] == false)
+		if($row == 0)
 		{
-			// prevent the addon name from being displayed
-			$this->messages = '';
-			return true;
-		}
+			$query = "INSERT INTO `" . $roster->db->table('user_link',$this->data['basename']) . "` SET `uid` = '" . $accounts->session->getval('uid') . "', `member_id` = '" . $member_id . "', `guild_id` = '" . $guild_id . "', `group_id` = '" . $accounts->user->info['group_id'] . "', `realm` = '" . $realm . "';";
 
-		if( empty($this->chars) ) 
-		{ 
-			$this->messages = ' - <span style="color:red;">Could not updated, failed at line ' . __LINE__ . '</span><br/>' . "\n";
-			return true;
-		}
- 
-		$this->messages .= '<li><span style="color:yellow">Storing your characters to database...</span></li><br />' . "\n";
-
-		foreach($this->chars as $member_id => $mid)
-		{
-			$char[] = array();
-			$char['id'] = $mid['id'];
-			$char['uid'] = $mid['uid'];
-			$char['name'] = $mid['name'];
-			$char['guid'] = $mid['guild_id'];
-			$char['gid'] = $mid['group_id'];
-			$char['realm'] = $mid['realm'];
-			
-			// And the update code
-			$sql = "SELECT `uid` FROM `" . $roster->db->table('user_link', $this->data['basename']) . "` WHERE `member_id` = '" . $char['id'] . "';";
-			$result = $roster->db->query( $sql );
-			$row = $roster->db->fetch($result);
-			
-			if($row == 0)
+			if( $roster->db->query($query) )
 			{
-				$query = "INSERT INTO `" . $roster->db->table('user_link',$this->data['basename']) . "` SET `uid` = '" . $char['uid'] . "', `member_id` = '" . $char['id'] . "', `guild_id` = '" . $char['guid'] . "', `group_id` = '" . $char['gid'] . "', `realm` = '" . $char['realm'] . "';";
-				
-				if( $roster->db->query($query) )
-				{
-					$this->messages .= ' - <span style="color:green;">' . $char['name'] . ' has been saved.</span><br/>';
-				}
-				else
-				{
-					$this->messages .= ' - <span style="color:red;">' . $char['name'] . ' has not been saved. MySQL said: ' . $roster->db->error() . '</span><br/>' . "\n";
-					return false;
-				}
+				$this->messages .= ' - <span style="color:green;"><img src="realmstatus.php?r=' . $region . '-' . $realm . '" height=0 width=0 />' . $member_name . ' has been saved.</span><br/>';
 			}
 			else
 			{
-				$query = "UPDATE `" . $roster->db->table('user_link',$this->data['basename']) . "` SET `guild_id` = '" . $char['guid'] . "', `group_id` = '" . $char['gid'] . "', `realm` = '" . $char['realm'] . "';";
-				
-				if( $roster->db->query($query) )
-				{
-					$this->messages .= ' - <span style="color:green;">' . $char['name'] . ' has been updated.</span><br/>';
-				}
-				else
-				{
-					$this->messages .= ' - <span style="color:red;">' . $char['name'] . ' has not been updated. MySQL said: ' . $roster->db->error() . '</span><br/>' . "\n";
-					return false;
-				}
+				$this->messages .= ' - <span style="color:red;">' . $member_name . ' has not been saved. MySQL said: ' . $roster->db->error() . '</span><br/>' . "\n";
+				return false;
 			}
 		}
+		else
+		{
+			$query = "UPDATE `" . $roster->db->table('user_link',$this->data['basename']) . "` SET `guild_id` = '" . $guild_id . "', `group_id` = '" . $accounts->user->info['group_id'] . "', `realm` = '" . $realm . "';";
+
+			if( $roster->db->query($query) )
+			{
+				$this->messages .= ' - <span style="color:green;"><img src="realmstatus.php?r=' . $region . '-' . $realm . '" height=0 width=0 />' . $member_name . ' has been updated.</span><br/>';
+			}
+			else
+			{
+				$this->messages .= ' - <span style="color:red;">' . $member_name . ' has not been updated. MySQL said: ' . $roster->db->error() . '</span><br/>' . "\n";
+				return false;
+			}
+		}
+
 		$this->messages .= "</ul>";
- 
 		return true;
 	}
+
 }

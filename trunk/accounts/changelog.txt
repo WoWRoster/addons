@@ -1,0 +1,118 @@
+/** 
+ * Dev.PKComp.net Accounts Addon
+ * 
+ * LICENSE: Licensed under the Creative Commons 
+ *          "Attribution-NonCommercial-ShareAlike 2.5" license 
+ * 
+ * @copyright  2005-2007 Pretty Kitty Development 
+ * @author	   mdeshane
+ * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5" 
+ * @link       http://dev.pkcomp.net 
+ * @package    Accounts 
+ * @subpackage Changelog 
+ */
+
+
+Accounts v1.9.9.93 [SVN]379:
+- Added
+-- changelog.txt (contains change info from SVN logs)
+-- session.lib.php (will replace $_SESSION vars in the addon as well as offer tracking)
+-- Profile and Session vars to accounts.lib.php and conf.php
+-- ApplicationPage() and ProfilePage() to page.lib.php
+-- userProfile(), userApplication(), and recruitment() to profile.lib.php
+-- Profile, Recruitment, and Application templates
+-- Application and Login links to Main Page
+-- Redirecting to loginPage()
+-- getMenuLoginForm() and setAction() to login.php
+-- getUser() function to user.lib.php (Gets the uname by uid)
+-- coding to parse realms for each character in update_hook.php
+
+- Dropped char_post from inc/update_hook.php (Just put everything in the char function.)
+- Cleaned up/reorganized admin pages
+- External Auth set back to roster on uninstall
+- Fixed other various errors
+
+
+Accounts v1.9.9.92 [SVN]349:
+- Complete restructuring of the framework to a more Object Oriented design.
+-- Added an Accounts handler class
+-- Added Plug-in framework
+-- Moved User functions to accountsUser class
+-- Moved Login functions to RosterLogin class
+-- Moved Page functions to accountsPage class
+
+- Added administration options and pages (with menus)
+- Added the workings of integrating the recruitment addon
+- Added user administration
+- Added coding for Memberslist (Modified)
+
+
+Accounts v1.9.9.49 [SVN]337:
+- Fixed SQL Error in inc/install.def.php. Thanks Zanix!
+
+
+Accounts v1.9.9.49 [SVN]334:
+- Modified
+-- inc/install.def.php
+-- inc/login.php
+-- inc/update_hook.php
+-- inc/user.lib.php
+-- templates/chars.html
+-- templates/guilds.html
+-- templates/realms.html
+-- locale/enUS.php
+-- index.php
+
+- Added the character, guild and realm pages scripting
+- Update_hook now gets realm info per character
+- New lang vars added for guild, character, and realm pages
+- Fixed login.php not working with rosterCP
+- Cleaned up some misc. vars
+
+
+Accounts v1.9.9.46 [SVN]331:
+- Dropped
+-- char folder
+-- guild folder
+-- realm folder
+-- register.php
+-- user.php
+- Added
+-- inc/plugin folder
+-- inc/login.php
+-- templates folder
+-- templates/chars.html
+-- templates/deny.html
+-- templates/guilds.html
+-- templates/index.html
+-- templates/login.html
+-- templates/lost.html
+-- templates/realms.html
+-- templates/register.html
+-- templates/settings.html
+- Made accounts more compatible with SEO URLs
+- Modified inc/update_hook.php to get and save character data in the user_link table
+- Fixed admin/admin.php and inc/admin.lib.php to properly find users by e-mail or user
+
+
+All 2.0 AddOns [SVN]318:
+- Changed installer class names for new Roster addon installer format
+
+
+Accounts v1.9.9.41 [SVN]291:
+- Code formatting
+- Changed hard coded links to use makelink()
+- Changed
+-- include_once ($addon['dir'] . 'inc' . DIR_SEP . 'user.lib.php');
+-- include_once ($addon['inc_dir'] . 'user.lib.php');
+- Changed
+-- $roster->output['show_menu'] = array('main','util','guild','realm','account_menu');
+-- $roster->output['show_menu'][] = 'account_menu';
+- Removed ?> off the end of all files
+- Some small xhtml fixes
+- changed installer to use $installer->create_table() and $installer->drop_table()
+- Fixed text box sizes in admin
+
+
+Accounts v1.9.9.41 [SVN]290:
+- First commit: can register, login, and use some access control. Primarily a developer preview of the addon.

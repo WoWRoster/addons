@@ -92,6 +92,29 @@ class accountsUser extends accounts
 		return;
 	}
 
+	function getUser($user)
+	{
+		if (is_int($user))
+		{
+			$sql_info = sprintf("SELECT `uname` FROM %s WHERE `uid` = '%s'", $accounts->db['usertable'], $user);
+		}
+		else
+		{
+			$sql_info = sprintf("SELECT `uid` FROM %s WHERE `uname` = '%s'", $accounts->db['usertable'], $user);
+		}
+
+		$results = $roster->db->query($sql_info);
+
+		if( !$results || $roster->db->num_rows($results) == 0 )
+		{
+			die_quietly("Cannot get user information from database<br />\nMySQL Said: " . $roster->db->error() . "<br /><br />\n");
+		}
+
+		$data = $roster->db->fetch($results, SQL_ASSOC);
+		
+		return $data;
+	}
+
 	function checkNewGroup( $pass )
 	{
 		global $roster, $addon, $accounts;
@@ -273,7 +296,7 @@ class accountsUser extends accounts
 	{
 		global $roster, $addon, $accounts;
 		
-		if ($activate_key != '' && strlen($activate_key) == 32 && $key_id > 0)
+		if (strlen($activate_key) == 32 || $key_id > 0)
 		{
 			$this->id = $key_id;
 			if ($this->checkUser('','','active'))
@@ -324,10 +347,11 @@ class accountsUser extends accounts
 	{
 		global $roster, $addon, $accounts;
 		
-		$sql = sprintf("SELECT `email` FROM %s WHERE `uid` = %d", $accounts->db['usertable'], $uid);
+		$sql = sprintf("SELECT `uname`, `email` FROM %s WHERE `uid` = %d", $accounts->db['usertable'], $uid);
 		$userEMail = $roster->db->result($roster->db->query($sql), 0, 'email');
+		$userName = $roster->db->result($roster->db->query($sql), 0, 'uname');
 		
-		$message = sprintf($roster->locale->act['acc_user']['msg37'], $this->info['uname'], makelink('util-accounts', true), $addon['config']['acc_admin_name']);
+		$message = sprintf($roster->locale->act['acc_user']['msg37'], $userName, makelink('util-accounts', true), $addon['config']['acc_admin_name']);
 		
 		if ($this->sendMail($userEMail, $message))
 		{
@@ -373,7 +397,7 @@ class accountsUser extends accounts
 		} 
 	}
 
-function forgotPass($forgot_email)
+	function forgotPass($forgot_email)
 	{ 
 		global $roster, $accounts, $addon;
 		
