@@ -11,7 +11,7 @@
  *
  * @copyright  2002-2007 WoWRoster.net
  * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5"
- * @version    2.0.3.376
+ * @version    2.0.3.380
  * @svn        SVN: $Id$
  * @link       http://www.wowroster.net/Forums/viewforum/f=35.html
  * @author     Gorgar, PoloDude, Zeryl, Munazz, Rouven
@@ -32,6 +32,19 @@ $lang['All_Classes'] = 'Alle Klassen';
 $lang['admin']['defaultset'] = 'Standard Seite|Gib das Standard Set an';
 $lang['admin']['itemsets_lvl'] = 'Mindestlevel|Zeigt Charaktere mit diesem Mindestlevel';
 $lang['admin']['itemsets_conf'] = 'Rüstungsset';
+
+// Class definition (female->male)
+$lang['classes']['Name'] = array(
+	'Kriegerin' => 'Krieger',
+	'Priesterin' => 'Priester',
+	'Druidin' => 'Druide',
+	'Schurkin' => 'Schurke',
+	'Magierin' => 'Magier',
+	'Paladin' => 'Paladin',
+	'Hexenmeisterin' => 'Hexenmeister',
+	'Jägerin' => 'Jäger',
+	'Schamanin' => 'Schamane'
+);
 
 //Tier localization
 $lang['Dungeon_1'] = 'Dungeon Set 1';
@@ -1767,7 +1780,7 @@ $lang['ItemSets_Set']['PVP_Epic']['A']['Druide'] = array(
 		'Chest' => 'Drachenlederbrustplatte des Feldmarschalls|13.770 EP, 30x Arathi|PvP',
 		'Hands' => 'Drachenlederstulpen des Marschalls|8.415 EP, 20x Alterac|PvP',
 		'Head'  => 'Drachenlederhelm des Feldmarschalls|13.005 EP, 30x Alterac|PvP',
-		'Legs'  => 'Drachenlederbeinschützer des Marschalls|13.005 EP, 30x Warsong',
+		'Legs'  => 'Drachenlederbeinschützer des Marschalls|13.005 EP, 30x Warsong|PvP',
 		'Shoulder' => 'Drachenlederschiftung des Feldmarschalls|8.415 EP, 20x Arathi|PvP'
 );
 $lang['ItemSets_Set']['PVP_Epic']['A']['Jäger'] = array(
@@ -1775,7 +1788,7 @@ $lang['ItemSets_Set']['PVP_Epic']['A']['Jäger'] = array(
 		'Chest' => 'Kettenbrustplatte des Feldmarschalls|13.770 EP, 30x Arathi|PvP',
 		'Hands' => 'Kettenhandschutz des Marschalls|8.415 EP, 20x Alterac|PvP',
 		'Head'  => 'Kettenhelm des Feldmarschalls|13.005 EP, 30x Alterac|PvP',
-		'Legs'  => 'Kettenbeinschützer des Marschalls|13.005 EP, 30x Warsong',
+		'Legs'  => 'Kettenbeinschützer des Marschalls|13.005 EP, 30x Warsong|PvP',
 		'Shoulder' => 'Kettenschiftung des Feldmarschalls|8.415 EP, 20x Arathi|PvP'
 );
 $lang['ItemSets_Set']['PVP_Epic']['A']['Magier'] = array(
@@ -1783,7 +1796,7 @@ $lang['ItemSets_Set']['PVP_Epic']['A']['Magier'] = array(
 		'Chest' => 'Seidene Tracht des Feldmarschalls|13.770 EP, 30x Arathi|PvP',
 		'Hands' => 'Seidene Handschuhe des Marschalls|8.415 EP, 20x Alterac|PvP',
 		'Head'  => 'Kronenreif des Feldmarschalls|13.005 EP, 30x Alterac|PvP',
-		'Legs'  => 'Seidene Gamaschen des Marschalls|13.005 EP, 30x Warsong',
+		'Legs'  => 'Seidene Gamaschen des Marschalls|13.005 EP, 30x Warsong|PvP',
 		'Shoulder' => 'Seidene Schiftung des Feldmarschalls|8.415 EP, 20x Arathi|PvP'
 );
 $lang['ItemSets_Set']['PVP_Epic']['A']['Paladin'] = array(
@@ -1791,7 +1804,7 @@ $lang['ItemSets_Set']['PVP_Epic']['A']['Paladin'] = array(
 		'Chest' => 'Lamellenbrustharnisch des Feldmarschalls|13.770 EP, 30x Arathi|PvP',
 		'Hands' => 'Lamellenhandschuhe des Marschalls|8.415 EP, 20x Alterac|PvP',
 		'Head'  => 'Lamellengesichtsschutz des Feldmarschalls|13.005 EP, 30x Alterac|PvP',
-		'Legs'  => 'Lamellenbeinplatten des Marschalls|13.005 EP, 30x Warsong',
+		'Legs'  => 'Lamellenbeinplatten des Marschalls|13.005 EP, 30x Warsong|PvP',
 		'Shoulder' => 'Lamellenschulterstücke des Feldmarschalls|8.415 EP, 20x Arathi|PvP'
 );
 $lang['ItemSets_Set']['PVP_Epic']['A']['Priester'] = array(
@@ -1799,7 +1812,7 @@ $lang['ItemSets_Set']['PVP_Epic']['A']['Priester'] = array(
 		'Chest' => 'Satintracht des Feldmarschalls|13.770 EP, 30x Arathi|PvP',
 		'Hands' => 'Satinhandschuhe des Marschalls|8.415 EP, 20x Alterac|PvP',
 		'Head'  => 'Kopfputz des Feldmarschalls|13.005 EP, 30x Alterac|PvP',
-		'Legs'  => 'Satinhose des Marschalls|13.005 EP, 30x Warsong',
+		'Legs'  => 'Satinhose des Marschalls|13.005 EP, 30x Warsong|PvP',
 		'Shoulder' => 'Satinmantel des Feldmarschalls|8.415 EP, 20x Arathi|PvP'
 );
 $lang['ItemSets_Set']['PVP_Epic']['A']['Schurke'] = array(
@@ -1807,7 +1820,7 @@ $lang['ItemSets_Set']['PVP_Epic']['A']['Schurke'] = array(
 		'Chest' => 'Lederner Brustharnisch des Feldmarschalls|13.770 EP, 30x Arathi|PvP',
 		'Hands' => 'Lederner Handschutz des Marschalls|8.415 EP, 20x Alterac|PvP',
 		'Head'  => 'Lederne Maske des Feldmarschalls|13.005 EP, 30x Alterac|PvP',
-		'Legs'  => 'Lederne Gamaschen des Marschalls|13.005 EP, 30x Warsong',
+		'Legs'  => 'Lederne Gamaschen des Marschalls|13.005 EP, 30x Warsong|PvP',
 		'Shoulder' => 'Lederne Schulterklappen des Feldmarschalls|8.415 EP, 20x Arathi|PvP'
 );
 $lang['ItemSets_Set']['PVP_Epic']['A']['Hexenmeister'] = array(
@@ -1815,7 +1828,7 @@ $lang['ItemSets_Set']['PVP_Epic']['A']['Hexenmeister'] = array(
 		'Chest' => 'Schreckenszwirnrobe des Feldmarschalls|13.770 EP, 30x Arathi|PvP',
 		'Hands' => 'Schreckenszwirnhandschuhe des Marschalls|8.415 EP, 20x Alterac|PvP',
 		'Head'  => 'Koronale des Feldmarschalls|13.005 EP, 30x Alterac|PvP',
-		'Legs'  => 'Schreckenszwirngamaschen des Marschalls|13.005 EP, 30x Warsong',
+		'Legs'  => 'Schreckenszwirngamaschen des Marschalls|13.005 EP, 30x Warsong|PvP',
 		'Shoulder' => 'Schreckenszwirnschultern des Feldmarschalls|8.415 EP, 20x Arathi|PvP'
 );
 $lang['ItemSets_Set']['PVP_Epic']['A']['Krieger'] = array(
@@ -1823,7 +1836,7 @@ $lang['ItemSets_Set']['PVP_Epic']['A']['Krieger'] = array(
 		'Chest' => 'Plattenrüstung des Feldmarschalls|13.770 EP, 30x Arathi|PvP',
 		'Hands' => 'Plattenstulpen des Marschalls|8.415 EP, 20x Alterac|PvP',
 		'Head'  => 'Plattenhelm des Feldmarschalls|13.005 EP, 30x Alterac|PvP',
-		'Legs'  => 'Plattenbeinschützer des Marschalls|13.005 EP, 30x Warsong',
+		'Legs'  => 'Plattenbeinschützer des Marschalls|13.005 EP, 30x Warsong|PvP',
 		'Shoulder' => 'Plattenschulterschutz des Feldmarschalls|8.415 EP, 20x Arathi|PvP'
 );
 $lang['ItemSets_Set']['PVP_Epic']['A']['Schamane'] = array(
@@ -1831,7 +1844,7 @@ $lang['ItemSets_Set']['PVP_Epic']['A']['Schamane'] = array(
 		'Chest' => 'Panzerrüstung des Feldmarschalls|13.770 EP, 30x Arathi|PvP',
 		'Hands' => 'Panzerstulpen des Marschalls|8.415 EP, 20x Alterac|PvP',
 		'Head'  => 'Panzerhelm des Feldmarschalls|13.005 EP, 30x Alterac|PvP',
-		'Legs'  => 'Panzergamaschen des Marschalls|13.005 EP, 30x Warsong',
+		'Legs'  => 'Panzergamaschen des Marschalls|13.005 EP, 30x Warsong|PvP',
 		'Shoulder' => 'Panzerschiftung des Feldmarschalls|8.415 EP, 20x Arathi|PvP'
 );
 
@@ -1842,7 +1855,7 @@ $lang['ItemSets_Set']['PVP_Epic']['H']['Druide'] = array(
 		'Chest' => 'Drachenlederbrustplatte des Kriegsfürsten|13.770 EP, 30x Arathi|PvP',
 		'Hands' => 'Drachenlederstulpen des Kriegsherren|8.415 EP, 20x Alterac|PvP',
 		'Head'  => 'Drachenlederhelm des Kriegsfürsten|13.005 EP, 30x Alterac|PvP',
-		'Legs'  => 'Drachenlederbeinschützer des Kriegsherren|13.005 EP, 30x Warsong',
+		'Legs'  => 'Drachenlederbeinschützer des Kriegsherren|13.005 EP, 30x Warsong|PvP',
 		'Shoulder' => 'Drachenlederschiftung des Kriegsfürsten|8.415 EP, 20x Arathi|PvP'
 );
 $lang['ItemSets_Set']['PVP_Epic']['H']['Jäger'] = array(
@@ -1850,7 +1863,7 @@ $lang['ItemSets_Set']['PVP_Epic']['H']['Jäger'] = array(
 		'Chest' => 'Kettenbrustplatte des Kriegsfürsten|13.770 EP, 30x Arathi|PvP',
 		'Hands' => 'Kettenhandschutz des Kriegsherren|8.415 EP, 20x Alterac|PvP',
 		'Head'  => 'Kettenhelm des Kriegsfürsten|13.005 EP, 30x Alterac|PvP',
-		'Legs'  => 'Kettenbeinschützer des Kriegsherren|13.005 EP, 30x Warsong',
+		'Legs'  => 'Kettenbeinschützer des Kriegsherren|13.005 EP, 30x Warsong|PvP',
 		'Shoulder' => 'Kettenschiftung des Kriegsfürsten|8.415 EP, 20x Arathi|PvP'
 );
 $lang['ItemSets_Set']['PVP_Epic']['H']['Magier'] = array(
@@ -1858,7 +1871,7 @@ $lang['ItemSets_Set']['PVP_Epic']['H']['Magier'] = array(
 		'Chest' => 'Seidene Tracht des Kriegsfürsten|13.770 EP, 30x Arathi|PvP',
 		'Hands' => 'Seidene Handschuhe des Kriegsherren|8.415 EP, 20x Alterac|PvP',
 		'Head'  => 'Kronenreif des Kriegsfürsten|13.005 EP, 30x Alterac|PvP',
-		'Legs'  => 'Seidene Gamaschen des Kriegsherren|13.005 EP, 30x Warsong',
+		'Legs'  => 'Seidene Gamaschen des Kriegsherren|13.005 EP, 30x Warsong|PvP',
 		'Shoulder' => 'Seidene Schiftung des Kriegsfürsten|8.415 EP, 20x Arathi|PvP'
 );
 $lang['ItemSets_Set']['PVP_Epic']['H']['Priester'] = array(
@@ -1866,7 +1879,7 @@ $lang['ItemSets_Set']['PVP_Epic']['H']['Priester'] = array(
 		'Chest' => 'Satintracht des Kriegsfürsten|13.770 EP, 30x Arathi|PvP',
 		'Hands' => 'Satinhandschuhe des Kriegsherren|8.415 EP, 20x Alterac|PvP',
 		'Head'  => 'Kopfputz des Kriegsfürsten|13.005 EP, 30x Alterac|PvP',
-		'Legs'  => 'Satinhose des Kriegsherren|13.005 EP, 30x Warsong',
+		'Legs'  => 'Satinhose des Kriegsherren|13.005 EP, 30x Warsong|PvP',
 		'Shoulder' => 'Satinmantel des Kriegsfürsten|8.415 EP, 20x Arathi|PvP'
 );
 $lang['ItemSets_Set']['PVP_Epic']['H']['Schurke'] = array(
@@ -1874,7 +1887,7 @@ $lang['ItemSets_Set']['PVP_Epic']['H']['Schurke'] = array(
 		'Chest' => 'Lederner Brustharnisch des Kriegsfürsten|13.770 EP, 30x Arathi|PvP',
 		'Hands' => 'Lederner Handschutz des Kriegsherren|8.415 EP, 20x Alterac|PvP',
 		'Head'  => 'Lederne Maske des Kriegsfürsten|13.005 EP, 30x Alterac|PvP',
-		'Legs'  => 'Lederne Gamaschen des Kriegsherren|13.005 EP, 30x Warsong',
+		'Legs'  => 'Lederne Gamaschen des Kriegsherren|13.005 EP, 30x Warsong|PvP',
 		'Shoulder' => 'Lederne Schulterklappen des Kriegsfürsten|8.415 EP, 20x Arathi|PvP'
 );
 $lang['ItemSets_Set']['PVP_Epic']['H']['Schamane'] = array(
@@ -1882,7 +1895,7 @@ $lang['ItemSets_Set']['PVP_Epic']['H']['Schamane'] = array(
 		'Chest' => 'Panzerrüstung des Kriegsfürsten|13.770 EP, 30x Arathi|PvP',
 		'Hands' => 'Panzerstulpen des Kriegsherren|8.415 EP, 20x Alterac|PvP',
 		'Head'  => 'Panzerhelm des Kriegsfürsten|13.005 EP, 30x Alterac|PvP',
-		'Legs'  => 'Panzergamaschen des Kriegsherren|13.005 EP, 30x Warsong',
+		'Legs'  => 'Panzergamaschen des Kriegsherren|13.005 EP, 30x Warsong|PvP',
 		'Shoulder' => 'Panzerschiftung des Kriegsfürsten|8.415 EP, 20x Arathi|PvP'
 );
 $lang['ItemSets_Set']['PVP_Epic']['H']['Hexenmeister'] = array(
@@ -1890,7 +1903,7 @@ $lang['ItemSets_Set']['PVP_Epic']['H']['Hexenmeister'] = array(
 		'Chest' => 'Schreckenszwirnrobe des Kriegsfürsten|13.770 EP, 30x Arathi|PvP',
 		'Hands' => 'Schreckenszwirnhandschuhe des Kriegsherren|8.415 EP, 20x Alterac|PvP',
 		'Head'  => 'Koronale des Kriegsfürsten|13.005 EP, 30x Alterac|PvP',
-		'Legs'  => 'Schreckenszwirngamaschen des Kriegsherren|13.005 EP, 30x Warsong',
+		'Legs'  => 'Schreckenszwirngamaschen des Kriegsherren|13.005 EP, 30x Warsong|PvP',
 		'Shoulder' => 'Schreckenszwirnschultern des Kriegsfürsten|8.415 EP, 20x Arathi|PvP'
 );
 $lang['ItemSets_Set']['PVP_Epic']['H']['Krieger'] = array(
@@ -1898,7 +1911,7 @@ $lang['ItemSets_Set']['PVP_Epic']['H']['Krieger'] = array(
 		'Chest' => 'Plattenrüstung des Kriegsfürsten|13.770 EP, 30x Arathi|PvP',
 		'Hands' => 'Plattenstulpen des Kriegsherren|8.415 EP, 20x Alterac|PvP',
 		'Head'  => 'Plattenkopfstück des Kriegsfürsten|13.005 EP, 30x Alterac|PvP',
-		'Legs'  => 'Plattengamaschen des Kriegsfürsten|13.005 EP, 30x Warsong',
+		'Legs'  => 'Plattengamaschen des Kriegsfürsten|13.005 EP, 30x Warsong|PvP',
 		'Shoulder' => 'Plattenschultern des Kriegsfürsten|8.415 EP, 20x Arathi|PvP'
 );
 $lang['ItemSets_Set']['PVP_Epic']['H']['Paladin'] = array(
@@ -1906,7 +1919,7 @@ $lang['ItemSets_Set']['PVP_Epic']['H']['Paladin'] = array(
 		'Chest' => 'Lamellenbrustharnisch des Kriegsfürsten|13.770 EP, 30x Arathi|PvP',
 		'Hands' => 'Lamellenhandschuhe des Kriegsherren|8.415 EP, 20x Alterac|PvP',
 		'Head'  => 'Lamellengesichtsschutz des Kriegsfürsten|13.005 EP, 30x Alterac|PvP',
-		'Legs'  => 'Lamellenbeinplatten des Kriegsherren|13.005 EP, 30x Warsong',
+		'Legs'  => 'Lamellenbeinplatten des Kriegsherren|13.005 EP, 30x Warsong|PvP',
 		'Shoulder' => 'Lamellenschulterstücke des Kriegsfürsten|8.415 EP, 20x Arathi|PvP'
 );
 

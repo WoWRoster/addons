@@ -11,7 +11,7 @@
  *
  * @copyright  2002-2007 WoWRoster.net
  * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5"
- * @version    2.0.3.376
+ * @version    2.0.3.380
  * @svn        SVN: $Id$
  * @link       http://www.wowroster.net/Forums/viewforum/f=35.html
  * @author     Gorgar, PoloDude, Zeryl, Foxbad, rouven
@@ -32,6 +32,21 @@ $lang['All_Classes'] = 'Toutes les Classes';
 $lang['admin']['defaultset'] = 'Ensemble d\\\'armure par défaut|Choisissez l\\\'ensemble d\\\'armure qui apparaîtra par défaut lors de l\\\'ouverture de la page des ensembles d\\\'armure.';
 $lang['admin']['itemsets_conf'] = 'Ensembles d\\\'armure|Affiche une liste des membres de niveau 50 ou plus et une liste des pièces d\\\'ensembles d\\\'armure qu\\\'ils possèdent déjà.';
 $lang['admin']['itemsets_lvl'] = 'Level Minimum|Affiche les caractères ayant au moins ce level';
+
+
+// Class definition (female->male)
+$lang['classes']['Name'] = array(
+	'Guerrière' => 'Guerrier',
+	'Prêtresse' => 'Prêtre',
+	'Druidesse' => 'Druide',
+	'Voleuse' => 'Voleur',
+	'Mage' => 'Mage',
+	'Paladin' => 'Paladin',
+	'Démoniste' => 'Démoniste',
+	'Chasseresse' => 'Chasseur',
+	'Chamane' => 'Chaman'
+);
+
 
 //Tier localization
 $lang['Dungeon_1'] = 'Donjon 1';
