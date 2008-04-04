@@ -11,7 +11,7 @@
  *
  * @copyright  2004-2007 PoloDude
  * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5"
- * @version    2.0.3.377
+ * @version    2.0.3.380
  * @svn        SVN: $Id$
  * @author     Gorgar, PoloDude, Zeryl, Munazz, Rouven
  * @link       http://www.wowroster.net/Forums/viewforum/f=35.html
@@ -35,7 +35,6 @@ $guildFaction = substr($roster->data['factionEn'],0,1);
 
 // Get the minimun character level
 $minlevel = $addon['config']['itemsets_lvl'];
-
 // Tier Selection
 // Get the default selection from the config
 $tier = $addon['config']['defaultset'];
@@ -209,8 +208,16 @@ echo '</tr>' . "\n";
 
 // Check if we have a Class Filter
 $class_where = '';
-if ($class != '')
-	$class_where = ' AND class = \''.$class.'\' ';
+if ($class != '') {
+    // Flip the array for reverse mapping
+    $flippedclasses = array_flip($roster->locale->act['classes']['Name']);
+    $uniclass = $flippedclasses[$class];
+    if (isset ($uniclass)) {
+	$class_where = ' AND (class = \''.$class.'\' OR class = \''.$uniclass.'\') ';
+    } else {
+        $class_where = ' AND (class = \''.$class.'\' ';
+    }
+}
 
 // Get the table name
 $player_table = $roster->db->table('players');
@@ -223,12 +230,21 @@ $result = $roster->db->query($query) or die_quietly($roster->db->error(),'Databa
 $rownum=1;
 while ($row = $roster->db->fetch($result, SQL_ASSOC)) {
 	if($tier=='PVP_Rare' || $tier=='PVP_Epic' || $tier=='PVP_Level70' ){
-		$items = $roster->locale->act['ItemSets_Set'][$tier][$guildFaction][$row['class']];
+	    if (isset ($roster->locale->act['classes']['Name'][$row['class']])) {
+		$uniclass = $roster->locale->act['classes']['Name'][$row['class']];
+	    } else {
+		$uniclass = $row['class'];
+	    }
+		$items = $roster->locale->act['ItemSets_Set'][$tier][$guildFaction][$uniclass];
 	}
 	else{
-		$items = $roster->locale->act['ItemSets_Set'][$tier][$row['class']];
+	    if (isset ($roster->locale->act['classes']['Name'][$row['class']])) {
+		$uniclass = $roster->locale->act['classes']['Name'][$row['class']];
+	    } else {
+		$uniclass = $row['class'];
+	    }
+		$items = $roster->locale->act['ItemSets_Set'][$tier][$uniclass];
 	}
-	
 	if ($items) {
 		// Open a new Row
 		echo "\n\n\n<tr>\n";
@@ -237,13 +253,13 @@ while ($row = $roster->db->fetch($result, SQL_ASSOC)) {
 		echo '<td><div class="membersKeyRowLeft'.$rownum.'">';
 		echo '<a href="'.makelink('char-info&amp;a=c:'.$row['member_id']).'">'. $row['name'] .'</a><br /><nobr>'.$row['class'].' ('.$row['level'].')</nobr><br />';
 		if($tier=='PVP_Rare' || $tier=='PVP_Epic' ){
-			echo '<span class="tooltipline" style="color:#0070dd; font-size: 10px;">'.$roster->locale->act['ItemSets_Set'][$tier]['Name'][$row['class']].'</span></div>';
+			echo '<span class="tooltipline" style="color:#0070dd; font-size: 10px;">'.$roster->locale->act['ItemSets_Set'][$tier]['Name'][$uniclass].'</span></div>';
 		}else if($tier=='Dungeon_3' || $tier=='Tier_4' || $tier == 'Tier_5' || $tier == 'Tier_6' || $tier == 'Arena_1' || $tier == 'Arena_2' || $tier == 'Arena_3' || $tier=='PVP_Level70'){
-			$armorsets = explode("|", $roster->locale->act['ItemSets_Set'][$tier]['Name'][$row['class']]);	
+			$armorsets = explode("|", $roster->locale->act['ItemSets_Set'][$tier]['Name'][$uniclass]);	
 		 	$seperatorIndex = 0;
 		 	echo '<span class="tooltipline" style="color:#0070dd; font-size: 10px;">'.$armorsets[0].'</span></div>';
 		}else{
-			echo '<span class="tooltipline" style="color:#0070dd; font-size: 10px;">'.$roster->locale->act['ItemSets_Set'][$tier]['Name'][$row['class']].'</span></div>';
+			echo '<span class="tooltipline" style="color:#0070dd; font-size: 10px;">'.$roster->locale->act['ItemSets_Set'][$tier]['Name'][$uniclass].'</span></div>';
 		}
 		echo "</td>\n";
 		
@@ -274,7 +290,7 @@ while ($row = $roster->db->fetch($result, SQL_ASSOC)) {
 			}
 			$iresult = $roster->db->query($iquery) or die_quietly($roster->db->error(),'Database Error',__FILE__,__LINE__,$iquery);
 			$idata = $roster->db->fetch($iresult, SQL_ASSOC);
-// if (!$idata) print "Empty idata"; else {print "\$idata = "; print_r($idata); }
+//if (!$idata) print "Empty idata"; else {print "\$idata = "; print_r($idata); }
 			if ($idata) {
 			    $item = new item($idata);
 			    if ($item->name)

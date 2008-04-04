@@ -208,8 +208,16 @@ echo '</tr>' . "\n";
 
 // Check if we have a Class Filter
 $class_where = '';
-if ($class != '')
-	$class_where = ' AND class = \''.$class.'\' ';
+if ($class != '') {
+    // Flip the array for reverse mapping
+    $flippedclasses = array_flip($roster->locale->act['classes']['Name']);
+    $uniclass = $flippedclasses[$class];
+    if (isset ($uniclass)) {
+       $class_where = ' AND (class = \''.$class.'\' OR class = \''.$uniclass.'\') ';
+    } else {
+        $class_where = ' AND (class = \''.$class.'\' ';
+    }
+}
 
 // Get the table name
 $player_table = $roster->db->table('players');
@@ -225,7 +233,12 @@ while ($row = $roster->db->fetch($result, SQL_ASSOC)) {
 		$items = $roster->locale->act['ItemSets_Set'][$tier][$guildFaction][$row['class']];
 	}
 	else{
-		$items = $roster->locale->act['ItemSets_Set'][$tier][$row['class']];
+	   if (isset ($roster->locale->act['classes']['Name'][$row['class']])) {
+	   $uniclass = $roster->locale->act['classes']['Name'][$row['class']];
+	   } else {
+	   $uniclass = $row['class'];
+	   }
+	   $items = $roster->locale->act['ItemSets_Set'][$tier][$uniclass];
 	}
 	
 	if ($items) {
@@ -236,13 +249,13 @@ while ($row = $roster->db->fetch($result, SQL_ASSOC)) {
 		echo '<td><div class="membersKeyRowLeft'.$rownum.'">';
 		echo '<a href="'.makelink('char-info&amp;a=c:'.$row['member_id']).'">'. $row['name'] .'</a><br /><nobr>'.$row['class'].' ('.$row['level'].')</nobr><br />';
 		if($tier=='PVP_Rare' || $tier=='PVP_Epic'){
-			echo '<span class="tooltipline" style="color:#0070dd; font-size: 10px;">'.$roster->locale->act['ItemSets_Set'][$tier][$guildFaction]['Name'][$row['class']].'</span></div>';
+			echo '<span class="tooltipline" style="color:#0070dd; font-size: 10px;">'.$roster->locale->act['ItemSets_Set'][$tier][$guildFaction]['Name'][$uniclass].'</span></div>';
                 }else if($tier=='Dungeon_3' || $tier=='Tier_4' || $tier == 'Tier_5' || $tier == 'Tier_6' || $tier == 'Arena_1' || $tier == 'Arena_2' || $tier == 'Arena_3' || $tier=='PVP_Level70'){
-			$armorsets = explode("|", $roster->locale->act['ItemSets_Set'][$tier]['Name'][$row['class']]);	
+			$armorsets = explode("|", $roster->locale->act['ItemSets_Set'][$tier]['Name'][$uniclass]);
 		 	$seperatorIndex = 0;
 		 	echo '<span class="tooltipline" style="color:#0070dd; font-size: 10px;">'.$armorsets[0].'</span></div>';
 		}else{
-			echo '<span class="tooltipline" style="color:#0070dd; font-size: 10px;">'.$roster->locale->act['ItemSets_Set'][$tier]['Name'][$row['class']].'</span></div>';
+			echo '<span class="tooltipline" style="color:#0070dd; font-size: 10px;">'.$roster->locale->act['ItemSets_Set'][$tier]['Name'][$uniclass].'</span></div>';
 		}
 		echo "</td>\n";
 		
