@@ -25,26 +25,30 @@ function getGroups($values){
 		return 'Set forum_prefix.';
 		//need to check group tables exist
 	}
-	$query = "SHOW TABLES LIKE '{$addon['config']['forum_prefix']}bbgroups'";
-	$result = $roster->db->query ( $query );
-	if ($roster->db->num_rows($result)==0){
-		return "{$addon['config']['forum_prefix']}bbgroups table does not exist";
-	}
-	$query = "SHOW TABLES LIKE '{$addon['config']['forum_prefix']}users'";
-	$result = $roster->db->query ( $query );
-	if (!$result){
-		return "{$addon['config']['forum_prefix']}users table does not exist";
-	}
-	$query = "SHOW TABLES LIKE '{$addon['config']['forum_prefix']}bbuser_group'";
-	$result = $roster->db->query ( $query );
-	if (!$result){
-		return "{$addon['config']['forum_prefix']}bbuser_group table does not exist";
-	}
+	if ($this->data['config']['forum_type'] == 0) /*DF*/{
+		$query = "SHOW TABLES LIKE '{$addon['config']['forum_prefix']}bbgroups'";
+		$result = $roster->db->query ( $query );
+		if ($roster->db->num_rows($result)==0){
+			return "{$addon['config']['forum_prefix']}bbgroups table does not exist";
+		}
+		$query = "SHOW TABLES LIKE '{$addon['config']['forum_prefix']}users'";
+		$result = $roster->db->query ( $query );
+		if (!$result){
+			return "{$addon['config']['forum_prefix']}users table does not exist";
+		}
+		$query = "SHOW TABLES LIKE '{$addon['config']['forum_prefix']}bbuser_group'";
+		$result = $roster->db->query ( $query );
+		if (!$result){
+			return "{$addon['config']['forum_prefix']}bbuser_group table does not exist";
+		}
 	
-	$configName = $values['name'];
-	$query = "SELECT * FROM `{$addon['config']['forum_prefix']}bbgroups` where group_single_user=0 order by group_name";
+		$configName = $values['name'];
+		$query = "SELECT * FROM `{$addon['config']['forum_prefix']}bbgroups` where group_single_user=0 order by group_name";
+	}
+	if ($this->data['config']['forum_type'] == 1) /*phpBB3*/{
+		$query = "SELECT * FROM `{$addon['config']['forum_prefix']}groups` where group_type!=3 order by group_name";
+	}
 	$result = $roster->db->query ( $query );
-
 	$return = '<select name="config_' . $configName . '">';
 	if ($addon['config'][$configName] == 0){
 		$return .= '<option value="0" selected="selected">-[ Disabled ]-</option>';

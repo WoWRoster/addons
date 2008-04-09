@@ -29,8 +29,8 @@ class phpbbsyncInstall
 	var $active = true;
 	var $icon = 'phpbb.png';
  
-	var $version = '1.1.0.0';
-	var $wrnet_id = 0;
+	var $version = '1.1.0.1';
+	var $wrnet_id = 128;
  
 	var $fullname = 'phpbbsync';
 	var $description = 'phpbbsync_desc';
@@ -61,6 +61,7 @@ class phpbbsyncInstall
 		$installer->add_config("'1101','forum_prefix','','text{200|30','phpbb_menu_main'");
 		/*$installer->add_config("'1102','forum_path','forum/','text{200|30','phpbb_menu_main'");*/
 		$installer->add_config("'1103','choose_guild','1','function{getGuildList','phpbb_menu_main'");
+		$installer->add_config("'1104','forum_type','1','radio{DF^1|phpBB3^0','phpbb_menu_main'");
 
 		$installer->add_config("'1200','player_update_location','1','radio{yes^1|no^0','phpbb_menu_player'");
 		$installer->add_config("'1201','player_location','Zone','select{Hearth^Hearth|Zone^Zone','phpbb_menu_player'");
@@ -101,6 +102,10 @@ class phpbbsyncInstall
 			$installer->update_config('1302', 'form_type=radio{yes^1|no^0|group^2');
 			//remove forum path
 			$installer->remove_config('1102');
+		}
+		if( version_compare('1.1.0.1', $oldversion,'>') == true )
+		{
+			$installer->add_config("'1104','forum_type','0','radio{DF^0|phpBB3^1','phpbb_menu_main'");
 		}
 		return true;
 	}

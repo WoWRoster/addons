@@ -51,6 +51,9 @@ $lang['admin']['guild_suspended_group']='Select a group to put suspended members
 $lang['admin']['guild_ranks']='Allow to manage ranks|Allow phpBBSync to change guild members ranks based on guild rank.<br />Ranks are created automatically as \'special\' ranks but rank image will have to be manually set.';
 $lang['admin']['groupcal_enable']='Enable GroupCalendar Sync with phpBB Calendar|Dont forget to enable and setup permissions<br />for the calendar in phpBB\'s admin panel.';
 $lang['admin']['groupcal_update_permission']='Permission to update|Select permission level to update calendar';
+$lang['admin']['forum_type']='Set forum type|Select Dragonfly or phpBB3(Not currently working)';
+
+
 
 $lang['LocationNotSpecified']='Location not specified. Assuming inside ArmorySync.';
 $lang['LocationIsCurrent']='Location is current.';
