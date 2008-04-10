@@ -107,21 +107,25 @@ class phpbbsyncUpdate
  					//First remove other memberships
  					if ($this->data['config']['forum_type'] == 0) /*DF*/{
 	 					$query = "delete from {$this->data['config']['forum_prefix']}bbuser_group where user_id in (select user_id from (SELECT distinct u.user_id from {$roster->db->prefix}memberlog ml
-							left outer join {$roster->db->prefix}members m on m.name=ml.name 
-							left outer join {$this->data['config']['forum_prefix']}users u on ucase(u.name)=ucase(ml.name)
-							left outer join {$this->data['config']['forum_prefix']}bbgroups g on m.guild_title=g.group_name
-							left outer join {$this->data['config']['forum_prefix']}bbuser_group ug on ug.user_id = u.user_id 
-							where m.name is not null /*makes sure character exists in roster*/
-							and u.name is not null /*makes sure user exists in forum*/
-							and ug.group_id is not null /*makes sure user belongs to at least one group*/
-							and g.group_name is not null /*makes sure the group to move to exists*/
+							inner join {$roster->db->prefix}members m on m.name=ml.name 
+							inner join {$this->data['config']['forum_prefix']}users u on ucase(u.name)=ucase(ml.name)
+							inner join {$this->data['config']['forum_prefix']}bbgroups g on m.guild_title=g.group_name
+							inner join {$this->data['config']['forum_prefix']}bbuser_group ug on ug.user_id = u.user_id 
 							and u.user_id not in /*makes sure user is not protected*/
 							(select ug1.user_id from {$this->data['config']['forum_prefix']}bbuser_group ug1 left outer join {$this->data['config']['forum_prefix']}bbgroups g1 on g1.group_id=ug1.group_id where g1.group_id={$this->data['config']['guild_protected_group']})
 							) uid )";
 						}
 					if ($this->data['config']['forum_type'] == 1) /*phpBB3*/{
 						//make sure group type three is excluded - these are the built in groups
-						$query="select 'nothing'";
+						$query = "delete from {$this->data['config']['forum_prefix']}user_group where user_id in (select user_id from (SELECT distinct u.user_id from {$roster->db->prefix}memberlog ml
+							inner join {$roster->db->prefix}members m on m.name=ml.name 
+							inner join {$this->data['config']['forum_prefix']}users u on ucase(u.user_aim)=ucase(ml.name)
+							inner join {$this->data['config']['forum_prefix']}groups g on m.guild_title=g.group_name
+							inner join {$this->data['config']['forum_prefix']}user_group ug on ug.user_id = u.user_id 
+							where g.group_type!=3
+							and u.user_id not in /*makes sure user is not protected*/
+							(select ug1.user_id from {$this->data['config']['forum_prefix']}user_group ug1 left outer join {$this->data['config']['forum_prefix']}groups g1 on g1.group_id=ug1.group_id where g1.group_id={$this->data['config']['guild_protected_group']})
+							) uid )";
 						
 					}
 					$result = $roster->db->query ( $query );
@@ -129,19 +133,24 @@ class phpbbsyncUpdate
 					if ($this->data['config']['forum_type'] == 0) /*DF*/{
 						$query = "insert into {$this->data['config']['forum_prefix']}bbuser_group (group_id, user_id, user_pending)
 						 	SELECT distinct g.group_id, u.user_id, 0 from {$roster->db->prefix}memberlog ml
-							left outer join {$roster->db->prefix}members m on m.name=ml.name 
-							left outer join {$this->data['config']['forum_prefix']}users u on ucase(u.name)=ucase(ml.name)
-							left outer join {$this->data['config']['forum_prefix']}bbgroups g on m.guild_title=g.group_name
+							inner join {$roster->db->prefix}members m on m.name=ml.name 
+							inner join {$this->data['config']['forum_prefix']}users u on ucase(u.name)=ucase(ml.name)
+							inner join {$this->data['config']['forum_prefix']}bbgroups g on m.guild_title=g.group_name
 							left outer join {$this->data['config']['forum_prefix']}bbuser_group ug on ug.user_id = u.user_id 
-							where m.name is not null /*makes sure character exists in roster*/
-							and u.name is not null /*makes sure user exists in forum*/
-							and g.group_name is not null /*makes sure the group to move to exists*/
-							and u.user_id not in /*makes sure user is not protected*/
+							where u.user_id not in /*makes sure user is not protected*/
 							(select ug1.user_id from {$this->data['config']['forum_prefix']}bbuser_group ug1 left outer join {$this->data['config']['forum_prefix']}bbgroups g1 on g1.group_id=ug1.group_id where g1.group_id={$this->data['config']['guild_protected_group']})
 							";
 					}
 					if ($this->data['config']['forum_type'] == 1) /*phpBB3*/{
-						$query="select 'nothing'";
+						$query = "insert into {$this->data['config']['forum_prefix']}user_group (group_id, user_id, group_leader, user_pending)
+						 	SELECT distinct g.group_id, u.user_id, 0, 0 from {$roster->db->prefix}memberlog ml
+							inner join {$roster->db->prefix}members m on m.name=ml.name 
+							inner join {$this->data['config']['forum_prefix']}users u on ucase(u.user_aim)=ucase(ml.name)
+							inner join {$this->data['config']['forum_prefix']}groups g on m.guild_title=g.group_name
+							left outer join {$this->data['config']['forum_prefix']}user_group ug on ug.user_id = u.user_id 
+							where u.user_id not in /*makes sure user is not protected*/
+							(select ug1.user_id from {$this->data['config']['forum_prefix']}user_group ug1 left outer join {$this->data['config']['forum_prefix']}groups g1 on g1.group_id=ug1.group_id where g1.group_id={$this->data['config']['guild_protected_group']})
+							";
 					}	
 					$result = $roster->db->query ( $query );
 					$this->messages .= "<span class=\"green\">{$roster->locale->act['GroupUpdated']}</span><br />\n";
@@ -157,6 +166,7 @@ class phpbbsyncUpdate
 							(select ug1.user_id from {$this->data['config']['forum_prefix']}bbuser_group ug1 left outer join {$this->data['config']['forum_prefix']}bbgroups g1 on g1.group_id=ug1.group_id where g1.group_id={$this->data['config']['guild_protected_group']})";
 				}
 				if ($this->data['config']['forum_type'] == 1) /*phpBB3*/{
+					//want to 'deactivate' - need to test this.
 						$query="select 'nothing'";
 				}
 				$result = $roster->db->query ( $query );
@@ -180,7 +190,16 @@ class phpbbsyncUpdate
 							)";
 					}
 					if ($this->data['config']['forum_type'] == 1) /*phpBB3*/{
-						$query="select 'nothing'";
+						$query = "delete from {$this->data['config']['forum_prefix']}user_group where user_id in (select user_id from (SELECT distinct u.user_id from {$roster->db->prefix}memberlog ml
+							left outer join {$roster->db->prefix}members m on m.name=ml.name 
+							inner join {$this->data['config']['forum_prefix']}users u on ucase(u.user_aim)=ucase(ml.name)
+							inner join {$this->data['config']['forum_prefix']}groups g on m.guild_title=g.group_name
+							inner join {$this->data['config']['forum_prefix']}user_group ug on ug.user_id = u.user_id 
+							where g.group_type!=3
+							and m.name is null
+							and u.user_id not in /*makes sure user is not protected*/
+							(select ug1.user_id from {$this->data['config']['forum_prefix']}user_group ug1 left outer join {$this->data['config']['forum_prefix']}groups g1 on g1.group_id=ug1.group_id where g1.group_id={$this->data['config']['guild_protected_group']})
+							) uid )";
 					}
 					$result = $roster->db->query ( $query );
 					//Then add in the suspended membership
@@ -196,7 +215,15 @@ class phpbbsyncUpdate
 									where g1.group_id={$this->data['config']['guild_protected_group']})";
 					}
 					if ($this->data['config']['forum_type'] == 1) /*phpBB3*/{
-						$query="select 'nothing'";
+						$query = "insert into {$this->data['config']['forum_prefix']}user_group (group_id, user_id, group_leader, user_pending)
+						 	SELECT distinct (select group_id from `{$this->data['config']['forum_prefix']}groups` where group_id='{$this->data['config']['guild_suspended_group']}') as group_id, u.user_id, 0, 0 from {$roster->db->prefix}memberlog ml
+							left outer join {$roster->db->prefix}members m on m.name=ml.name 
+							inner join {$this->data['config']['forum_prefix']}users u on ucase(u.user_aim)=ucase(ml.name)
+							left outer join {$this->data['config']['forum_prefix']}user_group ug on ug.user_id = u.user_id 
+							where m.name is null
+							and u.user_id not in /*makes sure user is not protected*/
+							(select ug1.user_id from {$this->data['config']['forum_prefix']}user_group ug1 left outer join {$this->data['config']['forum_prefix']}groups g1 on g1.group_id=ug1.group_id where g1.group_id={$this->data['config']['guild_protected_group']})
+							";
 					}
 					$result = $roster->db->query ( $query );
 					$this->messages .= "<span class=\"green\">{$roster->locale->act['SuspUpdated']}</span><br />\n";
