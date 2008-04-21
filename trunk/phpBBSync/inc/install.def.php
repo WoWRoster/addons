@@ -29,7 +29,7 @@ class phpbbsyncInstall
 	var $active = true;
 	var $icon = 'phpbb.png';
  
-	var $version = '1.1.0.1';
+	var $version = '1.2.0.1';
 	var $wrnet_id = 128;
  
 	var $fullname = 'phpbbsync';
@@ -56,13 +56,14 @@ class phpbbsyncInstall
 		$installer->add_config("'110','phpbb_menu_main',NULL,'blockframe','menu'");
 		$installer->add_config("'120','phpbb_menu_player',NULL,'blockframe','menu'");
 		$installer->add_config("'130','phpbb_menu_guild',NULL,'blockframe','menu'");
+		$installer->add_config("'140','phpbb_menu_multirank',NULL,'blockframe','menu'");
 
 		$installer->add_config("'1100','main_enable','0','radio{yes^1|no^0','phpbb_menu_main'");
 		$installer->add_config("'1101','forum_prefix','','text{200|30','phpbb_menu_main'");
-		/*$installer->add_config("'1102','forum_path','forum/','text{200|30','phpbb_menu_main'");*/
 		$installer->add_config("'1103','choose_guild','1','function{getGuildList','phpbb_menu_main'");
 		$installer->add_config("'1104','forum_type','1','radio{DF^1|phpBB3^0','phpbb_menu_main'");
-
+		$installer->add_config("'1105','char_field','username','text{1000|30','phpbb_menu_main'");
+		
 		$installer->add_config("'1200','player_update_location','1','radio{yes^1|no^0','phpbb_menu_player'");
 		$installer->add_config("'1201','player_location','Zone','select{Hearth^Hearth|Zone^Zone','phpbb_menu_player'");
 		$installer->add_config("'1202','player_enable_signature','0','radio{yes^1|no^0','phpbb_menu_player'");
@@ -77,6 +78,13 @@ class phpbbsyncInstall
 		//$installer->add_config("'1305','guild_enable_personaltext','0','radio{yes^1|no^0','phpbb_menu_guild'");
 		$installer->add_config("'1306','guild_protected_group','0','function{getGroups','phpbb_menu_guild'");
 		$installer->add_config("'1307','guild_ranks','0','radio{yes^1|no^0','phpbb_menu_guild'");
+		
+		$installer->add_config("'1401','use_multirank','0','radio{yes^1|no^0','phpbb_menu_multirank'");
+		$installer->add_config("'1402','multirank_1',NULL,'text{1000|30','phpbb_menu_multirank'");
+		$installer->add_config("'1402','multirank_2','members.guild_title','text{1000|30','phpbb_menu_multirank'");
+		$installer->add_config("'1402','multirank_3',NULL,'text{1000|30','phpbb_menu_multirank'");
+		$installer->add_config("'1402','multirank_4',NULL,'text{1000|30','phpbb_menu_multirank'");
+		$installer->add_config("'1402','multirank_5',NULL,'text{1000|30','phpbb_menu_multirank'");		
  
 		return true;
 	}
@@ -106,6 +114,19 @@ class phpbbsyncInstall
 		if( version_compare('1.1.0.1', $oldversion,'>') == true )
 		{
 			$installer->add_config("'1104','forum_type','0','radio{DF^0|phpBB3^1','phpbb_menu_main'");
+		}
+		if( version_compare('1.2.0.0', $oldversion,'>') == true )
+		{
+			$installer->add_config("'1105','char_field','username','text{1000|30','phpbb_menu_main'");
+		}
+		if( version_compare('1.2.0.1', $oldversion,'>') == true )
+		{
+			$installer->add_config("'140','phpbb_menu_multirank',NULL,'blockframe','menu'");
+			$installer->add_config("'1402','multirank_1',NULL,'text{1000|30','phpbb_menu_multirank'");
+			$installer->add_config("'1402','multirank_2','members.guild_title','text{1000|30','phpbb_menu_multirank'");
+			$installer->add_config("'1402','multirank_3',NULL,'text{1000|30','phpbb_menu_multirank'");
+			$installer->add_config("'1402','multirank_4',NULL,'text{1000|30','phpbb_menu_multirank'");
+			$installer->add_config("'1402','multirank_5',NULL,'text{1000|30','phpbb_menu_multirank'");	
 		}
 		return true;
 	}
