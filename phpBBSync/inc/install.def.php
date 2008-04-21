@@ -29,7 +29,7 @@ class phpbbsyncInstall
 	var $active = true;
 	var $icon = 'phpbb.png';
  
-	var $version = '1.2.0.1';
+	var $version = '1.2.0.2';
 	var $wrnet_id = 128;
  
 	var $fullname = 'phpbbsync';
@@ -81,10 +81,10 @@ class phpbbsyncInstall
 		
 		$installer->add_config("'1401','use_multirank','0','radio{yes^1|no^0','phpbb_menu_multirank'");
 		$installer->add_config("'1402','multirank_1',NULL,'text{1000|30','phpbb_menu_multirank'");
-		$installer->add_config("'1402','multirank_2','members.guild_title','text{1000|30','phpbb_menu_multirank'");
-		$installer->add_config("'1402','multirank_3',NULL,'text{1000|30','phpbb_menu_multirank'");
-		$installer->add_config("'1402','multirank_4',NULL,'text{1000|30','phpbb_menu_multirank'");
-		$installer->add_config("'1402','multirank_5',NULL,'text{1000|30','phpbb_menu_multirank'");		
+		$installer->add_config("'1403','multirank_2','members.guild_title','text{1000|30','phpbb_menu_multirank'");
+		$installer->add_config("'1404','multirank_3',NULL,'text{1000|30','phpbb_menu_multirank'");
+		$installer->add_config("'1405','multirank_4',NULL,'text{1000|30','phpbb_menu_multirank'");
+		$installer->add_config("'1406','multirank_5',NULL,'text{1000|30','phpbb_menu_multirank'");		
  
 		return true;
 	}
@@ -122,11 +122,12 @@ class phpbbsyncInstall
 		if( version_compare('1.2.0.1', $oldversion,'>') == true )
 		{
 			$installer->add_config("'140','phpbb_menu_multirank',NULL,'blockframe','menu'");
+			$installer->add_config("'1401','use_multirank','0','radio{yes^1|no^0','phpbb_menu_multirank'");
 			$installer->add_config("'1402','multirank_1',NULL,'text{1000|30','phpbb_menu_multirank'");
-			$installer->add_config("'1402','multirank_2','members.guild_title','text{1000|30','phpbb_menu_multirank'");
-			$installer->add_config("'1402','multirank_3',NULL,'text{1000|30','phpbb_menu_multirank'");
-			$installer->add_config("'1402','multirank_4',NULL,'text{1000|30','phpbb_menu_multirank'");
-			$installer->add_config("'1402','multirank_5',NULL,'text{1000|30','phpbb_menu_multirank'");	
+			$installer->add_config("'1403','multirank_2','members.guild_title','text{1000|30','phpbb_menu_multirank'");
+			$installer->add_config("'1404','multirank_3',NULL,'text{1000|30','phpbb_menu_multirank'");
+			$installer->add_config("'1405','multirank_4',NULL,'text{1000|30','phpbb_menu_multirank'");
+			$installer->add_config("'1406','multirank_5',NULL,'text{1000|30','phpbb_menu_multirank'");	
 		}
 		return true;
 	}

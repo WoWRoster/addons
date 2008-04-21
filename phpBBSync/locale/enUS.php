@@ -51,12 +51,12 @@ $lang['admin']['forum_type']='Set forum type|Select Dragonfly or phpBB3';
 $lang['admin']['char_field']='Set field for character name|Select the field name to use for character names.<br />Options you could use are username, name (real name in DF), or a user created field.';
 
 
-$lang['admin']['use_multirank']='Use the mutirank addon for phpBB forums|Leave fields blank if you don\'t wish to update that rank.<br />Otherwise fill in with either members.[field] or players.[field] <br />depending on which table you wish to draw your data from. <br />Common fields to use might be members.guild_title, members.class, players.race or players.sex.<br />Expect errors if you enable this and don\'t have it installed.'
-$lang['admin']['multirank_1']='Field to use for Rank 1|This is the built in rank and is often used for the post count ranks.<br />Leave blank if you wish to use it for that purpose.'
-$lang['admin']['multirank_2']='Field to use for Rank 2'
-$lang['admin']['multirank_3']='Field to use for Rank 3'
-$lang['admin']['multirank_4']='Field to use for Rank 4'
-$lang['admin']['multirank_5']='Field to use for Rank 5'
+$lang['admin']['use_multirank']='Use the mutirank addon for phpBB forums|Leave fields blank if you don\'t wish to update that rank.<br />Otherwise fill in with either members.[field] or players.[field] <br />depending on which table you wish to draw your data from. <br />Common fields to use might be members.guild_title, members.class, players.race or players.sex.<br />Expect errors if you enable this and don\'t have it installed.';
+$lang['admin']['multirank_1']='Field to use for Rank 1|This is the built in rank and is often used for the post count ranks.<br />Leave blank if you wish to use it for that purpose.';
+$lang['admin']['multirank_2']='Field to use for Rank 2';
+$lang['admin']['multirank_3']='Field to use for Rank 3';
+$lang['admin']['multirank_4']='Field to use for Rank 4';
+$lang['admin']['multirank_5']='Field to use for Rank 5';
 
 $lang['LocationNotSpecified']='Location not specified. Assuming inside ArmorySync.';
 $lang['LocationIsCurrent']='Location is current.';

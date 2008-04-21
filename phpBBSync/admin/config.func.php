@@ -25,7 +25,7 @@ function getGroups($values){
 		return 'Set forum_prefix.';
 		//need to check group tables exist
 	}
-	if ($addon['config']['forum_type'] == 0) /*DF*/{
+	if ($addon['config']['forum_type'] == 1) /*DF*/{
 		$query = "SHOW TABLES LIKE '{$addon['config']['forum_prefix']}bbgroups'";
 		$result = $roster->db->query ( $query );
 		if ($roster->db->num_rows($result)==0){
@@ -45,7 +45,7 @@ function getGroups($values){
 		$configName = $values['name'];
 		$query = "SELECT * FROM `{$addon['config']['forum_prefix']}bbgroups` where group_single_user=0 order by group_name";
 	}
-	if ($addon['config']['forum_type'] == 1) /*phpBB3*/{
+	if ($addon['config']['forum_type'] == 0) /*phpBB3*/{
 		$configName = $values['name'];
 		$query = "SELECT * FROM `{$addon['config']['forum_prefix']}groups` where group_type!=3 order by group_name";
 	}
