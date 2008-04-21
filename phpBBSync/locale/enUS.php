@@ -22,14 +22,10 @@ $lang['phpbbsync_desc']='Sychronises ranks in your guild roster with groups in y
 $lang['admin']['phpbb_menu_main']='Main|Main settings';
 $lang['admin']['phpbb_menu_player']='Player|Options for items updated on player update';
 $lang['admin']['phpbb_menu_guild']='Guild|Options for items updated on guild update';
-
-$lang['admin']['main_enable']='Enable phpBBSync|If disabled, phpBBSync will not run at all.';
-$lang['admin']['forum_prefix']='phpBB database prefix|This must be the same as the forums DB prefix.<br />Default is: cms_';
-$lang['admin']['forum_path']='Web path from root site|Enter the path to get to your phpBB forum here<br />Ex: forum/; phpBB/;<br />Be sure to include the last /';
-$lang['admin']['choose_guild']='Choose a guild|Choose the guild which you wish to sync to phpBB.';
+$lang['admin']['phpbb_menu_multirank']='Multirank|Options for users of the multirank forum mod.<br />No effect on non-users.';
 
 $lang['admin']['main_enable']='Enable phpBBSync|If disabled, ppBBSync will not run at all.';
-$lang['admin']['forum_prefix']='phpBB database prefix|This must be the same as the forums DB prefix.<br />Default is: phpbb_';
+$lang['admin']['forum_prefix']='phpBB database prefix|This must be the same as the forums DB prefix.<br />Default is: cms_';
 $lang['admin']['forum_path']='Web path from root site|Enter the path to get to your phpBB forum here<br />Ex: forum/; phpBB/;<br />Be sure to include the last /';
 $lang['admin']['choose_guild']='Choose a guild|Choose the guild which you wish to sync to phpBB.';
 
@@ -51,9 +47,16 @@ $lang['admin']['guild_suspended_group']='Select a group to put suspended members
 $lang['admin']['guild_ranks']='Allow to manage ranks|Allow phpBBSync to change guild members ranks based on guild rank.<br />Ranks are created automatically as \'special\' ranks but rank image will have to be manually set.';
 $lang['admin']['groupcal_enable']='Enable GroupCalendar Sync with phpBB Calendar|Dont forget to enable and setup permissions<br />for the calendar in phpBB\'s admin panel.';
 $lang['admin']['groupcal_update_permission']='Permission to update|Select permission level to update calendar';
-$lang['admin']['forum_type']='Set forum type|Select Dragonfly or phpBB3(Not currently working)';
+$lang['admin']['forum_type']='Set forum type|Select Dragonfly or phpBB3';
+$lang['admin']['char_field']='Set field for character name|Select the field name to use for character names.<br />Options you could use are username, name (real name in DF), or a user created field.';
 
 
+$lang['admin']['use_multirank']='Use the mutirank addon for phpBB forums|Leave fields blank if you don\'t wish to update that rank.<br />Otherwise fill in with either members.[field] or players.[field] <br />depending on which table you wish to draw your data from. <br />Common fields to use might be members.guild_title, members.class, players.race or players.sex.<br />Expect errors if you enable this and don\'t have it installed.'
+$lang['admin']['multirank_1']='Field to use for Rank 1|This is the built in rank and is often used for the post count ranks.<br />Leave blank if you wish to use it for that purpose.'
+$lang['admin']['multirank_2']='Field to use for Rank 2'
+$lang['admin']['multirank_3']='Field to use for Rank 3'
+$lang['admin']['multirank_4']='Field to use for Rank 4'
+$lang['admin']['multirank_5']='Field to use for Rank 5'
 
 $lang['LocationNotSpecified']='Location not specified. Assuming inside ArmorySync.';
 $lang['LocationIsCurrent']='Location is current.';
