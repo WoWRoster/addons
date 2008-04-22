@@ -29,7 +29,7 @@ class phpbbsyncInstall
 	var $active = true;
 	var $icon = 'phpbb.png';
  
-	var $version = '1.2.0.2';
+	var $version = '1.2.0.3';
 	var $wrnet_id = 128;
  
 	var $fullname = 'phpbbsync';
@@ -61,7 +61,7 @@ class phpbbsyncInstall
 		$installer->add_config("'1100','main_enable','0','radio{yes^1|no^0','phpbb_menu_main'");
 		$installer->add_config("'1101','forum_prefix','','text{200|30','phpbb_menu_main'");
 		$installer->add_config("'1103','choose_guild','1','function{getGuildList','phpbb_menu_main'");
-		$installer->add_config("'1104','forum_type','1','radio{DF^1|phpBB3^0','phpbb_menu_main'");
+		$installer->add_config("'1104','forum_type','1','radio{DF^0|phpBB3^1','phpbb_menu_main'");
 		$installer->add_config("'1105','char_field','username','text{1000|30','phpbb_menu_main'");
 		
 		$installer->add_config("'1200','player_update_location','1','radio{yes^1|no^0','phpbb_menu_player'");
@@ -107,7 +107,7 @@ class phpbbsyncInstall
 			$installer->add_config("'1205','player_avatar',NULL,'text{1000|30','phpbb_menu_player'");
 			$installer->add_config("'1307','guild_ranks','0','radio{yes^1|no^0','phpbb_menu_guild'");
 			//update suspend group here
-			$installer->update_config('1302', 'form_type=radio{yes^1|no^0|group^2');
+			$installer->update_config('1302', 'form_type="radio{yes^1|no^0|group^2"');
 			//remove forum path
 			$installer->remove_config('1102');
 		}
@@ -128,6 +128,10 @@ class phpbbsyncInstall
 			$installer->add_config("'1404','multirank_3',NULL,'text{1000|30','phpbb_menu_multirank'");
 			$installer->add_config("'1405','multirank_4',NULL,'text{1000|30','phpbb_menu_multirank'");
 			$installer->add_config("'1406','multirank_5',NULL,'text{1000|30','phpbb_menu_multirank'");	
+		}
+		if( version_compare('1.2.0.3', $oldversion,'>') == true )
+		{
+			$installer->update_config('1104','form_type="radio{DF^0|phpBB3^1"');
 		}
 		return true;
 	}
