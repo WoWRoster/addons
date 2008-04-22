@@ -351,32 +351,120 @@ class phpbbsyncUpdate
 					$this->messages .= "<span class=\"green\">{$roster->locale->act['RankUpdated']}</span><br />\n";
 				}
 				else{
-// 					if ($this->data['config']['forum_type'] == 0) /*DF*/{
-// 						$query = "INSERT INTO `{$this->data['config']['forum_prefix']}bbranks` (`rank_title` , `rank_min` , `rank_max`, `rank_special`, `rank_image` ) 
-// 		 					SELECT mp.ranks, '-1', 0, 1, '' from (";
-// 	 					$first=true;
-// 	 					for($i=1;$i<=5;i++){
-// 		 					if $this->data['config']['multirank_'.$i]!=''{
-// 			 					if $first=false{
-// 				 					$query .= "UNION ALL";
-// 		 						}else{
-// 			 						$first=false;
-// 			 					}
-// 		 						$query .="SELECT DISTINCT {$this->data['config']['multirank_'.$i]} as ranks from {$roster->db->prefix}members members
-//									full join {$roster->db->prefix}players players on players.name=members.name
-//									left outer join {$this->data['config']['forum_prefix']}bbranks r on {$this->data['config']['multirank_'.$i]}=r.rank_title
-//									where r.rank_title is null
-//									and {$this->data['config']['multirank_'.$i]} is not null";
-// 				 			}
-// 	 					}
-// 	 					$query .= ") mp
-// 							left outer join {$this->data['config']['forum_prefix']}users u on m.name=u.{$this->data['config']['char_field']}
-// 	 						where u.{$this->data['config']['char_field']} is not null
-// 	 						group by m.guild_title";
-// 					
-// 						
-// 						
-//					}
+					//First create ranks that don't exist
+					if ($this->data['config']['forum_type'] == 0) /*DF*/{
+						$query = "INSERT INTO `{$this->data['config']['forum_prefix']}bbranks` (`rank_title` , `rank_min` , `rank_max`, `rank_special`, `rank_image` ) 
+		 					SELECT mp.ranks, '-1', 0, 1, '' from (";
+	 					$first=true;
+	 					for($i=1;$i<=5;$i++){
+		 					if ($this->data['config']['multirank_'.$i]!=''){
+			 					if ($first==false){
+				 					$query .= "UNION ALL ";
+		 						}else{
+			 						$first=false;
+			 					}
+		 						$query .="SELECT DISTINCT {$this->data['config']['multirank_'.$i]} as ranks from {$roster->db->prefix}members members
+									left outer join {$roster->db->prefix}players players on players.name=members.name
+									left outer join {$this->data['config']['forum_prefix']}bbranks r on {$this->data['config']['multirank_'.$i]}=r.rank_title
+									left outer join {$this->data['config']['forum_prefix']}users u on members.name=u.{$this->data['config']['char_field']}
+									where r.rank_title is null
+									and u.{$this->data['config']['char_field']} is not null
+									and {$this->data['config']['multirank_'.$i]} is not null ";
+				 			}
+	 					}
+	 					$query .= ") mp";			
+					}
+					if ($this->data['config']['forum_type'] == 1) /*phpBB3*/{
+						//Test DF first
+						$query = "INSERT INTO `{$this->data['config']['forum_prefix']}ranks` (`rank_title` , `rank_min`, `rank_special`, `rank_image` ) 
+		 					SELECT mp.ranks, 0, 1, '' from (";
+	 					$first=true;
+	 					for($i=1;$i<=5;$i++){
+		 					if ($this->data['config']['multirank_'.$i]!=''){
+			 					if ($first==false){
+				 					$query .= "UNION ALL ";
+		 						}else{
+			 						$first=false;
+			 					}
+		 						$query .="SELECT DISTINCT {$this->data['config']['multirank_'.$i]} as ranks from {$roster->db->prefix}members members
+									left outer join {$roster->db->prefix}players players on players.name=members.name
+									left outer join {$this->data['config']['forum_prefix']}ranks r on {$this->data['config']['multirank_'.$i]}=r.rank_title
+									left outer join {$this->data['config']['forum_prefix']}users u on members.name=u.{$this->data['config']['char_field']}
+									where r.rank_title is null
+									and u.{$this->data['config']['char_field']} is not null
+									and {$this->data['config']['multirank_'.$i]} is not null ";
+				 			}
+	 					}
+	 					$query .= ") mp";	
+					}
+					$result = $roster->db->query ( $query );
+					//Next, we need to add people to all the ranks. Ugly SQL alert.
+					if ($this->data['config']['forum_type'] == 0) /*DF*/{
+						$query ="UPDATE {$this->data['config']['forum_prefix']}users u inner join {$roster->db->prefix}members members inner join {$roster->db->prefix}players players ";
+						for($i=1;$i<=5;$i++){
+			 				if ($this->data['config']['multirank_'.$i]!=''){
+				 				$query .="inner join {$this->data['config']['forum_prefix']}bbranks r{$i} ";
+			 				}
+		 				}
+		 				$first=true;
+		 				for($i=1;$i<=5;$i++){
+							if ($this->data['config']['multirank_'.$i]!=''){
+								if ($i==1){$rankcol="user_rank";}else{$rankcol="user_rank".$i;}
+								if ($first==false){
+				 					$query .= ", {$rankcol}=r{$i}.rank_id ";
+		 						}else{
+			 						$first=false;
+			 						$query .= "SET {$rankcol}=r{$i}.rank_id ";
+			 					}
+							}
+						}
+						$first=true;
+		 				for($i=1;$i<=5;$i++){
+							if ($this->data['config']['multirank_'.$i]!=''){
+								if ($first==false){
+				 					$query .= " and r{$i}.rank_title={$this->data['config']['multirank_'.$i]} ";
+		 						}else{
+			 						$first=false;
+			 						$query .= "WHERE r{$i}.rank_title={$this->data['config']['multirank_'.$i]} ";
+			 					}
+							}
+						}
+						$query .="AND ucase(u.{$this->data['config']['char_field']})=ucase(members.name) and members.name=players.name";
+					}
+					if ($this->data['config']['forum_type'] == 1) /*phpBB3*/{
+						$query ="UPDATE {$this->data['config']['forum_prefix']}users u inner join {$roster->db->prefix}members members inner join {$roster->db->prefix}players players ";
+						for($i=1;$i<=5;$i++){
+			 				if ($this->data['config']['multirank_'.$i]!=''){
+				 				$query .="inner join {$this->data['config']['forum_prefix']}ranks r{$i} ";
+			 				}
+		 				}
+		 				$first=true;
+		 				for($i=1;$i<=5;$i++){
+							if ($this->data['config']['multirank_'.$i]!=''){
+								if ($i==1){$rankcol="user_rank";}else{$rankcol="user_rank".$i;}
+								if ($first==false){
+				 					$query .= ", {$rankcol}=r{$i}.rank_id ";
+		 						}else{
+			 						$first=false;
+			 						$query .= "SET {$rankcol}=r{$i}.rank_id ";
+			 					}
+							}
+						}
+						$first=true;
+		 				for($i=1;$i<=5;$i++){
+							if ($this->data['config']['multirank_'.$i]!=''){
+								if ($first==false){
+				 					$query .= " and r{$i}.rank_title={$this->data['config']['multirank_'.$i]} ";
+		 						}else{
+			 						$first=false;
+			 						$query .= "WHERE r{$i}.rank_title={$this->data['config']['multirank_'.$i]} ";
+			 					}
+							}
+						}
+						$query .="AND ucase(u.{$this->data['config']['char_field']})=ucase(members.name) and members.name=players.name";
+					}
+					$result = $roster->db->query ( $query );
+					$this->messages .= "<span class=\"green\">{$roster->locale->act['RankUpdated']}</span><br />\n";
 				}
 			}
  		/* 
