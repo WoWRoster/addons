@@ -102,27 +102,31 @@ if( $num_members > 0 )
 	$query = 'SELECT '.
 	'`user_link`.`uid`, '.
 	'`user_link`.`member_id`, '.
-	'`players`.`member_id`, '.
-	'`players`.`name`, '.
-	'`players`.`level`, '.
-	'`players`.`class`, '.
-	'`players`.`show_money`, '.
-	'`players`.`show_played`, '.
-	'`players`.`show_tab2`, '.
-	'`players`.`show_tab3`, '.
-	'`players`.`show_tab4`, '.
-	'`players`.`show_tab5`, '.
-	'`players`.`show_talents`, '.
-	'`players`.`show_spellbook`, '.
-	'`players`.`show_mail`, '.
-	'`players`.`show_bags`, '.
-	'`players`.`show_bank`, '.
-	'`players`.`show_quests`, '.
-	'`players`.`show_recipes`, '.
-	'`players`.`show_item_bonuses` '.
+	'`player`.`member_id`, '.
+	'`player`.`name`, '.
+	'`player`.`race`, '.
+	'`player`.`sex`, '.
+	'`player`.`level`, '.
+	'`player`.`class`, '.
+	'`display`.`member_id`, '.
+	'`display`.`show_money`, '.
+	'`display`.`show_played`, '.
+	'`display`.`show_tab2`, '.
+	'`display`.`show_tab3`, '.
+	'`display`.`show_tab4`, '.
+	'`display`.`show_tab5`, '.
+	'`display`.`show_talents`, '.
+	'`display`.`show_spellbook`, '.
+	'`display`.`show_mail`, '.
+	'`display`.`show_bags`, '.
+	'`display`.`show_bank`, '.
+	'`display`.`show_quests`, '.
+	'`display`.`show_recipes`, '.
+	'`display`.`show_item_bonuses` '.
 
 	'FROM `'.$roster->db->table('user_link', 'accounts').'` AS user_link '.
-	'LEFT JOIN `'.$roster->db->table('players').'` AS players ON `user_link`.`member_id` = `players`.`member_id` '.
+	'LEFT JOIN `'.$roster->db->table('players').'` AS player ON `user_link`.`member_id` = `player`.`member_id` '.
+	'LEFT JOIN `'.$roster->db->table('display', 'info').'` AS display ON `user_link`.`member_id` = `display`.`member_id` '.
 	'WHERE `user_link`.`uid` = "' . $uid . '" '.
 	'ORDER BY `name` ASC'.
 	' LIMIT ' . ($start > 0 ? $start : 0) . ', 15;';
@@ -133,6 +137,7 @@ if( $num_members > 0 )
 	{
 		$formbody .= '	<tr>
 		<td class="membersRow' . (($i%2)+1) . '"><a href="' . makelink('char-info&amp;a=c:' . $data['member_id']) . '" target="_blank">' . $data['name'] . '</a><br />
+			' . $data['race'] . ':' . $data['sex'] . '<br />
 			' . $data['level'] . ':' . $data['class'] . "</td>\n";
 
 		$k=0;
@@ -144,9 +149,10 @@ if( $num_members > 0 )
 			}
 
 			$formbody .= '		<td class="membersRow' . (($i%2)+1) . '">' . "\n";
-			$formbody .= '			<input type="radio" id="chard_f' . $k . '_' . $data['member_id'] . '" name="disp_' . $data['member_id'] . ':' . $val_name . '" value="1" ' . ( $value == '1' ? 'checked="checked"' : '' ) . ' /><label for="chard_f' . $k . '_' . $data['member_id'] . '">off</label><br />' . "\n";
-			$formbody .= '			<input type="radio" id="chard_n' . $k . '_' . $data['member_id'] . '" name="disp_' . $data['member_id'] . ':' . $val_name . '" value="3" ' . ( $value == '3' ? 'checked="checked"' : '' ) . ' /><label for="chard_n' . $k . '_' . $data['member_id'] . '">on</label>' . "\n";
-			$formbody .= "\t\t</td>\n";
+			$formbody .= '			<input type="radio" id="chard_f' . $k . '_' . $data['member_id'] . '" name="disp_' . $data['member_id'] . ':' . $val_name . '" value="1" ' . ( $value == '1' ? 'checked="checked"' : '' ) . ' /><label for="chard_f' . $k . '_' . $data['member_id'] . '">Off</label><br />' . "\n";
+			$formbody .= '			<input type="radio" id="chard_n' . $k . '_' . $data['member_id'] . '" name="disp_' . $data['member_id'] . ':' . $val_name . '" value="3" ' . ( $value == '3' ? 'checked="checked"' : '' ) . ' /><label for="chard_n' . $k . '_' . $data['member_id'] . '">On</label><br />' . "\n";
+			$formbody .= '			<input type="radio" id="chard_g' . $k . '_' . $data['member_id'] . '" name="disp_' . $data['member_id'] . ':' . $val_name . '" value="0" ' . ( $value == '0' ? 'checked="checked"' : '' ) . ' /><label for="chard_g' . $k . '_' . $data['member_id'] . '">Global</label>' . "\n";
+			$formbody .= "\t\t\t</td>\n";
 
 			$k++;
 		}
@@ -202,7 +208,7 @@ function processData( )
 			list($member_id,$settingName) = explode(':',$settingName);
 
 			$get_val = "SELECT `$settingName`"
-					 . " FROM `" . $roster->db->table('players') . "`"
+					 . " FROM `" . $roster->db->table('display', 'info') . "`"
 					 . " WHERE `member_id` = '$member_id';";
 
 			$result = $roster->db->query($get_val) or die_quietly($roster->db->error(),'Database Error',__FILE__,__LINE__,$get_val);
@@ -211,7 +217,7 @@ function processData( )
 
 			if( $config[$settingName] != $settingValue && $settingName != 'process' )
 			{
-				$update_sql[] = "UPDATE `" . $roster->db->table('players') . "`"
+				$update_sql[] = "UPDATE `" . $roster->db->table('display', 'info') . "`"
 							  . " SET `$settingName` = '" . $roster->db->escape( $settingValue ) . "'"
 							  . " WHERE `member_id` = '$member_id';";
 			}

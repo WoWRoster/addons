@@ -12,6 +12,19 @@
  * @subpackage Changelog 
  */
 
+Accounts v1.9.9.935 [SVN]388:
+-Modified
+-- getAuthorized() in login.php for new Addon Auth and page redirection
+-- login scripting in page.lib.php for changes in the Auth System
+-- admin/settings.php for the DB change to the Info addon display settings
+-- inc/install.def.php
+
+- Added
+-- global option, as well as Race:Sex info for Character Display Settings
+-- new table for profile settings/info
+
+- Upped version to 1.9.9.935, as most changes are to maintain compatability with roster
+
 
 Accounts v1.9.9.93 [SVN]379:
 - Added

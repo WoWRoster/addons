@@ -28,7 +28,7 @@ class accountsInstall
     var $active = true; 
     var $icon = 'inv_misc_groupneedmore'; 
 
-    var $version = '1.9.9.93'; 
+    var $version = '1.9.9.935'; 
 	var $wrnet_id = '0';
 
     var $fullname = 'Accounts'; 
