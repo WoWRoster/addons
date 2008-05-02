@@ -227,35 +227,28 @@ class accountsPage extends accounts
     		$redirect = 'util-accounts-main';
     		$locale = 'acc_main_page';
     	}
-
-		// ----[ Check log-in ]-------------------------------------
-		include_once('login.php');
-		$roster_login = new RosterLogin($redirect);
  
 		// Disallow viewing of the page
-		if( $roster_login->getAuthorized() < 1 )
+		if( !$roster->auth->getAuthorized($addon['config']['acc_min_access'], $redirect) )
 		{
 			print
 			'<span class="title_text">' . $roster->locale->act[$locale] . '</span><br />'.
-			$roster_login->getMessage().
-			$roster_login->getLoginForm();
+			$roster->auth->getMessage().
+			$roster->auth->getLoginForm();
 		}
 	}
 
 	function charsPage()
 	{
 		global $roster, $addon, $accounts;
-		
-		// ----[ Check log-in ]-------------------------------------
-		$roster_login = new RosterLogin();
  
 		// Disallow viewing of the page
-		if( $roster_login->getAuthorized() < 1 )
+		if( !$roster->auth->getAuthorized($addon['config']['acc_min_access']) )
 		{
 			print
 			'<span class="title_text">' . $roster->locale->act['acc_chars_page'] . '</span><br />'.
-			$roster_login->getMessage().
-			$roster_login->getLoginForm();
+			$roster->auth->getMessage().
+			$roster->auth->getLoginForm();
 		}
 		else
 		{
@@ -450,17 +443,14 @@ class accountsPage extends accounts
 	function guildsPage()
 	{
 		global $roster, $addon, $accounts;
-
-		// ----[ Check log-in ]-------------------------------------
-		$roster_login = new RosterLogin();
  
 		// Disallow viewing of the page
-		if( $roster_login->getAuthorized() < 1 )
+		if( !$roster->auth->getAuthorized($addon['config']['acc_min_access']) )
 		{
 			print
 			'<span class="title_text">' . $roster->locale->act['acc_guilds_page'] . '</span><br />'.
-			$roster_login->getMessage().
-			$roster_login->getLoginForm();
+			$roster->auth->getMessage().
+			$roster->auth->getLoginForm();
 		}
 		else
 		{
@@ -556,17 +546,14 @@ class accountsPage extends accounts
 	function realmsPage()
 	{
 		global $roster, $addon, $accounts;
-
-		// ----[ Check log-in ]-------------------------------------
-		$roster_login = new RosterLogin();
  
 		// Disallow viewing of the page
-		if( $roster_login->getAuthorized() < 1 )
+		if( !$roster->auth->getAuthorized($addon['config']['acc_min_access']))
 		{
 			print
 			'<span class="title_text">' . $roster->locale->act['acc_realms_page'] . '</span><br />'.
-			$roster_login->getMessage().
-			$roster_login->getLoginForm();
+			$roster->auth->getMessage().
+			$roster->auth->getLoginForm();
 		}
 		else
 		{
@@ -662,17 +649,14 @@ class accountsPage extends accounts
 	function settingsPage()
 	{
 		global $roster, $addon, $accounts;
-
-		// ----[ Check log-in ]-------------------------------------
-		$roster_login = new RosterLogin();
  
 		// Disallow viewing of the page
-		if( $roster_login->getAuthorized() < 1 )
+		if( !$roster->auth->getAuthorized($addon['config']['acc_min_access']) )
 		{
 			print
 			'<span class="title_text">' . $roster->locale->act['acc_settings_page'] . '</span><br />'.
-			$roster_login->getMessage().
-			$roster_login->getLoginForm();
+			$roster->auth->getMessage().
+			$roster->auth->getLoginForm();
 		}
 		else
 		{
@@ -708,9 +692,6 @@ class accountsPage extends accounts
 	function mainPage()
 	{
 		global $roster, $addon, $accounts;
-
-		// ----[ Check log-in ]-------------------------------------
-		$roster_login = new RosterLogin();
 
 		if($accounts->session->getVal('isLoggedIn') == true) // This replaces login
 		{

@@ -209,16 +209,34 @@ class RosterLogin
 		
 	}
 
-	function getAuthorized()
+	function getAuthorized($access = '', $redirect = '')
 	{
 		global $roster, $addon, $accounts;
 
-		if($accounts->session->getVal('groupID') > 0)
+		if(!is_null($access))
 		{
-			$this->allow_login = $accounts->session->getVal('groupID');
+			if(!is_null($redirect))
+			{
+				$this->setAction($redirect);
+				return $this->allow_login >= $access;
+			}
+			else
+			{
+				return $this->allow_login >= $access;
+			}
 		}
-
-		return $this->allow_login;
+		elseif($accounts->session->getVal('groupID') > 0)
+		{
+			if(!is_null($redirect))
+			{
+				$this->setAction($redirect);
+				return $this->allow_login = $accounts->session->getVal('groupID');
+			}
+			else
+			{
+				return $this->allow_login = $accounts->session->getVal('groupID');
+			}
+		}
 	}
 
 	function getMessage()
