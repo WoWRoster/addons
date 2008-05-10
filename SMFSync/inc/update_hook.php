@@ -549,7 +549,7 @@ class smfsyncUpdate
 		 										</span><br />\n";
 		 				}else{
 		 					$query = "UPDATE `{$this->data['config']['forum_prefix']}members` SET `location` =
-		 								'{$data['Hearth']}'	WHERE `realName` = '{$data['Name']}' LIMIT 1 ";
+		 								'" . addslashes($data['Hearth']) . "'	WHERE `realName` = '{$data['Name']}' LIMIT 1 ";
 		 					$result = $roster->db->query ( $query );
 		 					$ResultRows = $roster->db->affected_rows();
 		 					if ($ResultRows == 1){
@@ -573,7 +573,7 @@ class smfsyncUpdate
 		 										</span><br />\n";
 		 				}else{
 		 					$query = "UPDATE `{$this->data['config']['forum_prefix']}members` SET `location` =
-		 								'{$data['Zone']}' WHERE `realName` = '{$data['Name']}' LIMIT 1 ";
+		 								'" . addslashes($data['Zone']) . "' WHERE `realName` = '{$data['Name']}' LIMIT 1 ";
 		 					$result = $roster->db->query ( $query );
 		 					$ResultRows = $roster->db->affected_rows();
 		 					if ($ResultRows == 1){

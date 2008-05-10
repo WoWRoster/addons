@@ -1,3 +1,7 @@
+[320 - 051008]
+-Deleted hacked login.php that was used to replace normal one.
+-Deleted readme.txt as it only pertained to login.php
+-Fixed bug for zones with apostrophies in them
 [319 - 112807]
 -Updated install routine for new procedure.
 --Zanix beat me to it.
