@@ -56,6 +56,15 @@ self.parent.location.reload(true);
 	require ("../../../../{$forumPath}SSI.php");
 
 	echo '<link REL="STYLESHEET" TYPE="text/css" HREF="../../../templates/'.$rosterTemplate.'/style.css"><center>';
+	echo "<style>
+label{
+	color: #CBA300;
+}
+input{
+	color: #CBA300;
+}
+</style>";
+
 	$redirect = "http://{$_SERVER['SERVER_NAME']}{$_SERVER['SCRIPT_NAME']}?login=true&rosterTemplate={$rosterTemplate}";
 
 	ssi_login($redirect);
