@@ -15,7 +15,7 @@
 * @package    SMFSync
 * @subpackage User
 */
-
+define('ROSTERLOGIN_ADMIN', 3);
 class RosterLogin
 {
 
@@ -164,13 +164,11 @@ Please visit '.$roster->config['website_address'].' to register on the forum.';
 				}
 				rsort($rosterGroup);
 				$this->allow_login = $rosterGroup[0];
-				$this->message = border('sgold','start');
-				$this->message .= '<span style="font-size:10px;color:green;">Logged in as '.$this->translateLevel($rosterGroup[0]).' <form style="display:inline;" name="roster_logout" action="'.$this->script_filename.'" method="post"><span style="font-size:10px;color:#FFFFFF"><input type="hidden" name="logout" value="1" />[<a href="javascript:document.roster_logout.submit();">Logout</a>]</span></form><br />';
-				$this->message .= border('sgold','end');
+				$this->message = '<span style="color:green;">Logged in as '.$this->translateLevel($rosterGroup[0]).' <form style="display:inline;" name="roster_logout" action="'.$this->script_filename.'" method="post"><span style="font-size:10px;color:#FFFFFF"><input type="hidden" name="logout" value="1" />[<a href="javascript:document.roster_logout.submit();">Logout</a>]</span></form><br />';
 
 		}else{
 			$this->allow_login = 0;
-			$this->message = '<span style="font-size:10px;color:red;">Not logged in</span><br />';
+			$this->message = '<span style="color:red;">Not logged in</span><br />';
 		}
 	}
 	function getAuthorized()
@@ -184,13 +182,34 @@ Please visit '.$roster->config['website_address'].' to register on the forum.';
 	}
 
 
+	function getMenuLoginForm()
+	{
+		return $this->getMessage();
+		/*
+		global $roster, $addon, $accounts;
+		if( $this->allow_login < 1 )
+		{
+			return '
+			<form action="' . $this->action . '" method="post" enctype="multipart/form-data" onsubmit="submitonce(this);" style="margin:0;">
+				' . $roster->locale->get_string('acc_uname', 'accounts') . ': <input name="user" class="wowinput128" type="text" size="30" maxlength="30" />&nbsp;&nbsp;
+				' . $roster->locale->act['password'] . ': <input name="password" class="wowinput128" type="password" size="30" maxlength="30" />&nbsp;&nbsp;
+				<input type="submit" value="Go" />
+			</form>' . $this->getMessage();
+		}
+		else
+		{
+			return $this->getMessage();
+		}*/
+	}
+
 	function getLoginForm ($level = 3){
 		global $roster;
 
 		$level = $this->translateLevel ($level);
 		$return = "";
+		$return = "<a href=addons/smfsync/inc/loginForm.php target=frame>Reload</a>";
 		$return .= border('sred','start',$level. ' login required');
-		$return .= '<iframe frameborder=0 width=200 height=90 scrolling=no align=top src="'.$roster->tpl->_tpldata['.']['0']['ROSTER_URL'].'addons/smfsync/inc/loginForm.php" ></iframe>';
+		$return .= '<iframe name=frame frameborder=0 width=200 height=90 scrolling=no align=top src="'.$roster->tpl->_tpldata['.']['0']['ROSTER_URL'].'addons/smfsync/inc/loginForm.php" ></iframe>';
 		$return .= border('sred','end');
 
 		return $return;
