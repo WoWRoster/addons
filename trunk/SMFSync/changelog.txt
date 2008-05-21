@@ -1,4 +1,7 @@
-[391 - 52108]
+[392 - 052108]
+-Group calendar tweaks. Still not 100% tested.
+--Two uploads due to accidently not commiting before downloading onto new computer.
+[391 - 052108]
 -Fixed bug in authentication. Was allowing anyone logged in at all into RosterCP
 [390 - 051308]
 -Fixed some bugs in the login form.

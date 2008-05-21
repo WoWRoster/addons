@@ -816,3 +816,9 @@ class smfsyncUpdate
 	}
 
 }
+
+function ClassInt($code){
+	global $gc_lang;
+	return $gc_lang['Class'][$code];
+}
+
