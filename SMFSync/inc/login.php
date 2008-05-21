@@ -171,9 +171,9 @@ Please visit '.$roster->config['website_address'].' to register on the forum.';
 			$this->message = '<span style="color:red;">Not logged in</span><br />';
 		}
 	}
-	function getAuthorized()
+	function getAuthorized( $access )
 	{
-		return $this->allow_login;
+		return $this->allow_login >= $access;
 	}
 
 	function getMessage()
