@@ -1,3 +1,5 @@
+[391 - 52108]
+-Fixed bug in authentication. Was allowing anyone logged in at all into RosterCP
 [390 - 051308]
 -Fixed some bugs in the login form.
 -Updated login so that it now works with the latest update of roster.
