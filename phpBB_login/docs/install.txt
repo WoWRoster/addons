@@ -1,0 +1,13 @@
+To Install this addon, copy the files into the Roster directory.
+
+Open \roster\addons\phpbb_login\inc\phpbb_login.php and goto line 30.
+You need to specify the absolute path to your phpBB forum working directory.
+
+Then install the addon via WoW Roster's control panel.  You will need to install the addon, then configure the addon prior to enabling it.
+
+In the configuration menu, you need to specify which phpBB User Group Names are to be applied to the level of roster authentication.
+
+Once you have established those settings, you then need to activate the addon from the Addon Manager.
+Then return to the Main Roster Configuration screen and change the Roster Auth setting to phpBB Login.
+
+You should be set to go!
