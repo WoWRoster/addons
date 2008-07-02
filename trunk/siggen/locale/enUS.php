@@ -32,37 +32,18 @@
  *
  */
 
+
+
 // Translation Information
-	// Format: $siggen_translate['locale']['Localized Name']='English Name';
+	// Format: $lang['translate']['Localized Name']='English Name';
 	// 'Localized Name' MUST be the same as what is stored in the database
 	// 'English Name' MUST be the same as what is stored in a 'enUS' database
-		// Example: $siggen_translate['deDE']['Nachtelf']='Night Elf';
+		// Example: $lang['translate']['Nachtelf']='Night Elf';
 		// Example: $lang['translate']['Night Elf']='Night Elf';
 
-// ----[ Begin US English (enUS) ]--------------------------
+// The main locale arrays 'class_to_en' and 'race_to_en' are added automatically
 
-// Class Translation
-$lang['translate']['Druid']    = 'Druid';
-$lang['translate']['Hunter']   = 'Hunter';
-$lang['translate']['Mage']     = 'Mage';
-$lang['translate']['Paladin']  = 'Paladin';
-$lang['translate']['Priest']   = 'Priest';
-$lang['translate']['Rogue']    = 'Rogue';
-$lang['translate']['Shaman']   = 'Shaman';
-$lang['translate']['Warlock']  = 'Warlock';
-$lang['translate']['Warrior']  = 'Warrior';
-
-// Race, Gender Translation
-$lang['translate']['Blood Elf'] = 'Blood Elf';
-$lang['translate']['Draenei']   = 'Draenei';
-$lang['translate']['Night Elf'] = 'Night Elf';
-$lang['translate']['Dwarf']     = 'Dwarf';
-$lang['translate']['Gnome']     = 'Gnome';
-$lang['translate']['Human']     = 'Human';
-$lang['translate']['Orc']       = 'Orc';
-$lang['translate']['Undead']    = 'Undead';
-$lang['translate']['Troll']     = 'Troll';
-$lang['translate']['Tauren']    = 'Tauren';
+// Gender Translation
 $lang['translate']['Male']      = 'Male';
 $lang['translate']['Female']    = 'Female';
 

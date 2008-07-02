@@ -69,6 +69,10 @@ if ( !defined('IN_ROSTER') )
 			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionList($classImgDirList,$configData['class_dir'],'class_dir',0,'onchange="document.config.submit();"' ); ?></td>
 		</tr>
 		<tr>
+			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Select an image pack','Talent Spec image pack' ); ?></td>
+			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionList($specImgDirList,$configData['spec_dir'],'spec_dir',0,'onchange="document.config.submit();"' ); ?></td>
+		</tr>
+		<tr>
 			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Select an image pack<br /><span style=&quot;color:red;&quot;>You MUST re-select the default background image and all of the images<br />in the background image config again when changing this!</span>','Background image pack' ); ?></td>
 			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionList($backImgDirList,$configData['backg_dir'],'backg_dir',0,'onchange="document.config.submit();"' ); ?></td>
 		</tr>
@@ -101,7 +105,7 @@ if ( !defined('IN_ROSTER') )
 			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><?php print $functions->createOptionList($linklist,$configData['link_type'],'link_type' ); ?></td>
 		</tr>
 		<tr>
-			<td class="sc_row_right<?php echo (((++$row)%2)+1); ?>" align="left" colspan="2"><?php print $functions->createTip( 'These <u><strong>MUST</strong></u> be separated with a ( : )<br />Choices { frames | char | border | pvp | lvl | class }','Image layer order' ); ?>
+			<td class="sc_row_right<?php echo (((++$row)%2)+1); ?>" align="left" colspan="2"><?php print $functions->createTip( 'These <u><strong>MUST</strong></u> be separated with a ( : )<br />Choices { frames | char | border | pvp | lvl | class | spec }','Image layer order' ); ?>
 				<input name="image_order" type="text" value="<?php print $configData['image_order']; ?>" size="50" maxlength="128" /></td>
 		</tr>
 		<tr>
@@ -320,7 +324,7 @@ if( !$configData['backg_force_default'] )
 				Field: <?php print $functions->createOptionList($backgColumsArr,$configData['backg_data'],'backg_data',3 ); ?></td>
 		</tr>
 		<tr>
-			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'This uses &quot;'.str_replace('\\','/',SIGGEN_DIR).'localization.php&quot; to translate<br /> the localized name to the english name<br /><br />Only race and class names are in the locale file by default','Translate &quot;Search Name&quot;' ); ?></td>
+			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'This uses the files in &quot;'.str_replace('\\','/',SIGGEN_DIR).'locale/&quot; to translate<br /> the localized name to the english name<br /><br />Only race and class names are in the locale file by default','Translate &quot;Search Name&quot;' ); ?></td>
 			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><label>
 				<input type="radio" class="checkBox" name="backg_translate" value="1" <?php print ( $configData['backg_translate'] ? 'checked="checked"' : '' ); ?> />
 				Yes</label> <label>
@@ -672,6 +676,19 @@ else
 			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Where to place the class logo','Class Logo Placement' ); ?></td>
 			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right">Horiz: <input name="class_img_loc_x" type="text" value="<?php print $configData['class_img_loc_x']; ?>" size="3" maxlength="3" /><br />
 				Vert: <input name="class_img_loc_y" type="text" value="<?php print $configData['class_img_loc_y']; ?>" size="3" maxlength="3" /></td>
+		</tr>
+		<tr>
+			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Display a talent spec icon','Talent Spec Icon Display' ); ?></td>
+			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><label>
+				<input type="radio" class="checkBox" name="spec_img_disp" value="1" <?php print ( $configData['spec_img_disp'] ? 'checked="checked"' : '' ); ?> />
+				Yes</label> <label>
+				<input type="radio" class="checkBox" name="spec_img_disp" value="0" <?php print ( !$configData['spec_img_disp'] ? 'checked="checked"' : '' ); ?> />
+				No</label></td>
+		</tr>
+		<tr>
+			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Where to place the talent spec icon','Talent Spec Icon Placement' ); ?></td>
+			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right">Horiz: <input name="spec_img_loc_x" type="text" value="<?php print $configData['spec_img_loc_x']; ?>" size="3" maxlength="3" /><br />
+				Vert: <input name="spec_img_loc_y" type="text" value="<?php print $configData['spec_img_loc_y']; ?>" size="3" maxlength="3" /></td>
 		</tr>
 		<tr>
 			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Display a PvP rank logo','PvP logo display' ); ?></td>

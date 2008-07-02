@@ -17,7 +17,7 @@ Under the following conditions:
    the copyright holder.
 
 Regarding Attribution:
-  - Keep the @author Chris Stockton in place, though you may add
+  - Keep the @author Joshua Clark in place, though you may add
     additional authors below or above that.
   - Include this file with this library if you distribute it.
 
