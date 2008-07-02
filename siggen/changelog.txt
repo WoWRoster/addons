@@ -3,6 +3,12 @@
 SigGen Change Log
 
 
+07.01.2008 - v0.3.2.409
+ * SigGen Config
+   o Fixed: Color selections
+   o Fixed: Plus/Minus images
+
+
 07.01.2008 - v0.3.2.408
  * SigGen
    o Added: Talent Spec Icons
