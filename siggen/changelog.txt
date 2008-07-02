@@ -3,6 +3,13 @@
 SigGen Change Log
 
 
+07.01.2008 - v0.3.2.408
+ * SigGen
+   o Added: Talent Spec Icons
+   o Fixed: Translations array
+     + SigGen now uses Roster's 'class_to_en' and 'race_to_en' local arrays
+
+
 02.06.2008 - v0.3.1.363
  * Important Note
    Clear Directory is still broken, it WILL remove ALL images in the saved directory regardless of which guild is updated

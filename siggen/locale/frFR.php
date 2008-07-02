@@ -32,37 +32,18 @@
  *
  */
 
+// translated to frFR by Harut
+
 // Translation Information
-	// Format: $siggen_translate['locale']['Localized Name']='English Name';
+	// Format: $lang['translate']['Localized Name']='English Name';
 	// 'Localized Name' MUST be the same as what is stored in the database
 	// 'English Name' MUST be the same as what is stored in a 'enUS' database
-		// Example: $siggen_translate['deDE']['Nachtelf']='Night Elf';
-		// Example: $siggen_translate['enUS']['Night Elf']='Night Elf';
+		// Example: $lang['translate']['Nachtelf']='Night Elf';
+		// Example: $lang['translate']['Night Elf']='Night Elf';
 
-// ----[ Begin French (frFR) ]------------------------------
-// translated to frFR by Harut
-// Class Translation
-$lang['translate']['Druide']       = 'Druid';
-$lang['translate']['Chasseur']     = 'Hunter';
-$lang['translate']['Mage']         = 'Mage';
-$lang['translate']['Paladin']      = 'Paladin';
-$lang['translate']['Prêtre']      = 'Priest';
-$lang['translate']['Voleur']       = 'Rogue';
-$lang['translate']['Chaman']       = 'Shaman';
-$lang['translate']['Démoniste']   = 'Warlock';
-$lang['translate']['Guerrier']     = 'Warrior';
+// The main locale arrays 'class_to_en' and 'race_to_en' are added automatically
 
-// Race, Gender Translation
-$lang['translate']['Elfe de sang'] = 'Blood Elf';
-$lang['translate']['Draeneï']     = 'Draenei';
-$lang['translate']['Elfe de la nuit'] = 'Night Elf';
-$lang['translate']['Nain']         = 'Dwarf';
-$lang['translate']['Gnome']        = 'Gnome';
-$lang['translate']['Humain']       = 'Human';
-$lang['translate']['Orc']          = 'Orc';
-$lang['translate']['Mort-vivant']  = 'Undead';
-$lang['translate']['Troll']        = 'Troll';
-$lang['translate']['Tauren']       = 'Tauren';
+// Gender Translation
 $lang['translate']['Homme']        = 'Male';
 $lang['translate']['Femme']        = 'Female';
 

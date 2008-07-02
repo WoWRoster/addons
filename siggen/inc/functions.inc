@@ -164,7 +164,7 @@ class SigConfigClass
 			$select_one = true;
 		}
 
-		$option_list = "\n\t<select name=\"{$id}\" $param>\n\t\t<option value=\"\">--None--</option>\n";
+		$option_list = "\n\t<select name=\"{$id}\" $param>\n\t\t<option value=\"\" style=\"color:grey;\">--None--</option>\n";
 
 		foreach( $values as $value )
 		{
@@ -218,7 +218,7 @@ class SigConfigClass
 		}
 
 		$option_list = "\n\t<select name=\"{$id}\" $param>\n";
-		$option_list .= ($none ? "\t\t<option value=\"\">--None--</option>\n" : '');
+		$option_list .= ($none ? "\t\t<option value=\"\" style=\"color:grey;\">--None--</option>\n" : '');
 
 		foreach( $values as $Aname => $Avalue )
 		{

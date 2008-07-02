@@ -245,7 +245,7 @@ if( isset($_GET['format']) )
 	// Get Talent Spec
 	if( isset($playersData['name']) )
 	{
-		$spec_str = 'SELECT `pointsspent`, `tree` FROM `' . $roster->db->table('talenttree') . "` WHERE `member_id` = '$member_id' ORDER BY `order` ASC;";
+		$spec_str = 'SELECT `pointsspent`, `tree`, `background` FROM `' . $roster->db->table('talenttree') . "` WHERE `member_id` = '$member_id' ORDER BY `order` ASC;";
 		$spec_sql = $roster->db->query($spec_str);
 
 		$spec_rows = $roster->db->num_rows();
@@ -262,6 +262,7 @@ if( isset($_GET['format']) )
 				{
 					$point_holder = $tempData['pointsspent'];
 					$specData['tree'] = $tempData['tree'];
+					$specData['icon'] = $tempData['background'];
 				}
 				$specData['points'][] = $tempData['pointsspent'];
 			}
@@ -290,6 +291,14 @@ if( isset($_GET['format']) )
 		$configData['save_images_dir'] = str_replace( '%s',SIGGEN_DIR,$configData['save_images_dir'] );
 
 
+	// Insert Roster locale arrays into SigGen's translate array
+		foreach( $roster->multilanguages as $language )
+		{
+			$roster->locale->wordings[$language]['translate'] += $roster->locale->wordings[$language]['class_to_en'];
+			$roster->locale->wordings[$language]['translate'] += $roster->locale->wordings[$language]['race_to_en'];
+		}
+
+
 	// Variable references to DB for quick changing
 		$sig_name  = $membersData['name'];
 		$sig_exp   = $playersData['exp'];
@@ -302,6 +311,8 @@ if( isset($_GET['format']) )
 
 	// Get character class from players table first to avoid translation problems
 		$sig_class = ( empty($playersData['class']) ? $membersData['class'] : $playersData['class'] );
+		$sig_classId = ( empty($playersData['classid']) ? $membersData['classid'] : $playersData['classid'] );
+		$sig_classEn = strtolower($roster->locale->wordings['enUS']['id_to_class'][$sig_classId]);
 
 
 		$sig_guild_title = $membersData['guild_title'];
@@ -309,8 +320,8 @@ if( isset($_GET['format']) )
 		$sig_server_name = $guildData['server'];
 		$sig_region_name = $guildData['region'];
 
-		$sig_race   = str_replace( ' ','',strtolower( getEnglishValue($playersData['race'],$sig_char_locale) ) );
-		$sig_gender = strtolower( getEnglishValue($playersData['sex'],$sig_char_locale) );
+		$sig_race   = ( strtolower($playersData['raceEn']) == 'scourge' ? 'undead' : strtolower($playersData['raceEn']) );
+		$sig_gender = ( $playersData['sexid'] == '0' ? 'male' : 'female' );
 
 
 		// Remove crap from pvprankicon
@@ -347,8 +358,18 @@ if( isset($_GET['format']) )
 		{
 			$class_ext = 'png';
 		}
-		$sig_class_img = strtolower(getEnglishValue($sig_class,$sig_char_locale)) . '.' . $class_ext;
+		$sig_class_img = $sig_classEn . '.' . $class_ext;
 
+	// Set talent spec image
+		if( file_exists($configData['image_dir'] . $configData['spec_dir'] . 'ext.inc') && is_readable($configData['image_dir'] . $configData['spec_dir'] . 'ext.inc') )
+		{
+			include( $configData['image_dir'] . $configData['spec_dir'] . 'ext.inc' );
+		}
+		else
+		{
+			$spec_ext = 'png';
+		}
+		$sig_spec_img = $specData['icon'] . '.' . $spec_ext;
 
 	// Check to remove 'http://'
 		$sig_site_name = ( $configData['text_sitename_remove'] ? str_replace('http://','',$roster->config['website_address']) : $roster->config['website_address'] );
@@ -1058,6 +1079,16 @@ if( isset($_GET['format']) )
 			if( file_exists($im_class_file) )
 			{
 				combineImage( $im,$im_class_file,(__LINE__),$configData['class_img_loc_x'],$configData['class_img_loc_y'] );
+			}
+		}
+
+		// Place Spec image
+		if( $o == 'spec' && $configData['spec_img_disp'] && !empty($sig_spec_img) )
+		{
+			$im_spec_file = $configData['image_dir'] . $configData['spec_dir'] . $sig_spec_img;
+			if( file_exists($im_spec_file) )
+			{
+				combineImage( $im,$im_spec_file,(__LINE__),$configData['spec_img_loc_x'],$configData['spec_img_loc_y'] );
 			}
 		}
 

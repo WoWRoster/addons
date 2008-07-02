@@ -32,37 +32,18 @@
  *
  */
 
+// translated to esES by MaQJaV - Marosth
+
 // Translation Information
-	// Format: $siggen_translate['locale']['Localized Name']='English Name';
+	// Format: $lang['translate']['Localized Name']='English Name';
 	// 'Localized Name' MUST be the same as what is stored in the database
 	// 'English Name' MUST be the same as what is stored in a 'enUS' database
-		// Example: $siggen_translate['deDE']['Nachtelf']='Night Elf';
-		// Example: $siggen_translate['enUS']['Night Elf']='Night Elf';
+		// Example: $lang['translate']['Nachtelf']='Night Elf';
+		// Example: $lang['translate']['Night Elf']='Night Elf';
 
-// ----[ Begin Spanish (esES) ]------------------------------
-// translated to esES by MaQJaV - Marosth
-// Class Translation
-$lang['translate']['Druida']       = 'Druid';
-$lang['translate']['Cazador']      = 'Hunter';
-$lang['translate']['Mago']         = 'Mage';
-$lang['translate']['Paladín']     = 'Paladin';
-$lang['translate']['Sacerdote']    = 'Priest';
-$lang['translate']['Pícaro']      = 'Rogue';
-$lang['translate']['Chamán']      = 'Shaman';
-$lang['translate']['Brujo']        = 'Warlock';
-$lang['translate']['Guerrero']     = 'Warrior';
+// The main locale arrays 'class_to_en' and 'race_to_en' are added automatically
 
-// Race, Gender Translation
-$lang['translate']['Elfo de sangre'] = 'Blood Elf';
-$lang['translate']['Draenei']      = 'Draenei';
-$lang['translate']['Elfo de la noche'] = 'Night Elf';
-$lang['translate']['Enano']        = 'Dwarf';
-$lang['translate']['Gnomo']        = 'Gnome';
-$lang['translate']['Humano']       = 'Human';
-$lang['translate']['Orco']         = 'Orc';
-$lang['translate']['No-muerto']    = 'Undead';
-$lang['translate']['Trol']         = 'Troll';
-$lang['translate']['Tauren']       = 'Tauren';
+// Gender Translation
 $lang['translate']['Masculino']    = 'Male';
 $lang['translate']['Femenino']     = 'Female';
 

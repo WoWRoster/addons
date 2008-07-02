@@ -384,11 +384,12 @@ $borderFilesArr = $functions->listFiles( SIGGEN_DIR . $configData['image_dir'] .
 $backImgDirScan  = $functions->listDir( SIGGEN_DIR . $configData['image_dir'] . 'background' . DIR_SEP );
 $charImgDirScan  = $functions->listDir( SIGGEN_DIR . $configData['image_dir'] . 'character' . DIR_SEP );
 $classImgDirScan = $functions->listDir( SIGGEN_DIR . $configData['image_dir'] . 'class' . DIR_SEP );
+$specImgDirScan  = $functions->listDir( SIGGEN_DIR . $configData['image_dir'] . 'spec' . DIR_SEP );
 $pvpImgDirScan   = $functions->listDir( SIGGEN_DIR . $configData['image_dir'] . 'pvp' . DIR_SEP );
 
 $charDirList = $functions->listFiles( SIGGEN_DIR . $configData['image_dir'] . $configData['char_dir'],array('png','gif','jpeg','jpg') );
 
-$backImgDirList = $charImgDirList = $classImgDirList = $pvpImgDirList = array();
+$backImgDirList = $charImgDirList = $classImgDirList = $specImgDirList = $pvpImgDirList = array();
 
 foreach( $backImgDirScan as $dir_check )
 {
@@ -403,6 +404,11 @@ foreach( $charImgDirScan as $dir_check )
 foreach( $classImgDirScan as $dir_check )
 {
 	$classImgDirList += array( $dir_check => 'class/' . $dir_check . '/' );
+}
+
+foreach( $specImgDirScan as $dir_check )
+{
+	$specImgDirList += array( $dir_check => 'spec/' . $dir_check . '/' );
 }
 
 foreach( $pvpImgDirScan as $dir_check )
