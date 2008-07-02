@@ -3,6 +3,11 @@
 SigGen Change Log
 
 
+07.02.2008 - v0.3.2.410
+ * SigGen
+   o Fixed: Installer Errors
+
+
 07.01.2008 - v0.3.2.409
  * SigGen Config
    o Fixed: Color selections
