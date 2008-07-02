@@ -31,7 +31,7 @@ class siggenInstall
 	var $active = true;
 	var $icon = 'inv_misc_book_13';
 
-	var $version = '0.3.2.408';
+	var $version = '0.3.2.409';
 	var $wrnet_id = '20';
 
 	var $fullname = 'SigGen';

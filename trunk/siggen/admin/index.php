@@ -42,6 +42,10 @@ if ( !defined('IN_ROSTER') )
 $roster->output['title'] .= $roster->locale->act['menu_siggen_config'];
 
 
+// ----[ Include the Color Palet js ]-----------------------
+$roster->output['html_head'] .= "<script type=\"text/javascript\" src=\"" .  ROSTER_PATH  . "js/color_functions.php?path=" . $roster->config['theme_path'] . "\"></script>\n";
+
+
 // ----[ Clear file status cache ]--------------------------
 clearstatcache();
 

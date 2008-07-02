@@ -278,7 +278,7 @@ else
 		</tr>
 		<tr>
 			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Select a color to fill the background with<br />Setting is for &quot;Color fill background&quot;','Background fill color' ); ?></td>
-			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input type="text" maxlength="7" style="background-color:<?php print $configData['backg_fill_color']; ?>;" value="<?php print $configData['backg_fill_color']; ?>" name="backg_fill_color" id="backg_fill_color" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('backg_fill_color'))" alt="" /></td>
+			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['backg_fill_color']; ?>;" value="<?php print $configData['backg_fill_color']; ?>" name="backg_fill_color" id="backg_fill_color" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('backg_fill_color'))" alt="" /></td>
 		</tr>
 		<tr>
 			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Image to use for the outside border<br />Set to &quot;--None--&quot; to disable','Outside border image name' ); ?></td>
@@ -443,10 +443,10 @@ else
 			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="left">Max eXp bar color</td>
 		</tr>
 		<tr>
-			<td class="sc_row<?php echo (((++$row)%2)+1); ?>"><input type="text" maxlength="7" style="background-color:<?php print $configData['expbar_color_border']; ?>;" value="<?php print $configData['expbar_color_border']; ?>" name="expbar_color_border" id="expbar_color_border" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_color_border'))" alt="" /></td>
-			<td class="sc_row<?php echo ((($row)%2)+1); ?>"><input type="text" maxlength="7" style="background-color:<?php print $configData['expbar_color_inside']; ?>;" value="<?php print $configData['expbar_color_inside']; ?>" name="expbar_color_inside" id="expbar_color_inside" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_color_inside'))" alt="" /></td>
-			<td class="sc_row<?php echo ((($row)%2)+1); ?>"><input type="text" maxlength="7" style="background-color:<?php print $configData['expbar_color_bar']; ?>;" value="<?php print $configData['expbar_color_bar']; ?>" name="expbar_color_bar" id="expbar_color_bar" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_color_bar'))" alt="" /></td>
-			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>"><input type="text" maxlength="7" style="background-color:<?php print $configData['expbar_color_maxbar']; ?>;" value="<?php print $configData['expbar_color_maxbar']; ?>" name="expbar_color_maxbar" id="expbar_color_maxbar" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_color_maxbar'))" alt="" /></td>
+			<td class="sc_row<?php echo (((++$row)%2)+1); ?>"><input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['expbar_color_border']; ?>;" value="<?php print $configData['expbar_color_border']; ?>" name="expbar_color_border" id="expbar_color_border" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_color_border'))" alt="" /></td>
+			<td class="sc_row<?php echo ((($row)%2)+1); ?>"><input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['expbar_color_inside']; ?>;" value="<?php print $configData['expbar_color_inside']; ?>" name="expbar_color_inside" id="expbar_color_inside" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_color_inside'))" alt="" /></td>
+			<td class="sc_row<?php echo ((($row)%2)+1); ?>"><input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['expbar_color_bar']; ?>;" value="<?php print $configData['expbar_color_bar']; ?>" name="expbar_color_bar" id="expbar_color_bar" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_color_bar'))" alt="" /></td>
+			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>"><input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['expbar_color_maxbar']; ?>;" value="<?php print $configData['expbar_color_maxbar']; ?>" name="expbar_color_maxbar" id="expbar_color_maxbar" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_color_maxbar'))" alt="" /></td>
 		</tr>
 		<tr>
 			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Make the border transparent/translucent<br /><br />Accepted values are 0-127<br />0 = Opaque | 127 = Transparent','Transparency Value' ); ?>
@@ -470,12 +470,12 @@ else
 		</tr>
 		<tr>
 			<td class="sc_row<?php echo (((++$row)%2)+1); ?>"><?php print $functions->createOptionList($fontFilesArr,$configData['expbar_font_name'],'expbar_font_name',1 ); ?></td>
-			<td class="sc_row<?php echo ((($row)%2)+1); ?>"><input type="text" maxlength="7" style="background-color:<?php print $configData['expbar_font_color']; ?>;" value="<?php print $configData['expbar_font_color']; ?>" name="expbar_font_color" id="expbar_font_color" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_font_color'))" alt="" /></td>
+			<td class="sc_row<?php echo ((($row)%2)+1); ?>"><input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['expbar_font_color']; ?>;" value="<?php print $configData['expbar_font_color']; ?>" name="expbar_font_color" id="expbar_font_color" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_font_color'))" alt="" /></td>
 			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="expbar_font_size" type="text" value="<?php print $configData['expbar_font_size']; ?>" size="3" maxlength="3" /></td>
 		</tr>
 		<tr>
 			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?></td>
-			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right" colspan="2"><input type="text" maxlength="7" style="background-color:<?php print $configData['expbar_text_shadow']; ?>;" value="<?php print $configData['expbar_text_shadow']; ?>" name="expbar_text_shadow" id="expbar_text_shadow" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_text_shadow'))" alt="" /></td>
+			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right" colspan="2"><input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['expbar_text_shadow']; ?>;" value="<?php print $configData['expbar_text_shadow']; ?>" name="expbar_text_shadow" id="expbar_text_shadow" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_text_shadow'))" alt="" /></td>
 		</tr>
 		<tr>
 			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left">Text alignment<br />
@@ -525,12 +525,12 @@ else
 		</tr>
 		<tr>
 			<td class="sc_row<?php echo (((++$row)%2)+1); ?>"><?php print $functions->createOptionList($fontFilesArr,$configData['lvl_font_name'],'lvl_font_name',1 ); ?></td>
-			<td class="sc_row<?php echo ((($row)%2)+1); ?>"><input type="text" maxlength="7" style="background-color:<?php print $configData['lvl_font_color']; ?>;" value="<?php print $configData['lvl_font_color']; ?>" name="lvl_font_color" id="lvl_font_color" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('lvl_font_color'))" alt="" /></td>
+			<td class="sc_row<?php echo ((($row)%2)+1); ?>"><input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['lvl_font_color']; ?>;" value="<?php print $configData['lvl_font_color']; ?>" name="lvl_font_color" id="lvl_font_color" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('lvl_font_color'))" alt="" /></td>
 			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right"><input name="lvl_font_size" type="text" value="<?php print $configData['lvl_font_size']; ?>" size="3" maxlength="3" /></td>
 		</tr>
 		<tr>
 			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?></td>
-			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right" colspan="2"><input type="text" maxlength="7" style="background-color:<?php print $configData['lvl_text_shadow']; ?>;" value="<?php print $configData['lvl_text_shadow']; ?>" name="lvl_text_shadow" id="lvl_text_shadow" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('lvl_text_shadow'))" alt="" /></td>
+			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right" colspan="2"><input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['lvl_text_shadow']; ?>;" value="<?php print $configData['lvl_text_shadow']; ?>" name="lvl_text_shadow" id="lvl_text_shadow" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('lvl_text_shadow'))" alt="" /></td>
 		</tr>
 	</table>
 <?php print border('syellow','end'); ?>
@@ -631,12 +631,12 @@ else
 		</tr>
 		<tr>
 			<td class="sc_row<?php echo (((++$row)%2)+1); ?>"><?php print $functions->createOptionList($fontFilesArr,$configData['skills_font_name'],'skills_font_name',1 ); ?></td>
-			<td class="sc_row<?php echo ((($row)%2)+1); ?>"><input type="text" maxlength="7" style="background-color:<?php print $configData['skills_font_color']; ?>;" value="<?php print $configData['skills_font_color']; ?>" name="skills_font_color" id="skills_font_color" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('skills_font_color'))" alt="" /></td>
+			<td class="sc_row<?php echo ((($row)%2)+1); ?>"><input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['skills_font_color']; ?>;" value="<?php print $configData['skills_font_color']; ?>" name="skills_font_color" id="skills_font_color" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('skills_font_color'))" alt="" /></td>
 			<td class="sc_row<?php echo ((($row)%2)+1); ?>" align="right"><input name="skills_font_size" type="text" value="<?php print $configData['skills_font_size']; ?>" size="3" maxlength="3" /></td>
 		</tr>
 		<tr>
 			<td class="sc_row<?php echo (((++$row)%2)+1); ?>" align="left"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?></td>
-			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right" colspan="2"><input type="text" maxlength="7" style="background-color:<?php print $configData['skills_shadow']; ?>;" value="<?php print $configData['skills_shadow']; ?>" name="skills_shadow" id="skills_shadow" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('skills_shadow'))" alt="" /></td>
+			<td class="sc_row_right<?php echo ((($row)%2)+1); ?>" align="right" colspan="2"><input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['skills_shadow']; ?>;" value="<?php print $configData['skills_shadow']; ?>" name="skills_shadow" id="skills_shadow" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('skills_shadow'))" alt="" /></td>
 		</tr>
 	</table>
 <?php print border('syellow','end'); ?>
@@ -715,11 +715,11 @@ else
 
       <td valign="top"><!-- ===[ Begin Text Config 1 ]=== -->
         <div id="textT1Col" style="display:inline">
-<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT1Col','textT1')\"><img src=\"".$roster->config['img_url']."plus.gif\" style=\"float:right;\" alt=\"+\" />Name</div>"); ?>
+<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT1Col','textT1')\"><img src=\"".$roster->config['theme_path']."/images/plus.gif\" style=\"float:right;\" alt=\"+\" />Name</div>"); ?>
 <?php print border('syellow','end'); ?>
         </div>
         <div id="textT1" style="display:none;">
-<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT1Col','textT1')\"><img src=\"".$roster->config['img_url']."minus.gif\" style=\"float:right;\" alt=\"-\" />Name</div>"); ?>
+<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT1Col','textT1')\"><img src=\"".$roster->config['theme_path']."/images/minus.gif\" style=\"float:right;\" alt=\"-\" />Name</div>"); ?>
         <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
           <tr>
             <td class="sc_row<?php echo ((($row=0)%2)+1); ?>" align="left">Display Name</td>
@@ -752,11 +752,11 @@ else
                 </tr>
                 <tr align="left">
                   <td class="sc_row_right2" colspan="2">Font color:
-                  	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_name_font_color']; ?>;" value="<?php print $configData['text_name_font_color']; ?>" name="text_name_font_color" id="text_name_font_color" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_name_font_color'))" alt="" /></td>
+                  	<input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['text_name_font_color']; ?>;" value="<?php print $configData['text_name_font_color']; ?>" name="text_name_font_color" id="text_name_font_color" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_name_font_color'))" alt="" /></td>
                 </tr>
                 <tr align="left">
                   <td class="sc_row_right1" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
-                    <input type="text" maxlength="7" style="background-color:<?php print $configData['text_name_shadow']; ?>;" value="<?php print $configData['text_name_shadow']; ?>" name="text_name_shadow" id="text_name_shadow" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_name_shadow'))" alt="" /></td>
+                    <input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['text_name_shadow']; ?>;" value="<?php print $configData['text_name_shadow']; ?>" name="text_name_shadow" id="text_name_shadow" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_name_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
           </tr>
@@ -766,11 +766,11 @@ else
 
       <td valign="top"><!-- ===[ Begin Text Config 2 ]=== -->
         <div id="textT2Col" style="display:inline">
-<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT2Col','textT2')\"><img src=\"".$roster->config['img_url']."plus.gif\" style=\"float:right;\" alt=\"+\" />Class</div>"); ?>
+<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT2Col','textT2')\"><img src=\"".$roster->config['theme_path']."/images/plus.gif\" style=\"float:right;\" alt=\"+\" />Class</div>"); ?>
 <?php print border('syellow','end'); ?>
         </div>
         <div id="textT2" style="display:none;">
-<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT2Col','textT2')\"><img src=\"".$roster->config['img_url']."minus.gif\" style=\"float:right;\" alt=\"-\" />Class</div>"); ?>
+<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT2Col','textT2')\"><img src=\"".$roster->config['theme_path']."/images/minus.gif\" style=\"float:right;\" alt=\"-\" />Class</div>"); ?>
         <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
           <tr>
             <td class="sc_row<?php echo ((($row=0)%2)+1); ?>" align="left">Display Class</td>
@@ -803,11 +803,11 @@ else
                 </tr>
                 <tr>
                   <td class="sc_row_right2" align="left" colspan="2">Font color:
-                  	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_class_font_color']; ?>;" value="<?php print $configData['text_class_font_color']; ?>" name="text_class_font_color" id="text_class_font_color" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_class_font_color'))" alt="" /></td>
+                  	<input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['text_class_font_color']; ?>;" value="<?php print $configData['text_class_font_color']; ?>" name="text_class_font_color" id="text_class_font_color" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_class_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
-                    <input type="text" maxlength="7" style="background-color:<?php print $configData['text_class_shadow']; ?>;" value="<?php print $configData['text_class_shadow']; ?>" name="text_class_shadow" id="text_class_shadow" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_class_shadow'))" alt="" /></td>
+                    <input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['text_class_shadow']; ?>;" value="<?php print $configData['text_class_shadow']; ?>" name="text_class_shadow" id="text_class_shadow" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_class_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
           </tr>
@@ -820,11 +820,11 @@ else
 
       <td valign="top"><!-- ===[ Begin Text Config 3 ]=== -->
         <div id="textT3Col" style="display:inline">
-<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT3Col','textT3')\"><img src=\"".$roster->config['img_url']."plus.gif\" style=\"float:right;\" alt=\"+\" />PvP Rank</div>"); ?>
+<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT3Col','textT3')\"><img src=\"".$roster->config['theme_path']."/images/plus.gif\" style=\"float:right;\" alt=\"+\" />PvP Rank</div>"); ?>
 <?php print border('syellow','end'); ?>
         </div>
         <div id="textT3" style="display:none;">
-<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT3Col','textT3')\"><img src=\"".$roster->config['img_url']."minus.gif\" style=\"float:right;\" alt=\"-\" />PvP Rank</div>"); ?>
+<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT3Col','textT3')\"><img src=\"".$roster->config['theme_path']."/images/minus.gif\" style=\"float:right;\" alt=\"-\" />PvP Rank</div>"); ?>
         <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
           <tr>
             <td class="sc_row<?php echo ((($row=0)%2)+1); ?>" align="left">Display PvP Rank</td>
@@ -857,11 +857,11 @@ else
                 </tr>
                 <tr>
                   <td class="sc_row_right2" align="left" colspan="2">Font color:
-                  	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_honor_font_color']; ?>;" value="<?php print $configData['text_honor_font_color']; ?>" name="text_honor_font_color" id="text_honor_font_color" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_honor_font_color'))" alt="" /></td>
+                  	<input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['text_honor_font_color']; ?>;" value="<?php print $configData['text_honor_font_color']; ?>" name="text_honor_font_color" id="text_honor_font_color" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_honor_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
-                    <input type="text" maxlength="7" style="background-color:<?php print $configData['text_honor_shadow']; ?>;" value="<?php print $configData['text_honor_shadow']; ?>" name="text_honor_shadow" id="text_honor_shadow" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_honor_shadow'))" alt="" /></td>
+                    <input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['text_honor_shadow']; ?>;" value="<?php print $configData['text_honor_shadow']; ?>" name="text_honor_shadow" id="text_honor_shadow" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_honor_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
           </tr>
@@ -871,11 +871,11 @@ else
 
       <td valign="top"><!-- ===[ Begin Text Config 4 ]=== -->
         <div id="textT4Col" style="display:inline">
-<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT4Col','textT4')\"><img src=\"".$roster->config['img_url']."plus.gif\" style=\"float:right;\" alt=\"+\" />Guild Name</div>"); ?>
+<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT4Col','textT4')\"><img src=\"".$roster->config['theme_path']."/images/plus.gif\" style=\"float:right;\" alt=\"+\" />Guild Name</div>"); ?>
 <?php print border('syellow','end'); ?>
         </div>
         <div id="textT4" style="display:none;">
-<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT4Col','textT4')\"><img src=\"".$roster->config['img_url']."minus.gif\" style=\"float:right;\" alt=\"-\" />Guild Name</div>"); ?>
+<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT4Col','textT4')\"><img src=\"".$roster->config['theme_path']."/images/minus.gif\" style=\"float:right;\" alt=\"-\" />Guild Name</div>"); ?>
         <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
           <tr>
             <td class="sc_row<?php echo ((($row=0)%2)+1); ?>" align="left">Display Guild Name</td>
@@ -908,11 +908,11 @@ else
                 </tr>
                 <tr>
                   <td class="sc_row_right2" align="left" colspan="2">Font color:
-                  	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_guildname_font_color']; ?>;" value="<?php print $configData['text_guildname_font_color']; ?>" name="text_guildname_font_color" id="text_guildname_font_color" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_guildname_font_color'))" alt="" /></td>
+                  	<input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['text_guildname_font_color']; ?>;" value="<?php print $configData['text_guildname_font_color']; ?>" name="text_guildname_font_color" id="text_guildname_font_color" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_guildname_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
-                    <input type="text" maxlength="7" style="background-color:<?php print $configData['text_guildname_shadow']; ?>;" value="<?php print $configData['text_guildname_shadow']; ?>" name="text_guildname_shadow" id="text_guildname_shadow" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_guildname_shadow'))" alt="" /></td>
+                    <input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['text_guildname_shadow']; ?>;" value="<?php print $configData['text_guildname_shadow']; ?>" name="text_guildname_shadow" id="text_guildname_shadow" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_guildname_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
           </tr>
@@ -925,11 +925,11 @@ else
 
       <td valign="top"><!-- ===[ Begin Text Config 5 ]=== -->
         <div id="textT5Col" style="display:inline">
-<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT5Col','textT5')\"><img src=\"".$roster->config['img_url']."plus.gif\" style=\"float:right;\" alt=\"+\" />Guild Title/Rank</div>"); ?>
+<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT5Col','textT5')\"><img src=\"".$roster->config['theme_path']."/images/plus.gif\" style=\"float:right;\" alt=\"+\" />Guild Title/Rank</div>"); ?>
 <?php print border('syellow','end'); ?>
         </div>
         <div id="textT5" style="display:none;">
-<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT5Col','textT5')\"><img src=\"".$roster->config['img_url']."minus.gif\" style=\"float:right;\" alt=\"-\" />Guild Title/Rank</div>"); ?>
+<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT5Col','textT5')\"><img src=\"".$roster->config['theme_path']."/images/minus.gif\" style=\"float:right;\" alt=\"-\" />Guild Title/Rank</div>"); ?>
         <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
           <tr>
             <td class="sc_row<?php echo ((($row=0)%2)+1); ?>" align="left">Display Guild Title/Rank</td>
@@ -962,11 +962,11 @@ else
                 </tr>
                 <tr>
                   <td class="sc_row_right2" align="left" colspan="2">Font color:
-                  	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_guildtitle_font_color']; ?>;" value="<?php print $configData['text_guildtitle_font_color']; ?>" name="text_guildtitle_font_color" id="text_guildtitle_font_color" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_guildtitle_font_color'))" alt="" /></td>
+                  	<input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['text_guildtitle_font_color']; ?>;" value="<?php print $configData['text_guildtitle_font_color']; ?>" name="text_guildtitle_font_color" id="text_guildtitle_font_color" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_guildtitle_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
-                    <input type="text" maxlength="7" style="background-color:<?php print $configData['text_guildtitle_shadow']; ?>;" value="<?php print $configData['text_guildtitle_shadow']; ?>" name="text_guildtitle_shadow" id="text_guildtitle_shadow" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_guildtitle_shadow'))" alt="" /></td>
+                    <input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['text_guildtitle_shadow']; ?>;" value="<?php print $configData['text_guildtitle_shadow']; ?>" name="text_guildtitle_shadow" id="text_guildtitle_shadow" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_guildtitle_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
           </tr>
@@ -976,11 +976,11 @@ else
 
       <td valign="top"><!-- ===[ Begin Text Config 6 ]=== -->
         <div id="textT6Col" style="display:inline">
-<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT6Col','textT6')\"><img src=\"".$roster->config['img_url']."plus.gif\" style=\"float:right;\" alt=\"+\" />Realm Name</div>"); ?>
+<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT6Col','textT6')\"><img src=\"".$roster->config['theme_path']."/images/plus.gif\" style=\"float:right;\" alt=\"+\" />Realm Name</div>"); ?>
 <?php print border('syellow','end'); ?>
         </div>
         <div id="textT6" style="display:none;">
-<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT6Col','textT6')\"><img src=\"".$roster->config['img_url']."minus.gif\" style=\"float:right;\" alt=\"-\" />Realm Name</div>"); ?>
+<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT6Col','textT6')\"><img src=\"".$roster->config['theme_path']."/images/minus.gif\" style=\"float:right;\" alt=\"-\" />Realm Name</div>"); ?>
         <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
           <tr>
             <td class="sc_row<?php echo ((($row=0)%2)+1); ?>" align="left">Display Realm Name</td>
@@ -1013,11 +1013,11 @@ else
                 </tr>
                 <tr>
                   <td class="sc_row_right2" align="left" colspan="2">Font color:
-                  	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_servername_font_color']; ?>;" value="<?php print $configData['text_servername_font_color']; ?>" name="text_servername_font_color" id="text_servername_font_color" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_servername_font_color'))" alt="" /></td>
+                  	<input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['text_servername_font_color']; ?>;" value="<?php print $configData['text_servername_font_color']; ?>" name="text_servername_font_color" id="text_servername_font_color" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_servername_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
-                    <input type="text" maxlength="7" style="background-color:<?php print $configData['text_servername_shadow']; ?>;" value="<?php print $configData['text_servername_shadow']; ?>" name="text_servername_shadow" id="text_servername_shadow" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_servername_shadow'))" alt="" /></td>
+                    <input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['text_servername_shadow']; ?>;" value="<?php print $configData['text_servername_shadow']; ?>" name="text_servername_shadow" id="text_servername_shadow" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_servername_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
           </tr>
@@ -1030,11 +1030,11 @@ else
 
       <td valign="top"><!-- ===[ Begin Text Config 7 ]=== -->
         <div id="textT7Col" style="display:inline">
-<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT7Col','textT7')\"><img src=\"".$roster->config['img_url']."plus.gif\" style=\"float:right;\" alt=\"+\" />Website Name</div>"); ?>
+<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT7Col','textT7')\"><img src=\"".$roster->config['theme_path']."/images/plus.gif\" style=\"float:right;\" alt=\"+\" />Website Name</div>"); ?>
 <?php print border('syellow','end'); ?>
         </div>
         <div id="textT7" style="display:none;">
-<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT7Col','textT7')\"><img src=\"".$roster->config['img_url']."minus.gif\" style=\"float:right;\" alt=\"-\" />Website Name</div>"); ?>
+<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT7Col','textT7')\"><img src=\"".$roster->config['theme_path']."/images/minus.gif\" style=\"float:right;\" alt=\"-\" />Website Name</div>"); ?>
         <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
           <tr>
             <td class="sc_row<?php echo ((($row=0)%2)+1); ?>" align="left">Display Website Name</td>
@@ -1076,11 +1076,11 @@ else
                 </tr>
                 <tr>
                   <td class="sc_row_right2" align="left" colspan="2">Font color:
-                  	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_sitename_font_color']; ?>;" value="<?php print $configData['text_sitename_font_color']; ?>" name="text_sitename_font_color" id="text_sitename_font_color" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_sitename_font_color'))" alt="" /></td>
+                  	<input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['text_sitename_font_color']; ?>;" value="<?php print $configData['text_sitename_font_color']; ?>" name="text_sitename_font_color" id="text_sitename_font_color" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_sitename_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
-                    <input type="text" maxlength="7" style="background-color:<?php print $configData['text_sitename_shadow']; ?>;" value="<?php print $configData['text_sitename_shadow']; ?>" name="text_sitename_shadow" id="text_sitename_shadow" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_sitename_shadow'))" alt="" /></td>
+                    <input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['text_sitename_shadow']; ?>;" value="<?php print $configData['text_sitename_shadow']; ?>" name="text_sitename_shadow" id="text_sitename_shadow" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_sitename_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
           </tr>
@@ -1090,11 +1090,11 @@ else
 
       <td valign="top"><!-- ===[ Begin Text Config 8 ]=== -->
         <div id="textT8Col" style="display:inline">
-<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT8Col','textT8')\"><img src=\"".$roster->config['img_url']."plus.gif\" style=\"float:right;\" alt=\"+\" />Custom Text</div>"); ?>
+<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT8Col','textT8')\"><img src=\"".$roster->config['theme_path']."/images/plus.gif\" style=\"float:right;\" alt=\"+\" />Custom Text</div>"); ?>
 <?php print border('syellow','end'); ?>
         </div>
         <div id="textT8" style="display:none;">
-<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT8Col','textT8')\"><img src=\"".$roster->config['img_url']."minus.gif\" style=\"float:right;\" alt=\"-\" />Custom Text</div>"); ?>
+<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT8Col','textT8')\"><img src=\"".$roster->config['theme_path']."/images/minus.gif\" style=\"float:right;\" alt=\"-\" />Custom Text</div>"); ?>
         <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
           <tr>
             <td class="sc_row<?php echo ((($row=0)%2)+1); ?>" align="left">Display Custom Text</td>
@@ -1131,11 +1131,11 @@ else
                 </tr>
                 <tr>
                   <td class="sc_row_right2" align="left" colspan="2">Font color:
-                  	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_custom_font_color']; ?>;" value="<?php print $configData['text_custom_font_color']; ?>" name="text_custom_font_color" id="text_custom_font_color" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_custom_font_color'))" alt="" /></td>
+                  	<input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['text_custom_font_color']; ?>;" value="<?php print $configData['text_custom_font_color']; ?>" name="text_custom_font_color" id="text_custom_font_color" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_custom_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
-                    <input type="text" maxlength="7" style="background-color:<?php print $configData['text_custom_shadow']; ?>;" value="<?php print $configData['text_custom_shadow']; ?>" name="text_custom_shadow" id="text_custom_shadow" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_custom_shadow'))" alt="" /></td>
+                    <input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['text_custom_shadow']; ?>;" value="<?php print $configData['text_custom_shadow']; ?>" name="text_custom_shadow" id="text_custom_shadow" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_custom_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
           </tr>
@@ -1148,11 +1148,11 @@ else
 
       <td valign="top"><!-- ===[ Begin Text Config 9 ]=== -->
         <div id="textT9Col" style="display:inline">
-<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT9Col','textT9')\"><img src=\"".$roster->config['img_url']."plus.gif\" style=\"float:right;\" alt=\"+\" />Talent Spec</div>"); ?>
+<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT9Col','textT9')\"><img src=\"".$roster->config['theme_path']."/images/plus.gif\" style=\"float:right;\" alt=\"+\" />Talent Spec</div>"); ?>
 <?php print border('syellow','end'); ?>
         </div>
         <div id="textT9" style="display:none;">
-<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT9Col','textT9')\"><img src=\"".$roster->config['img_url']."minus.gif\" style=\"float:right;\" alt=\"-\" />Talent Spec</div>"); ?>
+<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT9Col','textT9')\"><img src=\"".$roster->config['theme_path']."/images/minus.gif\" style=\"float:right;\" alt=\"-\" />Talent Spec</div>"); ?>
         <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
           <tr>
             <td class="sc_row<?php echo ((($row=0)%2)+1); ?>" align="left">Display Talent Spec</td>
@@ -1185,11 +1185,11 @@ else
                 </tr>
                 <tr>
                   <td class="sc_row_right2" align="left" colspan="2">Font color:
-                  	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_spec_font_color']; ?>;" value="<?php print $configData['text_spec_font_color']; ?>" name="text_spec_font_color" id="text_spec_font_color" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_spec_font_color'))" alt="" /></td>
+                  	<input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['text_spec_font_color']; ?>;" value="<?php print $configData['text_spec_font_color']; ?>" name="text_spec_font_color" id="text_spec_font_color" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_spec_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
-                    <input type="text" maxlength="7" style="background-color:<?php print $configData['text_spec_shadow']; ?>;" value="<?php print $configData['text_spec_shadow']; ?>" name="text_spec_shadow" id="text_spec_shadow" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_spec_shadow'))" alt="" /></td>
+                    <input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['text_spec_shadow']; ?>;" value="<?php print $configData['text_spec_shadow']; ?>" name="text_spec_shadow" id="text_spec_shadow" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_spec_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
           </tr>
@@ -1199,11 +1199,11 @@ else
 
       <td valign="top"><!-- ===[ Begin Text Config 10 ]=== -->
         <div id="textT10Col" style="display:inline">
-<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT10Col','textT10')\"><img src=\"".$roster->config['img_url']."plus.gif\" style=\"float:right;\" alt=\"+\" />Talent Points</div>"); ?>
+<?php print border('syellow','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT10Col','textT10')\"><img src=\"".$roster->config['theme_path']."/images/plus.gif\" style=\"float:right;\" alt=\"+\" />Talent Points</div>"); ?>
 <?php print border('syellow','end'); ?>
         </div>
         <div id="textT10" style="display:none;">
-<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT10Col','textT10')\"><img src=\"".$roster->config['img_url']."minus.gif\" style=\"float:right;\" alt=\"-\" />Talent Points</div>"); ?>
+<?php print border('sgreen','start',"<div style=\"cursor:pointer;width:240px;\" onclick=\"swapShow('textT10Col','textT10')\"><img src=\"".$roster->config['theme_path']."/images/minus.gif\" style=\"float:right;\" alt=\"-\" />Talent Points</div>"); ?>
         <table width="100%" class="sc_table" cellspacing="0" cellpadding="2">
           <tr>
             <td class="sc_row<?php echo ((($row=0)%2)+1); ?>" align="left">Display Talent Points</td>
@@ -1236,11 +1236,11 @@ else
                 </tr>
                 <tr>
                   <td class="sc_row_right2" align="left" colspan="2">Font color:
-                  	<input type="text" maxlength="7" style="background-color:<?php print $configData['text_talpoints_font_color']; ?>;" value="<?php print $configData['text_talpoints_font_color']; ?>" name="text_talpoints_font_color" id="text_talpoints_font_color" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_talpoints_font_color'))" alt="" /></td>
+                  	<input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['text_talpoints_font_color']; ?>;" value="<?php print $configData['text_talpoints_font_color']; ?>" name="text_talpoints_font_color" id="text_talpoints_font_color" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_talpoints_font_color'))" alt="" /></td>
                 </tr>
                 <tr>
                   <td class="sc_row_right1" align="left" colspan="2"><?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
-                    <input type="text" maxlength="7" style="background-color:<?php print $configData['text_talpoints_shadow']; ?>;" value="<?php print $configData['text_talpoints_shadow']; ?>" name="text_talpoints_shadow" id="text_talpoints_shadow" size="10" /><img src="<?php print $roster->config['img_url']; ?>/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_talpoints_shadow'))" alt="" /></td>
+                    <input type="text" maxlength="7" size="10" style="background-color:<?php print $configData['text_talpoints_shadow']; ?>;" value="<?php print $configData['text_talpoints_shadow']; ?>" name="text_talpoints_shadow" id="text_talpoints_shadow" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_talpoints_shadow'))" alt="" /></td>
                 </tr>
               </table></td>
           </tr>
