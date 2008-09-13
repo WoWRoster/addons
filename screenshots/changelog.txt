@@ -1,0 +1,3 @@
+ * $Id: changelog.txt 410 2008-07-02 23:38:04Z Zanix $
+
+0.1.0: Initial Release
