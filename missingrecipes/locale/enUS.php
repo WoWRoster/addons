@@ -5,6 +5,8 @@
  * Ported to 2.0 and maintained by: Teta
  */
 
+$lang['wowhead_hostname']='www';
+
 $lang['missing_recipe'] = 'Missing Recipes';
 $lang['missing_recipe_desc'] = 'Shows the recipes the character does not have.';
 $lang['missing_recipe_button'] = 'Missing Recipes|Which recipes am I missing?';

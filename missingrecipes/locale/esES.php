@@ -5,6 +5,8 @@
  * Ported to 2.0 and maintained by: Teta
  */
 
+$lang['wowhead_hostname']='es';
+
 $lang['missing_recipe'] = 'Recetas que faltan';
 $lang['missing_recipe_desc'] = 'Muestra las recetas que el personaje no tiene.';
 $lang['missing_recipe_button'] = 'Recetas que faltan|Que recetas no tengo?';
