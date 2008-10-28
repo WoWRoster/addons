@@ -1,0 +1,80 @@
+<?php
+/*
+ * Missing Recipes
+ * Originally by: Zeryl
+ * Ported to 2.0 and maintained by: Teta
+ */
+
+if ( !defined('IN_ROSTER') )
+{
+    exit('Detected invalid access to this file!');
+}
+
+?>
+
+<a name="top">&nbsp;</a>
+<div align="center">
+
+<!-- BEGIN mr -->
+	{mr.DIVIDER}<a href="{mr.LINK}">{mr.NAME}</a>
+<!-- END mr -->
+
+</div>
+<br />
+
+<!-- BEGIN mr_skill -->
+<table class="border_frame" cellpadding="0" cellspacing="1" style="width:800px;">
+	<tr>
+		<td class="border_color sgrayborder">
+			<div class="header_text sgrayborder">
+
+				<div style="cursor:pointer;" onclick="showHide('table_{mr_skill.INDEX}','img_{mr_skill.INDEX}','{R_THEME_PATH}/images/minus.gif','{R_THEME_PATH}/images/plus.gif');">
+
+					<img style="float:left;" width="17" height="17" src="{INTERFACE_URL}{mr_skill.ICON}.{IMG_SUFFIX}" alt="" />
+
+					<!-- IF L_SHOWBAR -->
+					<div {mr_skill.TOOLTIP} style="float:left;">
+						<div class="levelbarParent" style="width:200px;">
+							<div class="levelbarChild">
+								{mr_skill.KCOUNT}/{mr_skill.ACOUNT} - {mr_skill.PERCENTAGE}%
+							</div>
+						</div>
+						<table class="expOutline" border="0" cellpadding="0" cellspacing="0" width="200">
+							<tr>
+								<td style="background-image: url('{IMG_URL}expbar-var2.gif');" width="{mr_skill.PERCENTAGE}%">
+									<img src="{IMG_URL}pixel.gif" height="14" width="1" alt="" />
+								</td>
+								<td width="{mr_skill.LPERCENTAGE}%">
+								</td>
+							</tr>
+						</table>
+					</div>
+					<!-- ENDIF -->
+					<img style="float:right;" id="img_{mr_skill.INDEX}" src="{R_THEME_PATH}/images/plus.gif" alt="" />
+					<a name="{mr_skill.ANCHOR}"></a>{mr_skill.NAME}&nbsp;{mr_skill.LEVEL}:{mr_skill.MAXLEVEL}
+				</div>
+			</div>
+
+			<table style="display:{L_DISPLAY};width:100%;" class="bodyline" cellspacing="0" id="table_{mr_skill.INDEX}">
+				<tr>
+					<th class="membersHeader">{L_ITEM}</th>
+					<th class="membersHeader">{L_NAME}</th>
+					<th class="membersHeaderRight">{L_SLVL}</th>
+				</tr>
+
+<!-- BEGIN mr_recipe -->
+				<tr>
+					<td class="membersRow{mr_skill.mr_recipe.ROW_CLASS} equip" {mr_skill.mr_recipe.TOOLTIP}>{mr_skill.mr_recipe.ICON}</td>
+					<td class="membersRow{mr_skill.mr_recipe.ROW_CLASS}"><!-- IF mr_skill.mr_recipe.LINK neq '' --><a href="{mr_skill.mr_recipe.LINK}" rel="nofollow">&nbsp;{mr_skill.mr_recipe.NAME}</a>
+					<!-- ELSE --><span style="color:#CBA300">&nbsp;{mr_skill.mr_recipe.NAME}</span><!-- ENDIF -->
+					<!-- IF mr_skill.mr_recipe.PLINK neq '' --><br /><a href="{mr_skill.mr_recipe.PLINK}">&nbsp;{mr_skill.mr_recipe.PNAME}</a><!-- ENDIF --></td>
+					<td class="membersRowRight{mr_skill.mr_recipe.ROW_CLASS}"><span class="{mr_skill.mr_recipe.SKILLCOLOR}" >&nbsp;{mr_skill.mr_recipe.SKILL}</span></td>
+				</tr>
+<!-- END mr_recipe -->
+
+			</table>
+		</td>
+	</tr>
+</table>
+<br />
+<!-- END mr_skill -->
