@@ -322,7 +322,7 @@ foreach($skill_list as $sindex => $skill_name)
 		if(array_key_exists('i_link', $parsedrecipes[$sindex][$dindex]))
 		{
 			if ($addon['config']['mr_show_wowheadtooltips']) {
-				$link = "http://www.wowhead.com/?item=".get_icon_linka($parsedrecipes[$sindex][$dindex]['icon']);
+				$link = "http://".$roster->locale->act['wowhead_hostname'].".wowhead.com/?item=".get_icon_linka($parsedrecipes[$sindex][$dindex]['icon']);
 			} else {
 				$link = 'http://wow.allakhazam.com'.$parsedrecipes[$sindex][$dindex]['i_link'];
 			}
@@ -332,23 +332,7 @@ foreach($skill_list as $sindex => $skill_name)
 		if(array_key_exists('pat_link', $parsedrecipes[$sindex][$dindex]))
 		{
 			if ($addon['config']['mr_show_wowheadtooltips']) {
-				switch ($roster->data['clientLocale']) {
-					case 'enUS':
-						$plink = "http://www.wowhead.com/?item=".get_icon_link($parsedrecipes[$sindex][$dindex]['pat_link']);
-						break;
-					case 'deDE':
-						$plink = "http://de.wowhead.com/?item=".get_icon_link($parsedrecipes[$sindex][$dindex]['pat_link']);
-						break;
-					case 'frFR':
-						$plink = "http://fr.wowhead.com/?item=".get_icon_link($parsedrecipes[$sindex][$dindex]['pat_link']);
-						break;
-					case 'esES':
-						$plink = "http://es.wowhead.com/?item=".get_icon_link($parsedrecipes[$sindex][$dindex]['pat_link']);
-						break;
-/*					case 'ruRU':
-						$plink = "http://ru.wowhead.com/?item=".get_icon_link($parsedrecipes[$sindex][$dindex]['pat_link']);
-						break;
-*/				}
+				$plink = "http://".$roster->locale->act['wowhead_hostname'].".wowhead.com/?item=".get_icon_link($parsedrecipes[$sindex][$dindex]['pat_link']);
 			} else {
 				$plink = "http://wow.allakhazam.com".$parsedrecipes[$sindex][$dindex]['pat_link'];
 			}
