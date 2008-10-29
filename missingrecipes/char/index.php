@@ -99,7 +99,7 @@ foreach($skill_list as $skill)
 {
 	switch($skill)
 	{
-		case $roster->locale->wordings[$roster->data['clientLocale']]['Alchemy']:
+		case $roster->locale->act['Alchemy']:
 			$allrecipes[$i] = urlgrabber('http://wow.allakhazam.com/db/skill.html?line=171&source=live&tier=apprentice&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=171&source=live&tier=journeyman&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=171&source=live&tier=expert&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
@@ -107,7 +107,7 @@ foreach($skill_list as $skill)
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=171&source=live&tier=master&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$i++;
 			break;
-		case $roster->locale->wordings[$roster->data['clientLocale']]['Blacksmithing']:
+		case $roster->locale->act['Blacksmithing']:
 			$allrecipes[$i] = urlgrabber('http://wow.allakhazam.com/db/skill.html?line=164&source=live&tier=apprentice&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=164&source=live&tier=journeyman&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=164&source=live&tier=expert&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
@@ -115,7 +115,7 @@ foreach($skill_list as $skill)
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=164&source=live&tier=master&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$i++;
 			break;
-		case $roster->locale->wordings[$roster->data['clientLocale']]['Cooking']:
+		case $roster->locale->act['Cooking']:
 			$allrecipes[$i] = urlgrabber('http://wow.allakhazam.com/db/skill.html?line=185&source=live&tier=apprentice&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=185&source=live&tier=journeyman&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=185&source=live&tier=expert&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
@@ -123,7 +123,7 @@ foreach($skill_list as $skill)
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=185&source=live&tier=master&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$i++;
 			break;
-		case $roster->locale->wordings[$roster->data['clientLocale']]['Enchanting']:
+		case $roster->locale->act['Enchanting']:
 			$allrecipes[$i] = urlgrabber('http://wow.allakhazam.com/db/skill.html?line=333&source=live&tier=apprentice&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=333&source=live&tier=journeyman&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=333&source=live&tier=expert&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
@@ -131,7 +131,7 @@ foreach($skill_list as $skill)
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=333&source=live&tier=master&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$i++;
 			break;
-		case $roster->locale->wordings[$roster->data['clientLocale']]['Engineering']:
+		case $roster->locale->act['Engineering']:
 			$allrecipes[$i] = urlgrabber('http://wow.allakhazam.com/db/skill.html?line=202&source=live&tier=apprentice&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=202&source=live&tier=journeyman&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=202&source=live&tier=expert&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
@@ -139,7 +139,7 @@ foreach($skill_list as $skill)
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=202&source=live&tier=master&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$i++;
 			break;
-		case $roster->locale->wordings[$roster->data['clientLocale']]['First Aid']:
+		case $roster->locale->act['First Aid']:
 			$allrecipes[$i] = urlgrabber('http://wow.allakhazam.com/db/skill.html?line=129&source=live&tier=apprentice&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=129&source=live&tier=journeyman&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=129&source=live&tier=expert&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
@@ -147,7 +147,7 @@ foreach($skill_list as $skill)
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=129&source=live&tier=master&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$i++;
 			break;
-		case $roster->locale->wordings[$roster->data['clientLocale']]['Leatherworking']:
+		case $roster->locale->act['Leatherworking']:
 			$allrecipes[$i] = urlgrabber('http://wow.allakhazam.com/db/skill.html?line=165&source=live&tier=apprentice&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=165&source=live&tier=journeyman&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=165&source=live&tier=expert&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
@@ -155,7 +155,7 @@ foreach($skill_list as $skill)
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=165&source=live&tier=master&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$i++;
 			break;
-		case $roster->locale->wordings[$roster->data['clientLocale']]['Tailoring']:
+		case $roster->locale->act['Tailoring']:
 			$allrecipes[$i] = urlgrabber('http://wow.allakhazam.com/db/skill.html?line=197&source=live&tier=apprentice&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=197&source=live&tier=journeyman&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=197&source=live&tier=expert&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
@@ -163,12 +163,20 @@ foreach($skill_list as $skill)
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=197&source=live&tier=master&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$i++;
 			break;
-		case $roster->locale->wordings[$roster->data['clientLocale']]['Jewelcrafting']:
+		case $roster->locale->act['Jewelcrafting']:
 			$allrecipes[$i] = urlgrabber('http://wow.allakhazam.com/db/skill.html?line=755&source=live&tier=apprentice&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=755&source=live&tier=journeyman&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=755&source=live&tier=expert&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=755&source=live&tier=artisan&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=755&source=live&tier=master&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
+			$i++;
+			break;
+		case $roster->locale->act['Inscription']:
+			$allrecipes[$i] = urlgrabber('http://wow.allakhazam.com/db/skill.html?line=773&source=live&tier=apprentice&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
+			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=773&source=live&tier=journeyman&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
+			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=773&source=live&tier=expert&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
+			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=773&source=live&tier=artisan&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
+			$allrecipes[$i] .= urlgrabber('http://wow.allakhazam.com/db/skill.html?line=773&source=live&tier=master&locale='.$roster->data['clientLocale'],$addon['config']['mr_urlgrabber_timeout']);
 			$i++;
 			break;
 		default:
@@ -309,7 +317,7 @@ foreach($skill_list as $sindex => $skill_name)
 		$skill_levels = implode(' ',$skillmatches[2]);
 
 		// Check if the recipe exists in the database and use the tooltip data
-		$sqlquery = 'SELECT recipe_name, item_color, recipe_tooltip FROM '.$roster->db->table('recipes').' WHERE recipe_name = "'.$parsedrecipes[$sindex][$dindex]['name'].'"';
+		$sqlquery = 'SELECT recipe_name, item_color, recipe_tooltip FROM '.$roster->db->table('recipes').' WHERE recipe_name = \''.addslashes($parsedrecipes[$sindex][$dindex]['name']).'\'';
 		$sqlresult = $roster->db->query($sqlquery);
 		$sqlrow = $roster->db->fetch($sqlresult);
 		$inserttt = '';

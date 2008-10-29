@@ -13,6 +13,9 @@ $lang['missing_recipe_button'] = 'Recettes manquantes|Quelles recettes me manque
 
 $lang['skill_level'] = 'Niveau';
 
+// localisation for the new profession until wowroster has it
+$lang['Inscription'] = 'Calligraphie';
+
 // -- [ Configuration Page ]
 // Page names
 $lang['admin']['mr_main_conf'] = 'Configuration Principale|Configuration principale pour Recettes manquantes';

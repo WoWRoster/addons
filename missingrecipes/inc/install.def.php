@@ -21,7 +21,7 @@ class MissingRecipesInstall
 	var $active = true;
 	var $icon = 'inv_scroll_06';
  
-	var $version = '2.0.1.4';
+	var $version = '2.0.1.5';
 	var $wrnet_id = '135';
  
 	var $fullname = 'missing_recipe';
