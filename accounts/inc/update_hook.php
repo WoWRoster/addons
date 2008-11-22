@@ -116,7 +116,7 @@ class accountsUpdate
 
 		if($row == 0)
 		{
-			$query = "INSERT INTO `" . $roster->db->table('user_link',$this->data['basename']) . "` SET `uid` = '" . $accounts->session->getval('uid') . "', `member_id` = '" . $member_id . "', `guild_id` = '" . $guild_id . "', `group_id` = '" . $accounts->user->info['group_id'] . "', `realm` = '" . $realm . "';";
+			$query = "INSERT INTO `" . $roster->db->table('user_link',$this->data['basename']) . "` SET `uid` = '" . $accounts->session->getval('uid') . "', `member_id` = '" . $member_id . "', `guild_id` = '" . $guild_id . "', `group_id` = '" . $accounts->user->info['group_id'] . "', `realm` = '" . $realm . "', `region` = '" . $region ."';";
 
 			if( $roster->db->query($query) )
 			{
@@ -130,7 +130,7 @@ class accountsUpdate
 		}
 		else
 		{
-			$query = "UPDATE `" . $roster->db->table('user_link',$this->data['basename']) . "` SET `guild_id` = '" . $guild_id . "', `group_id` = '" . $accounts->user->info['group_id'] . "', `realm` = '" . $realm . "';";
+			$query = "UPDATE `" . $roster->db->table('user_link',$this->data['basename']) . "` SET `guild_id` = '" . $guild_id . "', `group_id` = '" . $accounts->user->info['group_id'] . "', `realm` = '" . $realm . "', `region` = '" . $region ."' WHERE `member_id` = '" . $member_id . "';";
 
 			if( $roster->db->query($query) )
 			{

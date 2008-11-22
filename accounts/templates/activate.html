@@ -1,0 +1,36 @@
+<!-- IF accounts_activate.ACT_KEY == true -->
+<!-- Begin Password Activation -->
+{accounts_activate.BORDER_START}
+<table class="bodyline" cellspacing="0" cellpadding="0" width="100%">
+<tr>
+<th class="membersHeader">
+{accounts_activate.ACT_PASS}&nbsp;<b>{accounts_activate.UNAME}</b></p><br />
+</th>
+</tr>
+<tr>
+<form name="passAct" method="post" action="{accounts_activate.FORM_LINK}">
+<td class="membersRow1">
+<span style="float:left">{accounts_activate.NEW_PASS}:</span>
+<span style="float:right"><input type="password" name="userPass" class="wowinput128"></span>
+</td>
+<td class="membersRow2">
+<span style="float:left">{accounts_activate.NEW_PASS_CONF}:</span>
+<span style="float:right"><input type="password" name="confirmPass" class="wowinput128"></span>
+</td>
+<input type="hidden" name="user" value="{accounts_activate.UNAME}">
+</tr>
+<tr>
+<td class="membersHeader">
+<div align="right"><input type="submit" name="Submit" value="{accounts_activate.SUBMIT}"></div>
+</td>
+</form>
+</tr>
+<!-- ELSE -->
+<h2>{accounts_activate.ACCOUNTS}</h2>
+<!-- ENDIF -->
+</table>
+{accounts_activate.BORDER_END}
+<p><b><!-- IF accounts_activate.ERROR_SET == true -->{accounts_activate.ERROR}<!-- ELSE -->&nbsp;<!-- ENDIF --></b></p>
+<p>&nbsp;</p>
+<!-- End Password Activation -->
+<center><p><a href="{accounts_activate.LOGIN_LINK}">{accounts_activate.LOGIN}</a></p></center>

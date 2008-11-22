@@ -12,3 +12,48 @@
  */
 
 #username { text-transform:capitalize}
+
+.profileRow1 {
+	position:relative;
+	text-align:left;
+	color:#ffffff;
+	background-color:#1F1E1D;
+	font:bold 11px arial,helvetica,sans-serif;
+	white-space:nowrap;
+	border-style:none;
+	padding:3px 6px 3px 6px;
+}
+.profileRow2 {
+	position:relative;
+	text-align:left;
+	color:#ffffff;
+	background-color:#2E2D2B;
+	font:bold 11px arial,helvetica,sans-serif;
+	white-space:nowrap;
+	border-style:none;
+	padding:3px 6px 3px 6px;
+}
+.profileRowimg {
+	vertical-align:middle;
+	display: inline;
+}
+.formTray {
+	border-top-color:#999;
+	border-top-width:thin;
+	border-top-style: double;
+	padding-top: 3px;
+}
+.textBoxArea {
+	scrollbar-arrow-color: #D3A229;
+	scrollbar-face-color: #D3A229;
+	scrollbar-track-color: #D3A226;
+	border:0;
+	vertical-align:middle;
+	width:182px;
+	height:78px;
+	padding:3px 5px 0 5px;
+	background:transparent url(images/textboxarea.png) no-repeat;
+	color: #FFF;
+	font: inherit;
+}
+* html .textBoxArea,

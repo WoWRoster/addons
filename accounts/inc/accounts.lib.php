@@ -33,6 +33,8 @@ class accounts
 		'group_id' => '',
 		'active' => '',
 		'session' => '',
+		'profile' => '',
+		'message' => '',
 		);
 
 	/**
@@ -77,6 +79,11 @@ class accounts
 	 */
 	var $session;
 	
+	/**
+	 * Accounts Locale Object
+	 */
+	var $locale;
+	
 	function accounts()
 	{
 		global $roster, $addon;
@@ -118,7 +125,21 @@ class accounts
 			'group_id' => 'group_id',
 			'active' => 'active',
 			'session' => $roster->db->table('session',$addon['basename']),
+			'profile' => $roster->db->table('profile',$addon['basename']),
+			'message' => $roster->db->table('messaging',$addon['basename']),
 			);
+	}
+	
+	/**
+	 * Get accounts locale strings
+	 */
+	function locale($key, $sub_key)
+	{
+		global $roster, $addon;
+		
+		$locale_string = $roster->locale->get_string(array($key => $sub_key), $addon['basename']);
+		
+		return $locale_string;
 	}
 
 }

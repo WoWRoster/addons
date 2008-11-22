@@ -27,22 +27,57 @@ class accountsUser extends accounts
 	{
 		global $roster, $addon;
 		
+		$this->id = 0;
 	}
 
-	function checkUser($user, $password, $pass = '')
+	function checkUser($user, $password, $email, $pass = '')
 	{
 		global $roster, $addon, $accounts;
 
+		if(!$user || $user == '')
+		{
+			if(isset($this->info['uname']))
+			{
+                        $user = $this->info['uname'];
+                  }
+                  else
+                  {
+                        $user = '';
+                  }
+		}
+		if(!$email || $email == '')
+		{
+			if(isset($this->info['email']))
+			{
+                        $email = $this->info['email'];
+                  }
+                  else
+                  {
+                        $email = '';
+                  }
+		}
+		if(!$password || $password == '')
+		{
+			if(isset($this->info['pass']))
+			{
+                        $password = $this->info['pass'];
+                  }
+                  else
+                  {
+                        $password = '';
+                  }
+		}
+
 		switch ($pass)
 		{
-			case 'new': 
-				$sql = sprintf("SELECT COUNT(*) AS `check` FROM %s WHERE `email` = '%s' OR `uname` = '%s'", $accounts->db['usertable'], $this->info['email'], $this->info['uname']);
+			case 'new':
+				$sql = sprintf("SELECT COUNT(*) AS `check` FROM %s WHERE `email` = '%s' OR `uname` = '%s'", $accounts->db['usertable'], $email, $user);
 				break;
 			case 'lost':
-				$sql = sprintf("SELECT COUNT(*) AS `check` FROM %s WHERE `email` = '%s' AND `active` = '1'", $accounts->db['usertable'], $this->info['email']);
+				$sql = sprintf("SELECT COUNT(*) AS `check` FROM %s WHERE `email` = '%s' AND `active` = '1'", $accounts->db['usertable'], $email);
 				break;
 			case 'new_pass':
-				$sql = sprintf("SELECT COUNT(*) AS `check` FROM %s WHERE `pass` = '%s' AND `uid` = %d", $accounts->db['usertable'], $this->info['pass'], $this->id);
+				$sql = sprintf("SELECT COUNT(*) AS `check` FROM %s WHERE `pass` = '%s' AND `uid` = %d", $accounts->db['usertable'], $password, $this->id);
 				break;
 			case 'active':
 				$sql = sprintf("SELECT COUNT(*) AS `check` FROM %s WHERE `uid` = %d AND `active` = '0'", $accounts->db['usertable'], $this->id);
@@ -65,11 +100,11 @@ class accountsUser extends accounts
 		}
 	}
 
-	function getInfo($user, $password)
+	function getInfo($user)
 	{
 		global $roster, $addon, $accounts;
 		
-		$sql_info = sprintf("SELECT * FROM %s WHERE `uname` = '%s' AND `pass` = '%s'", $accounts->db['usertable'], $user, $password);
+		$sql_info = sprintf("SELECT * FROM %s WHERE `uname` = '%s'", $accounts->db['usertable'], $user);
 		$results = $roster->db->query($sql_info);
 		
 		if( !$results || $roster->db->num_rows($results) == 0 )
@@ -94,7 +129,9 @@ class accountsUser extends accounts
 
 	function getUser($user)
 	{
-		if (is_int($user))
+		global $roster, $addon, $accounts;
+
+		if($user > 0)
 		{
 			$sql_info = sprintf("SELECT `uname` FROM %s WHERE `uid` = '%s'", $accounts->db['usertable'], $user);
 		}
@@ -107,12 +144,20 @@ class accountsUser extends accounts
 
 		if( !$results || $roster->db->num_rows($results) == 0 )
 		{
-			die_quietly("Cannot get user information from database<br />\nMySQL Said: " . $roster->db->error() . "<br /><br />\n");
+			die_quietly('Cannot get user data! MySQL said: ' . $roster->db->error(),'Database Error',__FILE__,__LINE__,$sql_info);
 		}
 
-		$data = $roster->db->fetch($results, SQL_ASSOC);
-		
-		return $data;
+		while( $data = $roster->db->fetch($results, SQL_ASSOC) )
+		{
+			foreach( $data as $row )
+			{
+				foreach( $data as $key => $value )
+				{
+					$return = $value;
+				}
+			}
+		}
+		return $return;
 	}
 
 	function checkNewGroup( $pass )
@@ -201,7 +246,7 @@ class accountsUser extends accounts
 		return $value;
 	}
 
-	function register($first_uname, $first_pass, $confirmPass, $first_fname, $first_lname, $first_group, $first_email)
+	function register($type, $first_uname, $first_pass, $confirmPass, $first_fname, $first_lname, $first_group, $first_email, $first_age = '', $first_city = '', $first_state = '', $first_country = '', $first_zone = '', $other_guilds = '', $first_why = '', $first_homepage = '', $first_about = '', $first_notes = '')
 	{
 		global $roster, $addon, $accounts;
 		
@@ -213,22 +258,69 @@ class accountsUser extends accounts
 				{
 					$this->info['email'] = $first_email;
 					$this->info['uname'] = $first_uname;
-					if ($this->checkUser('','','new'))
+					if ($this->checkUser('','','','new'))
 					{
 						$this->message = $roster->locale->act['acc_user']['msg12'];
 					}
 					else
 					{
 						$group = $this->checkNewGroup($first_group);
-						$sql = sprintf("INSERT INTO %s (`uid`, `uname`, `pass`, `fname`, `lname`, `date_joined`, `email`, `group_id`, `active`) VALUES (NULL, %s, %s, %s, %s, %s, %s, %d, '0')", 
-						$accounts->db['usertable'],
-						$this->clean($first_uname),
-						$this->clean(md5($first_pass)),
-						$this->clean($first_fname),
-						$this->clean($first_lname),
-						$this->clean(date('Y-m-d')),
-						$this->clean($this->info['email']),
-						$group);
+                                    if($type == 'full')
+						{
+                                          $cur_year = date('Y');
+                                          if($first_age != mktime(0, 0, 0, 1, 1, $cur_year))
+                                          {
+                                                if($first_country != '')
+                                                {
+                                                      if($first_why != '')
+                                                      {
+                                                            $sql = sprintf("INSERT INTO %s (`uid`, `uname`, `pass`, `fname`, `lname`, `date_joined`, `email`, `group_id`, `age`, `city`, `state`, `country`, `zone`, `other_guilds`, `why`, `homepage`, `about`, `notes`, `active`) VALUES (NULL, %s, %s, %s, %s, %s, %s, %d, %d, %s, %s, %s, %d, %s, %s, %s, %s, %s, '0')", 
+						                        $accounts->db['usertable'],
+						                        $this->clean($first_uname),
+						                        $this->clean(md5($first_pass)),
+						                        $this->clean($first_fname),
+						                        $this->clean($first_lname),
+						                        $this->clean(date('Y-m-d')),
+						                        $this->clean($this->info['email']),
+						                        $group,
+						                        $first_age,
+						                        $this->clean($first_city),
+						                        $this->clean($first_state),
+						                        $this->clean($first_country),
+						                        $first_zone,
+						                        $this->clean($other_guilds),
+						                        $this->clean($first_why),
+						                        $this->clean($first_homepage),
+						                        $this->clean($first_about),
+						                        $this->clean($first_notes));
+                                                      }
+                                                      else
+                                                      {
+                                                            $this->message = 'Please enter why you\'d like to join us!';
+                                                      }
+                                                }
+                                                else
+                                                {
+                                                      $this->message = 'Please enter your Country!';
+                                                }
+                                          }
+                                          else
+                                          {
+                                                $this->message = 'Please enter your Birthdate!';
+                                          }
+						}
+						elseif($type = 'basic')
+						{
+						      $sql = sprintf("INSERT INTO %s (`uid`, `uname`, `pass`, `fname`, `lname`, `date_joined`, `email`, `group_id`, `active`) VALUES (NULL, %s, %s, %s, %s, %s, %s, %d, '0')", 
+						      $accounts->db['usertable'],
+						      $this->clean($first_uname),
+						      $this->clean(md5($first_pass)),
+						      $this->clean($first_fname),
+						      $this->clean($first_lname),
+						      $this->clean(date('Y-m-d')),
+						      $this->clean($this->info['email']),
+						      $group);
+						}
 						$ins_res = $roster->db->query($sql);
 						if ($ins_res)
 						{

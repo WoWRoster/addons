@@ -37,7 +37,7 @@ class RosterLogin
 	var $active = false;
 	var $isCookie;
 	var $countVisit;
-	var $saveLogin;
+	var $saveLogin = false;
 	var $isLoggedIn = false;
 
 	/**
@@ -57,49 +57,40 @@ class RosterLogin
 
 		if( isset( $_POST['logout'] ) )
 		{
-			$this->logOut();
+			$this->logOut($accounts->session->getVal('uid'));
 		}
+		elseif (isset($_POST['user']) || isset($_POST['password']))
+		{		    			
+			if (isset($_POST['remember']))
+			{
+				$this->saveLogin = true; // use a cookie to remember the login
+			}
+			$this->loginSaver();
+			$this->countVisit = true; // if this is true then the last visitdate is saved in the database
+			$this->loginUser($_POST['user'], md5($_POST['password']));
+			if ($this->allow_login > 0)
+			{
+				$this->message = '<span style="font-size:10px;color:red;">Logged in '.ucfirst($accounts->user->info['fname']).':</span><form style="display:inline;" name="roster_logout" action="' . $this->action . '" method="post"><input type="hidden" name="logout" value="1" /><input type="submit" value="Logout" /></form><br />';
+			}
+	    }
+		elseif (isset($_COOKIE[$addon['config']['acc_cookie_name']]))
+		{
+			$this->loginReader();
+		}
+		elseif ($accounts->session->getVal('user') || $accounts->session->getVal('pass'))
+		{
+			$this->loginUser($accounts->session->getVal('user'), $accounts->session->getVal('pass'));
+			$this->allow_login = $accounts->session->getVal('groupID');
+			if ($this->allow_login > 0)
+			{
+				$this->message = '<span style="font-size:10px;color:red;">Logged in '.ucfirst($accounts->user->info['fname']).':</span><form style="display:inline;" name="roster_logout" action="' . $this->action . '" method="post"><input type="hidden" name="logout" value="1" /><input type="submit" value="Logout" /></form><br />';
+			}
+	    }
 		else
 		{
-			if (isset($_COOKIE[$addon['config']['acc_cookie_name']]))
-			{
-				$this->loginReader();
-			}
-			else
-			{
-				if ($accounts->session->getVal('user') || $accounts->session->getVal('pass'))
-				{
-					$this->loginUser($accounts->session->getVal('user'), $accounts->session->getVal('pass'));
-					$this->allow_login = $accounts->session->getVal('groupID');
-					if ($this->allow_login > 0)
-					{
-						$this->message = '<span style="font-size:10px;color:red;">Logged in '.ucfirst($accounts->user->info['fname']).':</span><form style="display:inline;" name="roster_logout" action="' . $this->action . '" method="post"><input type="hidden" name="logout" value="1" /><input type="submit" value="Logout" /></form><br />';
-					}
-	    		}
-				else
-				{
-					if (isset($_POST['user']) || isset($_POST['password']))
-					{		    			
-						if (isset($_POST['remember']))
-						{
-							$this->saveLogin = $_POST['remember'] ; // use a cookie to remember the login
-						}
-						$this->loginSaver();
-						$this->countVisit = true; // if this is true then the last visitdate is saved in the database
-						$this->loginUser($_POST['user'], md5($_POST['password']));
-						if ($this->allow_login > 0)
-						{
-							$this->message = '<span style="font-size:10px;color:red;">Logged in '.ucfirst($accounts->user->info['fname']).':</span><form style="display:inline;" name="roster_logout" action="' . $this->action . '" method="post"><input type="hidden" name="logout" value="1" /><input type="submit" value="Logout" /></form><br />';
-						}
-	    			}
-					else
-					{
-						$accounts->session->setVal('isLoggedIn', $this->isLoggedIn);
-						$this->allow_login = 0;
-						$this->message = '<span style="font-size:10px;color:red;">Not logged in</span><br />';
-					}
-				}
-			}
+			$accounts->session->setVal('isLoggedIn', $this->isLoggedIn);
+			$this->allow_login = 0;
+			$this->message = '<span style="font-size:10px;color:red;">Not logged in</span><br />';
 		}
 	}
 
@@ -111,7 +102,7 @@ class RosterLogin
 		{	
 			if ($accounts->user->checkUser($user, $password, ''))
 			{
-				$accounts->user->getInfo($user, $password);
+				$accounts->user->getInfo($user);
 
 				if ($this->countVisit)
 				{
@@ -122,12 +113,12 @@ class RosterLogin
 			}
 			else
 			{
-				$this->message = $roster->locale->act['acc_user']['msg10'];
+				$this->message = $roster->locale->get_string(array('acc_user' => 'msg10'), 'accounts');
 			}
 		}
 		else
 		{
-			$this->message = $roster->locale->act['acc_user']['msg11'];
+			$this->message = $roster->locale->get_string(array('acc_user' => 'msg11'), 'accounts');
 		}
 	}	
 
@@ -150,6 +141,11 @@ class RosterLogin
 				'groupID' => $accounts->user->info['group_id'],
 				'isLoggedIn' => $this->isLoggedIn
 				));
+
+			$sql = 'UPDATE `' . $accounts->db['usertable'] . '` SET `online` = 1 WHERE `uid` = ' . $accounts->user->info['uid'];
+			$roster->db->query($sql);
+
+			$this->allow_login = $accounts->user->info['group_id'];
 		}
 	}
 
@@ -157,7 +153,7 @@ class RosterLogin
 	{
 		global $roster, $addon, $accounts;
 		
-		if ($this->saveLogin == 'no')
+		if ($this->saveLogin == false)
 		{
 			if (isset($_COOKIE[$addon['config']['acc_cookie_name']]))
 			{
@@ -198,13 +194,17 @@ class RosterLogin
 		$roster->db->query($visit_sql);
 	}
 	
-	function logOut() 
+	function logOut($uid) 
 	{
 		global $roster, $addon, $accounts;
 		
 		setcookie( $addon['config']['acc_cookie_name'],'',time()-86400,'/' );
 		$this->allow_login = 0;
 		$this->message = '<span style="font-size:10px;color:red;">Logged out</span><br />';
+
+		$sql = 'UPDATE `' . $accounts->db['usertable'] . '` SET `online` = 0 WHERE `uid` = ' . $uid;
+		$roster->db->query($sql);
+
 		$accounts->session->endSession();
 		
 	}
@@ -225,18 +225,6 @@ class RosterLogin
 				return $this->allow_login >= $access;
 			}
 		}
-		elseif($accounts->session->getVal('groupID') > 0)
-		{
-			if(!is_null($redirect))
-			{
-				$this->setAction($redirect);
-				return $this->allow_login = $accounts->session->getVal('groupID');
-			}
-			else
-			{
-				return $this->allow_login = $accounts->session->getVal('groupID');
-			}
-		}
 	}
 
 	function getMessage()
@@ -254,18 +242,18 @@ class RosterLogin
 	
 		$roster->tpl->assign_block_vars('accounts_login', array(
 			'BORDER_START' => border('sred','start', $roster->locale->act['auth_req']),
-			'LOGIN_TXT' => $roster->locale->get_string('acc_login_txt', 'accounts'),
+			'LOGIN_TXT' => $roster->locale->get_string(array('acc_int' => 'login_txt'), 'accounts'),
 			'FORM_LINK' => $this->action,
-			'UNAME_TXT' => $roster->locale->get_string('acc_uname', 'accounts'),
+			'UNAME_TXT' => $roster->locale->get_string(array('acc_int' => 'uname'), 'accounts'),
 			'PASS_TXT' => $roster->locale->act['password'],
-			'REM_TXT' => $roster->locale->get_string('remember_login', 'accounts'),
-			'LOGIN_BTTN' => $roster->locale->get_string('login', 'accounts'),
+			'REM_TXT' => $roster->locale->get_string(array('acc_int' => 'remember'), 'accounts'),
+			'LOGIN_BTTN' => $roster->locale->get_string(array('acc_int' => 'login'), 'accounts'),
 			'BORDER_END' => border('sred','end'),
-			'REGISTER_TXT' => $roster->locale->get_string('acc_no_register', 'accounts'),
+			'REGISTER_TXT' => $roster->locale->get_string(array('acc_int' => 'no_register'), 'accounts'),
 			'REGISTER_LINK' => makelink('util-accounts-register'),
-			'REGISTER_CLICK' => $roster->locale->get_string('click', 'accounts'),
+			'REGISTER_CLICK' => $roster->locale->get_string(array('acc_int' => 'click'), 'accounts'),
 			'LOST_LINK' => makelink('util-accounts-lost'),
-			'LOST_TXT' => $roster->locale->get_string('acc_forgot', 'accounts'),
+			'LOST_TXT' => $roster->locale->get_string(array('acc_int' => 'forgot'), 'accounts'),
 			)
 		);
 
@@ -280,7 +268,7 @@ class RosterLogin
 		{
 			return '
 			<form action="' . $this->action . '" method="post" enctype="multipart/form-data" onsubmit="submitonce(this);" style="margin:0;">
-				' . $roster->locale->get_string('acc_uname', 'accounts') . ': <input name="user" class="wowinput128" type="text" size="30" maxlength="30" />&nbsp;&nbsp;
+				' . $roster->locale->get_string(array('acc_int' => 'uname'), 'accounts') . ': <input name="user" class="wowinput128" type="text" size="30" maxlength="30" />&nbsp;&nbsp;
 				' . $roster->locale->act['password'] . ': <input name="password" class="wowinput128" type="password" size="30" maxlength="30" />&nbsp;&nbsp;
 				<input type="submit" value="Go" />
 			</form>' . $this->getMessage();

@@ -231,6 +231,14 @@ class memberslist
 			{
 				$th_text = $roster->locale->act[$DATA['lang_field']];
 			}
+			elseif( !empty($roster->locale->act['acc_charlist'][$DATA['lang_field']]) )
+			{
+				$th_text = $roster->locale->act['acc_charlist'][$DATA['lang_field']];
+			}
+			elseif( !empty($roster->locale->act['acc_rs'][$DATA['lang_field']]) )
+			{
+				$th_text = $roster->locale->act['acc_rs'][$DATA['lang_field']];
+			}
 			else
 			{
 				$th_text = $DATA['lang_field'];
@@ -761,7 +769,7 @@ class memberslist
 			{
 				$rested = ' : '.$rested;
 			}
-			$togo = sprintf($roster->locale->act['xp_to_go'], $max - $current, ($row['level']+1));
+			$togo = sprintf($roster->locale->act['acc_charlist']['xp'], $max - $current, ($row['level']+1));
 
 			$percent_exp = ($max > 0 ? round(($current/$max)*100) : 0);
 
@@ -844,17 +852,6 @@ class memberslist
 	}
 
 	/**
-	 * Controls Output of the Guild Name Column
-	 *
-	 * @param array $row - of character data
-	 * @return string - Formatted output
-	 */
-	function guild_name_value ( $row, $field )
-	{
-		return '<div style="display:none; ">'.$row['guild_name'].'</div><a href="'.makelink('guild-memberslist&amp;a=g:'.$row['guild_id']).'">'.$row['guild_name'].'</a></div>';
-	}
-
-	/**
 	 * Controls Output of the Talent Spec Column
 	 *
 	 * @param array $row - of character data
@@ -927,52 +924,52 @@ class memberslist
 
 			if( isset($row['online']) && $row['online'] == '1' || $difference < 0 )
 			{
-				return $realtime . $roster->locale->act['online_at_update'];
+				return $realtime . $roster->locale->act['acc_charlist']['online'];
 			}
 
 			if( $difference < 60 )
 			{
-				return $realtime . sprintf(($difference == '1' ? $roster->locale->act['second'] : $roster->locale->act['seconds']),$difference);
+				return $realtime . sprintf(($difference == '1' ? $roster->locale->act['acc_charlist']['second'] : $roster->locale->act['acc_charlist']['seconds']),$difference);
 			}
 			else
 			{
 				$difference = round($difference / 60);
 				if( $difference < 60 )
 				{
-					return $realtime . sprintf(($difference == '1' ? $roster->locale->act['minute'] : $roster->locale->act['minutes']),$difference);
+					return $realtime . sprintf(($difference == '1' ? $roster->locale->act['acc_charlist']['minute'] : $roster->locale->act['acc_charlist']['minutes']),$difference);
 				}
 				else
 				{
 					$difference = round($difference / 60);
 					if( $difference < 24 )
 					{
-						return $realtime . sprintf(($difference == '1' ? $roster->locale->act['hour'] : $roster->locale->act['hours']),$difference);
+						return $realtime . sprintf(($difference == '1' ? $roster->locale->act['acc_charlist']['hour'] : $roster->locale->act['acc_charlist']['hours']),$difference);
 					}
 					else
 					{
 						$difference = round($difference / 24);
 						if( $difference < 7 )
 						{
-							return $realtime . sprintf(($difference == '1' ? $roster->locale->act['day'] : $roster->locale->act['days']),$difference);
+							return $realtime . sprintf(($difference == '1' ? $roster->locale->act['acc_charlist']['day'] : $roster->locale->act['acc_charlist']['days']),$difference);
 						}
 						else
 						{
 							$difference = round($difference / 7);
 							if( $difference < 4 )
 							{
-								return $realtime . sprintf(($difference == '1' ? $roster->locale->act['week'] : $roster->locale->act['weeks']),$difference);
+								return $realtime . sprintf(($difference == '1' ? $roster->locale->act['acc_charlist']['week'] : $roster->locale->act['acc_charlist']['weeks']),$difference);
 							}
 							else
 							{
 								$difference = round($difference / 4);
 								if( $difference < 12 )
 								{
-									return $realtime . sprintf(($difference == '1' ? $roster->locale->act['month'] : $roster->locale->act['months']),$difference);
+									return $realtime . sprintf(($difference == '1' ? $roster->locale->act['acc_charlist']['month'] : $roster->locale->act['acc_charlist']['months']),$difference);
 								}
 								else
 								{
 									$difference = round($difference / 12);
-									return $realtime . sprintf(($difference == '1' ? $roster->locale->act['year'] : $roster->locale->act['years']),$difference);
+									return $realtime . sprintf(($difference == '1' ? $roster->locale->act['acc_charlist']['year'] : $roster->locale->act['acc_charlist']['years']),$difference);
 								}
 
 							}
@@ -1088,7 +1085,7 @@ class memberslist
 			}
 		}
 
-		return '<div style="display:none; ">'.htmlentities($row[$field]).'</div>'.$note;
+		return '<div style="display:none; ">'.htmlentities($row[$field]).'</div><center>' . $note . '</center>';
 	}
 
 	/**
@@ -1103,11 +1100,11 @@ class memberslist
 
 		if( $row['guild_id'] )
 		{
-			return '<div style="display:none; ">' . $row['guild_name'] . '</div><a href="' . makelink('guild-memberslist&amp;a=g:' . $row['guild_id']) . '">' . $row['guild_name'] . '</a></div>';
+			return '<div style="display:none; ">' . $row['guild_name'] . '</div><center><a href="' . makelink('guild-memberslist&amp;a=g:' . $row['guild_id']) . '">' . $row['guild_name'] . '</a></center>';
 		}
 		else
 		{
-			return '<div style="display:none; ">' . $row['guild_name'] . '</div>' . $row['guild_name'];
+			return '<div style="display:none; ">' . $row['guild_name'] . '</div><center>' . $row['guild_name'] . '</center>';
 		}
 	}
 
@@ -1121,7 +1118,7 @@ class memberslist
 	{
 		global $roster;
 
-		return '<div style="display:none; ">' . $row['server_name'] . '</div>' . $row['server_name'];
+		return '<div style="display:none; ">' . $row['server_name'] . '</div><center>' . $row['server_name'] . '</center>';
 	}
 
 	/**
@@ -1134,7 +1131,7 @@ class memberslist
 	{
 		global $roster;
 
-		return '<div style="display:none; ">' . $row['server_region'] . '</div>' . $row['server_region'];
+		return '<div style="display:none; ">' . $row['server_region'] . '</div><center>' . $row['server_region'] . '</center>';
 	}
 
 	/**
@@ -1151,25 +1148,25 @@ class memberslist
 		{
 			case "RPPVP":
 				$text = $roster->locale->act['acc_rs']['rppvp'];
-				$textcolor = '535600';
+				$textcolor = $roster->config['rs_color_rppvp'];
 				break;
 			case "PVE":
 				$text = $roster->locale->act['acc_rs']['pve'];
-				$textcolor = '234303';
+				$textcolor = $roster->config['rs_color_pve'];
 				break;
 			case "PVP":
 				$text = $roster->locale->act['acc_rs']['pvp'];
-				$textcolor = '660D02';
+				$textcolor = $roster->config['rs_color_pvp'];
 				break;
 			case "RP":
 				$text = $roster->locale->act['acc_rs']['rp'];
-				$textcolor = '535600';
+				$textcolor = $roster->config['rs_color_rp'];
 				break;
 			default:
-				$text = $roster->locale->act['rs']['UNKNOWN'];
-				$textcolor = '860D02';
+				$text = $roster->locale->act['acc_rs']['error'];
+				$textcolor = $roster->config['rs_color_unknown'];
 		}
-		return '<div style="display:none; ">' . $row['servertype'] . '</div><font color="' . $textcolor . '">' . $text . '</font>';
+		return '<div style="display:none; ">' . $row['servertype'] . '</div><center><font color="' . $textcolor . '">' . $text . '</font></center>';
 	}
 
 	/**
@@ -1217,25 +1214,29 @@ class memberslist
 		{
 			case "LOW":
 				$text = $roster->locale->act['acc_rs']['low'];
-				$textcolor = '234303';
+				$textcolor = $roster->config['rs_color_low'];
 				break;
 			case "MEDIUM":
 				$text = $roster->locale->act['acc_rs']['medium'];
-				$textcolor = '535600';
+				$textcolor = $roster->config['rs_color_medium'];
 				break;
 			case "HIGH":
 				$text = $roster->locale->act['acc_rs']['high'];
-				$textcolor = '660D02';
+				$textcolor = $roster->config['rs_color_high'];
 				break;
 			case "MAX":
 				$text = $roster->locale->act['acc_rs']['max'];
-				$textcolor = '860D02';
+				$textcolor = $roster->config['rs_color_max'];
+				break;
+			case "OFFLINE":
+				$text = $roster->locale->act['acc_rs']['offline'];
+				$textcolor = $roster->config['rs_color_offline'];
 				break;
 			default:
 				$text = $roster->locale->act['acc_rs']['error'];
-				$textcolor = '860D02';
+				$textcolor = $roster->config['rs_color_error'];
 		}
-		return '<div style="display:none; ">' . $row['serverpop'] . '</div><font color="' . $textcolor . '">' . $text . '</font>';
+		return '<div style="display:none; ">' . $row['serverpop'] . '</div><center><font color="' . $textcolor . '">' . $text . '</font></center>';
 	}
 
 
@@ -1275,6 +1276,6 @@ class memberslist
 
 		$cell_value = $icon . $row['faction'];
 
-		return '<div style="display:none; ">' . $row['faction'] . '</div>' . $cell_value;
+		return '<div style="display:none; ">' . $row['faction'] . '</div><center>' . $cell_value . '</center>';
 	}
 }
