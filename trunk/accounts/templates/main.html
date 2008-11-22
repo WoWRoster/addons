@@ -1,12 +1,27 @@
 <!-- BEGIN accounts_main -->
 {accounts_main.MESSAGE}
 <br />
-{accounts_main.BORDER_START}
-<br />
-User: {accounts_main.USER}<br />
-First Name: {accounts_main.FNAME}<br />
-Last Name: {accounts_main.LNAME}<br />
-User Group: {accounts_main.GROUPID}<br />
-User E-mail: {accounts_main.EMAIL}<br />
-{accounts_main.BORDER_END}
+<table width="100%">
+	<tr>
+    	<td align="justify">
+		{accounts_main.INFO_BORDER_START}
+		{accounts_main.UNAME_TXT}: <a href="{accounts_main.USER_LINK}">{accounts_main.USER}</a><br />
+		{accounts_main.FNAME_TXT}: {accounts_main.FNAME}<br />
+		{accounts_main.LNAME_TXT}: {accounts_main.LNAME}<br />
+		{accounts_main.GROUP_TXT}: {accounts_main.GROUP}<br />
+		{accounts_main.EMAIL_TXT}: {accounts_main.EMAIL}<br />
+		{accounts_main.INFO_BORDER_END}
+        </td>
+        <td align="justify">
+        {accounts_main.MAIN_BORDER_START}
+        <br />
+        {accounts_main.MAIN_TXT}
+        <br />
+        {accounts_main.MAIN_BORDER_END}
+        </td>
+    	<td align="justify">
+		{accounts_main.MENU}
+        </td>
+	</tr>
+</table>
 <!-- END accounts_main -->

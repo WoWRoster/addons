@@ -12,8 +12,33 @@
  * @subpackage Changelog 
  */
 
+Accounts v1.9.9.940 [SVN]416:
+- Fixed
+-- Undefined $body error in character view settings
+-- Login issues requiring refresh to allow/show logged in status
+
+- Modified
+-- inc/profile.lib.php, inc/page.lib.php, inc/login.php, admin/profile.php, admin/settings.php, inc/memberslist.php for locale changes
+-- Memberslist display items, centered and colorized using settings from Realm Status Config
+-- admin/profile.php updated for it's actual config entries
+-- inc/update_hook.php added region column update, forgot the WHERE clause for userlink update
+-- inc/install.def.php dumped applicants table and added messaging table, added acc_use_app config to Registration Settings
+   and menu link for messaging
+-- Registration form now generated using the form class
+-- Application form now generated using form class
+-- inc/user.lib.php re-worked registration function now has full(Application) or basic(Registration) option
+
+-Added
+-- inc/form.lib.php the new form generation class
+-- inc/messaging.lib.php the new private message class
+-- inc/page.lib.php added mail page function
+-- images folder for basic avatar generation
+-- region column to user_link table in inc/install.def.php
+-- getGroup(), getAvSig(), setAvSig() and setMain() in inc/profile.lib.php
+
+
 Accounts v1.9.9.935 [SVN]388:
--Modified
+- Modified
 -- getAuthorized() in login.php for new Addon Auth and page redirection
 -- login scripting in page.lib.php for changes in the Auth System
 -- admin/settings.php for the DB change to the Info addon display settings

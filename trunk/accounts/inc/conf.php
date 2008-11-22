@@ -40,6 +40,12 @@ if( !isset($accounts))
 		$accounts->session = new accountsSession;
 	}
 
+	if( !isset($accounts->form))
+	{
+		include_once( $addon['inc_dir'] . 'form.lib.php');
+		$accounts->form = new accountsForm;
+	}
+
 	if( !isset($accounts->admin))
 	{
 		include_once( $addon['inc_dir'] . 'admin.lib.php');
@@ -62,6 +68,12 @@ if( !isset($accounts))
 	{
 		include_once( $addon['inc_dir'] . 'profile.lib.php');
 		$accounts->profile = new accountsProfile;
+	}
+
+	if( !isset($accounts->messaging))
+	{
+		include_once( $addon['inc_dir'] . 'messaging.lib.php');
+		$accounts->messaging = new accountsMessaging;
 	}
 
 }

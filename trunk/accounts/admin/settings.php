@@ -84,18 +84,18 @@ if( $num_members > 0 )
 		<th class="membersHeader">' . $roster->locale->act['name'] . '</th>
 		<th class="membersHeader">' . $roster->locale->act['money'] . '</th>
 		<th class="membersHeader">' . $roster->locale->act['timeplayed'] . '</th>
-		<th class="membersHeader">' . $roster->locale->act['tab2'] . '</th>
-		<th class="membersHeader">' . $roster->locale->act['tab3'] . '</th>
-		<th class="membersHeader">' . $roster->locale->act['tab4'] . '</th>
-		<th class="membersHeader">' . $roster->locale->act['tab5'] . '</th>
-		<th class="membersHeader">' . $roster->locale->act['talents'] . '</th>
-		<th class="membersHeader">' . $roster->locale->act['spellbook'] . '</th>
-		<th class="membersHeader">' . $roster->locale->act['mailbox'] . '</th>
+		<th class="membersHeader">' . $roster->locale->act['acc_settings']['tab2'] . '</th>
+		<th class="membersHeader">' . $roster->locale->act['acc_settings']['tab3'] . '</th>
+		<th class="membersHeader">' . $roster->locale->act['acc_settings']['tab4'] . '</th>
+		<th class="membersHeader">' . $roster->locale->act['acc_settings']['tab5'] . '</th>
+		<th class="membersHeader">' . $roster->locale->act['acc_settings']['talents'] . '</th>
+		<th class="membersHeader">' . $roster->locale->act['acc_settings']['spellbook'] . '</th>
+		<th class="membersHeader">' . $roster->locale->act['acc_settings']['mailbox'] . '</th>
 		<th class="membersHeader">' . $roster->locale->act['bags'] . '</th>
 		<th class="membersHeader">' . $roster->locale->act['bank'] . '</th>
 		<th class="membersHeader">' . $roster->locale->act['quests'] . '</th>
 		<th class="membersHeader">' . $roster->locale->act['recipes'] . '</th>
-		<th class="membersHeader">' . $roster->locale->act['item_bonuses'] . "</th>\n\t</tr>\n";
+		<th class="membersHeader">' . $roster->locale->act['acc_settings']['item_bonuses'] . "</th>\n\t</tr>\n";
 
 	$i=0;
 
@@ -170,21 +170,21 @@ else
 
 $roster->output['body_onload'] .= 'initARC(\'config\',\'radioOn\',\'radioOff\',\'checkboxOn\',\'checkboxOff\');';
 
-$body .= "
+$body = "
 <form action=\"\" method=\"post\" enctype=\"multipart/form-data\" id=\"config\" onsubmit=\"return confirm('" . $roster->locale->act['confirm_config_submit'] . "');submitonce(this);\">
 	$formbody
 <br /><br />\n<input type=\"submit\" value=\"" . $roster->locale->act['config_submit_button'] . "\" />\n<input type=\"reset\" name=\"Reset\" value=\"" . $roster->locale->act['config_reset_button'] . "\" onclick=\"return confirm('" . $roster->locale->act['confirm_config_reset'] . "')\"/>\n<input type=\"hidden\" name=\"process\" value=\"process\" />\n
 </form>";
 
-$tab1 = explode('|',$roster->locale->act['acc_settings_set']);
-$tab2 = explode('|',$roster->locale->act['acc_settings_prof']);
+$tab1 = explode('|',$roster->locale->act['acc_settings']['set']);
+$tab2 = explode('|',$roster->locale->act['acc_settings']['prof']);
 
 $menu = messagebox('
 <ul class="tab_menu">
 	<li class="selected"><a href="' . makelink('util-accounts-settings') . '" style="cursor:help;"' . makeOverlib($tab1[1],$tab1[0],'',1,'',',WRAP') . '>' . $tab1[0] . '</a></li>
 	<li><a href="' . makelink('util-accounts-settings-profile') . '" style="cursor:help;"' . makeOverlib($tab2[1],$tab2[0],'',1,'',',WRAP') . '>' . $tab2[0] . '</a></li>
 </ul>
-',$roster->locale->act['acc_settings_page'],'sgray','145px');
+',$roster->locale->act['acc_page']['settings'],'sgray','145px');
 
 
 /**

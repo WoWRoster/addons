@@ -20,21 +20,18 @@ $roster->output['title'] .= $roster->locale->act['pagebar_plugininst'];
 
 include($addon['inc_dir'] . 'install.lib.php');
 
-$tab1 = explode('|',$roster->locale->act['admin']['acc_display']);
-$tab2 = explode('|',$roster->locale->act['admin']['acc_perms']);
-$tab3 = explode('|',$roster->locale->act['admin']['acc_user']);
-$tab4 = explode('|',$roster->locale->act['admin']['acc_plugin']);
-$tab5 = explode('|',$roster->locale->act['admin']['acc_recruit']);
+/**
+ * Make our menu from the config api
+ */
+// ----[ Set the tablename and create the config class ]----
+include(ROSTER_LIB . 'config.lib.php');
+$config = new roster_config( $roster->db->table('addon_config'), '`addon_id` = "' . $addon['addon_id'] . '"' );
 
-$menu = messagebox('
-<ul class="tab_menu">
-	<li><a href="' . makelink('rostercp-addon-accounts') . '" rel="acc_display" style="cursor:help;"' . makeOverlib($tab1[1],$tab1[0],'',1,'',',WRAP') . '>' . $tab1[0] . '</a></li>
-	<li><a href="' . makelink('rostercp-addon-accounts') . '" rel="acc_perms" style="cursor:help;"' . makeOverlib($tab2[1],$tab2[0],'',1,'',',WRAP') . '>' . $tab2[0] . '</a></li>
-	<li><a href="' . makelink('rostercp-addon-accounts-admin') . '" style="cursor:help;"' . makeOverlib($tab3[1],$tab3[0],'',1,'',',WRAP') . '>' . $tab3[0] . '</a></li>
-	<li class="selected"><a href="' . makelink('rostercp-addon-accounts-plugin') . '" style="cursor:help;"' . makeOverlib($tab4[1],$tab4[0],'',1,'',',WRAP') . '>' . $tab4[0] . '</a></li>
-	<li><a href="' . makelink('rostercp-addon-accounts') . '" rel="acc_recruit" style="cursor:help;"' . makeOverlib($tab5[1],$tab5[0],'',1,'',',WRAP') . '>' . $tab5[0] . '</a></li>
-</ul>
-',$roster->locale->act['roster_config_menu'],'sgray','145px');
+// ----[ Get configuration data ]---------------------------
+$config->getConfigData();
+
+// ----[ Build the page items using lib functions ]---------
+$menu .= $config->buildConfigMenu('rostercp-addon-' . $addon['basename']);
 
 $op = ( isset($_POST['op']) ? $_POST['op'] : '' );
 
