@@ -29,7 +29,7 @@ class armorysyncInstall
 	var $active = true;
 	var $icon = 'inv_misc_missilesmall_blue';
 
-	var $version = '2.7.0.433';
+	var $version = '2.7.1.459';
 	var $wrnet_id  = '122';
 
 	var $fullname = 'Armory Sync';
@@ -48,8 +48,6 @@ class armorysyncInstall
 			"info"=>	"testing, bugfixing and translating"),
 		array(	"name"=>	"ds@wowroster.net",
 			"info"=>	"supporting"),
-		array(	"name"=>	"ulminia@gmail.com",
-			"info"=>	"testing, bugfixing and code support"),
 
 	);
 

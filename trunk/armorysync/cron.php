@@ -1,6 +1,6 @@
 <?php
-
-echo 'hi';
+echo '<pre>';
+print_r($roster);
 ?>
 
 <html><head>
