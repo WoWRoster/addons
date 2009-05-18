@@ -114,9 +114,12 @@ $lang['Classes']['Warlock'] = 'Warlock';
 $lang['Classes']['Warrior'] = 'Warrior';
 $lang['Classes']['Death Knight'] = 'Death Knight';
 
-$lang['Talenttrees']['DeathKnight']['Blood'] = "Blood";
-$lang['Talenttrees']['DeathKnight']['Frost'] = "Frost";
-$lang['Talenttrees']['DeathKnight']['Unholy'] = "Unholy";
+$lang['Talenttrees']['Death Knight']['Blood'] = "Blood";
+$lang['Talenttrees']['Death Knight']['Frost'] = "Frost";
+$lang['Talenttrees']['Death Knight']['Unholy'] = "Unholy";
+//$lang['Talenttrees']['DeathKnight']['Blood'] = "Blood";
+//$lang['Talenttrees']['DeathKnight']['Frost'] = "Frost";
+//$lang['Talenttrees']['DeathKnight']['Unholy'] = "Unholy";
 $lang['Talenttrees']['Druid']['Balance'] = "Balance";
 $lang['Talenttrees']['Druid']['Feral Combat'] = "Feral Combat";
 $lang['Talenttrees']['Druid']['Restoration'] = "Restoration";

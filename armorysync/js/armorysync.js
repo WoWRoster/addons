@@ -15,7 +15,7 @@
 
 
 function toggleStatus() {
-    showHide('update_details','update_details_img','img/minus.gif','img/plus.gif');
+    showHide('update_details','update_details_img',$roster->config['theme_path'] . '/images/minus.gif','templates/default/images/plus.gif');
     document.linker.StatusHidden.value=(document.linker.StatusHidden.value=='OFF'?'ON':'OFF');
 }
 

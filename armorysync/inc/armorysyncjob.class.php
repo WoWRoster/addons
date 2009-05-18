@@ -581,7 +581,7 @@ class ArmorySyncJob extends ArmorySyncBase {
         $status = isset($_POST['StatusHidden']) ? $_POST['StatusHidden'] :
                     ( $addon['config']['armorysync_status_hide'] ? 'ON' : 'OFF' );
         $display = ( $status == 'ON' ) ? 'none' : '';
-        $icon = ROSTER_PATH. ( $status == 'ON' ? 'img/plus.gif' : 'img/minus.gif' );
+        $icon = ROSTER_PATH. ( $status == 'ON' ? $roster->config['theme_path'] . '/images/plus.gif' : $roster->config['theme_path'] . '/images/minus.gif' );
         $style = 'syellow';
 
         $roster->tpl->assign_vars(array(
@@ -675,11 +675,11 @@ class ArmorySyncJob extends ArmorySyncBase {
             $array['STOPTIMEUTC'] = isset( $member['stoptimeutc'] ) ? $this->_getLocalisedTime($member['stoptimeutc']) : "<img src=\"". ROSTER_PATH. "img/blue-question-mark.gif\" alt=\"?\"/>";
 
             if ( !$memberlist && $member['log'] ) {
-                $array['LOG'] = "<img src=\"". ROSTER_PATH. "img/note.gif\"". makeOverlib( $member['log'] , $roster->locale->act['update_log'] , '' ,0 , '' , ',WRAP' ). " alt=\"\" />";
+                $array['LOG'] = "<img src=\"". $roster->config['theme_path'] . "/images/note.gif\"". makeOverlib( $member['log'] , $roster->locale->act['update_log'] , '' ,0 , '' , ',WRAP' ). " alt=\"\" />";
             } elseif( $member['log'] ) {
-                $array['LOG'] = "<img src=\"". ROSTER_PATH. "img/note.gif\"". makeOverlib( "<div style=\"height:300px;width:500px;overflow:auto;\">". $member['log']. "</div>", $roster->locale->act['update_log'] , '' ,0 , '' , ',STICKY, WRAP, CLOSECLICK' ). " alt=\"\" />";
+                $array['LOG'] = "<img src=\"". $roster->config['theme_path'] . "/images/note.gif\"". makeOverlib( "<div style=\"height:300px;width:500px;overflow:auto;\">". $member['log']. "</div>", $roster->locale->act['update_log'] , '' ,0 , '' , ',STICKY, WRAP, CLOSECLICK' ). " alt=\"\" />";
             } else {
-                $array['LOG'] = "<img src=\"". ROSTER_PATH. "img/no_note.gif\" alt=\"\" />";
+                $array['LOG'] = "<img src=\"". $roster->config['theme_path'] . "/images/no_note.gif\" alt=\"\" />";
             }
 
 
