@@ -734,7 +734,7 @@ class ArmorySyncJob extends ArmorySyncBase {
 
         $roster->tpl->assign_vars( array (
             'IMAGE_PATH' => $addon['image_path'],
-            'ARMORYSYNC_VERSION' => $addon['version']. ' by poetter',
+            'ARMORYSYNC_VERSION' => $addon['version']. ' by Ulminia',
             'ARMORYSYNC_CREDITS' => $roster->locale->act['armorysync_credits'],
             'ERROR' => count( $this->errormessages ) > 0,
             'DEBUG' => $addon['config']['armorysync_debuglevel'],
