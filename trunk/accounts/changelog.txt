@@ -12,6 +12,11 @@
  * @subpackage Changelog 
  */
 
+Accounts v1.9.9.941 [SVN]444:
+- Fixed
+-- MySQL error on messaging table in install.def.php
+
+
 Accounts v1.9.9.940 [SVN]416:
 - Fixed
 -- Undefined $body error in character view settings

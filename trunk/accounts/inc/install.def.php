@@ -239,7 +239,7 @@ class accountsInstall
 			`read` int(11) NOT NULL default 0,
 			`date` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
 			PRIMARY KEY  (`msgid`),
-			INDEX KEY (`uid`)"
+			KEY (`uid`)"
 			);
 
 		//Account menu
@@ -310,7 +310,7 @@ class accountsInstall
 			`read` int(11) NOT NULL default 0,
 			`date` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
 			PRIMARY KEY  (`msgid`),
-			INDEX KEY (`uid`)"
+			KEY (`uid`)"
 			);
 
 			// Remove old menu links
