@@ -7,9 +7,9 @@ if ( !defined('ROSTER_INSTALLED') )
 
 $char_ext = '.png';
 
-if( !empty($sig_race) && !empty($sig_gender) && !empty($sig_class) )
+if( !empty($sig_race) && !empty($sig_gender) && !empty($sig_classEn) )
 {
-	$im_user_file = $configData['image_dir'].$configData['char_dir'].$sig_race.'-'.$sig_gender.'-'.strtolower(getEnglishValue($sig_class,$sig_char_locale)).$char_ext;
+	$im_user_file = $configData['image_dir'].$configData['char_dir'].$sig_race.'-'.$sig_gender.'-'.str_replace(' ','',$sig_classEn).$char_ext;
 
 }	// Set default character image
 else
