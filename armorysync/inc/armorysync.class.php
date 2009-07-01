@@ -129,17 +129,28 @@ class ArmorySync extends ArmorySyncBase {
      * fetches seperate parts of the character sheet
      *
      */
-    function _getRosterData() {
+      function _getRosterData() {
 
-        $this->_getCharacterInfo();
-        if ( $this->status['characterInfo'] ) {
-            $this->_getSkillInfo();
-            $this->_getReputationInfo();
-            $this->_getTalentInfo();
-            $this->_debug( 1, $this->data, 'Parsed all armory data',  'OK' );
-        } else {
-            $this->_debug( 1, $this->data, 'Parsed all armory data',  'Failed' );
-        }
+            if (function_exists('php_curl')) 
+                  {
+                        $this->_getCharacterInfo();
+                        if ( $this->status['characterInfo'] ) 
+                              {
+                                    $this->_getSkillInfo();
+                                    $this->_getReputationInfo();
+                                    $this->_getTalentInfo();
+                                    $this->_debug( 1, $this->data, 'Parsed all armory data',  'OK' );
+                              }
+                        else
+                              {
+                                    $this->_debug( 1, $this->data, 'Parsed all armory data',  'Failed' );
+                              }
+                        $this->_debug( 1, $this->data, 'Armory sync initialization',  'Passed' );
+                  }
+            else
+                  {
+                        $this->_debug( 1, $this->data, 'Armory sync initialization',  'Failed' );
+                  }
 
     }
 
@@ -264,7 +275,7 @@ class ArmorySync extends ArmorySyncBase {
     function checkGuildInfo( $name = false, $server = false, $region = false ) {
         global $roster, $addon;
 
-        $this->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
+        //$this->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
         $content = $this->getguilddata( $roster->data['guild_name'], $this->region, $this->server, $fetch_type='array' );//$this->fetchGuild( $this->memberName, $roster->config['locale'], $this->server );
 
