@@ -38,6 +38,7 @@ class ArmorySync extends ArmorySyncBase {
     var $talentsr = array();
     var $data = array();
     var $properties = array();
+    var $classId = '';
 
     var $message;
     var $debuglevel = 0;
@@ -131,7 +132,7 @@ class ArmorySync extends ArmorySyncBase {
      */
       function _getRosterData() {
 
-            if (function_exists('php_curl')) 
+            if (function_exists('curl_init')) 
                   {
                         $this->_getCharacterInfo();
                         if ( $this->status['characterInfo'] ) 
@@ -318,18 +319,17 @@ class ArmorySync extends ArmorySyncBase {
             include_once(ROSTER_LIB . 'armory.class.php');
 		$armory = new RosterArmory;
             $armory->region = $this->region;
-            $armory->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
-		$this->_setUserAgent($armory);
+            $this->_setUserAgent($armory);
 
-            $content = $this->_parseData( $armory->fetchCharacter( $this->memberName, $roster->config['locale'], $this->server ) );
-            //echo '<pre>';
-            //print_r($content);
+            $content = $this->_parseData($armory->fetchCharacter( $this->memberName, $roster->config['locale'], $this->server ));
+
             /*
             if ( $this->_checkContent($content, array('characterInfo', 'character' ) ) &&
             $this->_checkContent($content, array('characterInfo', 'characterTab' ) ) ) 
-            {
-            */
+            {*/
+            
                   $char = $content->characterInfo->character;
+                  //$char = $charr['@attributes'];
                   $tab = $content->characterInfo->characterTab;
                   
 
@@ -548,7 +548,7 @@ class ArmorySync extends ArmorySyncBase {
                 $equip = $tab->items->item;
                 $this->_getEquipmentInfo( $equip );
             //}
-       /* } else {
+        /*} else {
             $this->_debug( 1, false, 'Parsed character infos',  'Failed' );
         }*/
     }
@@ -737,8 +737,6 @@ class ArmorySync extends ArmorySyncBase {
 		$fromCache = false;
             
             $content = $this->getTalentData($this->server, $this->memberName );
-            //echo '<pre>'.$this->data["Class"];
-            //print_r($content->characterInfo->talentGroups);
             $armoryTalents = '';
             foreach ($content->characterInfo->talentGroups as $spec)
             {
@@ -749,21 +747,17 @@ class ArmorySync extends ArmorySyncBase {
                         if ($t_dat['active'] == '1')
                         {
                         $armoryTalents = $t_dat->talentSpec['value'];  
-                        //echo '<pre>'.$t_dat['group'].'<br>'.$t_dat->talentSpec['value'].'<br><br>';
                         }
                   }
 
                         //$armoryTalents = $val['value'];                  
             }
-            //echo $armoryTalents;
             $talentArray = preg_split('//', $armoryTalents, -1, PREG_SPLIT_NO_EMPTY);
             $dl_class = $roster->locale->act['class_to_en'][$this->data["Class"]];
-            //echo '<pre>';
-            //print_r($talentArray);
-            
             $class = strtolower($dl_class);
             $locale = $roster->config['locale'];
             $clas = str_replace(' ' , '', $class);
+            
             if (file_exists($addon['dir'] . 'inc/talenticons_'.$this->data["ClassId"].'.php'))
             {
             	require_once ($addon['dir'] . 'inc/talenticons_'.$this->data["ClassId"].'.php');
@@ -833,7 +827,7 @@ class ArmorySync extends ArmorySyncBase {
             } 
             else 
             {
-            	$this->_debug( 1, false, 'Checked class existence "'.$class.' ('.$this->data["Class"].')".',  'Failed' );
+            	$this->_debug( 1, false, 'Checked class existence "'.$this->data["ClassId"].' ('.$this->data["Class"].')".',  'Failed' );
             	return false;
             }
             
