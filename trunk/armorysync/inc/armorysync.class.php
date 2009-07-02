@@ -1675,7 +1675,7 @@ function logReferer($output) {
 
 function _makeUrl( $mode, $locale, $id=false, $char=false, $realm=false, $guild=false )
 	{
-		if( $this->region == 'US' )
+		if( $locale == 'US' )
 		{
 			//$base_url = 'http://localhost:18080/?url=http://www.wowarmory.com/';
 			$base_url = 'http://www.wowarmory.com/';
