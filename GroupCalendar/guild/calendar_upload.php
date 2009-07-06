@@ -1,22 +1,4 @@
 <?php
-/*
-File Name:  calendar_upload.php
-WoW Addon Version:  GroupCalendar 3.0
-File Version:  2.0
-File Useage:  Upload and parse information from GroupCalendar.lua to a database for
-	use on a website.  This file should work both manually (website) and with the UniUploader program.
-Author: Munazz of Mediocrity in Motion on Skywall
-Inspiration from: (Saerok/Neer) of Cenarion Circle
-Warrenty & Copyright:  You're kidding, right?  Free to use and modify, but please let me know what
-	you are up to so that I can possibly incorporate it too.
-
-Thanks to Saerok/Neer for the original idea.  I have heavily modified his code, and as such I have changed the
-primary author to me.  But I was led down the proper path from the files I got from Saerok/Neer.	
-
---Useful Links--
-UniUploader @ http://www.wowroster.net
-Group Calendar mod @ http://www.curse-gaming.com/en/wow/addons-2718-1-groupcalendar.html
-*/
 
 // Set $htmlout to 1 to assume request is from a browser
 // If it is UniUploader sending the file, set $htmlout to 0
@@ -501,4 +483,4 @@ function ParseLuaArray( &$file_as_array )
 		return($stack[0][1]);
 	}
 }
-?>
+

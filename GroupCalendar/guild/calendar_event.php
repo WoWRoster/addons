@@ -464,4 +464,4 @@ function datesubtract($mon,$day,$year,$val = 1,$type = "day") {
 	return array("mon"=>$mon,"day"=>$day,"year"=>$year);
 }
 print border('spurple','end','');
-?>
+

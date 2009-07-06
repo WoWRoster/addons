@@ -151,4 +151,3 @@ if (!isset($gc_lang)) include_once("language.php");
 		return $newEvents;
 	}
 
-?>

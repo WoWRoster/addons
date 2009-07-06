@@ -24,6 +24,3 @@ else
       require 'calendar.php'; 
 }
 
-
-
-?>

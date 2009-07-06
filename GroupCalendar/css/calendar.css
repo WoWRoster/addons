@@ -69,26 +69,26 @@ background-color: #000000;
 .date_header			{ font-size:16px; font-family:arial, helvetica; font-weight:bold; color:#000000; }
 
 /**** color and size of calendar cells.  ****/
-.day_number {color: #CC9966;}
+.day_number {color: #FFFFFF;}
 .day_cell			{ background:url(../images/day.png) no-repeat; 
-				height:125px; 
-				width: 110px; }
+				height:135px; 
+				width: 120px; }
 .day_cell A:link		{ color:#ffffff; text-decoration:underline }
 .day_cell A:active		{ color:#ffffff; text-decoration:underline }
 .day_cell A:visited		{ color:#ffffff; text-decoration:underline }
 .day_cell A:hover		{ color:#ffffff; text-decoration:underline }
-.day_cell .day_number {color: #CC9966;}
+.day_cell .day_number {color: #FFFFFF;}
 .empty_day_cell			{ background:url(../images/day.png) no-repeat; 
-				height:125px; 
-				width: 110px; }
+				height:135px; 
+				width: 120px; }
 .today_cell			{ background:url(../images/today2.png) no-repeat; 
-				height:125px; 
-				width: 110px; }
+				height:135px; 
+				width: 120px; }
 .today_cell A:link		{ color:#ffffff; text-decoration:underline }
 .today_cell A:active		{ color:#ffffff; text-decoration:underline }
 .today_cell A:visited		{ color:#ffffff; text-decoration:underline }
 .today_cell A:hover		{ color:#ffffff; text-decoration:underline }
-.today_cell .day_number {color: #66CCFF;}
+.today_cell .day_number {color: #FFFFFF;}
 /**** color and size of mini calendar cells.  ****/
 .day_minicell			{ background-color:#EDECD8; height:30px; width: 35px; }
 .day_minicell A:link		{ color:#000000; text-decoration:underline }
@@ -103,7 +103,7 @@ background-color: #000000;
 .today_minicell A:hover		{ color:#000000; text-decoration:underline }
 
 /**** day number in upper left corner of each cell ****/
-.day_number				{ font-size:10px; font-family:verdana, arial, helvetica; color:#000000 }
+.day_number				{ font-size:10px; font-family:verdana, arial, helvetica; color:#FFFFFF }
 
 /**** title_txt is the text for each post on main page ****/
 .title_txt				{ color:#000000; font-size:10pt;}

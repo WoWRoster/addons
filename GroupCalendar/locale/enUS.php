@@ -39,6 +39,11 @@
 	$lang['Role']['RD'] = "Ranged";
 	$lang['Role']['MD'] = "Melee";
 
+
+$lang['WG'] = 'Warsong Gulch';
+$lang['EYE'] = 'Eye of the Storm';
+$lang['AB'] = 'Arathi Basin';
+$lang['AV'] = 'Alterac Valley';
 //	$lang['gcType'] = array();
 /*
 	$lang['gcType']['AB']		= "Arathi Basin";
@@ -240,6 +245,13 @@ $lang['gcType']['MagtheridonReset'] = "Magtheridon Resets";
 $lang['gcType']['HyjalReset'] = "Mount Hyjal Resets";
 $lang['gcType']['GruulReset'] = "Gruul's Lair Resets";
 $lang['gcType']['SunwellReset'] = "Sunwell Plateau Resets";
+$lang['gcType']['Magtheridon'] = "Magtheridon Resets";
+$lang['gcType']['Gruul\'s Lair'] = "Gruul's Lair";
+$lang['gcType']['CoT: Battle for Mount Hyjal'] = "CoT: Battle for Mount Hyjal";
+$lang['gcType']['Tempest Keep: The Eye'] = "Tempest Keep: The Eye";
+$lang['gcType']['CR: Serpentshrine Cavern'] = "CR: Serpentshrine Cavern";
+$lang['gcType']['Zul\'Aman'] = "Zul'Aman";
+
 // admin text 
 
 
@@ -255,6 +267,8 @@ $lang['admin']['WEEK_START'] = 'Week Start|Allows you to specify the weekstart, 
 $lang['admin']['INSTANCE_RESET_TYPE'] = 'Instance Reset Type| Select which set if instances<br>you want to show the resets<br>for Ither Both or Original or Burning Crusade';
 $lang['admin']['INSTANCE_RESET_ICON_SIZE'] = 'Reset Icon Size|Set the size of <br>the icons for reset evens on the calendar';
 $lang['admin']['EVENT_ICON_SIZE'] = 'Event Icon Size|Set the Event Icon size<br> for events on the main calendar';
+$lang['admin']['GC_PATH'] = 'GroupCalendar Path|This is to be set to the fill path of the GC<br>addon so that images will be shown no mater<br>what the path is set too.<br>  EX: /addons/GroupCalendar/<br>  Or<br>  for Roster DF<br>  /moduals/WoWRosterDf/addons/GroupCalendar/';
+
 $lang['admin']['GroupCalendar_config'] = 'Config';
 
 	//This text is used on various forms in the program
@@ -305,6 +319,4 @@ $lang['admin']['GroupCalendar_config'] = 'Config';
 	$lang['Records_Calendar'] = "Records in the Calendar";
 	$lang['Browse_to'] = "Please browse to the location of your GroupCalendar.lua file.<br>This is typically found at: <br>\"C:\\Program Files\\World of Warcraft\\WTF\\Account\\<i>Your WoW User Name</i>\\SavedVariables\\GroupCalendar.lua\"";
 	$lang['no_file'] = "Error!  No file was specified for this webpage to process.";
-
-?>
 

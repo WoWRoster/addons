@@ -80,7 +80,9 @@ var $messages = '';		// Update messages
 		$this->messages = "<br />\n";
             $filefield = "groupcalendar";
             $calendar_data = $this->GroupCalendarParse($update->uploadData['groupcalendar'],$roster->data['server']);//GroupCalendarParse($lua_data,$WOW_server);
-		
+            //echo '</center></center><pre>';
+		//print_r($calendar_data);
+		//echo '</pre>';
 		$replace_chars = array("&a;","&c;","&s;","&cn;","&n;");
 		$substu_chars = array("&",",","/",":","\n");
 
@@ -112,7 +114,10 @@ var $messages = '';		// Update messages
 		$id_counter = 1;
 		
 		foreach (array_keys($calendar_data) as $eid) {
-		
+		//echo $calendar_data[$eid]['Attendance'][0]['Guild'].'<br>';
+		//echo $roster->data['guild_name'].'<br>';
+            if (isset($calendar_data[$eid]['GuildOnly']) && $calendar_data[$eid]['GuildOnly'] == $roster->data['guild_name'] OR $calendar_data[$eid]['Attendance'][0]['Guild'] == $roster->data['guild_name'] ){
+		//echo '++--'.$calendar_data[$eid]['GuildOnly'].'--++';
 		      if (isset($calendar_data[$eid]['MinLevel']))
 			if ($calendar_data[$eid]['MinLevel'] == "") $calendar_data[$eid]['MinLevel'] = NULL;
 			if (isset($calendar_data[$eid]['MaxLevel']))
@@ -199,7 +204,9 @@ var $messages = '';		// Update messages
 				}
 			}
 			$id_counter++;
+			}
 		}
+		
 		$this->messages .= $roster->locale->act['gc_title'] .'<br> '.$roster->locale->act['Data_Uploaded'] ."<br />\n";
 		$this->messages .= $roster->locale->act['Updated'] .' '. $good_adds .' '.$roster->locale->act['Records_Calendar'] ."<br />\n";
 		if ($bad_adds) $this->messages = $roster->locale->act['Failed'] .' '. $bad_adds .' '.$roster->locale->act['Records_Calendar'] ."<br />\n";
@@ -612,4 +619,4 @@ function ParseLuaArray( &$file_as_array )
 
 
 }
-?>
+
