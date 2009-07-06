@@ -745,4 +745,3 @@ if ($_GET['id']) {
 
 echo $event['creator'].'---';
 
-?>

@@ -27,7 +27,7 @@ class GroupCalendarInstall
 	var $active = true;
 	var $icon = 'spell_shadow_unstableafllictions'; 
 
-	var $version = '1.0.1999';
+	var $version = '1.0.2100';
 	var $wrnet_id = '0';
 
 	var $fullname = 'Guild Group Calendar';
@@ -66,6 +66,7 @@ class GroupCalendarInstall
 		$installer->add_config("'6010', 'INSTANCE_RESET_TYPE', 'BOTH', 'select{Original^Orig|Burning Crusade^TBC|Both^ALL', 'GroupCalendar_config'");
 		$installer->add_config("'6011', 'INSTANCE_RESET_ICON_SIZE', '15', 'text{2|2', 'GroupCalendar_config'");
 		$installer->add_config("'6012', 'EVENT_ICON_SIZE', '24', 'text{2|2', 'GroupCalendar_config'");
+		$installer->add_config("'6013', 'GC_PATH', '/', 'text{75|75', 'GroupCalendar_config'");
 
 
 		# Roster menu entry

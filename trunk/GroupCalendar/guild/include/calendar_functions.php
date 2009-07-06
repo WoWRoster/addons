@@ -125,7 +125,7 @@
 	
 	function scrollArrows($m, $y)
 	{
-		global $gc_user, $roster, $addon;
+		global $roster, $addon;
 		//if using SID field for authentication, include it in the links
 		if (isset($gc_user['session_id'])) $sid = "&sid=".$gc_user['session_id'];
 		else $sid = "";
@@ -137,16 +137,40 @@
 		$nextmonth = ($m == 12) ? 1 : $m + 1;
 	
 		$s = "<a href=\"".makelink('&amp;month=' . $prevmonth . '&amp;year=' . $prevyear . $sid)."\">\n";
-		$s .= "<img src=\"".$addon['image_url'] ."calendar/leftArrow.gif\" border=\"0\"></a> ";
+		$s .= "<img src=\"".$addon['config']['GC_PATH']."images/leftArrow.gif\" border=\"0\"></a> ";
 		$s .= "<a href=\"".makelink('&amp;month=' . $nextmonth . '&amp;year=' . $nextyear . $sid)."\">";
-		$s .= "<img src=\"".$addon['image_url'] ."calendar/rightArrow.gif\" border=\"0\"></a>";
+		$s .= "<img src=\"".$addon['config']['GC_PATH']."images/rightArrow.gif\" border=\"0\"></a>";
 		
 		return $s;
 	}
-	
-	function writeCalendar($month, $year)
+	function inArray($array, $key)
+{
+  if(func_num_args() == 2 && is_string($key))
+    return in_array($key, $array);
+  else if(func_num_args() == 2 && is_array($key))
+  {
+    $r = true;
+    for($i=0; $i < count($key); $i++)
+      $r = (!in_array($key[$i], $array)) ? false : $r;
+    
+    return $r;
+  }
+  else if(func_num_args > 2)
+  {
+    $args = func_get_args();
+    $r = true;
+    for($i=1; $i < count($args); $i++)
+      $r = (!in_array($args[$i], $array)) ? false : $r;
+    
+    return $r;
+  }
+}
+	function writeCalendar($month, $year,$btg)
 	{
+
 		global $roster, $addon;
+		
+		
 		//if using SID field for authentication, include it in the links
 		if (isset($gc_user['session_id'])) $sid = "&sid=".$gc_user['session_id'];
 		else $sid = "";
@@ -178,7 +202,46 @@
 		// initialize today's date variables for color change
 		$timestamp = gmmktime() + $gc_user['user_timezone'] * 3600;
 		$d = date("j", $timestamp); $m = date("n", $timestamp); $y = date("Y", $timestamp);
-		
+		/*
+		$btg = Array(
+
+                  '102008' => Array
+	           (
+		          '3' => 'WG',
+		          '4' => 'WG',
+		          '5' => 'WG',
+		          '6' => 'WG',
+		          
+		          '10' => 'AB',
+		          '11' => 'AB',
+		          '12' => 'AB',
+		          '13' => 'AB',
+		          
+      		    '17' => 'EYE',
+      		    '18' => 'EYE',
+      		    '19' => 'EYE',
+      		    '20' => 'EYE',
+      		    
+		          '24' => 'AV',
+		          '25' => 'AV',
+		          '26' => 'AV',
+		          '27' => 'AV',
+		          
+		          '31' => 'WG',
+		          
+	           ),
+	           '112008' => Array
+	           (
+	                 '1' => 'WG',
+		          '2' => 'WG',
+		          '3' => 'WG',
+		          '7' => 'AB',
+		          '14' => 'EYE',
+		          '21' => 'AV',
+		          '28' => 'WG',
+	           ),
+	      );*/
+	      //$this->inArray( $btg[$month.$year][],$row2['member_id']);
 		// loop writes empty cells until it reaches position of 1st day of month ($wPos)
 		// it writes the days, then fills the last row with empty cells after last day
 		while($day <= $days) {
@@ -201,8 +264,14 @@
 					$str .= "".$day."";
 					
 					$str .= "</span><br>";
-					
+					if (isset($btg[$month.$year][$day])){
+					//if ($this->inArray( $btg[$month.$year][$day],$day))
+					//{
+					$str .= "<img src=\"".$addon['image_url'].$btg[$month.$year][$day].".jpg\" align=\"middle\"/>".$roster->locale->act[$btg[$month.$year][$day]]."<br>";
+					//}
+					}
 					// enforce title limit
+					//$str .= $btg[$month.$year][$day].'<br>';
 					$eventcount = '0';
 					
 					if (!empty($eventdata[$day]['title'])){
@@ -222,21 +291,29 @@
 				$resetnum = 0;
 				}
 				for ($j=0;$j<$resetnum;$j++) {
-					
+					$matches = array ('http://www.worldofwarcraft.com/calendar/images/','http://www.wow-europe.com/shared/wow-com/images/basics/raidcalendar/en/');
 					//if ($resetEvents[$day]['GAME'][$j] == $addon['config']['resettype'])
                               //{
                               if ($addon['config']['INSTANCE_RESET_TYPE'] == 'ALL')
                               {
                                     $tip = ''. addslashes(utf8_decode($resetEvents[$day]['Name'][$j]))."\n".$roster->locale->act['reset_time'].":". $resetEvents[$day]['Time'][$j] .'';
                                     $image = $resetEvents[$day]['Icon'][$j];
+                                    $image = str_replace( $matches, '', $image );
+                                    $image = $addon['image_url'] .'icons/'.$image;
                                     $str .= gctt($tip,$image,getGCtext($resetEvents[$day]['Name'][$j]),$addon['config']['INSTANCE_RESET_ICON_SIZE'],$addon['config']['INSTANCE_RESET_ICON_SIZE']);
 					}
 					else
 					{
 					if ($resetEvents[$day]['GAME'][$j] == $addon['config']['INSTANCE_RESET_TYPE'])
                               {
-                                    $tip = ''. addslashes(utf8_decode($resetEvents[$day]['Name'][$j]))."\n".$roster->locale->act['reset_time'].":". $resetEvents[$day]['Time'][$j] .'';
+                              //echo $resetEvents[$day]['Name'][$j].'<br>';
+                                    $tip = ''. addslashes(utf8_decode($resetEvents[$day]['Name'][$j]))."<br>".$roster->locale->act['reset_time'].":". $resetEvents[$day]['Time'][$j] .'';
                                     $image = $resetEvents[$day]['Icon'][$j];
+                                    $image = str_replace( $matches, '', $image );
+                                    $image = $addon['image_url'] .'icons/'.$image;
+                                    
+                                    
+                                    //$image = $resetEvents[$day]['Icon'][$j];
                                     $str .= gctt($tip,$image,getGCtext($resetEvents[$day]['Name'][$j]),$addon['config']['INSTANCE_RESET_ICON_SIZE'],$addon['config']['INSTANCE_RESET_ICON_SIZE']);
 					}					
 					
@@ -268,7 +345,7 @@
 								break;
 						}
 					}
-	
+	                       //echo $addon['image_url'] ;
 					$str .= "</td>\n";
 					$day++;
 				} elseif($day == 0)  {
@@ -646,6 +723,7 @@ function getClassIcon($class)
 				$eventdata[$d]['Time'][] = $reset;
 				$eventdata[$d]['Type'][] = $abrv;
 				$eventdata[$d]['GAME'][] = $game;
+				//echo $icon.'<br>';
 			}
 		}
 		return $eventdata;
@@ -771,4 +849,4 @@ function makeContainerTop($title,$w=0,$h=0) {
 		$res .= "<td class=\"ContainerContent\" width=\"100%\">\n";
 		return $res;
 	};
-?>
+
