@@ -137,9 +137,9 @@
 		$nextmonth = ($m == 12) ? 1 : $m + 1;
 	
 		$s = "<a href=\"".makelink('&amp;month=' . $prevmonth . '&amp;year=' . $prevyear . $sid)."\">\n";
-		$s .= "<img src=\"".$addon['config']['GC_PATH']."images/leftArrow.gif\" border=\"0\"></a> ";
+		$s .= "<img src=\"".$addon['config']['GC_PATH']."images/Calendar/leftArrow.gif\" border=\"0\"></a> ";
 		$s .= "<a href=\"".makelink('&amp;month=' . $nextmonth . '&amp;year=' . $nextyear . $sid)."\">";
-		$s .= "<img src=\"".$addon['config']['GC_PATH']."images/rightArrow.gif\" border=\"0\"></a>";
+		$s .= "<img src=\"".$addon['config']['GC_PATH']."images/Calendar/rightArrow.gif\" border=\"0\"></a>";
 		
 		return $s;
 	}
@@ -488,11 +488,11 @@
 	$icon_value = '';
 	if($note != '')
 	{
-		$icon_value = '<img src="'.$roster->config['img_url'].'note.gif" style="cursor:help;" class="membersRowimg" alt="'.$roster->locale->act['note'].'" '.makeOverlib(stripslashes($note),$roster->locale->act['note'],'',1).'>';
+		$icon_value = '<img src="'.$roster->config['theme_path'] . '\images/note.gif" style="cursor:help;" class="membersRowimg" alt="'.$roster->locale->act['note'].'" '.makeOverlib(stripslashes($note),$roster->locale->act['note'],'',1).'>';
 	}
 	else
 	{
-		$icon_value = '<img src="'.$roster->config['img_url'].'no_note.gif" class="membersRowimg" alt="'.$roster->locale->act['note'].'">';
+		$icon_value = '<img src="'.$roster->config['theme_path'] . '\images/no_note.gif" class="membersRowimg" alt="'.$roster->locale->act['note'].'">';
 	}	
 	return $icon_value;
 }

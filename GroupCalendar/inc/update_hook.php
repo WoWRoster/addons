@@ -116,7 +116,7 @@ var $messages = '';		// Update messages
 		foreach (array_keys($calendar_data) as $eid) {
 		//echo $calendar_data[$eid]['Attendance'][0]['Guild'].'<br>';
 		//echo $roster->data['guild_name'].'<br>';
-            if (isset($calendar_data[$eid]['GuildOnly']) && $calendar_data[$eid]['GuildOnly'] == $roster->data['guild_name'] OR $calendar_data[$eid]['Attendance'][0]['Guild'] == $roster->data['guild_name'] ){
+        //    if (isset($calendar_data[$eid]['GuildOnly']) && $calendar_data[$eid]['GuildOnly'] == $roster->data['guild_name'] OR $calendar_data[$eid]['Attendance'][0]['Guild'] == $roster->data['guild_name'] ){
 		//echo '++--'.$calendar_data[$eid]['GuildOnly'].'--++';
 		      if (isset($calendar_data[$eid]['MinLevel']))
 			if ($calendar_data[$eid]['MinLevel'] == "") $calendar_data[$eid]['MinLevel'] = NULL;
@@ -204,7 +204,7 @@ var $messages = '';		// Update messages
 				}
 			}
 			$id_counter++;
-			}
+			//}
 		}
 		
 		$this->messages .= $roster->locale->act['gc_title'] .'<br> '.$roster->locale->act['Data_Uploaded'] ."<br />\n";
