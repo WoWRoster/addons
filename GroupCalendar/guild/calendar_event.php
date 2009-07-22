@@ -3,7 +3,7 @@
 	include_once("include/helper_functions.php");
 	include_once("include/calendar_functions.php");
 
-
+$cfg = array();
 
 	//Check to see if user specified timezone exists, if not use default
 	if (!isset($gc_user['user_timezone'])) $gc_user['user_timezone'] = $addon['config']['CURR_TIME_OFFSET'];
@@ -56,6 +56,7 @@
 			$event = mysql_fetch_array($result);
 		}
 		
+		$attendies_a = array();
 		if ($event['s_time'] == "00:00:25") $timestr = "";
 		elseif ($event['s_time'] == $event['e_time']) $timestr = $event['stime'];
 		else $timestr = $event['stime'] ." - ". $event['etime'];
@@ -63,16 +64,33 @@
 		
 		if ($event['title']=="") $event['title'] = getGCtext($event['type']);
 		
-		$sql = "SELECT * FROM ". ATTENDANCE_TABLE ." WHERE eid='". mysql_escape_string($_GET['id']) ."' AND status='Y' ORDER BY `classcode`";
+		$sql = "SELECT * FROM ". ATTENDANCE_TABLE ." WHERE eid='". mysql_escape_string($_GET['id']) ."' ORDER BY `statuscode`";
 		$y_attendees = $roster->db->query($sql);//,$gc_database['connection']);
-		$y_attendees_n = $roster->db->num_rows($y_attendees);
-		$sql = "SELECT * FROM ". ATTENDANCE_TABLE ." WHERE eid='". mysql_escape_string($_GET['id']) ."' AND status='N' ORDER BY `classcode`";
-		$n_attendees = $roster->db->query($sql);//,$gc_database['connection']);
-		$n_attendees_n = $roster->db->num_rows($n_attendees);
-		$sql = "SELECT * FROM ". ATTENDANCE_TABLE ." WHERE eid='". mysql_escape_string($_GET['id']) ."' AND status='S' ORDER BY `classcode`";
-		$s_attendees = $roster->db->query($sql);//,$gc_database['connection']);
-		$s_attendees_n = $roster->db->num_rows($s_attendees);
-		
+		$is=0;
+		if( $y_attendees && $roster->db->num_rows($y_attendees) > 0 )
+		{
+			while($row = $roster->db->fetch($y_attendees))
+			{
+
+				
+				$d = $row['statuscode'];
+                        $is++;
+				//$this->cfg[$d][$e]['menue'] = $ii;
+				$cfg[$d]['statustype'] = $row['status'];
+				$cfg[$d][$is]['name'] = $row['name'];
+				$cfg[$d][$is]['level'] = $row['level'];
+				$cfg[$d][$is]['status'] = $row['status'];
+                        $cfg[$d][$is]['class'] = $row['classcode'];
+                        $cfg[$d][$is]['role'] = $row['role'];
+                        $cfg[$d][$is]['guildRank'] = $row['guildRank'];
+
+                        
+                  }
+
+			$roster->db->free_result($results);
+                  
+		} 
+
 		$month = $event['m'];
 		$day = $event['d'];
 		$year = $event['y'];
@@ -213,146 +231,62 @@
 	<?php if (! in_array($event['type'],array("Vacation","Birth"))) { ?>
 		<p class="GCH2"><?php echo  $roster->locale->act['attend_info'] ?></p>
 		<table border="0" cellspacing="0" cellpadding="2" width="100%">
-		  <tr>
-			<td colspan=7><b><?php echo  $roster->locale->act['conf_yes'] ?> (<?php echo $y_attendees_n ?>)</b></td>
-		  </tr>
-		  <tr class="membersRowColor2">
-			<th class="membersRowCell"><?php echo $roster->locale->act['level_abrv']?></td>
-			<th class="membersRowCell"><?php echo $roster->locale->act['Name']?></td>
-			<th class="membersRowCell"><?php echo $roster->locale->act['Class_txt']?></td>
-			<th class="membersRowCell"><?php echo $roster->locale->act['Race_txt']?></td>
-			<th class="membersRowCell"><?php echo $roster->locale->act['Guild']?></td>
-			<th class="membersRowCell"><?php echo $roster->locale->act['Comment']?></td>
-		  </tr>
-		  <?php
-		  $stripe_counter=0;
-		  while ($y_attendes = $roster->db->fetch($y_attendees)){
-		  $stripe_counter = ($stripe_counter % 2) + 1;
-		$stripe_class = ' class="membersRowColor'.$stripe_counter.'"';
-		if ( !empty($y_attendes['racecode']) && $y_attendes['classcode'] != '?'){
-		    $race_txt = $roster->locale->act['Race'][$y_attendes['racecode']];
-		}
-		else
-		{
-		    $race_txt = '';
-		}
-		if ( !empty($y_attendes['classcode']) && $y_attendes['classcode'] != '?'){
-		    $class_txt = $roster->locale->act['Class'][$y_attendes['classcode']];
-		    $class_cd = classswitcher($y_attendes['classcode']);
-		}
-		else
-		{
-		    $class_txt = '';
-		    $class_cd = '';
-		}
-		  echo'<tr '.$stripe_class.'>
-			<td class="membersRowCell">'.$y_attendes['level'].'</td>
-			<td class="membersRowCell">'.utf8_decode($y_attendes['name']).'</td>
+<?php
+
+// begin new fancy array thingie im trying .....
+
+      foreach($cfg as $statustype => $sinfo)
+      {
+            $contentt = '';
+            $titlee = $sinfo['statustype'];
+            //echo '<tr><td colspan=7><b>'.$sinfo['statustype'].'</b></td></tr>';
+             $contentt .= '<table width="425"><tr class="membersRowColor2">
+			<th class="membersRowCell">'.$roster->locale->act['level_abrv'].'</td>
+			<th class="membersRowCell">'.$roster->locale->act['Name'].'</td>
+			<th class="membersRowCell">'.$roster->locale->act['Class_txt'].'</td>
+			<th class="membersRowCell">'.$roster->locale->act['Race_txt'].'</td>
+			<th class="membersRowCell">'.$roster->locale->act['Guild'].'</td>
+			<th class="membersRowCell">'.$roster->locale->act['Role'].'</td>
+		  </tr>';
+            
+            foreach ($sinfo as $id => $pinfo)
+            {
+                  if ( !empty($pinfo['racecode']) && $pinfo['class'] != '?')
+                  {
+                        $race_txt = $roster->locale->act['Race'][$pinfo['racecode']];
+                  }
+                  else
+                  {
+                        $race_txt = '';
+                  }
+                  if ( !empty($pinfo['class']) && $pinfo['class'] != '?')
+                  {
+                        $class_txt = $roster->locale->act['Class'][$pinfo['class']];
+                        $class_cd = classswitcher($pinfo['class']);
+                  }
+                  else
+                  {
+                        $class_txt = '';
+                        $class_cd = '';
+                  }
+                  $stripe_counter = ($stripe_counter % 2) + 1;
+                  $stripe_class = ' class="membersRowColor'.$stripe_counter.'"';
+                  $contentt .='<tr '.$stripe_class.'>
+			<td class="membersRowCell">'.$pinfo['level'].'</td>
+			<td class="membersRowCell">'.utf8_decode($pinfo['name']).'</td>
 			<td class="membersRowCell">'.getClassIcon($class_cd).'<span class = "class'.$class_txt.'txt">'.$class_txt.'</span></td>
 			<td class="membersRowCell">'.$race_txt.'</td>
-			<td class="membersRowCell">'.utf8_decode($y_attendes['guild']).'</td>
-			<td class="membersRowCell">'.getNoteIcon($y_attendes['comment']).'</td>
+			<td class="membersRowCell">'.utf8_decode($pinfo['guildRank']).'</td>
+			<td class="membersRowCell">'.$pinfo['role'].'</td>
 		  </tr>
 		  ';
-		  }
-		  ?>
-		  <tr>
-			<td class="GCattend">&nbsp;</td>
-		  </tr>
-		  <tr>
-			<td colspan=7><b><?php echo  $roster->locale->act['standby'] ?> (<?php echo $s_attendees_n ?>)</b></td>
-		  </tr>
-		  <tr class="membersRowColor2">
-			
-			<th class="membersRowCell"><?php echo $roster->locale->act['level_abrv']?></td>
-			<th class="membersRowCell"><?php echo $roster->locale->act['Name']?></td>
-			<th class="membersRowCell"><?php echo $roster->locale->act['Class_txt']?></td>
-			<th class="membersRowCell"><?php echo $roster->locale->act['Race_txt']?></td>
-			<th class="membersRowCell"><?php echo $roster->locale->act['Guild']?></td>
-			<th class="membersRowCell"><?php echo $roster->locale->act['Comment']?></td>
-		  </tr>
-		  <?php
-		  $stripe_counter=0;
-		  while ($s_attendes = $roster->db->fetch($s_attendees)){
-		  $stripe_counter = ($stripe_counter % 2) + 1;
-		$stripe_class = ' class="membersRowColor'.$stripe_counter.'"';
-		if ( !empty($s_attendes['racecode']) && $s_attendes['classcode'] != '?'){
-		    $race_txt = $roster->locale->act['Race'][$s_attendes['racecode']];
-		}
-		else
-		{
-		    $race_txt = '';
-		}
-		  if ( !empty($s_attendes['classcode']) && $y_attendes['classcode'] != '?'){
-		$class_txt = $roster->locale->act['Class'][$s_attendes['classcode']];
-		$class_cd = classswitcher($s_attendes['classcode']);
-		}
-		else
-		{
-		$class_txt = '';
-		$class_cd = '';
-		}
-		  echo'<tr '.$stripe_class.'>
-			<td class="membersRowCell">'.$s_attendes['level'].'</td>
-			<td class="membersRowCell">'.utf8_decode($s_attendes['name']).'</td>
-			<td class="membersRowCell">'.getClassIcon($class_cd).'<span class = "class'.$class_txt.'txt">'.$class_txt.'</span></td>
-			<td class="membersRowCell">'.$race_txt.'</td>
-			<td class="membersRowCell">'.utf8_decode($s_attendes['guild']).'</td>
-			<td class="membersRowCell">'.getNoteIcon($s_attendes['comment']).'</td>
-		  </tr>
-		  ';
-		  }
-		  ?>
-		  <tr>
-			<td>&nbsp;</td>
-		  </tr>
-		  <tr>
-			<td colspan=7><b><?php echo  $roster->locale->act['conf_no'] ?> (<?php echo  $n_attendees_n ?>)</b></td>
-		  </tr>
-		  <tr class="membersRowColor2">
-			
-			<th class="membersRowCell"><?php echo $roster->locale->act['level_abrv']?></td>
-			<th class="membersRowCell"><?php echo $roster->locale->act['Name']?></td>
-			<th class="membersRowCell"><?php echo $roster->locale->act['Class_txt']?></td>
-			<th class="membersRowCell"><?php echo $roster->locale->act['Race_txt']?></td>
-			<th class="membersRowCell"><?php echo $roster->locale->act['Guild']?></td>
-			<th class="membersRowCell"><?php echo $roster->locale->act['Comment']?></td>
-		  </tr>
-		  <?php
-		  $stripe_counter=0;
-		  while ($n_attendes = $roster->db->fetch($n_attendees)){
-		  $stripe_counter = ($stripe_counter % 2) + 1;
-		$stripe_class = ' class="membersRowColor'.$stripe_counter.'"';
-		if ( !empty($n_attendes['racecode']) && $n_attendes['classcode'] != '?'){
-		    $race_txt = $roster->locale->act['Race'][$n_attendes['racecode']];
-		}
-		else
-		{
-		    $race_txt = '';
-		}
-		
-		    if ( !empty($s_attendes['classcode']) && $y_attendes['classcode'] != '?'){
-		$class_txt = $roster->locale->act['Class'][$n_attendes['classcode']];
-		$class_cd = classswitcher($n_attendes['classcode']);
-		}
-		else
-		{
-		$class_txt = '';
-		$class_cd = '';
-		}
-		  echo'<tr '.$stripe_class.'>
-			<td class="membersRowCell">'.$n_attendes['level'].'</td>
-			<td class="membersRowCell">'.utf8_decode($n_attendes['name']).'</td>
-			<td class="membersRowCell">'.getClassIcon($class_cd).'<span class = "class'.$class_txt.'txt">'.$class_txt.'</span></td>
-			<td class="membersRowCell">'.$race_txt.'</td>
-			<td class="membersRowCell">'.utf8_decode($n_attendes['guild']).'</td>
-			<td class="membersRowCell">'.getNoteIcon($n_attendes['comment']).'</td>
-		  </tr>
-		  ';
-		  }
-		  ?>
-		</table>
-		</tr></table>
+            }
+            $contentt .= '</table>';
+      echo messageboxtoggle($contentt, $titlee, 'sblue', false, '425px');
+      }
+      //echo messageboxtoggle($uploadwin, $title = 'Upload Image', $style = 'sblue', $open = false, $width = '210px');
+?>		
+</table>
 	<?php } // close the attendance if statement ?>
 	<?php print border('sgreen','end',''); ?>
 	</td>

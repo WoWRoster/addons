@@ -135,11 +135,12 @@
 		$prevyear = ($m != 1) ? $y : $y - 1;
 		$prevmonth = ($m == 1) ? 12 : $m - 1;
 		$nextmonth = ($m == 12) ? 1 : $m + 1;
-	
+	//echo '<pre>';
+	//print_r($addon);
 		$s = "<a href=\"".makelink('&amp;month=' . $prevmonth . '&amp;year=' . $prevyear . $sid)."\">\n";
-		$s .= "<img src=\"".$addon['config']['GC_PATH']."images/Calendar/leftArrow.gif\" border=\"0\"></a> ";
+		$s .= "<img src=\"".$addon['image_path']."/leftArrow.gif\" border=\"0\"></a> ";
 		$s .= "<a href=\"".makelink('&amp;month=' . $nextmonth . '&amp;year=' . $nextyear . $sid)."\">";
-		$s .= "<img src=\"".$addon['config']['GC_PATH']."images/Calendar/rightArrow.gif\" border=\"0\"></a>";
+		$s .= "<img src=\"".$addon['image_path']."/rightArrow.gif\" border=\"0\"></a>";
 		
 		return $s;
 	}
@@ -488,11 +489,11 @@
 	$icon_value = '';
 	if($note != '')
 	{
-		$icon_value = '<img src="'.$roster->config['theme_path'] . '\images/note.gif" style="cursor:help;" class="membersRowimg" alt="'.$roster->locale->act['note'].'" '.makeOverlib(stripslashes($note),$roster->locale->act['note'],'',1).'>';
+		$icon_value = '<img src="'.$roster->config['img_url'].'note.gif" style="cursor:help;" class="membersRowimg" alt="'.$roster->locale->act['note'].'" '.makeOverlib(stripslashes($note),$roster->locale->act['note'],'',1).'>';
 	}
 	else
 	{
-		$icon_value = '<img src="'.$roster->config['theme_path'] . '\images/no_note.gif" class="membersRowimg" alt="'.$roster->locale->act['note'].'">';
+		$icon_value = '<img src="'.$roster->config['img_url'].'no_note.gif" class="membersRowimg" alt="'.$roster->locale->act['note'].'">';
 	}	
 	return $icon_value;
 }
@@ -513,48 +514,51 @@ $icon_value = '<img src="'.$image.'" width="'.$w.'" height="'.$h.'" style="curso
 	
             switch( $class )
             {
-	           case 'D':
+	           case 'DRUID':
                         return "Druid";
                   break;
-                  case 'H':
+                  case 'HUNTER':
                         return "Hunter";
                   break;
-                  case 'M':
+                  case 'MAGE':
                         return "Mage";
                   break;
-                  case 'L':
+                  case 'PALADIN':
                         return "Paladin";
                   break;
-                  case 'P':
+                  case 'PRIEST':
                         return "Priest";
                   break;
-                  case 'R':
+                  case 'ROGUE':
                         return "Rogue";
                   break;
-                  case 'S':
+                  case 'SHAMAN':
                         return "Shaman";
                   break;
-                  case 'K':
+                  case 'WARLOCK':
                         return "Warlock";
                   break;
-                  case 'W':
+                  case 'WARRIOR':
                         return "Warrior";
+                  break;
+                  case 'DEATHKNIGHT':
+                        return "Death Knight";
                   break;
             }
       }
 function getClassIcon($class)
 {
 	global $roster, $addon;
-	
-	if (!empty($class)){
-	     $icon_name = $roster->locale->wordings['enUS']['class_iconArray'][$class];
-	     $alt = array_keys($roster->locale->act['class_to_en'],$class);
-	     $icon_value = '<img class="membersRowimg" width="16" height="16" src="'.ROSTER_PATH.'img/class/'.$icon_name.'.jpg" alt="'.$alt[0].'" /> ';
-	}
-      else
+	if ($class != '')
 	{
-	$icon_value = '';
-	}
+	     $icon_name = $roster->locale->act['c']['_iconArray'][$class];
+	     $alt = array_keys($roster->locale->act['class_to_en'],$class);
+	     $icon_value = '<img class="membersRowimg" width="16" height="16" src="'.ROSTER_PATH.'img/class/'.$icon_name.'.png" alt="'.$alt[0].'" /> ';
+      }
+      else
+      {
+      $icon_value = '';
+      }
 	return $icon_value;
 }
 	function getEventDataArray($month, $year, $auth = 0)

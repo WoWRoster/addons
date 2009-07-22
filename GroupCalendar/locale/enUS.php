@@ -6,18 +6,42 @@
 	$lang['timeAM']		= "am";	//as in 4:30am
 	$lang['timePM']		= "pm";	//as in 7:15pm
 	$lang['gc_title'] = 'Guild Group Calendar';
-      $lang['gc_button'] = 'Guild Group Calendar|Display Raid and schedules for your <br>guild with this addon from GroupCalendar In game';
+      $lang['gc_button'] = 'Guild Group Calendar|Display Raid and sceduls for your <br>guild with this addon from GroupCalendar In game';
 	$lang['Class_txt']	= 'Class';
-	$lang['Class']['P']	= 'Priest';
-	$lang['Class']['S']	= 'Shaman';
-	$lang['Class']['M']	= 'Mage';
-	$lang['Class']['R']	= 'Rogue';
-	$lang['Class']['D']	= 'Druid';
-	$lang['Class']['W']	= 'Warrior';
-	$lang['Class']['H']	= 'Hunter';
-	$lang['Class']['K']	= 'Warlock';
-	$lang['Class']['L']	= 'Paladin';
-	$lang['Class']['?']	= 'n/a';
+	$lang['Class']['PRIEST']	= 'Priest';
+	$lang['Class']['SHAMEN']	= 'Shaman';
+	$lang['Class']['MAGE']	= 'Mage';
+	$lang['Class']['ROGUE']	= 'Rogue';
+	$lang['Class']['DRUID']	= 'Druid';
+	$lang['Class']['WARRIOR']	= 'Warrior';
+	$lang['Class']['HUNTER']	= 'Hunter';
+	$lang['Class']['WARLOCK']	= 'Warlock';
+	$lang['Class']['PALADIN']	= 'Paladin';
+	$lang['Class']['DEATHKNIGHT']	= 'Death Knight';
+	
+	$lang['c']['_iconArray'] = array (
+	'Death Knight'=>'deathknight',
+	'Druid'=>'druid',
+	'Hunter'=>'hunter',
+	'Mage'=>'mage',
+	'Paladin'=>'paladin',
+	'Priest'=>'pries',
+	'Rogue'=>'rogue',
+	'Shaman'=>'shaman',
+	'Warlock'=>'warlock',
+	'Warrior'=>'warrior'
+// Space so locale files are line synced
+
+
+
+
+
+
+
+
+
+
+);
 
 	$lang['Race_txt']	= 'Race';
 	$lang['Race']['U']	= 'Undead';
@@ -126,11 +150,8 @@ $lang['AV'] = 'Alterac Valley';
 	
 */
 $lang['gcType']['Meeting'] = "Meeting";
-$lang['gcType']['Meet'] = "Meeting";
 $lang['gcType']['Birthday'] = "Birthday";
-$lang['gcType']['Birth'] = "Birthday";
 $lang['gcType']['Roleplay'] = "Roleplaying";
-$lang['gcType']['RP'] = "Roleplaying";
 $lang['gcType']['Holiday'] = "Holiday";
 $lang['gcType']['Dentist'] = "Dentist";
 $lang['gcType']['Doctor'] = "Doctor";
@@ -164,12 +185,11 @@ $lang['gcType']['Uld'] = "Uldaman";
 $lang['gcType']['WC'] = "Wailing Caverns";
 $lang['gcType']['ZF'] = "Zul'Farrak";
 $lang['gcType']['ZG'] = "Zul'Gurub";
+$lang['gcType']['Naxx'] = "Naxxramas";
 
-//TBC Raids and Dungeons
 $lang['gcType']['TheEye'] = "The Eye";
 $lang['gcType']['Serpentshrine'] = "Serpentshrine";
 $lang['gcType']['Magtheridon'] = "Magtheridon";
-$lang['gcType']['Mag'] = "Magtheridon";
 $lang['gcType']['Hyjal'] = "Mount Hyjal";
 $lang['gcType']['Karazhan'] = "Karazhan";
 $lang['gcType']['ZulAman'] = "Zul'Aman";
@@ -221,45 +241,6 @@ $lang['gcType']['Magisters'] = "Magister's Terrace";
 $lang['gcType']['MagistersH'] = "Magister's Terrace (Heroic)";
 $lang['gcType']['Sunwell'] = "Sunwell Plateau";
 
-// WotLK Raids
-$lang['gcType']['Naxx'] = "Naxxramas";
-$lang['gcType']['NaxxH'] = "Naxxramas (Heroic)";
-$lang['gcType']['Eternity'] = "Eye of Eternity";
-$lang['gcType']['EternityH'] = "Eye of Eternity (Heroic)";
-$lang['gcType']['Obsidian'] = "Obsidian Sanctum";
-$lang['gcType']['ObsidianH'] = "Obsidian Sanctum (Heroic)";
-$lang['gcType']['Archavon'] = "Vault of Archavon";
-$lang['gcType']['ArchavonH'] = "Vault of Archavon (Heroic)";
-$lang['gcType']['Ulduar'] = "Ulduar";
-$lang['gcType']['UlduarH'] = "Ulduar (Heroic)";
-
-
-// WotLK Dungeons
-$lang['gcType']['Ahnkalet'] = "Ahn'kahet: The Old Kingdom";
-$lang['gcType']['AhnkaletH'] = "Ahn'kahet: The Old Kingdom (Heroic)";
-$lang['gcType']['AzjolNerub'] = "Azjol-Nerub";
-$lang['gcType']['AzjolNerubH'] = "Azjol-Nerub (Heroic)";
-$lang['gcType']['Culling'] = "The Culling of Stratholme";
-$lang['gcType']['CullingH'] = "The Culling of Stratholme (Heroic)";
-$lang['gcType']['DrakTharon'] = "Drak'Tharon Keep";
-$lang['gcType']['DrakTharonH'] = "Drak'Tharon Keep (Heroic)";
-$lang['gcType']['Gundrak'] = "Gundrak";
-$lang['gcType']['GundrakH'] = "Gundrak (Heroic)";
-$lang['gcType']['TheNexus'] = "The Nexus";
-$lang['gcType']['TheNexusH'] = "The Nexus (Heroic)";
-$lang['gcType']['TheOculus'] = "The Oculus";
-$lang['gcType']['TheOculusH'] = "The Oculus (Heroic)";
-$lang['gcType']['HallsofLightning'] = "Halls of Lightning";
-$lang['gcType']['HallsofLightningH'] = "Halls of Lightning (Heroic)";
-$lang['gcType']['HallsofStone'] = "Halls of Stone";
-$lang['gcType']['HallsofStoneH'] = "Halls of Stone (Heroic)";
-$lang['gcType']['Utgarde'] = "Utgarde Keep";
-$lang['gcType']['UtgardeH'] = "Utgarde Keep (Heroic)";
-$lang['gcType']['UtgardePinnacle'] = "Utgarde Pinnacle";
-$lang['gcType']['UtgardePinnacleH'] = "Utgarde Pinnacle (Heroic)";
-$lang['gcType']['TheVioletHold'] = "The Violet Hold";
-$lang['gcType']['TheVioletHoldH'] = "The Violet Hold (Heroic)";
-
 $lang['gcType']['PvP'] = "General PvP";
 $lang['gcType']['A2v2'] = "Arena (2v2)";
 $lang['gcType']['A3v3'] = "Arena (3v3)";
@@ -295,6 +276,12 @@ $lang['gcType']['Tempest Keep: The Eye'] = "Tempest Keep: The Eye";
 $lang['gcType']['CR: Serpentshrine Cavern'] = "CR: Serpentshrine Cavern";
 $lang['gcType']['Zul\'Aman'] = "Zul'Aman";
 
+// wotlk instances
+$lang['gcType']['Ulduar'] = 'Ulduar';
+$lang['gcType']['UlduarH'] = 'Ulduar (Heroic)';
+$lang['gcType']['Naxx'] = 'Naxxramas';
+$lang['gcType']['NaxxH'] = 'Naxxramas (Heroic)';
+
 // admin text 
 
 
@@ -310,7 +297,7 @@ $lang['admin']['WEEK_START'] = 'Week Start|Allows you to specify the weekstart, 
 $lang['admin']['INSTANCE_RESET_TYPE'] = 'Instance Reset Type| Select which set if instances<br>you want to show the resets<br>for Ither Both or Original or Burning Crusade';
 $lang['admin']['INSTANCE_RESET_ICON_SIZE'] = 'Reset Icon Size|Set the size of <br>the icons for reset evens on the calendar';
 $lang['admin']['EVENT_ICON_SIZE'] = 'Event Icon Size|Set the Event Icon size<br> for events on the main calendar';
-$lang['admin']['GC_PATH'] = 'GroupCalendar Path|This is to be set to the fill path of the GC<br>addon so that images will be shown no matter<br>what the path is set too.<br>  EX: /addons/GroupCalendar/<br>  Or<br>  for Roster DF<br>  /moduals/WoWRosterDf/addons/GroupCalendar/';
+$lang['admin']['GC_PATH'] = 'GroupCalendar Path|This is to be set to the fill path of the GC<br>addon so that images will be shown no mater<br>what the path is set too.<br>  EX: /addons/GroupCalendar/<br>  Or<br>  for Roster DF<br>  /moduals/WoWRosterDf/addons/GroupCalendar/';
 
 $lang['admin']['GroupCalendar_config'] = 'Config';
 
@@ -363,4 +350,3 @@ $lang['admin']['GroupCalendar_config'] = 'Config';
 	$lang['Browse_to'] = "Please browse to the location of your GroupCalendar.lua file.<br>This is typically found at: <br>\"C:\\Program Files\\World of Warcraft\\WTF\\Account\\<i>Your WoW User Name</i>\\SavedVariables\\GroupCalendar.lua\"";
 	$lang['no_file'] = "Error!  No file was specified for this webpage to process.";
 
-?>

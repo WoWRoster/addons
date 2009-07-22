@@ -1,7 +1,4 @@
 <?php
-
-
-
 if ( !defined('IN_ROSTER') )
 {
     exit('Detected invalid access to this file!');
@@ -14,7 +11,7 @@ if ( !defined('IN_ROSTER') )
  
 
 
-      define('CALENDAR_TABLE',$roster->db->table('info',$addon['basename']));
+    define('CALENDAR_TABLE',$roster->db->table('info',$addon['basename']));
 	
 	define('ATTENDANCE_TABLE',$roster->db->table('attend',$addon['basename']));
 	
@@ -29,7 +26,7 @@ var $messages = '';		// Update messages
 	var $files = array();	// We need on of them
 	var $evid = '';
 	var $evt = '0';
-	var $debuging_flag = '0';
+	var $debuging_flag = '2';
 	var $mDate = null;
 	var $mTitle = null;
 	var $mType = null;
@@ -60,7 +57,9 @@ var $messages = '';		// Update messages
 		global $roster, $update, $addon;
 		
             $this->data = $data;
-            $this->files[] = 'groupcalendar'; // Register this file for upload
+            //$this->files[] = 'groupcalendar'; // Register this file for upload
+			$this->files[] = 'groupcalendar5'; // Register this file for upload
+			echo '<1>';
 
 	}
 		/**
@@ -78,9 +77,14 @@ var $messages = '';		// Update messages
 	{
 		global $roster, $update, $addon;
 		$this->messages = "<br />\n";
-            $filefield = "groupcalendar";
-            $calendar_data = $this->GroupCalendarParse($update->uploadData['groupcalendar'],$roster->data['server']);//GroupCalendarParse($lua_data,$WOW_server);
-            //echo '</center></center><pre>';
+		echo '<2>';
+		//echo 'bob<pre>';
+		//print_r($update);
+		//echo '</pre>';
+		
+            $filefield = "groupcalendar5";
+            $calendar_data = $this->GroupCalendarParse($update->uploadData[$filefield],$roster->data['server']);//GroupCalendarParse($lua_data,$WOW_server);
+        //echo '</center></center><pre>';
 		//print_r($calendar_data);
 		//echo '</pre>';
 		$replace_chars = array("&a;","&c;","&s;","&cn;","&n;");
@@ -114,10 +118,11 @@ var $messages = '';		// Update messages
 		$id_counter = 1;
 		
 		foreach (array_keys($calendar_data) as $eid) {
+		echo $eid.'<br>';
 		//echo $calendar_data[$eid]['Attendance'][0]['Guild'].'<br>';
 		//echo $roster->data['guild_name'].'<br>';
-        //    if (isset($calendar_data[$eid]['GuildOnly']) && $calendar_data[$eid]['GuildOnly'] == $roster->data['guild_name'] OR $calendar_data[$eid]['Attendance'][0]['Guild'] == $roster->data['guild_name'] ){
-		//echo '++--'.$calendar_data[$eid]['GuildOnly'].'--++';
+    //        if (isset($calendar_data[$eid]['mGuild']) && $calendar_data[$eid]['mGuild'] == $roster->data['guild_name'] OR $calendar_data[$eid]['Attendance'][0]['Guild'] == $roster->data['guild_name'] ){
+		
 		      if (isset($calendar_data[$eid]['MinLevel']))
 			if ($calendar_data[$eid]['MinLevel'] == "") $calendar_data[$eid]['MinLevel'] = NULL;
 			if (isset($calendar_data[$eid]['MaxLevel']))
@@ -185,13 +190,14 @@ var $messages = '';		// Update messages
 						$sql.= "`modDate`='". mysql_escape_string(str_replace($replace_chars,$substu_chars,$v['modDate'])) ."', ";
 						$sql.= "`modTime`='". mysql_escape_string(str_replace($replace_chars,$substu_chars,$v['modTime'])) ."', ";
 						$sql.= "`status`='". mysql_escape_string(str_replace($replace_chars,$substu_chars,$v['Status'])) ."', ";
+						$sql.= "`statuscode`='". mysql_escape_string(str_replace($replace_chars,$substu_chars,$v['Statuscode'])) ."', ";
 						$sql.= "`level`=". mysql_escape_string(str_replace($replace_chars,$substu_chars,$v['Level'])) .", ";
 						$sql.= "`racecode`='". mysql_escape_string(str_replace($replace_chars,$substu_chars,$v['RaceCode'])) ."', ";
 						$sql.= "`classcode`='". mysql_escape_string(str_replace($replace_chars,$substu_chars,$v['ClassCode'])) ."', ";
 						$sql.= "`comment`='". mysql_escape_string(str_replace($replace_chars,$substu_chars,$v['Comment'])) ."', ";
 						$sql.= "`role`='". mysql_escape_string(str_replace($replace_chars,$substu_chars,$v['Role'])) ."', ";
 						$sql.= "`guild`='". mysql_escape_string(str_replace($replace_chars,$substu_chars,$v['Guild'])) ."', ";
-						$sql.= "`guildRank`=". mysql_escape_string(str_replace($replace_chars,$substu_chars,$v['GuildRank'])) .", ";
+						$sql.= "`guildRank`='". mysql_escape_string(str_replace($replace_chars,$substu_chars,$v['GuildRank'])) ."', ";
 						$sql.= "`createDate`='". mysql_escape_string(str_replace($replace_chars,$substu_chars,$v['createDate'])) ."', ";
 						$sql.= "`createTime`='". mysql_escape_string(str_replace($replace_chars,$substu_chars,$v['createTime'])) ."'";
 						if ($this->debuging_flag) $this->messages = ("$sql\n");
@@ -219,31 +225,33 @@ var $messages = '';		// Update messages
 //				$only_realm is an optional restrictor of data
 //		returns an associative array of events
 ///////////////////////////////////////////////////////////
-function GroupCalendarParse($lua_data,$only_realm = "") {
+function GroupCalendarParse($lua_data,$only_realm) {
   global $roster, $addon;
 
   $calendar_items = array();
   $count = 0;
   
-  if (!array_key_exists("gGroupCalendar_Database",$lua_data)) {
+  if (!array_key_exists("GroupCalendar_Data",$lua_data)) {
   	if ($this->debuging_flag) $this->messages = ("\n\nERROR:  No Calendar Database key found in LUA Data.\n\n");
 	return array();
   }
-  $database = $lua_data['gGroupCalendar_Database'];
+  $database = $lua_data['GroupCalendar_Data'];
   if ($this->debuging_flag) $this->messages = ("Database Format is ". $database['Format'] ."\n");
   if ($this->debuging_flag && $database['Format'] != 14) $this->messages = ("WARNING: Expecting Format 14, possible errors from different format versions.  Continuing anyway...\n");
 
-  $gd = $database['Databases'];
-  foreach( array_keys( $gd ) as $char_name ) {
+  $gd = $database['Realms'][$only_realm];
+  foreach( $gd['Characters'] as $char_id => $char_name ) 
+  {
     //get char name that posted the event
-	$charName = $gd[$char_name]['UserName'];
-	$realm = $gd[$char_name]['Realm'];
+	$charName = $char_name['Name'];
+	$realm = $gd['Name'];
 	if ($only_realm != "" && $realm != $only_realm) {
 		$this->messages = ("Entry $char_name is being skipped because the realm '$realm' does not meet required realm of '$only_realm'.\n");
 		continue;
 	}
 
-	$events = $gd[$char_name]['Events'];
+	$events = $gd['Characters'][$char_id]['Events'];
+	$guild_namee = $gd['Characters'][$char_id]['Guild'];
 	if ($this->debuging_flag == 2) { $this->messages = ("$char_name Events "); $this->messages = (print_r($events,1)); }
 	foreach(array_keys($events) as $event){
 	  if ($this->debuging_flag == 2) { $this->messages = ("Event $event\n"); }
@@ -265,42 +273,42 @@ function GroupCalendarParse($lua_data,$only_realm = "") {
 		
 		// the 'mPrivate' field will signify if this event is private and shouldn't be uploaded
 		if ($detailedinfo['mPrivate'] == "true") continue;
-		if (isset($detailedinfo['mDate']))			
-		$mDate = $detailedinfo['mDate'];
-		if (isset($detailedinfo['mTitle']))
+		if (isset($detailedinfo['CacheUpdateDate']))			
+		$mDate = $detailedinfo['CacheUpdateDate'];
+		if (isset($detailedinfo['Title']))
             {
-		$mTitle = $detailedinfo['mTitle'];
+		$mTitle = $detailedinfo['Title'];
 		}
 		else{
 		$mTitle = '';
 		}
-		if (isset($detailedinfo['mType']))
-		$mType = $detailedinfo['mType'];
-            if (isset($detailedinfo['mID']))
-		$mID = $detailedinfo['mID'];
-		if (isset($detailedinfo['mTime']))
-		$mTime = $detailedinfo['mTime'];
-		if (isset($detailedinfo['mGuild']))
-		$mGuildOnly = $detailedinfo['mGuild'];
-            if (isset($detailedinfo['mDescription']))
+		if (isset($detailedinfo['EventType']))
+		$mType = $this->eventtype($detailedinfo['EventType']);
+            if (isset($detailedinfo['UID']))
+		$mID = $detailedinfo['UID'];
+		if (isset($detailedinfo['CacheUpdateTime']))
+		$mTime = $detailedinfo['CacheUpdateTime'];
+		//if (isset($detailedinfo['mGuild']))
+		//$mGuildOnly = $detailedinfo['mGuild'];
+            if (isset($detailedinfo['Description']))
             {
-		$mDescription = $detailedinfo['mDescription'];
+		$mDescription = $detailedinfo['Description'];
 		}
 		else{
 		$mDescription = '';
 		}
-		if (isset($detailedinfo['mDuration']))
-		$mDuration = $detailedinfo['mDuration'];
-		if (isset($detailedinfo['mMinLevel']))
-		$mMinLevel = $detailedinfo['mMinLevel'];
-		if (isset($detailedinfo['mMaxLevel']))
-		$mMaxLevel = $detailedinfo['mMaxLevel'];
-		if (isset($detailedinfo['mAttendance']))
-		$mAttendance = $detailedinfo['mAttendance'];
-		if (isset($detailedinfo['mLimits']))
-		$mLimits = $detailedinfo['mLimits'];
-		if (isset($detailedinfo['mLimits']['mMaxAttendance']))
-		$mMaxAttendance = $detailedinfo['mLimits']['mMaxAttendance'];
+		if (isset($detailedinfo['Duration']))
+		$mDuration = $detailedinfo['Duration'];
+		if (isset($detailedinfo['MinLevel']))
+		$mMinLevel = $detailedinfo['MinLevel'];
+		if (isset($detailedinfo['MaxLevel']))
+		$mMaxLevel = $detailedinfo['MaxLevel'];
+		if (isset($detailedinfo['Attendance']))
+		$mAttendance = $detailedinfo['Attendance'];
+		if (isset($detailedinfo['Limits']))
+		$mLimits = $detailedinfo['Limits'];
+		if (isset($detailedinfo['MaxSize']))
+		$mMaxAttendance = $detailedinfo['MaxSize'];
 
 		//Convert GroupCal Date to Calendar date
 		$startdate = mktime(12,0,0,1,1,2000);
@@ -348,64 +356,58 @@ function GroupCalendarParse($lua_data,$only_realm = "") {
 
 		//Parse the attendace information.
 		$fAttendance = "";
+		
 		if(isset($mAttendance))
-		if(is_array($mAttendance)){
-		  $fAttendance = array();
-		  //Check for People whom will attend the event.
-		  $attenCount = 0;
-		  foreach(array_keys($mAttendance) as $attendees){
-		    $currAttend = explode(",",$mAttendance[$attendees]);
-			//$currAttend = array(modified date,modified time,status,playerinfo,attend_comment,guild,guild rank,create date,create time)
-			// playerinfo is string of 4 characters: first one is Race, second one is Class, last two are level
-			$fAttendance[$attenCount]['Name'] = $attendees;
-			$fAttendance[$attenCount]['str'] = $mAttendance[$attendees];
-			$fAttendance[$attenCount]['modDate'] = $currAttend[0];
-			$fAttendance[$attenCount]['modTime'] = $currAttend[1];
-			$fAttendance[$attenCount]['Status'] = $currAttend[2];
-			$fAttendance[$attenCount]['Level'] = substr($currAttend[3],2,2);
-			$fAttendance[$attenCount]['RaceCode'] = substr($currAttend[3],0,1);
-			$fAttendance[$attenCount]['ClassCode'] = substr($currAttend[3],1,1);
-			$fAttendance[$attenCount]['Comment'] = $currAttend[4];
-                  $fAttendance[$attenCount]['Role'] = $this->RoleInt($currAttend[9]);
-			$fAttendance[$attenCount]['Guild'] = $currAttend[5];
-			$fAttendance[$attenCount]['GuildRank'] = $currAttend[6];
-			$fAttendance[$attenCount]['createDate'] = $currAttend[7];
-			$fAttendance[$attenCount]['createTime'] = $currAttend[8];
+		
+                  if(is_array($mAttendance))
+                  {
+                  
+                        $fAttendance = array();
+                        //Check for People whom will attend the event.
+                        $attenCount = 0;
+                        
+                        foreach($mAttendance as $attendees => $datas)
+                        {
+                              $fAttendance[$attenCount]['modDate'] = '';
+                              $fAttendance[$attenCount]['modTime'] = '';
+                              $pd = $gd['Guilds'][$guild_namee]['Players'][$attendees];
+                              $currAttend = explode(",",$mAttendance[$attendees]);
+                              //$currAttend = array(modified date,modified time,status,playerinfo,attend_comment,guild,guild rank,create date,create time)
+                              // playerinfo is string of 4 characters: first one is Race, second one is Class, last two are level
+                              $fAttendance[$attenCount]['Name'] = $attendees;
+                              $fAttendance[$attenCount]['str'] = $mAttendance[$attendees];
+                              if (isset($datas['ResponseDate']))$fAttendance[$attenCount]['modDate'] = $datas['ResponseDate'];
+                              if (isset($datas['ResponseTime']))$fAttendance[$attenCount]['modTime'] = $datas['ResponseTime'];
+                              $fAttendance[$attenCount]['Status'] = $this->eventstatus($datas['InviteStatus']);
+                              $fAttendance[$attenCount]['Statuscode'] = $datas['InviteStatus'];
+                              $fAttendance[$attenCount]['Level'] = $datas['Level'];
+                              $fAttendance[$attenCount]['ClassCode'] = $datas['ClassID'];
+                              $fAttendance[$attenCount]['Comment'] = $currAttend[4];
+                              $fAttendance[$attenCount]['Role'] = $this->RoleInt($datas['RoleCode']);
+                              if (isset($pd['GuildRank']))$fAttendance[$attenCount]['GuildRank'] = $gd['Guilds'][$guild_namee]['Ranks'][$pd['GuildRank']];
 								
-			//Convert GroupCal Time and Date to Gregorian Calendar date GMT timezone
-			//	Time is stored is seconds since midnight
-			$startdate = mktime(12,0,0,1,1,2000);
-			if ($fAttendance[$attenCount]['modDate'] != "") {
-				$mDateConv = $startdate + ($fAttendance[$attenCount]['modDate'] * 86400);
-				$modDate = getdate($mDateConv);
-				$eventTimeS = $fAttendance[$attenCount]['modTime'] % 60;
-				$eventTimeH = floor($fAttendance[$attenCount]['modTime'] / 60);
-				$eventTimeM = $eventTimeH % 60;
-				$eventTimeH = floor($eventTimeH / 60);
-				$modDate = mktime($eventTimeH,$eventTimeM,$eventTimeS,$modDate['mon'],$modDate['mday'],$modDate['year']);
-				$modDate = $modDate - ($addon['config']['WOW_TIME_OFFSET'] * 3600);
-				$fAttendance[$attenCount]['modDate'] = date("Y-m-d",$modDate);
-				$fAttendance[$attenCount]['modTime'] = date("H:i:s",$modDate);
-			}
+                              //Convert GroupCal Time and Date to Gregorian Calendar date GMT timezone
+                              //	Time is stored is seconds since midnight
+                              $startdate = mktime(12,0,0,1,1,2000);
+                              if ($fAttendance[$attenCount]['modDate'] != "")
+                              {
+                                    $mDateConv = $startdate + ($fAttendance[$attenCount]['modDate'] * 86400);
+                                    $modDate = getdate($mDateConv);
+                                    $eventTimeS = $fAttendance[$attenCount]['modTime'] % 60;
+                                    $eventTimeH = floor($fAttendance[$attenCount]['modTime'] / 60);
+                                    $eventTimeM = $eventTimeH % 60;
+                                    $eventTimeH = floor($eventTimeH / 60);
+                                    $modDate = mktime($eventTimeH,$eventTimeM,$eventTimeS,$modDate['mon'],$modDate['mday'],$modDate['year']);
+                                    $modDate = $modDate - ($addon['config']['WOW_TIME_OFFSET'] * 3600);
+                                    $fAttendance[$attenCount]['modDate'] = date("Y-m-d",$modDate);
+                                    $fAttendance[$attenCount]['modTime'] = date("H:i:s",$modDate);
+                              }
 
-			if ($fAttendance[$attenCount]['createDate'] != "") {
-				$mDateConv = $startdate + ($fAttendance[$attenCount]['createDate'] * 86400);
-				$modDate = getdate($mDateConv);
-				$eventTimeS = $fAttendance[$attenCount]['createTime'] % 60;
-				$eventTimeH = floor($fAttendance[$attenCount]['createTime'] / 60);
-				$eventTimeM = $eventTimeH % 60;
-				$eventTimeH = floor($eventTimeH / 60);
-				$modDate = mktime($eventTimeH,$eventTimeM,$eventTimeS,$modDate['mon'],$modDate['mday'],$modDate['year']);
-				$modDate = $modDate - ($addon['config']['WOW_TIME_OFFSET'] * 3600);
-				$fAttendance[$attenCount]['createDate'] = date("Y-m-d",$modDate);
-				$fAttendance[$attenCount]['createTime'] = date("H:i:s",$modDate);
-			}
-
-			//Increment and ready for next loop
-			$attenCount++;
-			if ($this->debuging_flag==2) $this->messages = ('<br>'.$name.' '.$status.' '.$level.' '.$this->Race($raceCode).' '.$this->ClassInt($classCode).' '.$guild);
-		  }
-		}
+                              //Increment and ready for next loop
+                              $attenCount++;
+                              if ($this->debuging_flag==2) $this->messages = ('<br>'.$name.' '.$status.' '.$level.' '.$this->Race($raceCode).' '.$this->ClassInt($classCode).' '.$guild);
+                        }
+                  }
             if (isset($mLimits['mRoleLimits']))
 		$fAttendLimits = $mLimits['mRoleLimits'];
 		if (isset($charName))				
@@ -487,12 +489,10 @@ function ClassInt($code){
 	
 function RoleInt($code){
 
-	$r['Role']['MH'] = "Healer";
-	$r['Role']['OH'] = "Off-Healer";
-	$r['Role']['MT'] = "Tank";
-	$r['Role']['OT'] = "Off-Tank";
-	$r['Role']['RD'] = "Ranged";
-	$r['Role']['MD'] = "Melee";
+	$r['Role']['H'] = "Healer";
+	$r['Role']['T'] = "Tank";
+	$r['Role']['R'] = "Ranged";
+	$r['Role']['M'] = "Melee";
 		return $r['Role'][$code];
 	}
 function RoleInts($code){
@@ -504,6 +504,43 @@ function RoleInts($code){
 	$rs['Role']['MD'] = "Melee";
 		return $rs['Role'][$code];
 	}
+	
+	function eventtype($id)
+	{
+		$EVENTTYPE['1'] = 'RAID';
+		$EVENTTYPE['2'] = 'DUNGEON';
+		$EVENTTYPE['3'] = 'PVP';
+		$EVENTTYPE['4'] = 'MEETING';
+		$EVENTTYPE['5'] = 'OTHER';
+
+		return $EVENTTYPE[$id];
+	}
+	
+	function eventstatus($id)
+	{
+	
+		$INVITESTATUS['1'] = 'INVITED';
+		$INVITESTATUS['2'] = 'ACCEPTED';
+		$INVITESTATUS['3'] = 'DECLINED';
+		$INVITESTATUS['4'] = 'CONFIRMED';
+		$INVITESTATUS['5'] = 'OUT';
+		$INVITESTATUS['6'] = 'STANDBY';
+		$INVITESTATUS['7'] = 'SIGNEDUP';
+		$INVITESTATUS['8'] = 'NOT SIGNEDUP';
+		
+		return $INVITESTATUS[$id];
+	
+	}
+	
+	function invitetype($id)
+	{
+	
+		$INVITETYPE['1'] = 'NORMAL';
+		$INVITETYPE['2'] = 'SIGNUP';
+		return $INVITETYPE[$id];
+		
+	}
+
 ///////////////////////////////////////////////////////////
 //  Parses the LUA file and creates and associative array
 //		input:	$filename is the location of the file
