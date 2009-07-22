@@ -66,7 +66,7 @@ background-color: #000000;
 **************************************************************/
 
 /**** month and year header at top of calendar ****/
-.date_header			{ font-size:16px; font-family:arial, helvetica; font-weight:bold; color:#FFFFFF; }
+.date_header			{ font-size:16px; font-family:arial, helvetica; font-weight:bold; color:#000000; }
 
 /**** color and size of calendar cells.  ****/
 .day_number {color: #FFFFFF;}

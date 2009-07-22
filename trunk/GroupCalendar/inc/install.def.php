@@ -27,7 +27,7 @@ class GroupCalendarInstall
 	var $active = true;
 	var $icon = 'spell_shadow_unstableafllictions'; 
 
-	var $version = '1.0.2100';
+	var $version = '1.0.2255';
 	var $wrnet_id = '0';
 
 	var $fullname = 'Guild Group Calendar';
@@ -74,21 +74,22 @@ class GroupCalendarInstall
 
 		//$installer->create_table($installer->table('events'),
 			$installer->create_table($installer->table('attend'),
-  "eid varchar(255) NOT NULL default '',
-  name varchar(255) NOT NULL default '',
-  modDate date NOT NULL default '0000-00-00',
-  modTime time NOT NULL default '00:00:00',
-  `status` char(2) NOT NULL default '',
+  "`eid` varchar(255) NOT NULL default '',
+  `name` varchar(255) NOT NULL default '',
+  `modDate` date NOT NULL default '0000-00-00',
+  `modTime` time NOT NULL default '00:00:00',
+  `status` char(50) NOT NULL,
+  `statuscode` tinyint(1) NOT NULL default '0',
   `level` int(2) NOT NULL default '0',
-  racecode char(1) NOT NULL default '',
-  classcode char(1) NOT NULL default '',
+  `racecode` char(25) NOT NULL,
+  `classcode` char(25) NOT NULL,
   `comment` varchar(255) NOT NULL default '',
   `role` varchar(255) NOT NULL default '',
-  guild varchar(255) NOT NULL default '',
-  guildRank int(4) NOT NULL default '0',
-  createDate date NOT NULL default '0000-00-00',
-  createTime time NOT NULL default '00:00:00'"
-);
+  `guild` varchar(255) NOT NULL default '',
+  `guildRank` int(4) NOT NULL default '0',
+  `createDate` date NOT NULL default '0000-00-00',
+  `createTime` time NOT NULL default '00:00:00'
+");
 
 $installer->create_table($installer->table('info'),
   "id varchar(255) NOT NULL default '',
@@ -130,7 +131,19 @@ $installer->create_table($installer->table('other'),
             if( version_compare($this->$version, $oldversion,'>') == true )
 		{
 			$installer->add_query("ALTER TABLE `" . $installer->table('attend') . "`"
-				. " ADD `role` varchar(255) NOT NULL default '0' AFTER `comment`;");
+			. " ADD `role` varchar(255) NOT NULL default '0' AFTER `comment`;");
+			
+			$installer->add_query("ALTER TABLE `" . $installer->table('attend') . "`"
+			. " ADD `statuscode` tinyint(1) NOT NULL default '0' AFTER `status`;");
+			
+			$installer->add_query("ALTER TABLE `" . $installer->table('attend') . "`"
+			. "CHANGE `status` `status` CHAR( 25 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;");
+			
+			$installer->add_query("ALTER TABLE `" . $installer->table('attend') . "`"
+			. "CHANGE `racecode` `racecode` CHAR( 25 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;");
+			
+			$installer->add_query("ALTER TABLE `" . $installer->table('attend') . "`"
+			. "CHANGE `classcode` `classcode` CHAR( 25 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;");
 				
 		}
 		
