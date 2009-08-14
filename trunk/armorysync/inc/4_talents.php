@@ -1,9 +1,4 @@
 <?php
-/**
- * AUTO-GENERATED CONF FILE
- * DO NOT EDIT !!!
- */
-
 $i = 0;
 $t = 0;
 
@@ -790,4 +785,4 @@ $rank[$i]= array(
 			"<span style=text-align:left;float:left;>Instant</span><span style=text-align:right;float:right;>2 min cooldown</span><br>Enter the Shadow Dance, allowing the use of Sap, Garrotte, Ambush, Cheap Shot, Premeditation, Pickpocket and Disarm Trap regardless of being stealthed."
 		);
 $i++;
-
+//Survival Talents End^^
