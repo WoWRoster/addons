@@ -4,7 +4,7 @@
  * DO NOT EDIT !!!
  */
 
-$i = 0;
+﻿$i = 0;
 $t = 0;
 
 $className = "Paladin Talents";
@@ -103,7 +103,7 @@ $talent[$i] = array(2, "Sanctified Wrath", 2, 3, 8); $i++;
 $talent[$i] = array(2, "Swift Retribution", 3, 1, 9); $i++;
 $talent[$i] = array(2, "Crusader Strike", 1, 2, 9); $i++;
 $talent[$i] = array(2, "Sheath of Light", 3, 3, 9); $i++;
-$talent[$i] = array(2, "Righteous Vengeance", 5, 2, 10); $i++;
+$talent[$i] = array(2, "Righteous Vengeance", 3, 2, 10); $i++;
 $talent[$i] = array(2, "Divine Storm", 1, 2, 11); $i++;
 
 $treeStartStop[$t] = $i -1;
@@ -161,7 +161,7 @@ $i++;
 
 //Aura Mastery - Holy //UPDATED 3.1.0
 $rank[$i]= array(
-		"<span style=text-align:left;float:left;>Instant cast</span><span style=text-align:right;float:right;>2 min cooldown</span><br>Causes your Concentration Aure to make all affected targets immune to Silence and Interrupt effects and improve the effect of all other auras by 100%. Lasts 10 sec."
+		"<span style=text-align:left;float:left;>Instant cast</span><span style=text-align:right;float:right;>2 min cooldown</span><br>Causes your Concentration Aura to make all affected targets immune to Silence and Interrupt effects and improve the effect of all other auras by 100%. Lasts 10 sec."
 		);
 $i++;	
 

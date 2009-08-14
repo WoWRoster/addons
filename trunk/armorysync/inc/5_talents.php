@@ -857,4 +857,5 @@ $rank[$i]= array(
 		
 $i++;
 
+//Shadow Talents End^^
 

@@ -767,4 +767,6 @@ $rank[$i]= array(
 "<span style=text-align:left;float:left;>18% of base mana</span><span style=text-align:right;float:right;>40 yd range</span><br><span style=text-align:left;float:left;>Instant cast</span><span style=text-align:right;float:right;>6 sec cooldown</span><br>Heals a friendly target for 639 to 691 and another 665 over 15 sec. Your next Chain heal cast on that primary target within 15 sec will consume the healing over time effect and increase the amount of the Chain Heal by 25%."
 				);
 $i++;
+		
+//Restoration Talents End^^
 

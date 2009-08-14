@@ -565,7 +565,7 @@ $i++;
 
 //Primal Gore - Feral //UPDATED 3.1.0
 $rank[$i] = array(
-"Grants the period damage from your Lacerate and Rip abilities the ability to critically hit."
+"Grants the periodic damage from your Lacerate and Rip abilities the ability to critically hit."
 		  );
 $i++;
 
