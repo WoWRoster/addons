@@ -4,7 +4,7 @@
  * DO NOT EDIT !!!
  */
 
-$i = 0;
+﻿$i = 0;
 $t = 0;
 
 $className = "Warrior Talents";

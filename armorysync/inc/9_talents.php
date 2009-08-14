@@ -53,7 +53,7 @@ $t++;
 //demonology talents
 $talent[$i] = array(1, "Improved Healthstone", 2, 1, 1); $i++;
 $talent[$i] = array(1, "Improved Imp", 3, 2, 1); $i++;
-$talent[$i] = array(1, "Demonic Embrace", 5, 3, 1); $i++;
+$talent[$i] = array(1, "Demonic Embrace", 3, 3, 1); $i++;
 $talent[$i] = array(1, "Fel Synergy", 2, 4, 1); $i++;
 $talent[$i] = array(1, "Improved Health Funnel", 2, 1, 2); $i++;
 $talent[$i] = array(1, "Demonic Brutality", 3, 2, 2); $i++;
@@ -759,3 +759,6 @@ $rank[$i]= array(
 	"<span style=text-align:left;float:left;>336 Mana</span><span style=text-align:right;float:right;>36 yd range</span><br><span style=text-align:left;float:left;>1.5 sec cast</span><span style=text-align:right;float:right;>12 sec cooldown</span><BR> Sends a bolt of chaotic fire at the enemy, dealing 685 to 861 Fire damage. Chaos Bolt cannot be resisted, and pierces through all absorption effects."
 		);
 $i++;
+		
+//Destruction Talents End^^
+

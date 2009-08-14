@@ -441,9 +441,9 @@ $i++;
 
 //Improved Scorch - Fire //UPDATED 3.1.0
 $rank[$i] = array(
-"Increases your chance to critically hit with Scorch, Fireball and Frostfire Bolt by an additional 1% and your damaging Scorch spells have a 33% chance to cause your target to be vulnerable to spell damage, increasing spell critical strike chance against that arget by 1% and lasts 30 sec. Stacks up to 5 times.",
-"Increases your chance to critically hit with Scorch, Fireball and Frostfire Bolt by an additional 2% and your damaging Scorch spells have a 66% chance to cause your target to be vulnerable to spell damage, increasing spell critical strike chance against that arget by 1% and lasts 30 sec. Stacks up to 5 times.",
-"Increases your chance to critically hit with Scorch, Fireball and Frostfire Bolt by an additional 3% and your damaging Scorch spells have a 100% chance to cause your target to be vulnerable to spell damage, increasing spell critical strike chance against that arget by 1% and lasts 30 sec. Stacks up to 5 times."
+"Increases your chance to critically hit with Scorch, Fireball and Frostfire Bolt by an additional 1% and your damaging Scorch spells have a 33% chance to cause your target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 1% and lasts 30 sec. Stacks up to 5 times.",
+"Increases your chance to critically hit with Scorch, Fireball and Frostfire Bolt by an additional 2% and your damaging Scorch spells have a 66% chance to cause your target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 1% and lasts 30 sec. Stacks up to 5 times.",
+"Increases your chance to critically hit with Scorch, Fireball and Frostfire Bolt by an additional 3% and your damaging Scorch spells have a 100% chance to cause your target to be vulnerable to spell damage, increasing spell critical strike chance against that target by 1% and lasts 30 sec. Stacks up to 5 times."
 		);
 $i++;		
 
@@ -795,4 +795,6 @@ $rank[$i]= array(
 "<span style=text-align:left;float:left;>9% of base mana</span><span style=text-align:right;float:right;>30 yd range</span><br><span style=text-align:left;float:left;>Instant cast</span><span style=text-align:right;float:right;>30 sec cooldown</span><br>Stuns the target for 5 sec. Only usable on Frozen targets.<br><br>"
 		);
 $i++;
-
+		
+//Frost Talents End^^
+//jsLoaded=true;//needed for ajax script loading

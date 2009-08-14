@@ -101,7 +101,7 @@ $talent[$i] = array(2, "Expose Weakness", 3, 1, 7); $i++;
 $talent[$i] = array(2, "Wyvern Sting", 1, 2, 7); $i++;
 $talent[$i] = array(2, "Thrill of the Hunt", 3, 3, 7); $i++;
 $talent[$i] = array(2, "Master Tactician", 5, 1, 8); $i++;
-$talent[$i] = array(2, "Noxious stings", 3, 2, 8); $i++;
+$talent[$i] = array(2, "Noxious Stings", 3, 2, 8); $i++;
 $talent[$i] = array(2, "Point of No Escape", 2, 1, 9); $i++;
 $talent[$i] = array(2, "Black Arrow", 1, 2, 9); $i++; //UPDATED 3.1.0
 $talent[$i] = array(2, "Sniper Training", 3, 4, 9); $i++;
@@ -429,8 +429,8 @@ $i++;
 
 //Concussive Barrage - Marksmanship //UPDATED 3.1.0
 $rank[$i] = array(
-		"Your successful Chimera Shout and Multi-Shot attacks have a 50% chance to Daze the target for 4 sec.",
-		"Your successful Chimera Shout and Multi-Shot attacks have a 100% chance to Daze the target for 4 sec."		
+		"Your successful Chimera Shot and Multi-Shot attacks have a 50% chance to Daze the target for 4 sec.",
+		"Your successful Chimera Shot and Multi-Shot attacks have a 100% chance to Daze the target for 4 sec."		
 			);
 $i++;		
 		
@@ -466,9 +466,9 @@ $i++;
 
 //Piercing Shots - Marksmanship //UPDATED 3.1.0
 $rank[$i]= array(
-"Your critical Aimed, Steady and Chimera Shots cause the taret to bleed for 10% of the damage dealt over 8 sec.",
-"Your critical Aimed, Steady and Chimera Shots cause the taret to bleed for 20% of the damage dealt over 8 sec.",
-"Your critical Aimed, Steady and Chimera Shots cause the taret to bleed for 30% of the damage dealt over 8 sec."
+"Your critical Aimed, Steady and Chimera Shots cause the target to bleed for 10% of the damage dealt over 8 sec.",
+"Your critical Aimed, Steady and Chimera Shots cause the target to bleed for 20% of the damage dealt over 8 sec.",
+"Your critical Aimed, Steady and Chimera Shots cause the target to bleed for 30% of the damage dealt over 8 sec."
 		);
 $i++;	
 	
@@ -751,9 +751,9 @@ $i++;
 
 //Sniper Training - Survival //UPDATED 3.1.0
 $rank[$i]= array(
-"Increases the critical strike chance of your Kill shot ability by 5%, and while standing still for 6 sec, you gain Sniper Training increasing the damage done by your Steady Shot, Aimed Shot, Black Arrow and Explosive Shot by 2% for 15 sec.",
-"Increases the critical strike chance of your Kill shot ability by 10%, and while standing still for 6 sec, you gain Sniper Training increasing the damage done by your Steady Shot, Aimed Shot, Black Arrow and Explosive Shot by 4% for 15 sec.",
-"Increases the critical strike chance of your Kill shot ability by 15%, and while standing still for 6 sec, you gain Sniper Training increasing the damage done by your Steady Shot, Aimed Shot, Black Arrow and Explosive Shot by 6% for 15 sec."
+"Increases the critical strike chance of your Kill Shot ability by 5%, and while standing still for 6 sec, you gain Sniper Training increasing the damage done by your Steady Shot, Aimed Shot, Black Arrow and Explosive Shot by 2% for 15 sec.",
+"Increases the critical strike chance of your Kill Shot ability by 10%, and while standing still for 6 sec, you gain Sniper Training increasing the damage done by your Steady Shot, Aimed Shot, Black Arrow and Explosive Shot by 4% for 15 sec.",
+"Increases the critical strike chance of your Kill Shot ability by 15%, and while standing still for 6 sec, you gain Sniper Training increasing the damage done by your Steady Shot, Aimed Shot, Black Arrow and Explosive Shot by 6% for 15 sec."
 		);
 $i++;	
 
@@ -770,4 +770,6 @@ $rank[$i] = array(
 		"<span style=text-align:left;float:left;>7% of base mana</span><span style=text-align:right;float:right;>5-35 yd range</span><br><span style=text-align:left;float:left;>Instant Cast</span><span style=text-align:right;float:right;>6 sec cooldown</span><br>Requires Ranged Weapon<br>You fire an explosive charge into the enemy target, dealing 121-139 Fire damage. The charge will blast the target every second for an additional 2 sec."
 		);
 $i++;	
+	
+//Survival Talents End^^
 

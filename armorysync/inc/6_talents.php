@@ -68,7 +68,7 @@ $talent[$i] = array(1, "Frigid Dreadplate", 3, 2, 5); $i++;
 $talent[$i] = array(1, "Glacier Rot", 3, 3, 5); $i++;
 $talent[$i] = array(1, "Deathchill", 1, 4, 5); $i++;
 $talent[$i] = array(1, "Improved Icy Talons", 1, 1, 6); $i++;
-$talent[$i] = array(1, "Merciless Combat", 2, 2, 6); $i++;
+$talent[$i] = array(1, "Merciless Combat", 2, 2, 6); $i++
 $talent[$i] = array(1, "Rime", 3, 3, 6); $i++;
 $talent[$i] = array(1, "Chilblains", 3, 1, 7); $i++;
 $talent[$i] = array(1, "Hungering Cold", 1, 2, 7); $i++;
@@ -799,4 +799,5 @@ $rank[$i] = array(
 "<span style=text-align:left;float:left;>50 Runic Power<br></span><span style=text-align:right;float:right;>30 yd range</span><br> <span style=text-align:left;float:left;>Instant<br></span><span style=text-align:right;float:right;>3 min cooldown</span><br>A Gargoyle flies into the area and bombards the target with Nature damage modified by the Death Knight\'s attack power. Persists for 10 sec plus 1 sec per 3 runic power up to 40 sec."
 		);
 $i++;
+//UNHOLY Talents End^^
 
