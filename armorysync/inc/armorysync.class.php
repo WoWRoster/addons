@@ -799,6 +799,7 @@ class ArmorySync extends ArmorySyncBase {
     
     function process_talents($armoryTalents, $branch)
     {
+        global $roster, $addon;
             $talentArray = preg_split('//', $armoryTalents, -1, PREG_SPLIT_NO_EMPTY);
             foreach($talentArray as $s => $spent)
             {
