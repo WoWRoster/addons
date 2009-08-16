@@ -36,9 +36,15 @@ class ArmorySync extends ArmorySyncBase {
     var $content2 = array();
     var $talentsc = array();
     var $talentsr = array();
+    var $talentst = array();
+    var $tree = array();
+    var $talenticon = array();
+    var $armroytalents1 = '';
+    var $armroytalents2 = '';
     var $data = array();
     var $properties = array();
     var $classId = '';
+    var $class = '';
 
     var $message;
     var $debuglevel = 0;
@@ -198,6 +204,7 @@ class ArmorySync extends ArmorySyncBase {
                 $player = array();
                 $player['name'] = $char['name'];
                 $player['Class'] = $char['class'];
+                
                 if ( substr($player["Class"] ,0,1) == 'J' && substr($player["Class"] ,-3) == 'ger' ) {
                         $player["Class"] = utf8_encode('Jäger');
                 }
@@ -275,8 +282,6 @@ class ArmorySync extends ArmorySyncBase {
      */
     function checkGuildInfo( $name = false, $server = false, $region = false ) {
         global $roster, $addon;
-
-        //$this->setTimeOut( $addon['config']['armorysync_fetch_timeout']);
 
         $content = $this->getguilddata( $roster->data['guild_name'], $this->region, $this->server, $fetch_type='array' );//$this->fetchGuild( $this->memberName, $roster->config['locale'], $this->server );
 
@@ -490,6 +495,7 @@ class ArmorySync extends ArmorySyncBase {
                 $this->data["RaceEn"] = "Scourge";
             }
             $this->data["Class"] = $char->class;
+            $this->class = $char->class;
 
             // This is an ugly workaround for an encoding error in the armory
             if ( substr($this->data["Class"] ,0,1) == 'J' && substr($this->data["Class"] ,-3) == 'ger' ) {
@@ -737,102 +743,135 @@ class ArmorySync extends ArmorySyncBase {
 		$fromCache = false;
             
             $content = $this->getTalentData($this->server, $this->memberName );
-            $armoryTalents = '';
-            foreach ($content->characterInfo->talentGroups as $spec)
-            {
-                  foreach ($spec as $t_dat)
-                  {
-                        
-                        //print_r($t_dat);
-                        if ($t_dat['active'] == '1')
-                        {
-                        $armoryTalents = $t_dat->talentSpec['value'];  
-                        }
-                  }
-
-                        //$armoryTalents = $val['value'];                  
-            }
-            $talentArray = preg_split('//', $armoryTalents, -1, PREG_SPLIT_NO_EMPTY);
-            $dl_class = $roster->locale->act['class_to_en'][$this->data["Class"]];
-            $class = strtolower($dl_class);
-            $locale = $roster->config['locale'];
-            $clas = str_replace(' ' , '', $class);
+            //echo '<pre>';
+            //print_r($content);
             
             if (file_exists($addon['dir'] . 'inc/talenticons_'.$this->data["ClassId"].'.php'))
             {
-            	require_once ($addon['dir'] . 'inc/talenticons_'.$this->data["ClassId"].'.php');
-            	require_once ($addon['dir'] . 'inc/'.$this->data["ClassId"]. '_talents.php');
-            
-                  $this->talentsc = $talent;
-                  $this->talentsr = $rank;
-            
-                  $pointsSpent = array();
-                  $dl_talentTree = array();
-
-                  $this->status['talentInfo'] = 0;
-                  foreach($talentArray as $s => $spent)
+                  require_once ($addon['dir'] . 'inc/talenticons_'.$this->data["ClassId"].'.php');
+                  require_once ($addon['dir'] . 'inc/'.$this->data["ClassId"]. '_talents.php');
+                  if (isset($talent))
                   {
-                        $i = 0;
-                        $i = $s;
-
-                        $talentName = $this->talentsc[''.$i.''][1];
-                        $talentX = $this->talentsc[''.$i.''][3];
-                        $talentY = $this->talentsc[''.$i.''][4];
-                        $talentRank = $spent;
-                        $talentMax = $this->talentsc[''.$i.''][2];
-                        $talentDesc = $rank[$i][(($talentRank > 0) ? $talentRank -1 : 0)];
-                        $talentDesc = str_replace("\\\r\n", '', $talentDesc);
-                        $talentDesc = str_replace("\t", '', $talentDesc);
-                        $talentTree = $tree[$i <= $treeStartStop[0] ? 0 : ( $i <= $treeStartStop[1] ? 1 : 2 )];
-                        $talentTreeOrder =  $i <= $treeStartStop[0] ? 1 : ( $i <= $treeStartStop[1] ? 2 : 3 );
-                  
-                        if ( isset($talentIcons[$this->data["ClassId"]][$talentTreeOrder][$talentX][$talentY]) ) 
-                        {
-                              $talentPic = $talentIcons[$this->data["ClassId"]][$talentTreeOrder][$talentX][$talentY];
-                        } 
-                        else 
-                        {
-                              $talentPic = '';//$this->_debug( 0, null, 'Char: '. $this->memberName. ' - No talent icon found for '. $class. ' '. $talentTreeOrder. '/'. $talentX. '/'. $talentY, 'PROBLEM' );
-                        }
-                        if ( array_key_exists ( $talentTree, $pointsSpent ) ) 
-                        {
-                              $pointsSpent[$talentTree] += $talentRank;
-                        } 
-                        else 
-                        {
-                              $pointsSpent[$talentTree] = $talentRank;
-                        }
-                        $this->status['talentInfo'] += $talentRank;
-
-                        $talent = array(
-                            "Location" => $talentY . ":" . $talentX,
-                            "Tooltip" => $talentName . "<br>". $roster->locale->act['misc']['Rank']. " " . $talentRank ."/" . $talentMax . "<br>" . $talentDesc,
-                            "Icon" => $talentPic,
-                            "Rank" => $talentRank . ":" . $talentMax
-                        );
-
-                        $this->data["Talents"][$talentTree][$talentName] = $talent;
-                        $this->data["Talents"][$talentTree]["Order"] = $talentTreeOrder;
-                  
-                        if (!isset($dl_talentTree[$talentTree])) 
-                        {
-                              $dl_talentTree[$talentTree] = $this->_getDelocalisedTalenttree($talentTree, $clas);
-                        }
-                        if (!isset($this->data["Talents"][$talentTree]["Background"])) 
-                        {
-                              $this->data["Talents"][$talentTree]["Background"] = $this->_getTalentBackground($clas, $dl_talentTree[$talentTree]);
-                        }
-                              $this->data["Talents"][$talentTree]["PointsSpent"] = $pointsSpent[$talentTree];
+                        echo 'talent file loaded<br>';
                   }
-            } 
-            else 
+                  $this->talentsc = $talent;
+                  $this->talentst = $treeStartStop;
+                  $this->tree = $tree;
+                  $this->talentsr = $rank;
+                  $this->talenticon = $talentIcons;
+            foreach ($content->characterInfo->talents->talentGroup as $spec)
             {
-            	$this->_debug( 1, false, 'Checked class existence "'.$this->data["ClassId"].' ('.$this->data["Class"].')".',  'Failed' );
-            	return false;
-            }
             
-            $this->_debug( 1, true, 'Char: '. $this->memberName. ' ('.$class.') Parsed talent info', 'OK' );
-		return true;
+             
+            
+
+            foreach ($spec as $t_dat => $data)
+            {
+            
+                  if (isset($spec['active']) )
+                  {
+                  echo $spec['prim'].' Active '.$spec['active'].'<br>';
+                  $branch = '1';
+                  $this->process_talents($data['value'], $branch);//$data['value'];
+                  }
+                  else
+                  {
+                  $branch = '2';
+                  $this->process_talents($data['value'], $branch);//$data['value'];
+                  }
+            
+                  //$this->process_talents($talentArray, $branch)                  
+                            
+                        echo '<br>end return..--'.$data['value'].' ++ '.$branch.'<br>';
+                        
+                        $this->_debug( 1, true, 'Char: '. $this->memberName. ' ('.$class.') Parsed talent('.$branch.') info', 'OK' );
+                  }
+            }
+            }
+            //$this->_debug( 1, true, 'Char: '. $this->memberName. ' ('.$class.') Parsed talent info', 'OK' );
+		
+		//echo '<pre>';
+		//print_R($this->data);
+            
+            return true;
+		
+    }
+    
+    function process_talents($armoryTalents, $branch)
+    {
+            $talentArray = preg_split('//', $armoryTalents, -1, PREG_SPLIT_NO_EMPTY);
+            foreach($talentArray as $s => $spent)
+            {
+                                    $i = 0;
+                                    $i = $s;
+
+                                    $talentName = $this->talentsc[$i][1];
+                                    $talentX = $this->talentsc[$i][3];
+                                    $talentY = $this->talentsc[$i][4];
+                                    $talentRank = $spent;
+                                    $talentMax = $this->talentsc[$i][2];
+                                    $talentDesc = $this->talentsr[$i][(($talentRank > 0) ? $talentRank -1 : 0)];
+                                    $talentDesc = str_replace("\\\r\n", '', $talentDesc);
+                                    $talentDesc = str_replace("\t", '', $talentDesc);
+                                    $talentTree = $this->tree[$i <= $this->talentst[0] ? 0 : ( $i <= $this->talentst[1] ? 1 : 2 )];
+                                    $talentTreeOrder =  $i <= $this->talentst[0] ? 1 : ( $i <= $this->talentst[1] ? 2 : 3 );
+                  
+                                    if ( isset($this->talenticon[$this->data["ClassId"]][$talentTreeOrder][$talentX][$talentY]) ) 
+                                    {
+                                          $talentPic = $this->talenticon[$this->data["ClassId"]][$talentTreeOrder][$talentX][$talentY];
+                                    } 
+                                    else 
+                                    {
+                                          $talentPic = '';//$this->_debug( 0, null, 'Char: '. $this->memberName. ' - No talent icon found for '. $class. ' '. $talentTreeOrder. '/'. $talentX. '/'. $talentY, 'PROBLEM' );
+                                    }
+                                    if ( array_key_exists ( $talentTree, $pointsSpent ) ) 
+                                    {
+                                          $pointsSpent[$talentTree] += $talentRank;
+                                    } 
+                                    else 
+                                    {
+                                          $pointsSpent[$talentTree] = $talentRank;
+                                    }
+                                    $this->status['talentInfo'] += $talentRank;
+
+                                    $talent = array(
+                                        "Location" => $talentY . ":" . $talentX,
+                                        "Tooltip" => $talentName . "<br>". $roster->locale->act['misc']['Rank']. " " . $talentRank ."/" . $talentMax . "<br>" . $talentDesc,
+                                        "Icon" => $talentPic,
+                                        "Rank" => $talentRank . ":" . $talentMax
+                                    );
+                                    if ($branch == 1)
+                                    {
+                                          $this->data["Talents"][$talentTree][$talentName] = $talent;
+                                          $this->data["Talents"][$talentTree]["Order"] = $talentTreeOrder;
+                                    }
+                                    else
+                                    {
+                                          $this->data["DualSpec"]["Talents"][$talentTree][$talentName] = $talent;
+                                          $this->data["DualSpec"]["Talents"][$talentTree]["Order"] = $talentTreeOrder;
+                                    }
+                                    if (!isset($dl_talentTree[$talentTree])) 
+                                    {
+                                          $dl_talentTree[$talentTree] = $this->_getDelocalisedTalenttree($talentTree, $this->class);
+                                    }
+                                    if ($branch == 1)
+                                    {
+                                          if (!isset($this->data["Talents"][$talentTree]["Background"])) 
+                                                {
+                                          $this->data["Talents"][$talentTree]["Background"] = $this->_getTalentBackground($this->class, $dl_talentTree[$talentTree]);
+                                                }
+                                          $this->data["Talents"][$talentTree]["PointsSpent"] = $pointsSpent[$talentTree];
+                                    }
+                                    else
+                                    {
+                                          if (!isset($this->data["DualSpec"]["Talents"][$talentTree]["Background"])) 
+                                          {
+                                                $this->data["DualSpec"]["Talents"][$talentTree]["Background"] = $this->_getTalentBackground($this->class, $dl_talentTree[$talentTree]);
+                                          }
+                                                $this->data["DualSpec"]["Talents"][$talentTree]["PointsSpent"] = $pointsSpent[$talentTree];
+                                    }
+                              }
+                  return true;
     }
     // Helper functions
 
@@ -1715,7 +1754,7 @@ function _makeUrl( $mode, $locale, $id=false, $char=false, $realm=false, $guild=
 				break;
 			case 4:
 			case 'character-talents':
-				$mode = 'character-talents.xml?n=' . urlencode($char) . '&r=' . urlencode($realm);
+				$mode = 'character-talents.xml?cn=' . urlencode($char) . '&r=' . urlencode($realm);
 				break;
 			case 5:
 			case 'character-skills':
@@ -1723,7 +1762,7 @@ function _makeUrl( $mode, $locale, $id=false, $char=false, $realm=false, $guild=
 				break;
 			case 6:
 			case 'character-reputation':
-				$mode = 'character-reputation.xml?n=' . urlencode($char) . '&r=' . urlencode($realm);
+				$mode = 'character-reputation.xml?cn=' . urlencode($char) . '&r=' . urlencode($realm);
 				break;
 			case 7:
 			case 'character-arenateams':

@@ -60,6 +60,12 @@ class armorysyncInstall
 	function install()
 	{
 		global $installer;
+		
+		if( !function_exists('curl') )
+		{
+			$installer->seterrors('Curl not detected armory sync may not work!!!!!');
+			return;
+		}
 
 		// Master and menu entries
 		$installer->add_config("'1','startpage','armorysync_conf','display','master'");
