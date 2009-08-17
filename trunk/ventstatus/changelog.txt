@@ -1,0 +1,46 @@
+ * -----------------------------
+ * VentStatus WoWRoster.net  Roster Addon
+ * Copyright 2007
+ * Licensed under the Creative Commons
+ * "Attribution-NonCommercial-ShareAlike 2.5" license
+ *
+ * Short summary
+ *  http://creativecommons.org/licenses/by-nc-sa/2.5/
+ *
+ * Full license information
+ *  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
+ *
+ * Author Rabbitbunny
+ *
+ * -----------------------------
+ Name: VentStatus
+Description: Provides Ventrilo status information with an admin page.
+
+Tired of teaching people how to connect to your vent?
+
+This addon provides:
+-"Click to connect" link for easy propagation
+-Admin page to easily choose:
+  Admin Password
+  Path to ventrilo_status
+  Detail Mode
+  Host
+  Port
+  Status Password
+-Four Ventrilo information tables preconfigured for ease of use
+-German, French and Spanish localization
+
+
+
+ Changes:
+  0.0.3
+ -removed setting for internal host
+ -w3c valid output
+ -added table that mimics look of Ventrilo Client
+ -all server bin's included (thanks ds|works)
+  0.0.2
+ -admin password now stored in db
+ -admin password now changable via admin login
+ -prettied up display tables
+  0.0.1
+ - First release
