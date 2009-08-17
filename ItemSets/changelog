@@ -1,3 +1,27 @@
+ItemSets ToDo:
+ - check & fix all item sets info
+ - add missing sets (such as PvP70 Set 2!)
+ - add sets from Patch 3.2 (i.e. Tier 8.5 or Collesium)
+
+ItemSets 2.0.7.000:
+ - added Tier 8 items (Ulduar) - AnthonyB
+ - corrected some Tier 7 gear locations (based on WoWWiki - if the info is wrong, blame them!)
+	- Tier 7 hands now drop from Sartharion in Obsidian Sanctum
+	- Tier 7 chest now drops from the Four Horsemen as well as Gluth in Naxx
+ 
+ItemSets 2.0.6.000:
+ - added new option to only display players who can actually use the item (EG only level 80s for Tier 7, level 70+ for Tier 6, etc)
+
+ItemSets 2.0.5.000:
+ - added Tier 7 items (including Death Knight items)
+ - altered table output slightly to neaten things up hopefully
+ - cleaned up a few typos
+
+ItemSets 2.0.4.000:
+ - added patch 2.4.x Tier 6 bracers/belt/boots items
+ - added Arena Season 4 items
+ - cleaned up code, minor indentation fixes, etc
+
 ItemSets 2.0.3.380:
  - added support for german/french female class names
  - fixed german translation for PvP_Epic Set

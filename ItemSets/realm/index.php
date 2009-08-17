@@ -3,7 +3,7 @@
 /**
  * WoWRoster.net ItemSets
  *
- * Itemsets is a Roster addon that shows a list of all your guildmates above lvl 50
+ * Itemsets is a Roster addon that shows a list of all your guildmates above a defined level
  * and which setitems of their class-sets they have.
  *
  * LICENSE: Licensed under the Creative Commons
@@ -11,21 +11,21 @@
  *
  * @copyright  2004-2007 PoloDude
  * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5"
- * @version    2.0.3.377
+ * @version    2.0.4.000
  * @svn        SVN: $Id$
- * @author     Gorgar, PoloDude, Zeryl, Munazz, Rouven
+ * @author     Gorgar, PoloDude, Zeryl, Munazz, Rouven, Calystos
  * @link       http://www.wowroster.net/Forums/viewforum/f=35.html
  * @package    ItemSets
  *
 */
 
 if( !defined('IN_ROSTER') )
-    {
+{
     exit('Detected invalid access to this file!');
-    }
-    
+}
+
 include( ROSTER_LIB . 'item.php' );
-    
+
 // Set the output page title
 $roster->output['title'] = $roster->locale->act['ItemSets'];
 
@@ -52,7 +52,7 @@ $all_sets = array_keys($roster->locale->act['ItemSets_Set']);
 sort($all_sets);
 $form = '';
 $form .= '<table cellpadding="0" cellspacing="0" class="membersList">';
-$form .= '<form method="GET" name="myform" action="'. getFormAction() .'">';
+$form .= '<form method="GET" name="myform" action="'.getFormAction().'">';
 $form .= '<input type="hidden" name="p" value="realm-ItemSets" />';
 $form .= '<input type="hidden" name="realm" value="'.$roster->data['region'].'-'.$roster->data['server'].'" />';
 $form .= '<tr><th class="membersRow1">Tier:</th>';
@@ -150,13 +150,13 @@ if ($tier == 'ZG'){
 	$roster->locale->act['Head'],
 	$roster->locale->act['Legs'],
 	$roster->locale->act['Shoulder'],
-	$roster->locale->act['Separator'],	    
+	$roster->locale->act['Separator'],
 	$roster->locale->act['Chest'],
 	$roster->locale->act['Hands'],
 	$roster->locale->act['Head'],
 	$roster->locale->act['Legs'],
-	$roster->locale->act['Shoulder']);	
-}  elseif ($tier == 'Tier_4' || $tier == 'Tier_5' || $tier == 'Tier_6' || $tier == 'PVP_Level70' || $tier == 'Arena_1' || $tier == 'Arena_2' || $tier == 'Arena_3'){
+	$roster->locale->act['Shoulder']);
+}  elseif ($tier == 'Tier_4' || $tier == 'Tier_5' || $tier == 'PVP_Level70' || $tier == 'Arena_1' || $tier == 'Arena_2' || $tier == 'Arena_3' || $tier == 'Arena_4'){
     $headeritems = array(
 	$roster->locale->act['Name'],
 	$roster->locale->act['Chest'],
@@ -164,18 +164,85 @@ if ($tier == 'ZG'){
 	$roster->locale->act['Head'],
 	$roster->locale->act['Legs'],
 	$roster->locale->act['Shoulder'],
-	$roster->locale->act['Separator'],	    
+	$roster->locale->act['Separator'],
 	$roster->locale->act['Chest'],
 	$roster->locale->act['Hands'],
 	$roster->locale->act['Head'],
 	$roster->locale->act['Legs'],
-	$roster->locale->act['Shoulder'],	
-	$roster->locale->act['Separator'],	    
+	$roster->locale->act['Shoulder'],
+	$roster->locale->act['Separator'],
 	$roster->locale->act['Chest'],
 	$roster->locale->act['Hands'],
 	$roster->locale->act['Head'],
 	$roster->locale->act['Legs'],
-	$roster->locale->act['Shoulder']);	
+	$roster->locale->act['Shoulder']);
+}  elseif ($tier == 'Tier_6'){
+    $headeritems = array(
+	$roster->locale->act['Name'],
+	$roster->locale->act['Chest'],
+	$roster->locale->act['Hands'],
+	$roster->locale->act['Head'],
+	$roster->locale->act['Legs'],
+	$roster->locale->act['Shoulder'],
+	$roster->locale->act['Wrists'],
+	$roster->locale->act['Waist'],
+	$roster->locale->act['Feet'],
+	$roster->locale->act['Separator'],
+	$roster->locale->act['Chest'],
+	$roster->locale->act['Hands'],
+	$roster->locale->act['Head'],
+	$roster->locale->act['Legs'],
+	$roster->locale->act['Shoulder'],
+	$roster->locale->act['Wrists'],
+	$roster->locale->act['Waist'],
+	$roster->locale->act['Feet'],
+	$roster->locale->act['Separator'],
+	$roster->locale->act['Chest'],
+	$roster->locale->act['Hands'],
+	$roster->locale->act['Head'],
+	$roster->locale->act['Legs'],
+	$roster->locale->act['Shoulder'],
+	$roster->locale->act['Wrists'],
+	$roster->locale->act['Waist'],
+	$roster->locale->act['Feet']);
+}  elseif ($tier == 'Tier_7'|| $tier == 'Tier_8'){
+    $headeritems = array(
+	$roster->locale->act['Name'],
+	$roster->locale->act['Chest'],
+	$roster->locale->act['Hands'],
+	$roster->locale->act['Head'],
+	$roster->locale->act['Legs'],
+	$roster->locale->act['Shoulder'],
+	$roster->locale->act['Separator'],
+	$roster->locale->act['Chest'],
+	$roster->locale->act['Hands'],
+	$roster->locale->act['Head'],
+	$roster->locale->act['Legs'],
+	$roster->locale->act['Shoulder'],
+	$roster->locale->act['Separator'],
+	$roster->locale->act['Chest'],
+	$roster->locale->act['Hands'],
+	$roster->locale->act['Head'],
+	$roster->locale->act['Legs'],
+	$roster->locale->act['Shoulder'],
+	$roster->locale->act['Separator'],
+	$roster->locale->act['Chest'],
+	$roster->locale->act['Hands'],
+	$roster->locale->act['Head'],
+	$roster->locale->act['Legs'],
+	$roster->locale->act['Shoulder'],
+	$roster->locale->act['Separator'],
+	$roster->locale->act['Chest'],
+	$roster->locale->act['Hands'],
+	$roster->locale->act['Head'],
+	$roster->locale->act['Legs'],
+	$roster->locale->act['Shoulder'],
+	$roster->locale->act['Separator'],
+	$roster->locale->act['Chest'],
+	$roster->locale->act['Hands'],
+	$roster->locale->act['Head'],
+	$roster->locale->act['Legs'],
+	$roster->locale->act['Shoulder']);
 } else {
     $headeritems = array(
 	$roster->locale->act['Name'],
@@ -213,9 +280,9 @@ if ($class != '') {
     $flippedclasses = array_flip($roster->locale->act['classes']['Name']);
     $uniclass = $flippedclasses[$class];
     if (isset ($uniclass)) {
-       $class_where = ' AND (class = \''.$class.'\' OR class = \''.$uniclass.'\') ';
+		$class_where = ' AND (class = \''.$class.'\' OR class = \''.$uniclass.'\') ';
     } else {
-        $class_where = ' AND (class = \''.$class.'\' ';
+        $class_where = ' AND class = \''.$class.'\' ';
     }
 }
 
@@ -223,24 +290,39 @@ if ($class != '') {
 $player_table = $roster->db->table('players');
 $items_table = $roster->db->table('items');
 
-// Get all the players of the realm above L50 from the DB and sort by member name (Filtered by Class if selected)
+// Get all the players of the realm above the defined level from the DB and sort by member name (Filtered by Class if selected)
 $query = 'SELECT name, level, member_id, class, clientLocale FROM `'. $player_table .'` WHERE server = "'.$roster->data['server'].'" AND level >= '.$minlevel.' '.$class_where.' GROUP BY name ORDER BY class ASC, name ASC';
 $result = $roster->db->query($query) or die_quietly($roster->db->error(),'Database Error',__FILE__,__LINE__,$query);
 
 $rownum=1;
 while ($row = $roster->db->fetch($result, SQL_ASSOC)) {
+	// No point showing people who can't even use the item of this level
+	// Level 80 check
+	if($tier=='Tier_7' || $tier=='Tier_8' && $minlevel<80 && $unuseshow && $row['level']!=80) {
+		// Need check here to allow people who ARE the right level through though
+		continue;
+	}
+	// Level 70 check
+	if(($tier=='PVP_Level70' || $tier=='Arena_1' || $tier=='Arena_2' || $tier=='Arena_3' || $tier=='Arena_4' || $tier=='Tier_4' || $tier=='Tier_5' || $tier=='Tier_6') && $minlevel<70 && $unuseshow && $row['level']!=70) {
+		continue;
+	}
+	// Level 60 check
+	if(($tier=='PVP_Rare' || $tier=='PVP_Epic' || $tier=='ZG' || $tier=='AQ20' || $tier=='AQ40' || $tier=='1' || $tier=='Tier_2' || $tier=='Tier_3') && $minlevel<60 && $unuseshow && $row['level']!=60) {
+		continue;
+	}
+
 	if($tier=='PVP_Rare' || $tier=='PVP_Epic' || $tier=='PVP_Level70' ){
 		$items = $roster->locale->act['ItemSets_Set'][$tier][$guildFaction][$row['class']];
 	}
 	else{
-	   if (isset ($roster->locale->act['classes']['Name'][$row['class']])) {
-	   $uniclass = $roster->locale->act['classes']['Name'][$row['class']];
-	   } else {
-	   $uniclass = $row['class'];
-	   }
-	   $items = $roster->locale->act['ItemSets_Set'][$tier][$uniclass];
+		if (isset ($roster->locale->act['classes']['Name'][$row['class']])) {
+			$uniclass = $roster->locale->act['classes']['Name'][$row['class']];
+		} else {
+			$uniclass = $row['class'];
+		}
+		$items = $roster->locale->act['ItemSets_Set'][$tier][$uniclass];
 	}
-	
+
 	if ($items) {
 		// Open a new Row
 		echo "\n\n\n<tr>\n";
@@ -250,7 +332,7 @@ while ($row = $roster->db->fetch($result, SQL_ASSOC)) {
 		echo '<a href="'.makelink('char-info&amp;a=c:'.$row['member_id']).'">'. $row['name'] .'</a><br /><nobr>'.$row['class'].' ('.$row['level'].')</nobr><br />';
 		if($tier=='PVP_Rare' || $tier=='PVP_Epic'){
 			echo '<span class="tooltipline" style="color:#0070dd; font-size: 10px;">'.$roster->locale->act['ItemSets_Set'][$tier][$guildFaction]['Name'][$uniclass].'</span></div>';
-                }else if($tier=='Dungeon_3' || $tier=='Tier_4' || $tier == 'Tier_5' || $tier == 'Tier_6' || $tier == 'Arena_1' || $tier == 'Arena_2' || $tier == 'Arena_3' || $tier=='PVP_Level70'){
+		}else if($tier=='Dungeon_3' || $tier=='Tier_4' || $tier == 'Tier_5' || $tier == 'Tier_6' || $tier == 'Tier_7' || $tier == 'Arena_1' || $tier == 'Arena_2' || $tier == 'Arena_3' || $tier == 'Arena_4' || $tier=='PVP_Level70'){
 			$armorsets = explode("|", $roster->locale->act['ItemSets_Set'][$tier]['Name'][$uniclass]);
 		 	$seperatorIndex = 0;
 		 	echo '<span class="tooltipline" style="color:#0070dd; font-size: 10px;">'.$armorsets[0].'</span></div>';
@@ -258,13 +340,13 @@ while ($row = $roster->db->fetch($result, SQL_ASSOC)) {
 			echo '<span class="tooltipline" style="color:#0070dd; font-size: 10px;">'.$roster->locale->act['ItemSets_Set'][$tier]['Name'][$uniclass].'</span></div>';
 		}
 		echo "</td>\n";
-		
+	
 		// Process all set's for the member_id
 		foreach ($items as $setpiece) {
 			if ( $setpiece == "-setname-" ) {
-			   // make empty Cell
+				// make empty Cell
 				echo '<td class="membersKeyRow'.$rownum.'">';
-				if($tier=='Dungeon_3' || $tier=='Tier_4' || $tier=='Tier_5' || $tier=='Tier_6' || $tier=='Arena_1' || $tier=='Arena_2' || $tier=='Arena_3' || $tier=='PVP_Level70' ){
+				if($tier=='Dungeon_3' || $tier=='Tier_4' || $tier=='Tier_5' || $tier=='Tier_6' || $tier=='Tier_7'|| $tier=='Arena_1' || $tier=='Arena_2' || $tier=='Arena_3' || $tier=='Arena_4' || $tier=='PVP_Level70' ){
 					$seperatorIndex++;
 		 			echo '<span class="tooltipline" style="color:#0070dd; font-size: 10px;">'.$armorsets[$seperatorIndex].'</span>';
 				}
@@ -287,18 +369,18 @@ while ($row = $roster->db->fetch($result, SQL_ASSOC)) {
 			$iresult = $roster->db->query($iquery) or die_quietly($roster->db->error(),'Database Error',__FILE__,__LINE__,$iquery);
 			$idata = $roster->db->fetch($iresult, SQL_ASSOC);
 // if (!$idata) print "Empty idata"; else {print "\$idata = "; print_r($idata); }
-                        if ($idata) {
-                            $item = new item($idata);
-                            if ($item->name)
-                                print $item->out();
-                            else
-                                echo '<center>N/A</center>';
-                        } else {
-                            if ($setpiecename[0])
-				echo '<span style="z-index: 1000;" onMouseover="return overlib(\'<span class=&quot;tooltipheader&quot; style=&quot;color:#0070dd; font-weight: bold&quot;>'.$setpiecename[0].'</span><br><span class=&quot;tooltipline&quot; style=&quot;color:#ffffff; font-size: 10px;&quot;>'.$roster->locale->act['DropsFrom'].' <b>'.$setpiecename[1].'</b></span><br><span class=&quot;tooltipline&quot; style=&quot;color:#ffffff; font-size: 10px;&quot;>'.$roster->locale->act['DropsIn'].' <b>'.$setpiecename[2].'</b></span>\');" onMouseout="return nd();"><center>X</center></span>';
-			    else
-			        echo '<center>N/A</center>';
-			}
+			if ($idata) {
+				$item = new item($idata);
+				if ($item->name)
+					print $item->out();
+				else
+					echo '<center>N/A</center>';
+			} else {
+				if ($setpiecename[0])
+					echo '<span style="z-index: 1000;" onMouseover="return overlib(\'<span class=&quot;tooltipheader&quot; style=&quot;color:#0070dd; font-weight: bold&quot;>'.$setpiecename[0].'</span><br><span class=&quot;tooltipline&quot; style=&quot;color:#ffffff; font-size: 10px;&quot;>'.$roster->locale->act['DropsFrom'].' <b>'.$setpiecename[1].'</b></span><br><span class=&quot;tooltipline&quot; style=&quot;color:#ffffff; font-size: 10px;&quot;>'.$roster->locale->act['DropsIn'].' <b>'.$setpiecename[2].'</b></span>\');" onMouseout="return nd();"><center>X</center></span>';
+				else
+					echo '<center>N/A</center>';
+				}
 			echo '</td>' . "\n\n";
 			echo '</div>';
 			echo '</div>';
@@ -306,7 +388,7 @@ while ($row = $roster->db->fetch($result, SQL_ASSOC)) {
 		// Close the Row
 		echo '</tr>' . "\n";
 	}
-	
+
 	switch ($rownum) {
 		case 1:
 			$rownum=2;
