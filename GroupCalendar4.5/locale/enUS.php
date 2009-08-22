@@ -222,17 +222,20 @@ $lang['gcType']['MagistersH'] = "Magister's Terrace (Heroic)";
 $lang['gcType']['Sunwell'] = "Sunwell Plateau";
 
 // WotLK Raids
-$lang['gcType']['Naxx'] = "Naxxramas";
-$lang['gcType']['NaxxH'] = "Naxxramas (Heroic)";
-$lang['gcType']['Eternity'] = "Eye of Eternity";
-$lang['gcType']['EternityH'] = "Eye of Eternity (Heroic)";
-$lang['gcType']['Obsidian'] = "Obsidian Sanctum";
-$lang['gcType']['ObsidianH'] = "Obsidian Sanctum (Heroic)";
-$lang['gcType']['Archavon'] = "Vault of Archavon";
-$lang['gcType']['ArchavonH'] = "Vault of Archavon (Heroic)";
-$lang['gcType']['Ulduar'] = "Ulduar";
-$lang['gcType']['UlduarH'] = "Ulduar (Heroic)";
-
+$lang['gcType']['Naxx'] = "Naxxramas (10 Player)";
+$lang['gcType']['NaxxH'] = "Naxxramas (25 Player)";
+$lang['gcType']['Eternity'] = "Eye of Eternity (10 Player)";
+$lang['gcType']['EternityH'] = "Eye of Eternity (25 Player)";
+$lang['gcType']['Obsidian'] = "Obsidian Sanctum (10 Player)";
+$lang['gcType']['ObsidianH'] = "Obsidian Sanctum (25 Player)";
+$lang['gcType']['Archavon'] = "Vault of Archavon (10 Player)";
+$lang['gcType']['ArchavonH'] = "Vault of Archavon (25 Player))";
+$lang['gcType']['Ulduar'] = "Ulduar (10 Player)";
+$lang['gcType']['UlduarH'] = "Ulduar (25 Player)";
+$lang['gcType']['Crusader'] = "Trial of the Crusader (10 Player)";
+$lang['gcType']['CrusaderH'] = "Trial of the Crusader (25 Player)";
+$lang['gcType']['GrandCrusader'] = "Trial of the Grand Crusader (10 Player)";
+$lang['gcType']['GrandCrusaderH'] = "Trial of the Grand Crusader (25 Player)";
 
 // WotLK Dungeons
 $lang['gcType']['Ahnkalet'] = "Ahn'kahet: The Old Kingdom";
@@ -259,6 +262,8 @@ $lang['gcType']['UtgardePinnacle'] = "Utgarde Pinnacle";
 $lang['gcType']['UtgardePinnacleH'] = "Utgarde Pinnacle (Heroic)";
 $lang['gcType']['TheVioletHold'] = "The Violet Hold";
 $lang['gcType']['TheVioletHoldH'] = "The Violet Hold (Heroic)";
+$lang['gcType']['Champion'] = "Trial of the Champion";
+$lang['gcType']['ChampionH'] = "Trial of the Champion (Heroic)";
 
 $lang['gcType']['PvP'] = "General PvP";
 $lang['gcType']['A2v2'] = "Arena (2v2)";
