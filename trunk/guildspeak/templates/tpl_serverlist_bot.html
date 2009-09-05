@@ -1,0 +1,25 @@
+<!-- BEGIN serverlist_bot -->
+<tr>
+      <td align="center" bgcolor="{serverlist_bot.CATROWCOLOR1}" class="catagory" colspan="7">Servers update in 5 minute intervals | <a href="http://www.gryphonllc.com" target="_blank">&copy; 2002-{serverlist_bot.YEAR} Gryphon, LLC</a> | Total Servers: {serverlist_bot.SERVER_COUNT} | Total Channels: {serverlist_bot.CHANNEL_COUNT}</td>
+</tr>
+<!-- IF serverlist_bot.LISTADMIN && serverlist_bot.LISTADMIN != 'admin@yoursite.com' || serverlist_bot.REFRESH == '1' -->
+<tr>
+      <td align="center" bgcolor="{serverlist_bot.CATROWCOLOR1}" class="catagory" colspan="7">
+<!-- ENDIF -->
+<!-- IF serverlist_bot.LISTADMIN && serverlist_bot.LISTADMIN != 'admin@yoursite.com' -->
+            Contact the serverlist administrator at <a href="mailto:{serverlist_bot.LISTADMIN}">{serverlist_bot.LISTADMIN}</a>
+<!-- ENDIF -->
+<!-- IF serverlist_bot.LISTADMIN && serverlist_bot.LISTADMIN != 'admin@yoursite.com' || serverlist_bot.REFRESH == '1' --> | <!-- ENDIF -->
+<!-- IF serverlist_bot.REFRESH == '1' -->
+    {serverlist_bot.REFRESH_TIME} second Auto-refresh.
+<!-- ENDIF -->
+      </td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>
+<!-- END serverlist_bot -->
+

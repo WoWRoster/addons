@@ -1,0 +1,25 @@
+<!-- BEGIN serverlist_nav -->
+        <tr>
+          <td align="center" bgcolor="{serverlist_nav.CATROWCOLOR1}" class="catagory" colspan="8">
+<a href="listing.php?page=1&sort='<!-- IF serverlist_nav.VERSION_DIRECTION == 'server_version' -->server_version<!-- ELSE -->{serverlist_nav.SORT}<!-- ENDIF -->&direction={serverlist_nav.PAGE_DIRECTION}&showgroup={serverlist_nav.SHOW_GROUP}">&#60;&#60;</a>
+<a href="listing.php?page={serverlist_nav.PAGE_PREV}&sort=<!--IF serverlist_nav.VERSION_DIRECTION == 'server_version' -->server_version<!-- ELSE -->{serverlist_nav.SORT}<!-- ENDIF -->&direction={serverlist_nav.PAGE_DIRECTION}&showgroup={serverlist_nav.SHOW_GROUP}">&#60;</a> | 
+<a href="listing.php?page={serverlist_nav.PAGE_NEXT}&sort=<!--IF serverlist_nav.VERSION_DIRECTION == 'server_version' -->server_version<!-- ELSE -->{serverlist_nav.SORT}<!-- ENDIF -->&direction={serverlist_nav.PAGE_DIRECTION}&showgroup={serverlist_nav.SHOW_GROUP}">&#62;</a>
+<a href="listing.php?page={serverlist_nav.PAGE_LINKS}&sort=<!--IF serverlist_nav.VERSION_DIRECTION == 'server_version' -->server_version<!-- ELSE -->{serverlist_nav.SORT}<!-- ENDIF -->&direction={serverlist_nav.PAGE_DIRECTION}&showgroup={serverlist_nav.SHOW_GROUP}">&#62;&#62;</a><br>
+
+
+<!-- WHILE serverlist_nav.NUM_LINK <= serverlist_nav.PAGE_LINKS -->
+<!-- IF serverlist_nav.PAGE == serverlist_nav.NUM_LINK -->
+      <b>[
+<!-- ENDIF -->
+<a href="listing.php?page={serverlist_nav.NUM_LINK}&sort=<!-- IF serverlist_nav.VERSION_DIRECTION == 'server_version' -->server_version<!-- ELSE -->{serverlist_nav.SORT}<!-- ENDIF -->&direction={serverlist_nav.PAGE_DIRECTION}&showgroup={serverlist_nav.SHOW_GROUP}">{serverlist_nav.NUM_LINK}</a>
+<!-- IF serverlist_nav.PAGE == serverlist_nav.NUM_LINK -->
+      ]</b>
+<!-- ENDIF -->
+<!-- IF serverlist_nav.NUM_LINK != serverlist_nav.PAGE_LINKS -->
+      {serverlist_nav.SPACES}
+<!-- ENDIF -->
+{serverlist_nav.INC_NUM_LINK}
+<!-- ENDWHILE -->
+          </td>
+        </tr>
+<!-- END serverlist_nav -->

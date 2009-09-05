@@ -1,0 +1,29 @@
+/** 
+ * Dev.PKComp.net Accounts Addon
+ * 
+ * LICENSE: Licensed under the Creative Commons 
+ *          "Attribution-NonCommercial-ShareAlike 2.5" license 
+ * 
+ * @copyright  2005-2007 Pretty Kitty Development 
+ * @author	   mdeshane
+ * @license    http://creativecommons.org/licenses/by-nc-sa/2.5   Creative Commons "Attribution-NonCommercial-ShareAlike 2.5" 
+ * @link       http://dev.pkcomp.net 
+ * @package    GuildSpeak 
+ * @subpackage Changelog 
+ */
+
+GuildSpeak v1.9.9.6 [SVN]469:
+- First Commit
+
+- Working
+-- Addon installer
+-- Admin Settings
+-- Standard TeamSpeak display
+-- Basic Ventrilo display
+
+- Broken
+-- TeamSpeak group display (currently hangs, need to re-write php and templating)
+-- Any kind of templating fo Ventrilo
+
+- Not Implemented Yet
+-- Search functions

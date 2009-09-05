@@ -1,0 +1,50 @@
+<!-- BEGIN ts_style -->
+<html>
+<head>
+<title>{ts_style.PAGETITLE} - TeamSpeak2 Serverlist</title>
+<meta name="keywords" content="teamspeak, serverlist, webpost, {ts_style.PAGETITLE}">
+<meta name="description" content="gllcTS2 v{ts_style.VERSION} for TeamSpeak 2 (c) Gryphon, LLC www.gryphonllc.com">
+<meta name="robots" content="all">
+<style type="text/css">
+body { scrollbar-base-color: {ts_style.CATROWCOLOR1} scrollbar-arrow-color: {ts_style.CATTXTCOLOR} font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px }
+input, textarea { background-color: {ts_style.ROWCOLOR1} color: {ts_style.LSTTXTCOLOR} font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10px; font-weight: bold}
+.button { background-color: {ts_style.ROWCOLOR1} color: {ts_style.LSTTXTCOLOR} font-family: verdana,arial,helvetica,sans-serif; font-size:10px; }
+.listing { color: {ts_style.LSTTXTCOLOR} }
+.listing a:link { color: {ts_style.LSTLNKCOLOR} text-decoration: none; }
+.listing a:visited { color: {ts_style.LSTVLNKCOLOR} text-decoration: none; }
+.listing a:active { color: {ts_style.LSTALNKCOLOR} text-decoration: none; }
+.listing a:hover { color: {ts_style.LSTHVRCOLOR} text-decoration: underline; }
+.glisting { color: {ts_style.LSTTXTCOLOR} }
+.glisting a:link { color: {ts_style.LSTLNKCOLOR} text-decoration: none; }
+.glisting a:visited { color: {ts_style.LSTVLNKCOLOR} text-decoration: none; }
+.glisting a:active { color: {ts_style.LSTALNKCOLOR} text-decoration: none; }
+.glisting a:hover { color: {ts_style.LSTHVRCOLOR} text-decoration: underline; }
+.catagory { color: {ts_style.CATTXTCOLOR} }
+.catagory a:link, .catagory a:visited, .catagory a:active { color: {ts_style.CATLNKCOLOR} text-decoration: none; }
+.catagory a:hover { color: {ts_style.CATHVRCOLOR} text-decoration: underline; }
+.listfont tr, .listfont td { font-size: 10px; font-family: verdana,arial,helvetica,sans-serif; }
+.glistfont tr, .glistfont td { font-size: 12px; font-family: verdana,arial,helvetica,sans-serif; }
+</style>
+<script language="javascript" type="text/javascript">
+var win = null;
+function NewWindow(mypage,myname,w,h) {
+  LeftPosition = (screen.width) ? (screen.width-w)/2 : 0;
+  TopPosition = (screen.height) ? (screen.height-h)/2 : 0;
+  settings = 'height='+h+',width='+w+',top='+TopPosition+',left='+LeftPosition+'';
+  win = window.open(mypage,myname,settings);
+}
+function upc(preview,newvalue,findword) {
+  preview.style.backgroundColor = newvalue;
+}
+</script>
+<!-- IF REFRESH == 'on' -->
+<meta http-equiv="refresh" content="{ts_style.REFRESHTIME}">
+<!-- ENDIF -->
+<!-- IF TICKERREFRESH -->
+{ts_style.TICKERREFRESH}
+<!-- ENDIF -->
+
+</head>
+
+<body bgcolor="{ts_style.BODYBGCOLOR}" text="{ts_style.BODYTXTCOLOR}" link="{ts_style.BODYLNKCOLOR}" vlink="{ts_style.BODYVLNKCOLOR}" alink="{ts_style.BODYALNKCOLOR}" <!-- IF TICKERMARG --> {ts_style.TICKERMARG} <!-- ENDIF -->>
+<!-- END ts_style -->
