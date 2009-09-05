@@ -1,0 +1,106 @@
+<!-- BEGIN serverdetail -->
+{serverdetail.JS}
+      <br>
+      <table align="center" border="0" cellpadding="3" cellspacing="1" width="100%" bgcolor="{serverdetail.BORDERCOLOR}">
+        <tr>
+          <td align="center" bgcolor="{serverdetail.CATROWCOLOR1}" class="catagory" colspan="7">
+            <b>Server Detail for
+              <!-- IF !preg_match("/webpost.php/i", serverdetail.SERVER_LINK_URL) -->
+                  <a href="{serverdetail.SERVER_LINK_URL}" title="Visit {serverdetail.SERVER_LINK_URL}" target="_blank">{serverdetail.SERVER_NAME}</a>
+                <!-- ELSE -->
+                  {serverdetail.SERVER_NAME}
+                <!-- ENDIF -->
+            </a></b>
+          </td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="{serverdetail.CATROWCOLOR1}" class="catagory"><b>Country</b></td>
+          <td align="center" bgcolor="{serverdetail.CATROWCOLOR1}" class="catagory"><b>Priv/Pub</b></td>
+          <td align="center" bgcolor="{serverdetail.CATROWCOLOR1}" class="catagory"><b>Admin</b></td>
+          <td align="center" bgcolor="{serverdetail.CATROWCOLOR1}" class="catagory"><b>Name</b></td>
+          <td align="center" bgcolor="{serverdetail.CATROWCOLOR1}" class="catagory"><b>Server IP : Port</b></td>
+          <td align="center" bgcolor="{serverdetail.CATROWCOLOR1}" class="catagory"><b>On/Max</b></td>
+          <td align="center" bgcolor="{serverdetail.CATROWCOLOR1}" class="catagory"><b>Server</b></td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="{serverdetail.ROWCOLOR1}" class="listing">{serverdetail.SERVER_ISP_COUNTRY}</td>
+          <td align="center" bgcolor="{serverdetail.ROWCOLOR1}" class="listing">
+            <!-- IF serverdetail.SERVER_PASSWORD == 1 -->
+                <img src="images/{serverdetail.IMG_BG}_private.gif" border="0" alt="Private" title="This server requires a password to join.">
+            <!-- ELSE -->
+                  <img src="images/{serverdetail.IMG_BG}_open.gif" border="0" alt="Open" title="This server does not require password to join.">
+            <!-- ENDIF -->
+          </td>
+          <td align="center" bgcolor="{serverdetail.ROWCOLOR1}" class="listing">
+            <!-- IF serverdetail.SERVER_ADMIN_EMAIL and serverdetail.SERVER_ADMIN_EMAIL != 'na' -->
+                <a href="mailto:{serverdetail.SERVER_ADMIN_EMAIL}"><img src="images/{serverdetail.IMG_BG}_email.gif" border="0" alt="Email" title="Contact the server administrator at {serverdetail.SERVER_ADMIN_EMAIL}"></a>
+            <!-- ELSE -->
+                  N/A
+            <!-- ENDIF -->
+          </td>
+          <td align="center" bgcolor="{serverdetail.ROWCOLOR1}" class="listing">
+            <!-- IF serverdetail.SERVER_LINK_URL != '' && !preg_match("/webpost.php/i", serverdetail.SERVER_LINK_URL) -->
+                <img src="images/{serverdetail.IMG_BG}_www.gif" border="0" alt="WWW" title="Visit {serverdetail.SERVER_NAME} website" align="absmiddle"> <a href="{serverdetail.SERVER_LINK_URL}" title="Visit {serverdetail.SERVER_LINK_URL}" target="_blank">{serverdetail.SERVER_NAME}</a>
+            <!-- ELSE -->
+                {serverdetail.SERVER_NAME}
+            <!-- ENDIF -->
+          </td>
+          <td align="center" bgcolor="{serverdetail.ROWCOLOR1}" class="listing">
+            <a href="login.php?detail={serverdetail.SERVER_ID}" title="Click to join {serverdetail.SERVER_IP}:{serverdetail.SERVER_PORT}" onClick="NewWindow(this.href,'login','{serverdetail.POPUP_WIDTH}','{serverdetail.POPUP_HEIGHT}');return false">{serverdetail.SERVER_IP}:{serverdetail.SERVER_PORT}</a>
+          </td>
+          <td align="center" bgcolor="{serverdetail.ROWCOLOR1}" class="listing">
+              {serverdetail.NF_CLIENT_CURRENT}/{serverdetail.NF_CLIENT_MAXIMUM}
+          </td>
+          <td align="center" bgcolor="{serverdetail.ROWCOLOR1}" class="listing">
+            {serverdetail.SERVER_PLATFORM}<br>v{serverdetail.SERVER_VER_MAJOR}.{serverdetail.SERVER_VER_MINOR}.{serverdetail.SERVER_VER_RELEASE}.{serverdetail.SERVER_VER_BUILD}
+          </td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="{serverdetail.CATROWCOLOR1}" class="catagory"><b>ISP</b></td>
+          <td align="center" bgcolor="{serverdetail.CATROWCOLOR1}" class="catagory"><b>Type 1</b></td>
+          <td align="center" bgcolor="{serverdetail.CATROWCOLOR1}" class="catagory"><b>Type 2</b></td>
+          <td align="center" bgcolor="{serverdetail.CATROWCOLOR1}" class="catagory"><b>Last Updated</b></td>
+          <td align="center" bgcolor="{serverdetail.CATROWCOLOR1}" class="catagory"><b>Current Time</b></td>
+          <td align="center" bgcolor="{serverdetail.CATROWCOLOR1}" class="catagory"><b>Channels</b></td>
+          <td align="center" bgcolor="{serverdetail.CATROWCOLOR1}" class="catagory"><b>Uptime</b></td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="{serverdetail.ROWCOLOR2}" class="listing">
+            <!-- IF serverdetail.SERVER_ISP_LINKURL and serverdetail.SERVER_ISP_LINKURL != 'na' -->
+                <a href="{serverdetail.SERVER_ISP_LINKURL}" target="_blank">{serverdetails.SERVER_ISP_NAME}</a>
+            <!-- ELSEIF serverdetail.SERVER_ISP_NAME -->
+              	{serverdetail.SERVER_ISP_NAME}
+            <!-- ENDIF -->
+          </td>
+          <td align="center" bgcolor="{serverdetail.ROWCOLOR2}" class="listing">{serverdetail.SERVER_TYPE1}</td>
+          <td align="center" bgcolor="{serverdetail.ROWCOLOR2}" class="listing">{serverdetail.SERVER_TYPE2}</td>
+          <td align="center" bgcolor="{serverdetail.ROWCOLOR2}" class="listing" nowrap>{serverdetail.JS2}</td>
+          <td align="center" bgcolor="{serverdetail.ROWCOLOR2}" class="listing" nowrap>{serverdetail.JS3}</td>
+          <td align="center" bgcolor="{serverdetail.ROWCOLOR2}" class="listing">{serverdetail.CHANNELS_CURRENT}</td>
+          <td align="center" bgcolor="{serverdetail.ROWCOLOR2}" class="listing">{serverdetail.GET_UPTIME}</td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="{serverdetail.CATROWCOLOR1}" class="catagory" colspan="7"><b>Users and Channels</b></td>
+        </tr>
+        <tr>
+          <td align="center" bgcolor="{serverdetail.ROWCOLOR1}" class="listing" colspan="7">
+            <br>
+            <table border="0" align="center" cellspacing="1" class="listing" width="460" bgcolor="{serverdetail.BORDERCOLOR}">
+              <tr>
+                <td valign="top" width="260" bgcolor="{serverdetail.ROWCOLOR2}">
+                  <img src="images/bullet_server.gif" align="absmiddle"> <b>
+                    {serverdetail.SERVER_NAME}</b><br>
+                    {serverdetail.GET_CLDETAIL}
+                </td>
+                <td valign="top" width="140" bgcolor="{serverdetail.ROWCOLOR2}">
+                  <b>Channel Flags</b><br>&nbsp;&nbsp;R = Registered<br>&nbsp;&nbsp;M = Moderated<br>&nbsp;&nbsp;P = Passworded<br>&nbsp;&nbsp;S = Sub-Channels<br>&nbsp;&nbsp;D = Default<br>&nbsp;&nbsp;U = Unregistered
+                  <hr width="140">
+                  <b>Player Flags</b><br>&nbsp;&nbsp;R = Registered<br>&nbsp;&nbsp;SA = Server Admin<br>&nbsp;&nbsp;CA = Channel Admin<br>&nbsp;&nbsp;AO = Auto-Operator<br>&nbsp;&nbsp;AV = Auto-Voice<br>&nbsp;&nbsp;O = Operator<br>&nbsp&nbsp;V = Voice<br>&nbsp;&nbsp;U = Unregistered
+                </td>
+              </tr>
+            </table>
+            <br>
+          </td>
+        </tr>
+      </table>
+<!-- END serverdetail -->

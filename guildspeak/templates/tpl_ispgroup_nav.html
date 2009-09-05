@@ -1,0 +1,26 @@
+<!-- BEGIN ispgroup_nav -->
+        <tr>
+          <td align="center" bgcolor="{ispgroup_nav.CATROWCOLOR1}" class="catagory" colspan="8">
+
+
+<a href="groups.php?page=1">&#60;&#60;</a>
+<a href="groups.php?page={ispgroup_nav.PAGE_PREV}">&#60;</a> | 
+<a href="groups.php?page={ispgroup_nav.PAGE_NEXT}">&#62;</a>
+<a href="groups.php?page={ispgroup_nav.PAGE_LINKS}">&#62;&#62;</a><br>
+
+<!-- WHILE ispgroup_nav.NUM_LINK <= ispgroup_nav.PAGE_LINKS -->
+      <!-- IF ispgroup_nav.PAGE == ispgroup_nav.NUM_LINK -->
+            <b>[
+      <!-- ENDIF -->
+      <a href="groups.php?page={ispgroup_nav.NUM_LINK}">{ispgroup_nav.NUM_LINK}</a>
+      <!-- IF ispgroup_nav.PAGE == ispgroup_nav.NUM_LINK -->
+            ]</b>
+      <!-- ENDIF -->
+      <!-- IF ispgroup_nav.NUM_LINK != ispgroup_nav.PAGE_LINKS -->
+            {ispgroup_nav.SPACE}
+      <!-- ENDIF -->
+      {ispgroup_nav.INC_NUM_LINK}
+<!-- ENDWHILE -->
+          </td>
+        </tr>
+<!-- END ispgroup_nav -->
