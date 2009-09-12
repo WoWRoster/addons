@@ -1,5 +1,5 @@
 /** 
- * Dev.PKComp.net Accounts Addon
+ * Dev.PKComp.net GuildSpeak Addon
  * 
  * LICENSE: Licensed under the Creative Commons 
  *          "Attribution-NonCommercial-ShareAlike 2.5" license 
@@ -11,6 +11,28 @@
  * @package    GuildSpeak 
  * @subpackage Changelog 
  */
+
+GuildSpeak v1.9.9.7 [SVN]470:
+- Fixed
+-- webpost.php for integration with WoWRoster
+-- inc/db_inc.php fixed numerous $row variables and detail display functions
+-- inc/install.lib.php fixed guildspeak_ts_listips to use radio{Yes^1|No^0 form and default 0
+
+- Added
+-- Status Mode for Ventrilo Servers, allows you to switch from ventrilo_status method and a PHP fsockopen method
+-- inc/vent.inc.php an fsockopen method of retrieving vent status
+-- Vent setting to switch between status methods
+
+- Changed
+-- index.php added display and string parsing for the vent fsockopen method
+
+- Still Broken
+-- TeamSpeak group display (currently hangs, need to re-write php and templating)
+-- Any kind of templating fo Ventrilo
+
+- Still Not Implemented Yet
+-- Search functions
+
 
 GuildSpeak v1.9.9.6 [SVN]469:
 - First Commit

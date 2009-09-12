@@ -1,27 +1,29 @@
 <?php
-/*
-****************************************************************
-* gllcTS2 for TeamSpeak 2 © Gryphon, LLC (www.gryphonllc.com ) *
-****************************************************************
-*
-* $Id: login.php 999 2008-07-03 17:51:49Z gryphon $
-* $Rev: 999 $
-* $LastChangedBy: gryphon $
-* $Date: 2008-07-03 10:51:49 -0700 (Thu, 03 Jul 2008) $
-*/
+/**
+ * WoWRoster GuildSpeak - TeamSpeak 2 and Ventrilo for WoWRoster
+ * 
+ * Addon based on Gryphon, LLC's gllcts2 version 4.2.5
+ * and the Ventrilo Server Monitor Script
+ *
+ * @author Mike DeShane (mdeshane@pkcomp.net)
+ * @copyright 2006-2008 Mike DeShane, US
+ * @package WoWRoster GuildSpeak
+ * @subpackage Login Page
+ * 
+ */
 
 if (isset($_POST["action"]))
 {
-	include("./admin/db_inc.php");
-	include("tpl_style.php");
+	include($addon['inc_dir'] . 'db_inc.php');
+	//include("tpl_style.php");
 	include("tpl_loggedin.php");
 }
 else
 {
-	include("./admin/db_inc.php");
-	include("tpl_style.php");
+	include($addon['inc_dir'] . 'db_inc.php');
+	//include("tpl_style.php");
 	$r = query("SELECT * FROM $dbtable1 WHERE server_id='" . addslashes(htmlspecialchars($_GET['detail'])) . "'");
-	$row = mysql_fetch_object($r);
+	$row = $roster->db->fetch($r);
 
 	include("tpl_login.php");
 }

@@ -1,15 +1,18 @@
 <?php
-/*
-****************************************************************
-* gllcTS2 for TeamSpeak 2 © Gryphon, LLC (www.gryphonllc.com ) *
-****************************************************************
-*
-* $Id: webpost.php 5 2005-10-26 23:19:04Z gryphon $
-* $Rev: 5 $
-* $LastChangedBy: gryphon $
-* $Date: 2005-10-26 16:19:04 -0700 (Wed, 26 Oct 2005) $
-*/
-include("./admin/db_inc.php");
+/**
+ * WoWRoster GuildSpeak - TeamSpeak 2 and Ventrilo for WoWRoster
+ * 
+ * Addon based on Gryphon, LLC's gllcts2 version 4.2.5
+ * and the Ventrilo Server Monitor Script
+ *
+ * @author Mike DeShane (mdeshane@pkcomp.net)
+ * @copyright 2006-2008 Mike DeShane, US
+ * @package WoWRoster GuildSpeak
+ * @subpackage Webpost
+ * 
+ */
+
+include($addon['inc_dir'] . 'db_inc.php');
 
 if (empty($_POST['server_port'])) {
 //  header ("location: $setting[homepage]");
@@ -32,10 +35,9 @@ if ($_POST["gllc_posttest"]) {
   }
 }
 
-$r = query("SELECT * FROM $dbtable5 WHERE listips LIKE '%$server_ip,%'");
-$r2 = query("SELECT * FROM $dbtable1");
-$r3 = query("SELECT * FROM $dbtable1 WHERE server_ip = '$server_ip'");
-if (mysql_num_rows($r) == '0' && mysql_num_rows($r2) >= $setting["listamount"] && mysql_num_rows($r3) == '0') {
+$r = query("SELECT * FROM $dbtable1");
+$r2 = query("SELECT * FROM $dbtable1 WHERE server_ip = '$server_ip'");
+if ($roster->db->num_rows($r) >= $addon['config']['guildspeak_ts_listamount'] && $roster->db->num_rows($r2) == '0') {
   exit;
 }
 
@@ -82,7 +84,7 @@ if ($server_ispname == 'na') {
 //}
 
 // update existing server
-if (mysql_num_rows($sql)!= 0) {
+if ($roster->db->num_rows($sql)!= 0) {
   query("UPDATE $dbtable1 SET
     server_adminemail='$server_adminemail',
     server_isplinkurl='$server_isplinkurl',
@@ -166,29 +168,29 @@ if ($server_port) {
 $sqlg = query("SELECT * FROM $dbtable4 WHERE group_ispname='$server_ispname'");
 
 // update existing server
-if (mysql_num_rows($sqlg)!= 0) {
+if ($roster->db->num_rows($sqlg)!= 0) {
   $sqlg2 = query("SELECT * FROM $dbtable1 WHERE server_ispname='$server_ispname'");
-  $groupservercount = mysql_num_rows($sqlg2);
+  $groupservercount = $roster->db->num_rows($sqlg2);
 
   if (($server_ispname == 'Private') or ($server_ispname == '')) {
     $server_ispname = 'Private';
     $server_isplinkurl = 'na';
   }
   $sqlg3 = query("SELECT sum(clients_current) FROM $dbtable1 WHERE server_ispname='$server_ispname'");
-  $sqlg3data = mysql_fetch_row($sqlg3);
+  $sqlg3data = $roster->db->fetch($sqlg3);
 
   query("UPDATE $dbtable4 SET group_ispurl='$server_isplinkurl', group_ispname='$server_ispname', group_servers='$groupservercount', group_users='$sqlg3data[0]', server_timestamp='$server_timestamp' WHERE group_ispname='$server_ispname'");
 } else if ($server_ispname) {
 // insert new server
   $sqlg2 = query("SELECT * FROM $dbtable1 WHERE server_ispname='$server_ispname'");
-  $groupservercount = mysql_num_rows($sqlg2);
+  $groupservercount = $roster->db->num_rows($sqlg2);
 
   if (($server_ispname == 'Private') or ($server_ispname == '')) {
     $server_ispname = 'Private';
     $server_isplinkurl = 'na';
   }
   $sqlg3 = query("SELECT sum(clients_current) FROM $dbtable1 WHERE server_ispname='$server_ispname'");
-  $sqlg3data = mysql_fetch_row($sqlg3);
+  $sqlg3data = $roster->db->fetch($sqlg3);
 
   query("INSERT INTO $dbtable4 (group_ispurl,group_ispname,group_servers,group_users,server_timestamp) VALUES ('$server_isplinkurl','$server_ispname','$groupservercount','$sqlg3data[0]','$server_timestamp')");
 }

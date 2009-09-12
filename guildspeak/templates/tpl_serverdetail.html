@@ -26,21 +26,21 @@
           <td align="center" bgcolor="{serverdetail.ROWCOLOR1}" class="listing">{serverdetail.SERVER_ISP_COUNTRY}</td>
           <td align="center" bgcolor="{serverdetail.ROWCOLOR1}" class="listing">
             <!-- IF serverdetail.SERVER_PASSWORD == 1 -->
-                <img src="images/{serverdetail.IMG_BG}_private.gif" border="0" alt="Private" title="This server requires a password to join.">
+                <img src="{serverdetail.IMG_PATH}{serverdetail.IMG_BG}_private.gif" border="0" alt="Private" title="This server requires a password to join.">
             <!-- ELSE -->
-                  <img src="images/{serverdetail.IMG_BG}_open.gif" border="0" alt="Open" title="This server does not require password to join.">
+                  <img src="{serverdetail.IMG_PATH}{serverdetail.IMG_BG}_open.gif" border="0" alt="Open" title="This server does not require password to join.">
             <!-- ENDIF -->
           </td>
           <td align="center" bgcolor="{serverdetail.ROWCOLOR1}" class="listing">
             <!-- IF serverdetail.SERVER_ADMIN_EMAIL and serverdetail.SERVER_ADMIN_EMAIL != 'na' -->
-                <a href="mailto:{serverdetail.SERVER_ADMIN_EMAIL}"><img src="images/{serverdetail.IMG_BG}_email.gif" border="0" alt="Email" title="Contact the server administrator at {serverdetail.SERVER_ADMIN_EMAIL}"></a>
+                <a href="mailto:{serverdetail.SERVER_ADMIN_EMAIL}"><img src="{serverdetail.IMG_PATH}{serverdetail.IMG_BG}_email.gif" border="0" alt="Email" title="Contact the server administrator at {serverdetail.SERVER_ADMIN_EMAIL}"></a>
             <!-- ELSE -->
                   N/A
             <!-- ENDIF -->
           </td>
           <td align="center" bgcolor="{serverdetail.ROWCOLOR1}" class="listing">
             <!-- IF serverdetail.SERVER_LINK_URL != '' && !preg_match("/webpost.php/i", serverdetail.SERVER_LINK_URL) -->
-                <img src="images/{serverdetail.IMG_BG}_www.gif" border="0" alt="WWW" title="Visit {serverdetail.SERVER_NAME} website" align="absmiddle"> <a href="{serverdetail.SERVER_LINK_URL}" title="Visit {serverdetail.SERVER_LINK_URL}" target="_blank">{serverdetail.SERVER_NAME}</a>
+                <img src="{serverdetail.IMG_PATH}{serverdetail.IMG_BG}_www.gif" border="0" alt="WWW" title="Visit {serverdetail.SERVER_NAME} website" align="absmiddle"> <a href="{serverdetail.SERVER_LINK_URL}" title="Visit {serverdetail.SERVER_LINK_URL}" target="_blank">{serverdetail.SERVER_NAME}</a>
             <!-- ELSE -->
                 {serverdetail.SERVER_NAME}
             <!-- ENDIF -->
@@ -88,7 +88,7 @@
             <table border="0" align="center" cellspacing="1" class="listing" width="460" bgcolor="{serverdetail.BORDERCOLOR}">
               <tr>
                 <td valign="top" width="260" bgcolor="{serverdetail.ROWCOLOR2}">
-                  <img src="images/bullet_server.gif" align="absmiddle"> <b>
+                  <img src="{serverdetail.IMG_PATH}bullet_server.gif" align="absmiddle"> <b>
                     {serverdetail.SERVER_NAME}</b><br>
                     {serverdetail.GET_CLDETAIL}
                 </td>

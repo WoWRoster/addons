@@ -45,9 +45,9 @@ function query($query)
       $query_count++;
       qcount($query_count);
 
-      $result = mysql_query($query);
+      $result = $roster->db->query($query);
       if (!$result) {
-            echo "MySQL Error in [ <b>".$query."</b> ]: ".mysql_error()."<br><br>Please contact a the site admin immediately.<br>";
+            echo "MySQL Error in [ <b>".$query."</b> ]: ".$roster->db->error()."<br><br>Please contact a the site admin immediately.<br>";
             exit();
       }
       return $result;
@@ -137,7 +137,7 @@ function gettotalonline()
       $servercount = number_format($roster->db->num_rows($sql));
       while ($row = $roster->db->fetch($sql))
       {
-            $users = $users + $row->clients_current;
+            $users = $users + $row['clients_current'];
       }
       return ''.$users.'';
 }
@@ -161,137 +161,148 @@ function getpldetail($var1, $var2, $var3, $var4)
       global $roster, $addon, $dbtable2;
 
       if ($var4 == 'sub') { $plsub = "sub"; }
+      $display = '';
       $sql = $roster->db->query("SELECT * FROM $dbtable2 WHERE server_ip='$var1' AND server_port='$var2' and pl_channelid='$var3' ORDER BY pl_playerprivileges desc, pl_nickname asc");
       while ($row = $roster->db->fetch($sql)) {
 
-            if ($row->pl_playerprivileges == '13') {
+            if ($row['pl_playerprivileges'] == '13') {
                   $plpriv = "R <b>SA</b>";
-            } else if ($row->pl_playerprivileges == '5') {
+            } else if ($row['pl_playerprivileges'] == '5') {
                   $plpriv = "R SA";
-            } else if ($row->pl_playerprivileges == '4') {
+            } else if ($row['pl_playerprivileges'] == '4') {
                   $plpriv = "R";
-            } else if ($row->pl_playerprivileges == '0') {
+            } else if ($row['pl_playerprivileges'] == '0') {
                   $plpriv = "U";
             }
-            if ($row->pl_channelprivileges == '1') {
+            if ($row['pl_channelprivileges'] == '1') {
                   $clpriv = " CA";
             } else {
                   $clpriv = "";
             }
 
             if ($var4 == 'sub') {
-                  echo '<nobr><img src="'.$addon['image_path'].'bullet_sub.gif">';
+                  $display .= '<nobr><img src="'.$addon['image_path'].'bullet_sub.gif">';
             } else if ($var4 == 'nonsub') {
-                  echo '<nobr>';
+                  $display .= '<nobr>';
             }
 
             if ($addon['config']['guildspeak_ts_showtimeonline'] == '1') {
-                  $m_online = '('.getuptime($row->pl_logintime,client).')';
+                  $m_online = '('.getuptime($row['pl_logintime'],'client').')';
             } else {
                   $m_online = "";
             }
 
             // Thanks MrGuide
-            if (($row->pl_playerflags & 8) == 8) {
+            if (($row['pl_playerflags'] & 8) == 8) {
                   $plflag = "away";
-            } else if (($row->pl_playerflags & 32) == 32) {
+            } else if (($row['pl_playerflags'] & 32) == 32) {
 		  	$plflag = "m_speak";
-            } else if (($row->pl_playerflags & 16) == 16) {
+            } else if (($row['pl_playerflags'] & 16) == 16) {
                   $plflag = "m_mic";
-		} else if (($row->pl_playerflags & 1) == 1) {
+		} else if (($row['pl_playerflags'] & 1) == 1) {
 		  	$plflag = "cc";
 		} else {
 		  	$plflag = "normal";
 		}
 
-            echo '<img src="'.$addon['image_path'].'bullet_'.$plflag.'.gif" align="absmiddle" alt="User" title="Ping '.$row->pl_ping.' | Packet Loss '.$row->pl_pktloss.'"> '.$row->pl_nickname.' ('.$plpriv.''.$clpriv.') '.$m_online.'</nobr><br>';
+            $display .= '<img src="'.$addon['image_path'].'bullet_'.$plflag.'.gif" align="absmiddle" alt="User" title="Ping '.$row['pl_ping'].' | Packet Loss '.$row['pl_pktloss'].'"> '.$row['pl_nickname'].' ('.$plpriv.''.$clpriv.') '.$m_online.'</nobr><br>';
       }
+      return $display;
 }
 
 function getsubcldetail($var1, $var2, $var3, $var4, $var5)
 {
       global $roster, $addon, $detail, $dbtable3;
 
+      $display = '';
       $sql = $roster->db->query("SELECT * FROM $dbtable3 WHERE server_ip='$var1' AND server_port='$var2' and cl_parent='$var3' ORDER BY cl_order asc, cl_number");
       while ($row = $roster->db->fetch($sql)) {
-            $clsubname = stripslashes($row->cl_name);
+            $clsubname = stripslashes($row['cl_name']);
             $clsubnamelink = urlencode($clsubname);
 
-            echo '<nobr><img src="'.$addon['image_path'].'bullet_subchannel.gif" align="absmiddle"> <a href="login.php?detail='.$var5.'&channel='.$clsubnamelink.'" title="Click to join subchannel \''.$row->cl_name.'\' on server '.$var1.':'.$var2.' | Topic: '.htmlentities($row->cl_topic).' | This opens in a popup window." onClick="NewWindow(this.href,\'login\',\''; echo ''.$addon['config']['guildspeak_ts_popupwidth'].''; echo '\',\''; echo ''.$addon['config']['guildspeak_ts_popupheight'].''; echo '\');return false">'.$clsubname.'</a></nobr><br>';  echo "\n                  ";
-            getpldetail($var1, $var2, $row->cl_number, "sub");
+            $display .= '<nobr><img src="'.$addon['image_path'].'bullet_subchannel.gif" align="absmiddle"> <a href="' . makelink('util-guildspeak-login') . '&detail='.$var5.'&channel='.$clsubnamelink.'" title="Click to join subchannel \''.$row['cl_name'].'\' on server '.$var1.':'.$var2.' | Topic: '.htmlentities($row['cl_topic']).' | This opens in a popup window." onClick="NewWindow(this.href,\'login\',\''; echo ''.$addon['config']['guildspeak_ts_popupwidth'].''; echo '\',\''; echo ''.$addon['config']['guildspeak_ts_popupheight'].''; echo '\');return false">'.$clsubname.'</a></nobr><br>';  echo "\n                  ";
+            $display.= getpldetail($var1, $var2, $row['cl_number'], 'sub');
       }
+      return $display;
 }
 
 function getcldetail($var1, $var2, $var3)
 {
       global $roster, $addon, $dbtable3;
 
+      $display = '';
       $sql = $roster->db->query("SELECT * FROM $dbtable3 WHERE server_ip='$var1' AND server_port='$var2' and cl_parent='-1' ORDER BY cl_order asc, cl_name, cl_number");
       if ($roster->db->num_rows($sql) == 0) {
-            echo '<center><b>Data unavailable.<br>TCPQueryPort may not be open.</b></center>';
+            $display .= '<center><b>Data unavailable.<br>TCPQueryPort may not be open.</b></center>';
       }
       while ($row = $roster->db->fetch($sql)) {
-            $clname = stripslashes($row->cl_name);
+            $clname = stripslashes($row['cl_name']);
             $clnamelink = urlencode($clname);
 
             // (RMPSD) (0 2 4 6 8 16)
 
-            if ($row->cl_flags == '30') {
+            if ($row['cl_flags'] == '30') {
                   $clflag = "(RMPSD)";
-            } else if ($row->cl_flags == '28') {
+            } else if ($row['cl_flags'] == '28') {
                   $clflag = "(RPSD)";
-            } else if ($row->cl_flags == '26') {
+            } else if ($row['cl_flags'] == '26') {
                   $clflag = "(RMSD)";
-            } else if ($row->cl_flags == '24') {
+            } else if ($row['cl_flags'] == '24') {
                   $clflag = "(RSD)";
-            } else if ($row->cl_flags == '22') {
+            } else if ($row['cl_flags'] == '22') {
                   $clflag = "(RMPD)";
-            } else if ($row->cl_flags == '20') {
+            } else if ($row['cl_flags'] == '20') {
                   $clflag = "(RPD)";
-            } else if ($row->cl_flags == '18') {
+            } else if ($row['cl_flags'] == '18') {
                   $clflag = "(RMD)";
-            } else if ($row->cl_flags == '16') {
+            } else if ($row['cl_flags'] == '16') {
                   $clflag = "(RD)";
-            } else if ($row->cl_flags == '15') {
+            } else if ($row['cl_flags'] == '15') {
                   $clflag = "(UMPS)";
-            } else if ($row->cl_flags == '14') {
+            } else if ($row['cl_flags'] == '14') {
                   $clflag = "(RMPS)";
-            } else if ($row->cl_flags == '13') {
+            } else if ($row['cl_flags'] == '13') {
                   $clflag = "(UPS)";
-            } else if ($row->cl_flags == '12') {
+            } else if ($row['cl_flags'] == '12') {
                   $clflag = "(RPS)";
-            } else if ($row->cl_flags == '11') {
+            } else if ($row['cl_flags'] == '11') {
                   $clflag = "(UMS)";
-            } else if ($row->cl_flags == '10') {
+            } else if ($row['cl_flags'] == '10') {
                   $clflag = "(RMS)";
-            } else if ($row->cl_flags == '9') {
+            } else if ($row['cl_flags'] == '9') {
                   $clflag = "(US)";
-            } else if ($row->cl_flags == '8') {
+            } else if ($row['cl_flags'] == '8') {
                   $clflag = "(RS)";
-            } else if ($row->cl_flags == '7') {
+            } else if ($row['cl_flags'] == '7') {
                   $clflag = "(UMP)";
-            } else if ($row->cl_flags == '6') {
+            } else if ($row['cl_flags'] == '6') {
                   $clflag = "(RMP)";
-            } else if ($row->cl_flags == '5') {
+            } else if ($row['cl_flags'] == '5') {
                   $clflag = "(UP)";
-            } else if ($row->cl_flags == '4') {
+            } else if ($row['cl_flags'] == '4') {
                   $clflag = "(RP)";
-            } else if ($row->cl_flags == '3') {
+            } else if ($row['cl_flags'] == '3') {
                   $clflag = "(UM)";
-            } else if ($row->cl_flags == '2') {
+            } else if ($row['cl_flags'] == '2') {
                   $clflag = "(RM)";
-            } else if ($row->cl_flags == '1') {
+            } else if ($row['cl_flags'] == '1') {
                   $clflag = "(U)";
-            } else if ($row->cl_flags == '0') {
+            } else if ($row['cl_flags'] == '0') {
                   $clflag = "(R)";
             } else {
                   $clflag = "";
             }
 
-            echo '<nobr><img src="'.$addon['image_path'].'bullet_channel.gif" align="absmiddle"> <a href="login.php?detail='.$var3.'&channel='.$clnamelink.'" title="Click to join channel \''.$clname.'\' on server '.$var1.':'.$var2.' | Topic: '.htmlentities($row->cl_topic).'" onClick="NewWindow(this.href,\'login\',\''; echo ''.$addon['config']['guildspeak_ts_popupwidth'].''; echo '\',\''; echo ''.$addon['config']['guildspeak_ts_popupheight'].''; echo '\');return false">'.$clname.'</a>&nbsp;&nbsp;'.$clflag.'</nobr><br>';  echo "\n                  ";
-            getsubcldetail($var1, $var2, $row->cl_number, $row->cl_private, $var3);
-            getpldetail($var1, $var2, $row->cl_number, "nonsub");
+            $display .= '<nobr><img src="'.$addon['image_path'].'bullet_channel.gif" align="absmiddle"> <a href="' . makelink('util-guildspeak-login') . '&detail='.$var3.'&channel='.$clnamelink.'" title="Click to join channel \''.$clname.'\' on server '.$var1.':'.$var2.' | Topic: '.htmlentities($row['cl_topic']).'" onClick="NewWindow(this.href,\'login\',\'';
+            $display .= ''.$addon['config']['guildspeak_ts_popupwidth'].'';
+            $display .= '\',\'';
+            $display .= ''.$addon['config']['guildspeak_ts_popupheight'].'';
+            $display .= '\');return false">'.$clname.'</a>&nbsp;&nbsp;'.$clflag.'</nobr><br>';
+            $display .= "\n                  ";
+            $display.= getsubcldetail($var1, $var2, $row['cl_number'], $row['cl_private'], $var3);
+            $display.= getpldetail($var1, $var2, $row['cl_number'], "nonsub");
       }
+      return $display;
 }
 
 function insertchannelinfo($var1, $var2, $var3, $var4)

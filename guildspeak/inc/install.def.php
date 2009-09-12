@@ -27,7 +27,7 @@ class guildspeakInstall
 	var $active = true;
 	var $icon = 'inv_misc_ear_human_01';
 
-	var $version = '1.9.9.6';
+	var $version = '1.9.9.7';
 	var $wrnet_id = '0';
 
 	var $fullname = 'GuildSpeak';
@@ -93,7 +93,7 @@ class guildspeakInstall
             $installer->add_config("'2280','guildspeak_ts_showgroups','0','radio{Yes^1|No^0','guildspeak_ts_set'");
             $installer->add_config("'2290','guildspeak_ts_homepage','index.php','text{15|30','guildspeak_ts_set'");
             $installer->add_config("'2300','guildspeak_ts_listamount','50','text{4|15','guildspeak_ts_set'");
-            $installer->add_config("'2310','guildspeak_ts_listips','127.0.0.1','text{15|30','guildspeak_ts_set'");
+            $installer->add_config("'2310','guildspeak_ts_listips','0','radio{Yes^1|No^0','guildspeak_ts_set'");
             $installer->add_config("'2320','guildspeak_ts_showtimeonline','1','radio{Yes^1|No^0','guildspeak_ts_set'");
             $installer->add_config("'2330','guildspeak_ts_logo','ts_logo.gif','text{15|30','guildspeak_ts_set'");
 
@@ -104,6 +104,7 @@ class guildspeakInstall
             $installer->add_config("'3030','guildspeak_vent_port','3784','text{4|15','guildspeak_vent_set'");
             $installer->add_config("'3040','guildspeak_vent_pass','','text{15|30','guildspeak_vent_set'");
             $installer->add_config("'3050','guildspeak_vent_disp','1','select{Basic^1|Classic^2|Roster^3','guildspeak_vent_set'");
+            $installer->add_config("'3060','guildspeak_vent_mode','1','select{Executable^1|Pure PHP^0','guildspeak_vent_set'");
 
             // Database Tables
 		$installer->create_table($installer->table('channel'),"
@@ -194,15 +195,15 @@ class guildspeakInstall
 	{
 		global $installer;
 
-            if( version_compare('1.9.9.6', $oldversion, '>') == true )
+            if( version_compare('1.9.9.7', $oldversion, '>') == true )
 		{
                 
-                // Update Server Setting
-                $installer->remove_config('1000');
-                $installer->remove_config('1010');
-
-                $installer->add_config("'1000','guildspeak_server_mode','1','select{TeamSpeak^1|Ventrilo^0','guildspeak_server'");
-		    $installer->add_config("'1010','guildspeak_server_link','1','radio{On^1|Off^0','guildspeak_server'");
+                // Update TS Display Setting
+                $installer->remove_config('2310');
+                $installer->add_config("'2310','guildspeak_ts_listips','0','radio{Yes^1|No^0','guildspeak_ts_set'");
+                
+                // Add Vent Mode Setting
+                $installer->add_config("'3060','guildspeak_vent_mode','1','select{Executable^1|Pure PHP^0','guildspeak_vent_set'");
 		}
 		return true;
 	}
