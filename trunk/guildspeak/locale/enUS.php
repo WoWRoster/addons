@@ -70,6 +70,7 @@ $lang['admin']['guildspeak_vent_host']    = 'Host Address|Set the address to the
 $lang['admin']['guildspeak_vent_port']    = 'Host Port|Set the port number the Ventrilo server uses';
 $lang['admin']['guildspeak_vent_pass']    = 'Status Password|Set the password to access the server status';
 $lang['admin']['guildspeak_vent_disp']    = 'Display Format|Set the display format to use';
+$lang['admin']['guildspeak_vent_mode']    = 'Status Mode|Set how to get the Ventrilo Server status, Executable may require filesystem permissions, Pure PHP requires no permissions';
 
 // Button names
 $lang['guildspeak_button']	= 'GuildSpeak|See who\'s on TeamSpeak/Ventrilo, and login';

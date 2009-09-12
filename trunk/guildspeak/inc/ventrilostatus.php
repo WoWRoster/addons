@@ -64,12 +64,12 @@ function StrDecode( &$src )
 
 class CVentriloClient
 {
-	var	$m_uid;			// User ID.
+	var	$m_uid;		// User ID.
 	var	$m_admin;		// Admin flag.
-	var $m_phan;		// Phantom flag.
-	var $m_cid;			// Channel ID.
-	var $m_ping;		// Ping.
-	var	$m_sec;			// Connect time in seconds.
+	var   $m_phan;		// Phantom flag.
+	var   $m_cid;		// Channel ID.
+	var   $m_ping;		// Ping.
+	var	$m_sec;		// Connect time in seconds.
 	var	$m_name;		// Login name.
 	var	$m_comm;		// Comment.
 	
@@ -134,8 +134,8 @@ class CVentriloClient
 
 class CVentriloChannel
 {
-	var	$m_cid;		// Channel ID.
-	var	$m_pid;		// Parent channel ID.
+	var	$m_cid;	// Channel ID.
+	var	$m_pid;	// Parent channel ID.
 	var	$m_prot;	// Password protected flag.
 	var	$m_name;	// Channel name.
 	var	$m_comm;	// Channel comment.
@@ -193,27 +193,27 @@ class CVentriloStatus
 	
 	// These are the result variables that are filled in when the request is performed.
 	
-	var	$m_error;		// If the ERROR: keyword is found then this is the reason following it.
+	var	$m_error;		      // If the ERROR: keyword is found then this is the reason following it.
 	
-	var	$m_name;				// Server name.
-	var	$m_phonetic;			// Phonetic spelling of server name.
-	var	$m_comment;				// Server comment.
-	var	$m_maxclients;			// Maximum number of clients.
-	var	$m_voicecodec_code;		// Voice codec code.
-	var $m_voicecodec_desc;		// Voice codec description.
+	var	$m_name;			// Server name.
+	var	$m_phonetic;		// Phonetic spelling of server name.
+	var	$m_comment;			// Server comment.
+	var	$m_maxclients;		// Maximum number of clients.
+	var	$m_voicecodec_code;	// Voice codec code.
+	var   $m_voicecodec_desc;	// Voice codec description.
 	var	$m_voiceformat_code;	// Voice format code.
 	var	$m_voiceformat_desc;	// Voice format description.
-	var	$m_uptime;				// Server uptime in seconds.
-	var	$m_platform;			// Platform description.
-	var	$m_version;				// Version string.
+	var	$m_uptime;			// Server uptime in seconds.
+	var	$m_platform;		// Platform description.
+	var	$m_version;			// Version string.
 	
 	var	$m_channelcount;		// Number of channels as specified by the server.
 	var	$m_channelfields;		// Channel field names.
-	var	$m_channellist;			// Array of CVentriloChannel's.
+	var	$m_channellist;		// Array of CVentriloChannel's.
 	
-	var	$m_clientcount;			// Number of clients as specified by the server.
+	var	$m_clientcount;		// Number of clients as specified by the server.
 	var	$m_clientfields;		// Client field names.
-	var $m_clientlist;			// Array of CVentriloClient's.
+	var   $m_clientlist;		// Array of CVentriloClient's.
 	
 	function Parse( $str )
 	{
@@ -353,69 +353,75 @@ class CVentriloStatus
 		return( $pathname );
 	}
 	
-	function Request()
+	function Request($cmd = 2)
 	{
-		$cmdline = $this->m_cmdprog;
-		$cmdline .= " -c" . $this->m_cmdcode;
-		$cmdline .= " -t" . $this->m_cmdhost;
+		global $roster, $addon;
 		
-		if ( strlen( $this->m_cmdport ) )
-		{
-			$cmdline .= ":" . $this->m_cmdport;
+            $cmdline = $this->m_cmdprog;
+            $cmdline .= " -c" . $this->m_cmdcode;
+            $cmdline .= " -t" . $this->m_cmdhost;
+		
+            if ( strlen( $this->m_cmdport ) )
+            {
+                  $cmdline .= ":" . $this->m_cmdport;
 			
-			// For password to work you MUST provide a port number.
+                  // For password to work you MUST provide a port number.
 			
-			if ( strlen( $this->m_cmdpass ) )
-				$cmdline .= ":" . $this->m_cmdpass;
+                  if ( strlen( $this->m_cmdpass ) )
+                  {
+                        $cmdline .= ":" . $this->m_cmdpass;
+                  }
 		}
+            // Just in case.
 		
-		// Just in case.
+            $cmdline = escapeshellcmd( $cmdline );
 		
-		$cmdline = escapeshellcmd( $cmdline );
+            // Execute the external command.
 		
-		// Execute the external command.
+            $pipe = popen( $cmdline, "r" );
+            if ( $pipe === false )
+            {
+                  $this->m_error = "PHP Unable to spawn shell.";
+                  return -10;
+            }
 		
-		$pipe = popen( $cmdline, "r" );
-		if ( $pipe === false )
-		{
-			$this->m_error = "PHP Unable to spawn shell.";
-			return -10;
-		}
+            // Process the results coming back from the shell.
 		
-		// Process the results coming back from the shell.
+            $cnt = 0;
 		
-		$cnt = 0;
-		
-		while( !feof( $pipe ) )
-		{
-			$s = fgets( $pipe, 1024 );
+            while( !feof( $pipe ) )
+            {
+                  $s = fgets( $pipe, 1024 );
 
-			if ( strlen( $s ) == 0 )
-				continue;
+                  if ( strlen( $s ) == 0 )
+                  {
+                        continue;
+                  }
 				
-			$rc = $this->Parse( $s );
-			if ( $rc < 0 )
-			{
-				pclose( $pipe );
-				return( $rc );
-			}
+                  $rc = $this->Parse( $s );
+                  if ( $rc < 0 )
+                  {
+                        pclose( $pipe );
+                        return( $rc );
+                  }
 			
-			$cnt += 1;
-		}
+                  $cnt += 1;
+            }
 		
-		pclose( $pipe );
+            pclose( $pipe );
 		
-		if ( $cnt == 0 )
-		{
-			// This is possible since the shell might not be able to find
-			// the specified process but the shell did spawn. More likely to
-			// occur then the -10 above.
+            if ( $cnt == 0 )
+            {
+                  // This is possible since the shell might not be able to find
+                  // the specified process but the shell did spawn. More likely to
+                  // occur then the -10 above.
 			
-			$this->m_error = "PHP Unable to start external status process.";
-			return -11;
-		}
+                  $this->m_error = "PHP Unable to start external status process.";
+                  return -11;
+            }
 		
-		return 0;
-	}
+            return 0;
+      }
+
 };
 
