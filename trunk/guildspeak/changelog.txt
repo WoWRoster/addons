@@ -12,6 +12,11 @@
  * @subpackage Changelog 
  */
 
+GuildSpeak v1.9.9.7 [SVN]471:
+-Fixed
+-- Vent Status String parsing in index.php to add white space before the key, and declare the clients array outside foreach loop
+
+
 GuildSpeak v1.9.9.7 [SVN]470:
 - Fixed
 -- webpost.php for integration with WoWRoster
