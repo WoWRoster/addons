@@ -148,13 +148,14 @@ elseif ($addon['config']['guildspeak_server_mode'] == 0)
                         $ckey = key($res);
                         if($ckey != false && array_key_exists($ckey, $res))
                         {
-                              $str = $ckey.':'; // Our Key text
-                              $re1='(?-i:)';    // Case Sensitive
-                              $re2='((?:[a-z][a-z]+))';	// Word 1
-                              $re3='(:)';	// Any Single Character 1
+                              $str = ' '.$ckey.':'; // Our Key text
+                              $re1 = '(?-i:)';    // Case Sensitive
+                              $re2 = '(\\s+)';    //Whit Space 1
+                              $re3 = '((?:[a-z][a-z]+))';	// Word 1
+                              $re4 = '(:)';	// Any Single Character 1
 
                               $tempres = substr($value, 0, strpos($value, $ckey));
-                              if ($c=preg_match_all ("/".$re1.$re2.$re3."/is", $str, $matches))
+                              if ($c=preg_match_all ("/".$re1.$re2.$re3.$re4."/is", $str, $matches))
                               {
                                     $ws1=$matches[1][0];
                                     $word1=$matches[2][0];
@@ -165,6 +166,7 @@ elseif ($addon['config']['guildspeak_server_mode'] == 0)
                         }
                   }
                   // Clean up the client fields
+                  $clients= array();
                   $cfields = explode(',', $res['CLIENTFIELDS']);
                   $parse = str_replace(',', '&', $res['CLIENT:']);
                   parse_str($parse, $clientarr);
