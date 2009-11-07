@@ -16,7 +16,7 @@
 
 if ( !defined('IN_ROSTER') )
 {
-    exit('Detected invalid access to this file!');
+	exit('Detected invalid access to this file!');
 }
 
 /**
@@ -29,7 +29,7 @@ class armorysyncInstall
 	var $active = true;
 	var $icon = 'inv_misc_missilesmall_blue';
 
-	var $version = '2.7.1.459';
+	var $version = '2.7.1.460';
 	var $wrnet_id  = '122';
 
 	var $fullname = 'Armory Sync';
@@ -37,20 +37,17 @@ class armorysyncInstall
 	var $credits = array(
             array(	"name"=>	"Ulminia",
 			"info"=>	"Author of 2.7 rewrite and new maintainer"),
-			
-		array(	"name"=>	"poetter@WoWRoster.net",
+			array(	"name"=>	"poetter@WoWRoster.net",
 			"info"=>	"Author of 2.6 rewrite"),
-		array(	"name"=>	"kristoff22@WoWRoster.net",
+			array(	"name"=>	"kristoff22@WoWRoster.net",
 			"info"=>	"Original author"),
-		array(	"name"=>	"tuigii@wowroster.net",
+			array(	"name"=>	"tuigii@wowroster.net",
 			"info"=>	"testing, bugfixing and translating"),
-		array(	"name"=>	"zanix@wowroster.net",
+			array(	"name"=>	"zanix@wowroster.net",
 			"info"=>	"testing, bugfixing and translating"),
-		array(	"name"=>	"ds@wowroster.net",
+			array(	"name"=>	"ds@wowroster.net",
 			"info"=>	"supporting"),
-
 	);
-
 
 	/**
 	 * Install function
@@ -61,7 +58,7 @@ class armorysyncInstall
 	{
 		global $installer;
 		
-		if( !function_exists('curl') )
+		if( !function_exists('curl_init') ) // Changed by Calystos from 'curl' since there is no function called curl
 		{
 			$installer->seterrors('Curl not detected armory sync may not work!!!!!');
 			return;
