@@ -282,13 +282,19 @@ class ArmorySync extends ArmorySyncBase {
      */
     function checkGuildInfo( $name = false, $server = false, $region = false ) {
         global $roster, $addon;
-
-        $content = $this->getguilddata( $roster->data['guild_name'], $this->region, $this->server, $fetch_type='array' );//$this->fetchGuild( $this->memberName, $roster->config['locale'], $this->server );
-
-        if ( $this->_checkContent( $content, array( 'guildInfo', 'guild' ) ) ) {
+            include_once(ROSTER_LIB . 'armory.class.php');
+		$armory = new RosterArmory;
+		
+            $content = $this->_parseData($armory->fetchGuild( $name, $region, $server,$fetch_type='array' ));//$this->getguilddata( $roster->data['guild_name'], $this->region, $this->server, $fetch_type='array' );//$this->fetchGuild( $this->memberName, $roster->config['locale'], $this->server );
+            //echo $name.'<br><pre>';
+            //print_r($content);
+        if ( $this->_xcheckarray( $content, array( 'guildInfo', 'guild' ) ) ) //_checkContent( $content, array( 'guildInfo', 'guild' ) ) ) 
+        {
             $this->_debug( 1, true, 'Checked guild on existence',  'OK' );
             return true;
-        } else {
+        } 
+        else 
+        {
             $this->_debug( 1, false, 'Checked guild on existence',  'Failed' );
             return false;
         }
@@ -883,6 +889,22 @@ class ArmorySync extends ArmorySyncBase {
      * @param string $tree
      * @return string
      */
+     
+      function _xcheckarray($array=false, $keys)
+      {
+            foreach ( $keys as $key ) 
+            {
+                  if (array_key_exists($key, $array))
+                  {
+                        return true;
+                  }
+                  else
+                  {
+                        return false;
+                  }
+            } 
+      }
+      
     function _checkContent( $object = false, $keys = array( ) ) {
 
         if ( is_object ($object ) && count (array_keys ( $keys ) ) !== 0 ) {
@@ -1751,7 +1773,7 @@ function _makeUrl( $mode, $locale, $id=false, $char=false, $realm=false, $guild=
 				break;
 			case 3:
 			case 'guild-info':
-				$mode = 'guild-info.xml?r=' . urlencode($realm) . '&n=' . urlencode($guild) . '&p=1';
+				$mode = 'guild-info.xml?r=' . urlencode($realm) . '&gn=' . urlencode($guild) . '&p=1';
 				break;
 			case 4:
 			case 'character-talents':
