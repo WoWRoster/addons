@@ -1,0 +1,387 @@
+
+	<table width="500">
+		<tr>
+			<td>
+				<table width="550">
+					<tr>
+						<td valign="top">
+							<table class="border_frame" cellpadding="0" cellspacing="1">
+								<tr>
+									<td class="border_color sgrayborder">
+										<div class="header_text sgrayborder">Catagories</div>
+
+										<div >
+											<ul id="rp_menu" class="tab_menu">
+											<!-- BEGIN menue -->
+												<li<!-- IF menue.SELECTED --> class="selected"<!-- ENDIF -->><a href="{menue.LINK}" >{menue.NAME}</a></li>
+											<!-- END menue -->
+											</ul>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td valign="top">
+
+						<!-- BEGIN body2 -->
+						
+						<table >
+							<tr>
+								<td valign="top" class="border_color sgreenborder">
+									<table class="border_frame" cellpadding="0" cellspacing="1">
+										<tr>
+											<td class="border_color sgreenborder" >
+												<div class="header_text">{body2.NAME}</div>
+											</td>
+										</tr>
+										<tr>
+											<td valign="top" background="{body2.IMG_PATH}/images/">
+
+						<div class="achievements">
+<div class="achieve_rcol">
+<div >
+<img src="{body2.IMG_PATH}/images/achv_rcol_top.jpg"></div>
+<div class="achievements-container">
+<div id="achievements-content">
+<div class="summary">
+<div>
+<div class="prog_bar ">
+<div class="progress_cap">
+
+</div>
+<div class="progress_cap_r" style="background-position:bottom">
+
+</div>
+<div class="progress_int">
+<div class="progress_fill" style="width:23.624161073825505%">
+
+</div>
+<div class="prog_int_text">{body2.TOTAL}</div>
+</div>
+</div>
+</div>
+<div class="summary_progress_container">
+<!-- BEGIN general -->
+<div class="summary_progress">
+<div>{body2.general.NAME}: </div>
+<div>
+<div class="prog_bar blue">
+<div class="progress_int">
+<div class="progress_fill" style="width:{body2.general.WIDTH}%">
+
+</div>
+<div class="prog_int_text">{body2.general.STANDING}</div>
+</div>
+</div>
+</div>
+</div>
+<!-- END general -->
+
+<!-- BEGIN quest -->
+<div class="summary_progress">
+<div>{body2.quest.NAME}: </div>
+<div>
+<div class="prog_bar blue">
+<div class="progress_int">
+<div class="progress_fill" style="width:{body2.quest.WIDTH}%">
+
+</div>
+<div class="prog_int_text">{body2.quest.STANDING}</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- END quest -->
+
+<!-- BEGIN exploration -->
+<div class="summary_progress">
+<div>{body2.exploration.NAME}: </div>
+<div>
+<div class="prog_bar blue">
+<div class="progress_int">
+<div class="progress_fill" style="width:{body2.exploration.WIDTH}%">
+
+</div>
+<div class="prog_int_text">{body2.exploration.STANDING}</div>
+</div>
+</div>
+</div>
+</div>
+<!-- END exploration -->
+<!-- BEGIN pvp -->
+<div class="summary_progress">
+<div>{body2.pvp.NAME}: </div>
+<div>
+<div class="prog_bar blue">
+<div class="progress_int">
+<div class="progress_fill" style="width:{body2.pvp.WIDTH}%">
+
+</div>
+<div class="prog_int_text">{body2.pvp.STANDING}</div>
+</div>
+</div>
+</div>
+</div>
+<!-- END pvp -->
+<!-- BEGIN dn_raids -->
+<div class="summary_progress">
+<div>{body2.dn_raids.NAME}: </div>
+<div>
+<div class="prog_bar blue">
+<div class="progress_int">
+<div class="progress_fill" style="width:{body2.dn_raids.WIDTH}%">
+
+</div>
+<div class="prog_int_text">{body2.dn_raids.STANDING}</div>
+</div>
+</div>
+</div>
+</div>
+<!-- END dn_raids -->
+<!-- BEGIN prof -->
+<div class="summary_progress">
+<div>{body2.prof.NAME}: </div>
+<div>
+<div class="prog_bar blue">
+<div class="progress_int">
+<div class="progress_fill" style="width:{body2.prof.WIDTH}%">
+
+</div>
+<div class="prog_int_text">{body2.prof.STANDING}</div>
+</div>
+</div>
+</div>
+</div>
+<!-- END prof -->
+<!-- BEGIN rep -->
+<div class="summary_progress">
+<div>{body2.rep.NAME}: </div>
+<div>
+<div class="prog_bar blue">
+<div class="progress_int">
+<div class="progress_fill" style="width:{body2.rep.WIDTH}%">
+
+</div>
+<div class="prog_int_text">{body2.rep.STANDING}</div>
+</div>
+</div>
+</div>
+</div>
+<!-- END rep -->
+<!-- BEGIN world_events -->
+<div class="summary_progress">
+<div>{body2.world_events.NAME}: </div>
+<div>
+<div class="prog_bar blue">
+<div class="progress_int">
+<div class="progress_fill" style="width:{body2.world_events.WIDTH}%">
+
+</div>
+<div class="prog_int_text">{body2.world_events.STANDING}</div>
+</div>
+</div>
+</div>
+</div>
+<!-- END world_events -->
+<!-- BEGIN feats -->
+<div class="summary_progress">
+<div>{body2.feats.NAME}: </div>
+<div>
+<div class="null_progress">{body2.feats.STANDING}</div>
+</div>
+</div>
+<!-- END feats -->
+<br clear="all">
+<br>
+</div>
+<div class="recent_header">{body2.RECENT}</div>
+
+<!-- BEGIN lst5-->
+<div class="s_achievement" >
+<div class="s_ach_stat">{body2.lst5.POINTS}<img src="{body2.IMG_PATH}/images/tiny_shield.gif">
+	        	{body2.lst5.DATE}
+	        </div>
+<span>{body2.lst5.NAME}</span><span class="achv_desc">{body2.lst5.DESC}</span>
+</div>
+<!-- END lst5-->
+
+</div>
+</div>
+</div>
+<div class="achv_r_btm">
+<img src="{body2.IMG_PATH}/images/achv_rcol_btm.jpg"></div>
+
+</div>
+<br clear="all">
+</div>
+
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+						<!-- END body2 -->
+						
+						<!-- BEGIN body -->
+
+						<table width="550">
+					<tr>
+						<td valign="top" colspan="2" class="border_color sgreenborder">
+							<table class="border_frame" cellpadding="0" cellspacing="1">
+								<tr>
+									<td class="border_color sgreenborder" colspan="2">
+										<div class="header_text">{body.NAME}</div>
+									</td>
+								</tr>
+								<tr>
+									<td valign="top" >
+										<table>
+											<tr>
+												<td class="border_color sgrayborder" valign="top" colspan="2">
+													<div class="header_text sgrayborder">Sub Catagories</div>
+														<div >
+															<ul id="rp_menu{body.MEN}" class="tab_menu">
+															<!-- BEGIN menue2 -->
+																<li<!-- IF body.menue2.SELECTED --> class="selected"<!-- ENDIF -->><a href="#" rel="{body.menue2.ID}">{body.menue2.NAME}</a></li>
+															<!-- END menue2 -->
+															</ul>
+														</div>
+												</td>
+											</tr>
+										</table>
+									</td>
+									<td>
+										<!-- BEGIN info -->
+											<div id="{body.info.ID}" style="display:none">
+												<table width=500>
+												<!-- BEGIN achv -->
+													<tr>
+														<td style="background-image:url({body.info.achv.BACKGROUND});background-position: bottom left;">
+															<div style="cursor:pointer;width:100%;" onclick="showHide('achv{body.info.achv.IDS}','','','');">
+															<table width="100%">
+																<tr>
+																	<td align="center" width="68">
+																		<img src ="{body.info.achv.ICON}"></a>
+																	</td>
+																	<td align="center"width="364">
+																		<h3><font color="black">{body.info.achv.NAME}</font></h3>
+																	</td>
+																	<td width="70" style="right:12px; top:5px; background:url({body.info.achv.SHIELD}point_shield.png);width:68px; height:61px; font:22px Georgia; color:white;">
+																		{body.info.achv.POINTS}
+																	</td>
+																</tr>
+																<tr>
+																	<td colspan=3><center><span style="color:#4169E1;">{body.info.achv.DESC}</span><br><font color="black" size="1">{body.info.achv.DATE}</font></center><br></td>
+																</tr>
+															</div>
+																<tr>
+																	<td colspan=3 width="100%">
+																		<div id="achv{body.info.achv.IDS}" style="width:100%;display:none;">
+																		<table width="100%">
+																			<tr>
+																				<td>
+																					<span style="color:#4169E1;">{body.info.achv.CRITERIA}</span>
+																				</td>
+																			</tr>
+																			<!-- IF body.info.achv.BAR -->
+																			<!-- BEGIN bar -->
+																			<tr>
+																			<td></td>
+																			<td>
+																			<div class="prog_bar">
+																			<div class="progress_int">
+																			<div class="progress_fill" style="{body.info.achv.bar.WIDTHX}">
+																			</div>
+																			<div class="prog_int_text">{body.info.achv.bar.STANDINGX}</div>
+																			</div>
+																			</div>
+																			</td>
+																			<td>
+																			</td>
+																			</tr>
+																			<!-- END bar -->
+																			<!-- ENDIF -->
+																			<tr>
+																			</tr>
+																		</table>
+																		<div>
+																	</td>
+																</tr>
+															</table>
+														</td>
+													</tr>
+												<!-- END achv -->
+												</table>
+											</div>
+										<!-- END info -->
+									</td>
+								</tr>
+
+						</table>
+						</td></tr></table>
+				
+						<!-- END body -->
+
+
+						</td>
+					</tr>
+				</table>
+				
+			</td>
+		</tr>
+	</table>
+
+<script type="text/javascript">
+var rp_menu=new tabcontent('rp_menu');
+rp_menu.init();
+</script>
+
+<script type="text/javascript">
+var rp_menu1=new tabcontent('rp_menu1');
+rp_menu1.init();
+</script>
+
+<script type="text/javascript">
+var rp_menu2=new tabcontent('rp_menu2');
+rp_menu2.init();
+</script>
+
+<script type="text/javascript">
+var rp_menu3=new tabcontent('rp_menu3');
+rp_menu3.init();
+</script>
+
+<script type="text/javascript">
+var rp_menu4=new tabcontent('rp_menu4');
+rp_menu4.init();
+</script>
+
+<script type="text/javascript">
+var rp_menu5=new tabcontent('rp_menu5');
+rp_menu5.init();
+</script>
+
+<script type="text/javascript">
+var rp_menu6=new tabcontent('rp_menu6');
+rp_menu6.init();
+</script>
+<script type="text/javascript">
+var rp_menu7=new tabcontent('rp_menu7');
+rp_menu7.init();
+</script>
+
+<script type="text/javascript">
+var rp_menu8=new tabcontent('rp_menu8');
+rp_menu8.init();
+</script>
+
+<script type="text/javascript">
+var rp_menu9=new tabcontent('rp_menu9');
+rp_menu9.init();
+</script>
+
+
+
+
