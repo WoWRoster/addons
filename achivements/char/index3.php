@@ -104,7 +104,314 @@ require_once(ROSTER_LIB . 'armory.class.php');
 
 
 
-aprint($roster);
+ //foreach ($pages as $cat => $title)
+     // {      
+                  
+            $r = $armory->fetchArmorya( $type = '12', $character ='Ulminia', $guild = false, $realm = 'Zangarmarsh', $item_id = '96',$fetch_type = 'array' );//getArmoryDataXML($url);
+	
+            $g = 0;
+
+            foreach ($r as $category )
+            {
+                  //aprint($category);
+                  echo '<hr><br>-='.$g.' '.$pages[96][$g].'=-<br><hr><br>';
+                  foreach ($category->achievement as $achiv)
+                  {
+                        
+                        $temp = get_object_vars($achiv);
+                        //aprint($temp);
+                        echo $temp['@attributes']['title'].'<br>';
+                  }
+                  
+                  foreach ($category->category as $catag)
+                  {
+                        $g++;
+                        echo '<hr><br>-='.$g.' '.$pages[96][$g].'=-<br><hr><br>';
+                        $temp = get_object_vars($catag);
+                        //aprint($temp);
+                        foreach ($catag->achievement as $ach)
+                        {
+                              $temp = get_object_vars($ach);
+                              echo $temp['@attributes']['title'].'<br>';     
+                        }
+                        
+                  }
+                  
+                  
+                  
+                  
+            }      
+                  
+            /*
+                  //echo '<hr><br>~~-  '.$title[0].'~~~<br>';
+                  foreach ($category->achievement as $achievement)
+                  {
+                  
+                        
+                        $achv_points='';
+                        $achv_icon='';
+                        $achv_title='';
+                        $achv_disc='';
+                        $achv_date='';
+                        $achv_title='';
+                        $achv_id='';
+                        $achv_reward_title = '';
+                        $achv_criteria = '';
+                        $achv_progress = '';
+                        $achv_progress_width = '';
+                        $achv_complete = '';
+                        $quantity = '';
+                        $max = '';
+                        $order = '';
+                        //echo '~~----  '.$title[$g].'~~~<br>';
+                        $achv_cat_sub = $title[$g];
+                        $temp = get_object_vars($achievement);
+                        $achv_title = $temp['@attributes']['title'];//.' -<br>';
+                        
+                        //echo '$lang[\''.$temp['@attributes']['id'].'title\'] = "'.addslashes($temp['@attributes']['title']).'";<br>';
+                        //echo '$lang[\''.$temp['@attributes']['id'].'disc\'] = "'.addslashes($temp['@attributes']['desc']).'";<br>';
+                        //--echo $temp['@attributes']['categoryId']v.' -<br>';// => 97
+                        if (isset($temp['@attributes']['dateCompleted']))
+                        {
+                              $achv_date=$temp['@attributes']['dateCompleted'];//.' -<br>';// => 2009-01-16-07:00
+                              $achv_complete = '1';
+                        }
+                        $achv_disc=$temp['@attributes']['desc'];//.' -<br>';// => Explore the regions of Northrend.
+                        $achv_icon=$temp['@attributes']['icon'];//.' -<br>';// => achievement_zone_northrend_01
+                        $achv_id=$temp['@attributes']['id'];//.' -<br>';// => 45
+                        $achv_points=$temp['@attributes']['points'];//.' -<br>';// => 25
+                        if (isset($temp['@attributes']['reward']))
+                        {
+                              $achv_reward_title = $temp['@attributes']['reward'];//.' -<br><br>';// => Reward: Tabard of the Explorer
+                        }
+                        ////--echo $achievements->{'@attributes'}['title'].' -<br>';
+                        //--echo 'Criteria listing<br>';
+                        $datae = '';
+                        foreach($achievement->criteria as $achievemen)
+                        {
+
+                              $temp2 = get_object_vars($achievemen);
+                              if (isset($temp2['@attributes']['name']))
+                              {
+                                    $datae.= $temp2['@attributes']['name'].'<br>';//.' -<br>';
+                              }
+                              if (isset($temp2['@attributes']['quantity']))
+                              {
+                                    $quantity = $temp2['@attributes']['quantity'];//.'-<br>';
+                              }
+                              if (isset($temp2['@attributes']['maxQuantity']))
+                              {
+                                     $max = $temp2['@attributes']['maxQuantity'];//.'-<br>';
+                              }
+                              if ($max != '')
+                              {
+                                    $achv_progress_width = 'width:'.round( ( ( $quantity / $max )*100 ) ).'%';
+                                    $achv_progress = ''.$quantity.' / '.$max.'';
+                              }
+                              
+                        }
+                        
+                        //--echo 'Achivement Criteria <BR>';
+                        
+                        foreach($achievement->achievement as $achievemen)
+                        {
+                              $date = '';
+                              $b1 = '';
+                              $b2 = '';
+                              $temp2 = get_object_vars($achievemen);
+                  
+                              if (isset($temp2['@attributes']['dateCompleted']))
+                              {
+                        ////--echo '-------'.$temp2['@attributes']['date'].' -<br>';
+                                    $date = '( ' . $temp2['@attributes']['dateCompleted'] . ' )';
+                                    $b1 = '<b><span style="color:#7eff00;">';
+                                    $b2 = '</span></b>';
+                              }
+                              else
+                              {
+                                    $date = '';
+                                    $b1 = '';
+                                    $b2 = '';
+                              }
+                              if (isset($temp2['@attributes']['icon']))
+                              {
+                                    $datae.= '<img src="img/Interface/Icons/' .$temp2['@attributes']['icon'] . '.png" width="24" height="24"> ';
+                              }
+                              if (isset($temp2['@attributes']['title']))
+                              {
+                                    $datae.= $b1.$temp2['@attributes']['title'].$b2.' ' . $date . ' ';
+                              }
+
+                              if (isset($temp2['@attributes']['quantity']))
+                              {
+                                    $quantity = $temp2['@attributes']['quantity'];//.'-<br>';
+                              }
+                              if (isset($temp2['@attributes']['maxQuantity']))
+                              {
+                                     $max = $temp2['@attributes']['maxQuantity'];//.'-<br>';
+                              }
+                              if ($max != '')
+                              {
+                                    $achv_progress_width = 'width:'.round( ( ( $quantity / $max )*100 ) ).'%';
+                                    $achv_progress = ''.$quantity.' / '.$max.'';
+                              }
+                              if (isset($temp2['@attributes']['points']))
+                              {
+                                    $datae.= ' Points'.$temp2['@attributes']['points'].'<br>';
+                              }
+                               
+                        }
+                        
+                        $achv_criteria = $datae;
+            
+                        $g++;
+                        
+                       // $this->achnum++;
+
+
+                //  $this->order++;
+            }
+                  $g = 1;
+      
+                  foreach($category->category as $f => $achievements)
+                  {
+                  
+                        
+                        //aprint($category);
+                        $achv_cat_sub = $title[$g];
+                       // echo  $achv_cat_sub.' - '.$f.' - '.$category.'<br>';
+      
+                        foreach ($achievements as $achiev)
+                        {
+            
+                              $achv_points='';
+                              $achv_icon='';
+                              $achv_title='';
+                              $achv_disc='';
+                              $achv_date='';
+                              $achv_title='';
+                              $achv_id='';
+                              $achv_reward_title = '';
+                              $achv_criteria = '';
+                              $achv_progress = '';
+                              $achv_progress_width = '';
+                              $quantity = '';
+                              $max = '';
+                              $order = '';
+                              $achv_complete = '';
+                        
+                  
+                              $temp = get_object_vars($achiev);
+                              $achv_title = $temp['@attributes']['title'];//.' -<br>';
+                              //--echo $temp['@attributes']['categoryId']v.' -<br>';// => 97
+                              
+                        //echo '$lang[\''.$temp['@attributes']['id'].'title\'] = "'.addslashes($temp['@attributes']['title']).'";<br>';
+                        //echo '$lang[\''.$temp['@attributes']['id'].'disc\'] = "'.addslashes($temp['@attributes']['desc']).'";<br>';
+                              if (isset($temp['@attributes']['dateCompleted']))
+                              {
+                                    $achv_date=$temp['@attributes']['dateCompleted'];//.' -<br>';// => 2009-01-16-07:00
+                                    $achv_complete = '1';
+                              }
+                              $achv_disc=$temp['@attributes']['desc'];//.' -<br>';// => Explore the regions of Northrend.
+                              $achv_icon=$temp['@attributes']['icon'];//.' -<br>';// => achievement_zone_northrend_01
+                              $achv_id=$temp['@attributes']['id'];//.' -<br>';// => 45
+                              $achv_points=$temp['@attributes']['points'];//.' -<br>';// => 25
+                              if (isset($temp['@attributes']['reward']))
+                              {
+                                    $achv_reward_title = $temp['@attributes']['reward'];//.' -<br><br>';// => Reward: Tabard of the Explorer
+                              }
+                              ////--echo $achievements->{'@attributes'}['title'].' -<br>';
+                              //--echo 'Criteria listing<br>';
+                              $datae = '';
+                              foreach($achiev->criteria as $achievemen)
+                              {
+
+                                    $temp2 = get_object_vars($achievemen);
+                                    if (isset($temp2['@attributes']['name']))
+                                    {
+                                          $datae.= $temp2['@attributes']['name'].'<br>';//.' -<br>';
+                                    }
+                                    if (isset($temp2['@attributes']['quantity']))
+                                    {
+                                          $quantity = $temp2['@attributes']['quantity'];//.'-<br>';
+                                    }
+                                    if (isset($temp2['@attributes']['maxQuantity']))
+                                    {
+                                          $max = $temp2['@attributes']['maxQuantity'];//.'-<br>';
+                                    }
+                                    if ($max != '')
+                                    {
+                                          $achv_progress_width = 'width:'.round( ( ( $quantity / $max )*100 ) ).'%';
+                                          $achv_progress = ''.$quantity.' / '.$max.'';
+                                    }
+                              
+                              }
+                        
+                        //--echo 'Achivement Criteria <BR>';
+                        
+                              foreach($achiev->achievement as $achievemen)
+                              {
+                                    $date = '';
+                                    $b1 = '';
+                                    $b2 = '';
+                                    $temp2 = get_object_vars($achievemen);
+                  
+                                    if (isset($temp2['@attributes']['dateCompleted']))
+                                    {
+                        ////--echo '-------'.$temp2['@attributes']['date'].' -<br>';
+                                          $date = '( ' . $temp2['@attributes']['dateCompleted'] . ' )';
+                                          $b1 = '<b><span style="color:#7eff00;">';
+                                          $b2 = '</span></b>';
+                                    }
+                                    else
+                                    {
+                                          $date = '';
+                                          $b1 = '';
+                                          $b2 = '';
+                                    }
+                                    if (isset($temp2['@attributes']['icon']))
+                                    {
+                                          $datae.= '<img src="img/Interface/Icons/' .$temp2['@attributes']['icon'] . '.png" width="24" height="24"> ';
+                                    }
+                                    if (isset($temp2['@attributes']['title']))
+                                    {
+                                          $datae.= $b1.$temp2['@attributes']['title'].$b2.' ' . $date . ' ';
+                                    }
+
+                                    if (isset($temp2['@attributes']['quantity']))
+                                    {
+                                          $quantity = $temp2['@attributes']['quantity'];//.'-<br>';
+                                    }
+                                    if (isset($temp2['@attributes']['maxQuantity']))
+                                    {
+                                          $max = $temp2['@attributes']['maxQuantity'];//.'-<br>';
+                                    }
+                                    if ($max != '')
+                                    {
+                                          $achv_progress_width = 'width:'.round( ( ( $quantity / $max )*100 ) ).'%';
+                                          $achv_progress = ''.$quantity.' / '.$max.'';
+                                    }
+                                    if (isset($temp2['@attributes']['points']))
+                                    {
+                                          $datae.= ' Points'.$temp2['@attributes']['points'].'<br>';
+                                    }
+                               
+                              }
+                        
+                              $achv_criteria = $datae;
+            
+                      
+                        
+                           //   $this->achnum++;
+                              
+            
+                        }
+                        $g++;
+                  }
+
+           }*/
+            //end pages
+     // }
 
 /*
 

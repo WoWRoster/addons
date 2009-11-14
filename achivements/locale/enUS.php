@@ -27,8 +27,6 @@ $lang['World Events'] = 'World Events';
 $lang['Feats of Strength'] = 'Feats of Strength';
 $lang['Recent'] = 'Recent Achievements';
 $lang['Summary'] = 'Summary';
-
-// page 92
 $lang['1833title'] = "It\'s Happy Hour Somewhere";
 $lang['1833disc'] = "Drink 25 different types of beverages.";
 $lang['2141title'] = "Stable Keeper";
@@ -99,7 +97,6 @@ $lang['2084title'] = "Ring of the Kirin Tor";
 $lang['2084disc'] = "Purchase a Signet of the Kirin Tor, Band of the Kirin Tor, Loop of the Kirin Tor, or Ring of the Kirin Tor in Dalaran.";
 $lang['2142title'] = "Filling Up The Barn";
 $lang['2142disc'] = "Obtain 25 mounts.";
-// page 96
 $lang['975title'] = "200 Daily Quests Complete";
 $lang['975disc'] = "Complete 200 daily quests.";
 $lang['1576title'] = "Of Blood and Anguish";
@@ -180,7 +177,6 @@ $lang['1428title'] = "Mine Sweeper";
 $lang['1428disc'] = "Get caught in 10 consecutive land mine explosions in the Sparksocket Minefield without landing.";
 $lang['41title'] = "Loremaster of Northrend";
 $lang['41disc'] = "Complete the Northrend quest achievements listed below.";
-// page 97
 $lang['45title'] = "Explore Northrend";
 $lang['45disc'] = "Explore the regions of Northrend.";
 $lang['46title'] = "World Explorer";
@@ -317,7 +313,6 @@ $lang['1267title'] = "Explore Zul\'Drak";
 $lang['1267disc'] = "Explore Zul\'Drak, revealing the covered areas of the world map.";
 $lang['2256title'] = "Northern Exposure";
 $lang['2256disc'] = "Kill one of the extremely rare and hard to find Northrend creatures listed below.";
-// page 95
 $lang['701title'] = "Freedom of the Alliance";
 $lang['701disc'] = "Obtain an Insignia or Medallion of the Alliance.";
 $lang['1157title'] = "Duel-icious";
@@ -592,7 +587,6 @@ $lang['3855title'] = "Glaive Grave";
 $lang['3855disc'] = "In Isle of Conquest, kill 10 players with a Glaive Thrower without dying.";
 $lang['3857title'] = "Master of Isle of Conquest";
 $lang['3857disc'] = "Complete the Isle of Conquest achievements listed below.";
-// page 168
 $lang['3840title'] = "50 Dungeon & Raid Emblems";
 $lang['3840disc'] = "Loot 50 Emblems of Heroism, Valor, Conquest or Triumph.";
 $lang['1283title'] = "Classic Dungeonmaster";
@@ -1315,7 +1309,6 @@ $lang['3816title'] = "The Traitor King (25 player)";
 $lang['3816disc'] = "Kill 40 Swarm Scarabs within 30 seconds in 25-player mode.";
 $lang['3817title'] = "A Tribute to Skill (25 player)";
 $lang['3817disc'] = "In the Trial of the Grand Crusader, reach a Tribute Chest with at least 25 attempts remaining in 25-player mode.";
-// page 169
 $lang['730title'] = "Skills to Pay the Bills";
 $lang['730disc'] = "Become a Grand Master in fishing, first aid and cooking.";
 $lang['735title'] = "Working Day and Night";
@@ -1410,7 +1403,6 @@ $lang['135title'] = "Grand Master in First Aid";
 $lang['135disc'] = "Become a Grand Master in first aid.";
 $lang['137title'] = "Stocking Up";
 $lang['137disc'] = "Create 500 Heavy Frostweave Bandages.";
-// page 201
 $lang['522title'] = "Somebody Likes Me";
 $lang['522disc'] = "Raise a reputation to Exalted.";
 $lang['523title'] = "5 Exalted Reputations";
@@ -1485,7 +1477,6 @@ $lang['2082title'] = "Ice Mammoth";
 $lang['2082disc'] = "Obtain an Ice Mammoth.";
 $lang['2083title'] = "Grand Ice Mammoth";
 $lang['2083disc'] = "Obtain a Grand Ice Mammoth.";
-// page 155
 $lang['3456title'] = "Dead Man\'s Party";
 $lang['3456disc'] = "Dance with Catrina to become a skeleton during the Day of the Dead.";
 $lang['2797title'] = "Noble Gardener";
@@ -1742,7 +1733,6 @@ $lang['2782title'] = "Champion of the Alliance";
 $lang['2782disc'] = "Earn the right to represent every Alliance race\'s faction in the Argent Tournament.";
 $lang['3676title'] = "A Silver Confidant";
 $lang['3676disc'] = "Earn both exalted status with The Silver Covenant and the right to represent a city in the Argent Tournament.";
-// page 81
 $lang['684title'] = "Onyxia\'s Lair (Level 60)";
 $lang['684disc'] = "Defeat the classic, level 60 version of Onyxia.";
 $lang['1706title'] = "Crashin\' Thrashin\' Racer";
