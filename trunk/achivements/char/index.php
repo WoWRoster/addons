@@ -155,7 +155,7 @@
                                     'ID' => $catagory,
                                     'LINK' => makelink('&amp;cat='.$catagory),
                                     'NAME' => htmlspecialchars($roster->locale->act[$achv]),
-                                    'SELECTED' => (isset($sx) && $sx == 1 ? true : false)
+                                    'SELECTED' => (isset($sx) && $sx == 0 ? true : false)
                                     )
                               );
                   $e++;
@@ -170,11 +170,11 @@
                                     );
                         $sxx = '0';
                         
-            
                         foreach ($achv_info as $achva => $dat)
                         {
 
                         $sxx++;
+                        
                               $roster->tpl->assign_block_vars('body.menue2',array(
                                     'ID' => 's'.$dat['menue'],
                                     'NAME' => $achva,
@@ -194,11 +194,11 @@
                               {
                                     $xxx++;
                                     
-                                    if ($b['achv_complete'] == 'achievement')
+                                    if ($b['achv_complete'] == '1')
                                     {
                                           $bg = $addon['url'].'images/achievement_bg.jpg';
                                     }
-                                    if ($b['achv_complete'] == 'achievement locked')
+                                    if ($b['achv_complete'] == '')
                                     {
                                           $bg = $addon['url'].'images/achievement_bg_locked.jpg';
                                     }
