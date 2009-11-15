@@ -493,7 +493,7 @@ class ArmorySync extends ArmorySyncBase {
 
 
 
-            $this->data["TalentPoints"] = ($char->level > 0) ? $char->level - $tab->talentSpec->treeOne - $tab->talentSpec->treeTwo - $tab->talentSpec->treeThree - 9 : 0;
+            $this->data["TalentPoints"] = ($char->level > 0) ? $char->level - $tab->talentGroup->talentSpec->treeOne - $tab->talentGroup->talentSpec->treeTwo - $tab->talentGroup->talentSpec->treeThree - 9 : 0;
             $this->data["Race"] = $char->race;
             $this->data["RaceId"] = $char->raceId;
             $this->data["RaceEn"] = preg_replace( "/\s/", "", $roster->locale->act['race_to_en'][$char->race] );
@@ -692,20 +692,31 @@ class ArmorySync extends ArmorySyncBase {
       function _getReputationInfo() 
       {
             global $roster, $addon;
-
-            $content =  $this->getCharacterRep($this->server,$this->memberName);    
-       
-            $factionReputation = $content->characterInfo->reputationTab->factionCategory;
+            
+            include_once(ROSTER_LIB . 'armory.class.php');
+		$armory = new RosterArmory;
+		
+                                    //$character, $locale, $realm, $fetch_type='array' )
+            $content =  $this->_parseData($armory->fetchCharacterReputation($this->memberName, $roster->config['locale'], $this->server, $fetch_type='array'));    
+            //aprint($content);
+            $factionReputation = $content->characterInfo->reputationTab->faction;
 
             $this->data["Reputation"]["Count"] = 0;
             $is = 0;
+            //aprint($factionReputation);
             foreach ($factionReputation as $factiona) 
             {
-                  $factionType = $factiona['name'];
-
+                  //echo $factiona->id.'<br>';
                   foreach ($factiona as $factionRep) 
                   {
-                        $name = $factionRep['name'];
+                        //echo aprint($factionRep); //->id.'<br>';
+                  }
+            //aprint($factiona);
+                  //$factionType = $factiona['name'];
+/*
+                  foreach ($factiona as $factionRep) 
+                  {
+                        //$name = $factionRep['name'];
             
                         $is++;
                         $this->data["Reputation"][''.$factionType.''][''.$name.''] = array();
@@ -716,7 +727,7 @@ class ArmorySync extends ArmorySyncBase {
                         $this->status['reputationInfo'] += 1;
 
                   }
-
+*/
             }
             
             $this->_debug( 1, true, 'Parsed reputation info', 'OK' );
