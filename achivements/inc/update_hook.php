@@ -508,10 +508,10 @@ var $pages = array(
                     (null,'".$memberid."','".$this->data['guild_id']."','".$total."','".$general."','".$quests."',".
                     "'".$exploration."','".$pvp."','".$dn_raids."','".$prof."','".$rep."','".$world_events."','".$feats."',".
                     "'".addslashes($title_1)."','".addslashes($disc_1)."','".$date_1."','".$points_1."',".
-                    "'".addslashes($title_2)."','".addslashes($disc_1)."','".$date_2."','".$points_2."',".
-                    "'".addslashes($title_3)."','".addslashes($disc_1)."','".$date_3."','".$points_3."',".
-                    "'".addslashes($title_4)."','".addslashes($disc_1)."','".$date_4."','".$points_4."',".
-                    "'".addslashes($title_5)."','".addslashes($disc_1)."','".$date_5."','".$points_5."');";
+                    "'".addslashes($title_2)."','".addslashes($disc_2)."','".$date_2."','".$points_2."',".
+                    "'".addslashes($title_3)."','".addslashes($disc_3)."','".$date_3."','".$points_3."',".
+                    "'".addslashes($title_4)."','".addslashes($disc_4)."','".$date_4."','".$points_4."',".
+                    "'".addslashes($title_5)."','".addslashes($disc_5)."','".$date_5."','".$points_5."');";
                     $result7 = $roster->db->query($sql7) or die_quietly($roster->db->error(),'Database Error',basename(__FILE__),__LINE__,$sql7);
 
             $this->messages .=$this->achnum.'</li>';
