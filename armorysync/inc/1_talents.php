@@ -1,3 +1,4 @@
+<<<<<<< .mine
 <?php
 /**
  * AUTO-GENERATED CONF FILE
@@ -5,6 +6,15 @@
  */
 
 $i = 0;
+=======
+<?php
+/**
+ * AUTO-GENERATED CONF FILE
+ * DO NOT EDIT !!!
+ */
+
+$i = 0;
+>>>>>>> .r479
 $t = 0;
 
 $className = "Warrior Talents";
