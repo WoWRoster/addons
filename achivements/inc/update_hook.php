@@ -148,7 +148,7 @@ var $pages = array(
 
 	function char($char, $memberid) 
 	{
-	     //print_r($this->data);
+	     aprint($char);
 		global $roster, $addon;
             $this->messages .='<li>Updating Achievements: ';
             $sql = '';
@@ -299,14 +299,14 @@ var $pages = array(
                         if ($achv_title != '' && $achv_disc != '')
                         {
                               $sql = "INSERT INTO `" . $roster->db->table('data',$this->data['basename']) . "` 
-                              (`id`,`member_id`,`guild_id`,`achv_cat`,`achv_cat_title`,`achv_cat_sub`,`achv_cat_sub2`,
-                              `achv_id`,`achv_points`,`achv_icon`,`achv_title`,`achv_reward_title`,`achv_disc`,`achv_date`,
-                              `achv_criteria`,`achv_progress`,`achv_progress_width`,`achv_complete`) 
-                              VALUES 
-                              (null,'".$memberid."','".$this->data['guild_id']."','".$cat."','".addslashes($title[0])."',
-                              '','".addslashes($title[0])."','".$achv_id."','".$achv_points."',
-                              '".addslashes($achv_icon)."','".$achv_id."title','".addslashes($achv_reward_title)."','".$achv_id."disc',
-                              '".addslashes($achv_date)."','".addslashes($achv_criteria)."','".$achv_progress."','".$achv_progress_width."','".$achv_complete."');";
+                                    (`id`,`member_id`,`guild_id`,`achv_cat`,`achv_cat_title`,`achv_cat_sub`,`achv_cat_sub2`,
+                                    `achv_id`,`achv_points`,`achv_icon`,`achv_title`,`achv_reward_title`,`achv_disc`,`achv_date`,
+                                    `achv_criteria`,`achv_progress`,`achv_progress_width`,`achv_complete`) 
+                                    VALUES 
+                                    (null,'".$memberid."','".$this->data['guild_id']."','".$cat."','".addslashes($title['0'])."',
+                                    '".addslashes($title['0'])."','".$this->order."','".$achv_id."','".$achv_points."',
+                                    '".addslashes($achv_icon)."','".$achv_id."title','".addslashes($achv_reward_title)."','".$achv_id."disc',
+                                    '".addslashes($achv_date)."','".addslashes($achv_criteria)."','".$achv_progress."','".$achv_progress_width."','".$achv_complete."');";
                               $result = $roster->db->query($sql) or die_quietly($roster->db->error(),'Database Error',basename(__FILE__),__LINE__,$sql);
                         }
                   
@@ -347,7 +347,7 @@ var $pages = array(
                               if (isset($temp['@attributes']['dateCompleted']))
                               {
                                     $achv_date=$temp['@attributes']['dateCompleted'];//.' -<br>';// => 2009-01-16-07:00
-                                    $achv_complete = '1';
+                                  //  $achv_complete = '1';
                               }
                               $achv_disc=$temp['@attributes']['desc'];//.' -<br>';// => Explore the regions of Northrend.
                               $achv_icon=$temp['@attributes']['icon'];//.' -<br>';// => achievement_zone_northrend_01
@@ -398,7 +398,7 @@ var $pages = array(
                         ////--echo '-------'.$temp2['@attributes']['date'].' -<br>';
                                           $date = '( ' . $temp2['@attributes']['dateCompleted'] . ' )';
                                           $b1 = '<b><span style="color:#7eff00;">';
-                                          $b2 = '</span></b>';
+                                          $b2 = '</span></b>';                             
                                     }
                                     else
                                     {

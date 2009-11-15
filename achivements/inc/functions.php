@@ -13,7 +13,7 @@ function getConfigDatamod($member_id)
       {
 		global $roster, $addon;
 
-            $sql = "SELECT * FROM `".$roster->db->table('data',$addon['basename'])."` WHERE `member_id` = '".$member_id."' ORDER BY `achv_cat_sub2` ASC,`achv_complete` ASC, `achv_date` desc ";
+            $sql = "SELECT * FROM `".$roster->db->table('data',$addon['basename'])."` WHERE `member_id` = '".$member_id."' ORDER BY `achv_cat_sub2` ASC,`achv_complete` desc, `achv_date` desc ";
 
             $this->cfg = '';
 		// Get the current config values
