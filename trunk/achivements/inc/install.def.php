@@ -30,14 +30,14 @@ class achivementsinstall
 	var $active = true;
 	var $icon = 'achievement_general';
 
-	var $version = '1.0';
+	var $version = '1.0.484';
 	
-	var $fullname = 'Player Achivements';
-	var $description = 'Displays Player Achivements';
+	var $fullname = 'Player Achievements';
+	var $description = 'Displays Player Achievements';
 	var $wrnet_id = '';
 	var $credits = array(
-		array(	"name"=>	"Ulminia warcraftalliance@gmail.com",
-				"info"=>	"Retired Roster Dev Now addon Dev!"),
+		array(	"name"=>	"Ulminia",
+				"info"=>	"Roster/addon DEV"),
 	);
 
 
