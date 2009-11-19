@@ -34,7 +34,7 @@ class achivementsinstall
 	
 	var $fullname = 'Player Achievements';
 	var $description = 'Displays Player Achievements';
-	var $wrnet_id = '';
+	var $wrnet_id = '0';
 	var $credits = array(
 		array(	"name"=>	"Ulminia",
 				"info"=>	"Roster/addon DEV"),
