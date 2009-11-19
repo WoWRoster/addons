@@ -148,7 +148,7 @@ var $pages = array(
 
 	function char($char, $memberid) 
 	{
-	     aprint($char);
+	     //aprint($char);
 		global $roster, $addon;
             $this->messages .='<li>Updating Achievements: ';
             $sql = '';
