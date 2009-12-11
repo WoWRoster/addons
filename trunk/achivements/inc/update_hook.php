@@ -71,6 +71,11 @@ var $pages = array(
             '8' => 'Secrets of Ulduar 25-Player Raid',
             '9' => 'Call of the Crusade 10-Player Raid',
             '10' => 'Call of the Crusade 25-Player Raid',
+            '11' => 'Call of the Crusade 10-Player Raid',
+            '12' => 'Call of the Crusade 25-Player Raid',
+            '13' => 'Fall of the Lich King 10-Player Raid',
+            '14' => 'Fall of the Lich King 25-Player Raid',
+
 		),
 	'169' => Array(
 		'0' => 'Professions',
