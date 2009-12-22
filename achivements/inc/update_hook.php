@@ -125,7 +125,7 @@ var $pages = array(
       global $roster, $addon;
       
       $r =split("en", $roster->config['locale']);
-      print_r($r);
+      //aprint($roster->data);
 	 
 	 
 	 if( $r[1] == 'US' )
@@ -155,6 +155,10 @@ var $pages = array(
 	{
 	     //aprint($char);
 		global $roster, $addon;
+		
+		//aprint($roster);
+		
+		
             $this->messages .='<li>Updating Achievements: ';
             $sql = '';
             $sqll = "DELETE FROM `" . $roster->db->table('data',$this->data['basename']) . "` Where `member_id` = '".$memberid."';";
@@ -201,6 +205,7 @@ var $pages = array(
                         
                         //echo '~~----  '.$title[$g].'~~~<br>';
                         $achv_cat_sub = $title[$g];
+                        $gh=1;
                         $temp = get_object_vars($achievement);
                         $achv_title = $temp['@attributes']['title'];//.' -<br>';
                         //--echo $temp['@attributes']['categoryId']v.' -<br>';// => 97
@@ -212,7 +217,10 @@ var $pages = array(
                         $achv_disc=$temp['@attributes']['desc'];//.' -<br>';// => Explore the regions of Northrend.
                         $achv_icon=$temp['@attributes']['icon'];//.' -<br>';// => achievement_zone_northrend_01
                         $achv_id=$temp['@attributes']['id'];//.' -<br>';// => 45
-                        $achv_points=$temp['@attributes']['points'];//.' -<br>';// => 25
+                         if (isset($temp['@attributes']['points']))
+                        {
+                              $achv_points=$temp['@attributes']['points'];//.' -<br>';// => 25
+                        }
                         if (isset($temp['@attributes']['reward']))
                         {
                               $achv_reward_title = $temp['@attributes']['reward'];//.' -<br><br>';// => Reward: Tabard of the Explorer
@@ -308,7 +316,7 @@ var $pages = array(
                                     `achv_id`,`achv_points`,`achv_icon`,`achv_title`,`achv_reward_title`,`achv_disc`,`achv_date`,
                                     `achv_criteria`,`achv_progress`,`achv_progress_width`,`achv_complete`) 
                                     VALUES 
-                                    (null,'".$memberid."','".$this->data['guild_id']."','".$cat."','".addslashes($title['0'])."',
+                                    (null,'".$memberid."','".$roster->data['guild_id']."','".$cat."','".addslashes($title['0'])."',
                                     '".addslashes($title['0'])."','".$this->order."','".$achv_id."','".$achv_points."',
                                     '".addslashes($achv_icon)."','".$achv_id."title','".addslashes($achv_reward_title)."','".$achv_id."disc',
                                     '".addslashes($achv_date)."','".addslashes($achv_criteria)."','".$achv_progress."','".$achv_progress_width."','".$achv_complete."');";
@@ -450,7 +458,7 @@ var $pages = array(
                                     `achv_id`,`achv_points`,`achv_icon`,`achv_title`,`achv_reward_title`,`achv_disc`,`achv_date`,
                                     `achv_criteria`,`achv_progress`,`achv_progress_width`,`achv_complete`) 
                                     VALUES 
-                                    (null,'".$memberid."','".$this->data['guild_id']."','".$cat."','".addslashes($title['0'])."',
+                                    (null,'".$memberid."','".$roster->data['guild_id']."','".$cat."','".addslashes($title['0'])."',
                                     '".addslashes($achv_cat_sub)."','".$this->order."','".$achv_id."','".$achv_points."',
                                     '".addslashes($achv_icon)."','".$achv_id."title','".addslashes($achv_reward_title)."','".$achv_id."disc',
                                     '".addslashes($achv_date)."','".addslashes($achv_criteria)."','".$achv_progress."','".$achv_progress_width."','".$achv_complete."');";
@@ -510,7 +518,7 @@ var $pages = array(
                     `title_5`,`disc_5`,`date_5`,`points_5`
                     ) 
                     VALUES 
-                    (null,'".$memberid."','".$this->data['guild_id']."','".$total."','".$general."','".$quests."',".
+                    (null,'".$memberid."','".$roster->data['guild_id']."','".$total."','".$general."','".$quests."',".
                     "'".$exploration."','".$pvp."','".$dn_raids."','".$prof."','".$rep."','".$world_events."','".$feats."',".
                     "'".addslashes($title_1)."','".addslashes($disc_1)."','".$date_1."','".$points_1."',".
                     "'".addslashes($title_2)."','".addslashes($disc_2)."','".$date_2."','".$points_2."',".
