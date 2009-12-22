@@ -57,15 +57,25 @@ $pages = array(
 		'5' => 'Warsong Gulch',
 		'6' => 'Strand of the Ancients',
 		'7' => 'Wintergrasp',
+		'8' => 'Isle of Conquest',
 		),
 	'168' => Array(
 		'0' => 'Dungeons &amp; Raids',
-		'1' => 'Classic',
-		'2' => 'The Burning Crusade',
-		'3' => 'Lich King Dungeon',
-		'4' => 'Lich King Heroic',
-		'5' => 'Lich King Raid',
-		'6' => 'Lich King Heroic Raid',
+            '1' => 'Classic',
+            '2' => 'The Burning Crusade',
+            '3' => 'Lich King Dungeon',
+            '4' => 'Lich King Heroic',
+            '5' => 'Lich King 10-Player Raid',
+            '6' => 'Lich King 25-Player Raid',
+            '7' => 'Secrets of Ulduar 10-Player Raid',
+            '8' => 'Secrets of Ulduar 25-Player Raid',
+            '9' => 'Call of the Crusade 10-Player Raid',
+            '10' => 'Call of the Crusade 25-Player Raid',
+            '11' => 'Call of the Crusade 10-Player Raid',
+            '12' => 'Call of the Crusade 25-Player Raid',
+            '13' => 'Fall of the Lich King 10-Player Raid',
+            '14' => 'Fall of the Lich King 25-Player Raid',
+
 		),
 	'169' => Array(
 		'0' => 'Professions',
@@ -83,12 +93,14 @@ $pages = array(
 		'0' => 'World Events',
 		'1' => 'Lunar Festival',
 		'2' => 'Love is in the Air',
-		'3' => 'Children\'s Week',
-		'4' => 'Noble Garden',
+		'3' => 'Noblegarden',
+		'4' => 'Children\'s Week',
 		'5' => 'Midsummer',
 		'6' => 'Brewfest',
 		'7' => 'Hallow\'s End',
-		'8' => 'Winter Veil',
+		'8' => 'Pilgrim\'s Bounty',
+		'9' => 'Winter Veil',
+		'10' => 'Argent Tournament',
 		),
 	'81' => Array(
 		'0' => 'Feats of Strength',
@@ -102,48 +114,17 @@ require_once(ROSTER_LIB . 'armory.class.php');
 
 
 
-
-
- //foreach ($pages as $cat => $title)
-     // {      
+foreach ($pages as $cat => $title)
+      {      
                   
-            $r = $armory->fetchArmorya( $type = '12', $character ='Ulminia', $guild = false, $realm = 'Zangarmarsh', $item_id = '96',$fetch_type = 'array' );//getArmoryDataXML($url);
+            $r = $armory->fetchArmorya( $type = '12', $character ='Ulminia', $guild = false, $realm = 'Zangarmarsh', $item_id = $cat,$fetch_type = 'array' );//getArmoryDataXML($url);
 	
             $g = 0;
 
             foreach ($r as $category )
             {
-                  //aprint($category);
-                  echo '<hr><br>-='.$g.' '.$pages[96][$g].'=-<br><hr><br>';
-                  foreach ($category->achievement as $achiv)
-                  {
-                        
-                        $temp = get_object_vars($achiv);
-                        //aprint($temp);
-                        echo $temp['@attributes']['title'].'<br>';
-                  }
                   
-                  foreach ($category->category as $catag)
-                  {
-                        $g++;
-                        echo '<hr><br>-='.$g.' '.$pages[96][$g].'=-<br><hr><br>';
-                        $temp = get_object_vars($catag);
-                        //aprint($temp);
-                        foreach ($catag->achievement as $ach)
-                        {
-                              $temp = get_object_vars($ach);
-                              echo $temp['@attributes']['title'].'<br>';     
-                        }
-                        
-                  }
-                  
-                  
-                  
-                  
-            }      
-                  
-            /*
-                  //echo '<hr><br>~~-  '.$title[0].'~~~<br>';
+                 // echo '<hr><br>~~-  '.$title[0].'~~~<br>';
                   foreach ($category->achievement as $achievement)
                   {
                   
@@ -163,13 +144,12 @@ require_once(ROSTER_LIB . 'armory.class.php');
                         $quantity = '';
                         $max = '';
                         $order = '';
+                        
                         //echo '~~----  '.$title[$g].'~~~<br>';
                         $achv_cat_sub = $title[$g];
+                        $gh=1;
                         $temp = get_object_vars($achievement);
                         $achv_title = $temp['@attributes']['title'];//.' -<br>';
-                        
-                        //echo '$lang[\''.$temp['@attributes']['id'].'title\'] = "'.addslashes($temp['@attributes']['title']).'";<br>';
-                        //echo '$lang[\''.$temp['@attributes']['id'].'disc\'] = "'.addslashes($temp['@attributes']['desc']).'";<br>';
                         //--echo $temp['@attributes']['categoryId']v.' -<br>';// => 97
                         if (isset($temp['@attributes']['dateCompleted']))
                         {
@@ -179,7 +159,13 @@ require_once(ROSTER_LIB . 'armory.class.php');
                         $achv_disc=$temp['@attributes']['desc'];//.' -<br>';// => Explore the regions of Northrend.
                         $achv_icon=$temp['@attributes']['icon'];//.' -<br>';// => achievement_zone_northrend_01
                         $achv_id=$temp['@attributes']['id'];//.' -<br>';// => 45
-                        $achv_points=$temp['@attributes']['points'];//.' -<br>';// => 25
+                        
+                  echo '$lang[\''.$achv_id.'title\'] = \''.addslashes($achv_title).'\';<br>';//echo "$lang['".$achv_id."title''] = '".$achv_disc."';<br>";
+                              echo '$lang[\''.$achv_id.'disc\'] = \''.addslashes($achv_disc).'\';<br>';
+                         if (isset($temp['@attributes']['points']))
+                        {
+                              $achv_points=$temp['@attributes']['points'];//.' -<br>';// => 25
+                        }
                         if (isset($temp['@attributes']['reward']))
                         {
                               $achv_reward_title = $temp['@attributes']['reward'];//.' -<br><br>';// => Reward: Tabard of the Explorer
@@ -264,22 +250,35 @@ require_once(ROSTER_LIB . 'armory.class.php');
                         
                         $achv_criteria = $datae;
             
-                        $g++;
-                        
-                       // $this->achnum++;
+               
+                        /*
+                        //$this->achnum++;
 
-
-                //  $this->order++;
-            }
-                  $g = 1;
+                        if ($achv_title != '' && $achv_disc != '')
+                        {
+                              $sql = "INSERT INTO `" . $roster->db->table('data',$this->data['basename']) . "` 
+                                    (`id`,`member_id`,`guild_id`,`achv_cat`,`achv_cat_title`,`achv_cat_sub`,`achv_cat_sub2`,
+                                    `achv_id`,`achv_points`,`achv_icon`,`achv_title`,`achv_reward_title`,`achv_disc`,`achv_date`,
+                                    `achv_criteria`,`achv_progress`,`achv_progress_width`,`achv_complete`) 
+                                    VALUES 
+                                    (null,'".$memberid."','".$roster->data['guild_id']."','".$cat."','".addslashes($title['0'])."',
+                                    '".addslashes($title['0'])."','".$this->order."','".$achv_id."','".$achv_points."',
+                                    '".addslashes($achv_icon)."','".$achv_id."title','".addslashes($achv_reward_title)."','".$achv_id."disc',
+                                    '".addslashes($achv_date)."','".addslashes($achv_criteria)."','".$achv_progress."','".$achv_progress_width."','".$achv_complete."');";
+                              //$result = $roster->db->query($sql) or die_quietly($roster->db->error(),'Database Error',basename(__FILE__),__LINE__,$sql);
+                        }
+                  
+                        $this->order++;
+                        */
+                  }
       
                   foreach($category->category as $f => $achievements)
                   {
-                  
+                        $g++;
                         
                         //aprint($category);
                         $achv_cat_sub = $title[$g];
-                       // echo  $achv_cat_sub.' - '.$f.' - '.$category.'<br>';
+                        echo "// ".$achv_cat_sub." - ".$f." - ".$category."<br>";
       
                         foreach ($achievements as $achiev)
                         {
@@ -304,18 +303,18 @@ require_once(ROSTER_LIB . 'armory.class.php');
                               $temp = get_object_vars($achiev);
                               $achv_title = $temp['@attributes']['title'];//.' -<br>';
                               //--echo $temp['@attributes']['categoryId']v.' -<br>';// => 97
-                              
-                        //echo '$lang[\''.$temp['@attributes']['id'].'title\'] = "'.addslashes($temp['@attributes']['title']).'";<br>';
-                        //echo '$lang[\''.$temp['@attributes']['id'].'disc\'] = "'.addslashes($temp['@attributes']['desc']).'";<br>';
                               if (isset($temp['@attributes']['dateCompleted']))
                               {
                                     $achv_date=$temp['@attributes']['dateCompleted'];//.' -<br>';// => 2009-01-16-07:00
-                                    $achv_complete = '1';
+                                  //  $achv_complete = '1';
                               }
                               $achv_disc=$temp['@attributes']['desc'];//.' -<br>';// => Explore the regions of Northrend.
                               $achv_icon=$temp['@attributes']['icon'];//.' -<br>';// => achievement_zone_northrend_01
                               $achv_id=$temp['@attributes']['id'];//.' -<br>';// => 45
                               $achv_points=$temp['@attributes']['points'];//.' -<br>';// => 25
+                              
+                  echo '$lang[\''.$achv_id.'title\'] = \''.addslashes($achv_title).'\';<br>';//echo "$lang['".$achv_id."title''] = '".$achv_disc."';<br>";
+                              echo '$lang[\''.$achv_id.'disc\'] = \''.addslashes($achv_disc).'\';<br>';
                               if (isset($temp['@attributes']['reward']))
                               {
                                     $achv_reward_title = $temp['@attributes']['reward'];//.' -<br><br>';// => Reward: Tabard of the Explorer
@@ -361,7 +360,7 @@ require_once(ROSTER_LIB . 'armory.class.php');
                         ////--echo '-------'.$temp2['@attributes']['date'].' -<br>';
                                           $date = '( ' . $temp2['@attributes']['dateCompleted'] . ' )';
                                           $b1 = '<b><span style="color:#7eff00;">';
-                                          $b2 = '</span></b>';
+                                          $b2 = '</span></b>';                             
                                     }
                                     else
                                     {
@@ -399,595 +398,28 @@ require_once(ROSTER_LIB . 'armory.class.php');
                               }
                         
                               $achv_criteria = $datae;
-            
-                      
-                        
-                           //   $this->achnum++;
+                              /*
+                              $this->achnum++;
                               
-            
+                              if ($achv_title != '' && $achv_disc != '')
+                              {
+                                    $sql = "INSERT INTO `" . $roster->db->table('data',$this->data['basename']) . "` 
+                                    (`id`,`member_id`,`guild_id`,`achv_cat`,`achv_cat_title`,`achv_cat_sub`,`achv_cat_sub2`,
+                                    `achv_id`,`achv_points`,`achv_icon`,`achv_title`,`achv_reward_title`,`achv_disc`,`achv_date`,
+                                    `achv_criteria`,`achv_progress`,`achv_progress_width`,`achv_complete`) 
+                                    VALUES 
+                                    (null,'".$memberid."','".$roster->data['guild_id']."','".$cat."','".addslashes($title['0'])."',
+                                    '".addslashes($achv_cat_sub)."','".$this->order."','".$achv_id."','".$achv_points."',
+                                    '".addslashes($achv_icon)."','".$achv_id."title','".addslashes($achv_reward_title)."','".$achv_id."disc',
+                                    '".addslashes($achv_date)."','".addslashes($achv_criteria)."','".$achv_progress."','".$achv_progress_width."','".$achv_complete."');";
+                              
+                                    //$result = $roster->db->query($sql) or die_quietly($roster->db->error(),'Database Error',basename(__FILE__),__LINE__,$sql);
+                              } */           
                         }
-                        $g++;
                   }
-
-           }*/
+            }
             //end pages
-     // }
-
-/*
-
-foreach ($pages as $cat => $title)
-      {      
-                  
-            $r = $armory->fetchArmorya( $type = '12', $character ='Ulminia', $guild = false, $realm = 'Zangarmarsh', $item_id = $cat,$fetch_type = 'array' );//getArmoryDataXML($url);
-	
-            $g = 0;
-
-            foreach ($r as $category)
-            {
-
-                  //--echo '~~-  '$title.'~~~<br><hr><br>';
-                  foreach ($category->achievement as $achievement)
-                  {
-                  
-                        
-                        $achv_points='';
-                        $achv_icon='';
-                        $achv_title='';
-                        $achv_disc='';
-                        $achv_date='';
-                        $achv_title='';
-                        $achv_id='';
-                        $achv_reward_title = '';
-                        $achv_criteria = '';
-                        $achv_progress = '';
-                        $achv_progress_width = '';
-                        $quantity = '';
-                        $max = '';
-                        $order = '';
-                        
-                  
-                        $temp = get_object_vars($achievement);
-                        $achv_title = $temp['@attributes']['title'];//.' -<br>';
-                        //--echo $temp['@attributes']['categoryId']v.' -<br>';// => 97
-                        if (isset($temp['@attributes']['dateCompleted']))
-                        {
-                              $achv_date=$temp['@attributes']['dateCompleted'];//.' -<br>';// => 2009-01-16-07:00
-                        }
-                        $achv_disc=$temp['@attributes']['desc'];//.' -<br>';// => Explore the regions of Northrend.
-                        $achv_icon=$temp['@attributes']['icon'];//.' -<br>';// => achievement_zone_northrend_01
-                        $achv_id=$temp['@attributes']['id'];//.' -<br>';// => 45
-                        $achv_points=$temp['@attributes']['points'];//.' -<br>';// => 25
-                        
-                        echo '$lang[\'ach'.$temp['@attributes']['id'].'title\'] = "'.addslashes($temp['@attributes']['title']).'";<br>';
-                        echo '$lang[\'ach'.$temp['@attributes']['id'].'disc\'] = "'.addslashes($temp['@attributes']['desc']).'";<br>';
-                              
-                              
-                        if (isset($temp['@attributes']['reward']))
-                        
-                        {
-                              $achv_reward_title = $temp['@attributes']['reward'];//.' -<br><br>';// => Reward: Tabard of the Explorer
-                        }
-                        ////--echo $achievements->{'@attributes'}['title'].' -<br>';
-                        //--echo 'Criteria listing<br>';
-                        $datae = '';
-                        foreach($achievement->criteria as $achievemen)
-                        {
-
-                              $temp2 = get_object_vars($achievemen);
-                              if (isset($temp2['@attributes']['name']))
-                              {
-                                    $datae.= $temp2['@attributes']['name'];//.' -<br>';
-                              }
-                              if (isset($temp2['@attributes']['quantity']))
-                              {
-                                    $quantity = $temp2['@attributes']['quantity'];//.'-<br>';
-                              }
-                              if (isset($temp2['@attributes']['maxQuantity']))
-                              {
-                                     $max = $temp2['@attributes']['maxQuantity'];//.'-<br>';
-                              }
-                              if ($max != '')
-                              {
-                                    $achv_progress_width = 'width:'.round( ( ( $quantity / $max )*100 ) ).'%';
-                                    $achv_progress = ''.$quantity.' / '.$max.'';
-                              }
-                              
-                        }
-                        
-                        //--echo 'Achivement Criteria <BR>';
-                        
-                        foreach($achievement->achievement as $achievemen)
-                        {
-                              $date = '';
-                              $b1 = '';
-                              $b2 = '';
-                              $temp2 = get_object_vars($achievemen);
-                  
-                              if (isset($temp2['@attributes']['dateCompleted']))
-                              {
-                        ////--echo '-------'.$temp2['@attributes']['date'].' -<br>';
-                                    $date = '( ' . $temp2['@attributes']['dateCompleted'] . ' )';
-                                    $b1 = '<b><span style="color:#7eff00;">';
-                                    $b2 = '</span></b>';
-                              }
-                              else
-                              {
-                                    $date = '';
-                                    $b1 = '';
-                                    $b2 = '';
-                              }
-                              if (isset($temp2['@attributes']['icon']))
-                              {
-                                    $datae.= '<img src="img/Interface/Icons/' .$temp2['@attributes']['icon'] . '.png" width="24" height="24"> ';
-                              }
-                              if (isset($temp2['@attributes']['title']))
-                              {
-                                    $datae.= $b1.$temp2['@attributes']['title'].$b2.' ' . $date . ' ';
-                              }
-
-                              if (isset($temp2['@attributes']['quantity']))
-                              {
-                                    $quantity = $temp2['@attributes']['quantity'];//.'-<br>';
-                              }
-                              if (isset($temp2['@attributes']['maxQuantity']))
-                              {
-                                     $max = $temp2['@attributes']['maxQuantity'];//.'-<br>';
-                              }
-                              if ($max != '')
-                              {
-                                    $achv_progress_width = 'width:'.round( ( ( $quantity / $max )*100 ) ).'%';
-                                    $achv_progress = ''.$quantity.' / '.$max.'';
-                              }
-                              if (isset($temp2['@attributes']['points']))
-                              {
-                                    $datae.= ' Points'.$temp2['@attributes']['points'].'<br>';
-                              }
-                               
-                        }
-                        
-                        $achv_criteria = $datae;
-            
-                        $g++;
-                        
-
-
-                  }
-            }
-                  $g = 1;
-      
-                  foreach($category->category as $f => $achievements)
-                  {
-      
-                        foreach ($achievements as $achiev)
-                        {
-                        
-                        
-                        
-            
-                              $temp = get_object_vars($achiev);
-                              
-                              echo '$lang[\'ach'.$temp['@attributes']['id'].'title\'] = "'.addslashes($temp['@attributes']['title']).'";<br>';
-                              echo '$lang[\'ach'.$temp['@attributes']['id'].'disc\'] = "'.addslashes($temp['@attributes']['desc']).'";<br>';
-                              //--echo 'title '.$temp['@attributes']['title'].' -<br>';
-                              //--echo 'categoryId '.$temp['@attributes']['categoryId'].' -<br>';// => 97
-                              if (isset($temp['@attributes']['dateCompleted']))
-                              {
-                                    //--echo 'dateCompleted '.$temp['@attributes']['dateCompleted'].' -<br>';// => 2009-01-16-07:00
-                              }
-                              //--echo 'desc '.$temp['@attributes']['desc'].' -<br>';// => Explore the regions of Northrend.
-                              //--echo 'icon '.$temp['@attributes']['icon'].' -<br>';// => achievement_zone_northrend_01
-                              //--echo 'id '.$temp['@attributes']['id'].' -<br>';// => 45
-                              //--echo 'points '.$temp['@attributes']['points'].' -<br>';// => 25
-                              if (isset($temp['@attributes']['reward']))
-                              {
-                                    //--echo 'reward '.$temp['@attributes']['reward'].' -<br><br>';// => Reward: Tabard of the Explorer
-                              }
-                              ////--echo $achievements->{'@attributes'}['title'].' -<br>';
-                              //--echo 'Criteria <BR>';
-                              
-                              foreach($achiev->criteria as $achievement)
-                              {
-                                    $date = '';
-                                    $b1 = '';
-                                    $b2 = '';
-                                    $temp2 = get_object_vars($achievement);
-                  
-                                    if (isset($temp2['@attributes']['date']))
-                                    {
-                                          $date = '( ' . $temp2['@attributes']['date'] . ' )';
-                                          $b1 = '<b><span style="color:#7eff00;">';
-                                          $b2 = '</span></b>';
-                                    }
-                                    else
-                                    {
-                                          $date = '';
-                                          $b1 = '';
-                                          $b2 = '';
-                                    }
-                                    
-                                    if (isset($temp2['@attributes']['icon']))
-                                    {
-                                          //--echo '<img src="img/Interface/Icon/' .$temp2['@attributes']['icon'] . '.png"> ';
-                                    }
-                                    if (isset($temp2['@attributes']['name']))
-                                    {
-                                          //--echo $b1.$temp2['@attributes']['name'].$b2.' ' . $date . '-<br>';
-                                    }
-
-                                    if (isset($temp2['@attributes']['quantity']))
-                                    {
-                                          //--echo 'Quantity '.$temp2['@attributes']['quantity'].'-<br>';
-                                    }
-                                    if (isset($temp2['@attributes']['maxQuantity']))
-                                    {
-                                          //--echo 'maxQuantity '.$temp2['@attributes']['maxQuantity'].'-<br>';
-                                    }
-                  
-                              }
-            
-                              //--echo '<span style="color:red;">Achivement Criteria </span><BR>';
-                              foreach($achiev->achievement as $achievemen)
-                              {
-                                    $date = '';
-                                    $b1 = '';
-                                    $b2 = '';
-                                    $temp2 = get_object_vars($achievemen);
-                  
-                                    if (isset($temp2['@attributes']['date']))
-                                    {
-                                          $date = '( ' . $temp2['@attributes']['date'] . ' )';
-                                          $b1 = '<b><span style="color:#7eff00;">';
-                                          $b2 = '</span></b>';
-                                    }
-                                    else
-                                    {
-                                          $date = '';
-                                          $b1 = '';
-                                          $b2 = '';
-                                    }
-                                    if (isset($temp2['@attributes']['icon']))
-                                    {
-                                          //--echo '<img src="img/Interface/Icon/' .$temp2['@attributes']['icon'] . '.png"> ';
-                                    }
-                                    if (isset($temp2['@attributes']['name']))
-                                    {
-                                          //--echo $b1.$temp2['@attributes']['name'].$b2.' ' . $date . '-<br>';
-                                    }
-
-                                    if (isset($temp2['@attributes']['quantity']))
-                                    {
-                                          //--echo 'Quantity '.$temp2['@attributes']['quantity'].'-<br>';
-                                    }
-                                    if (isset($temp2['@attributes']['maxQuantity']))
-                                    {
-                                          //--echo 'maxQuantity '.$temp2['@attributes']['maxQuantity'].'-<br>';
-                                    }
-                  
-                              }
-            
-                        }
-                        $g++;
-                  }
-
-            }
-         */   
-            //end pages
-      
-      
-      
-      
-      
-//	$r = $armory->fetchArmorya( $type = '11', $character ='Zonous', $guild = false, $realm = 'Zangarmarsh', $item_id = '',$fetch_type = 'array' );//getArmoryDataXML($url);
-	//echo '<pre>';
-	/*
-	aprint($r->achievements->summary);
-	$temps = get_object_vars($r->achievements->summary);
-	$total = 'Total Completed: '.$temps['c']['earned'].' / '.$temps['c']['total'].'<br>';
-	$general         = $temps['category']['0']->c['earned'].' / '.$temps['category'][0]->c['total'];
-	$quests          = $temps['category']['1']->c['earned'].' / '.$temps['category'][1]->c['total'];
-	$exploration     = $temps['category']['2']->c['earned'].' / '.$temps['category'][2]->c['total'];
-	$pvp             = $temps['category']['3']->c['earned'].' / '.$temps['category'][3]->c['total'];
-	$dn_raids        = $temps['category']['4']->c['earned'].' / '.$temps['category'][4]->c['total'];
-      $prof            = $temps['category']['5']->c['earned'].' / '.$temps['category'][5]->c['total'];
-	$rep             = $temps['category']['6']->c['earned'].' / '.$temps['category'][6]->c['total'];
-	$world_events    = $temps['category']['7']->c['earned'].' / '.$temps['category'][7]->c['total'];
-      $feats           = $temps['category']['8']->c['earned'].' / '.$temps['category'][8]->c['total'];
-      
-	
-	//`title_1`,`disc_1`,`date_1`,`points_1`
-
-	'categoryId' => 95,
-				'dateCompleted' => '2009-01-29T16:03:00-07:00',
-				'desc' => 'Obtain an Insignia or Medallion of the Alliance.',
-				'icon' => 'inv_jewelry_trinketpvp_01',
-				'id' => 701,
-				'points' => 10,
-				'title' => 'Freedom of the Alliance'
-
-
-	$title_1 = $temps['achievement']['0']['title'];
-	$date_1 = $temps['achievement']['0']['dateCompleted'];
-	$disc_1 =  $temps['achievement']['0']['desc'];
-	$points_1 = $temps['achievement']['0']['points'];
-$general = '';
-$quests = '';
-$exploration = '';
-$pvp = '';
-$dn_raids = '';
-$prof = '';
-$rep = '';
-$world_events = '';
-$feats = '';
-	
-
-	foreach ($r->achievements->summary as $type => $data)
-	{
-	     //aprint($data);
-	     //echo $type->category[0]['total'] .' - '.$data.'<br>';
-	     foreach($data as $cat => $i)
-	     {
-	           $temp2 = get_object_vars($i);
-	           aprint($temp2);
-	           
-	           echo $$temp2['c'][0] .' '.$temp2['c']['total'].'<br>';
-	     }
-	}
-
-	
-$g = 0;
-//arraydisplay($r);
-foreach ($r as $category)
-{
-
-//arraydisplay($category);
-
-
-echo '~~-  '.$pages['96'][$g].'~~~<br><hr><br>';
-      foreach ($category->achievement as $achievement)
-      {
-            $temp = get_object_vars($achievement);
-            echo $temp['@attributes']['title'].' -<br>';
-            echo $temp['@attributes']['categoryId'].' -<br>';// => 97
-            if (isset($temp['@attributes']['dateCompleted']))
-            {
-                  echo $temp['@attributes']['dateCompleted'].' -<br>';// => 2009-01-16-07:00
-            }
-            echo $temp['@attributes']['desc'].' -<br>';// => Explore the regions of Northrend.
-            echo $temp['@attributes']['icon'].' -<br>';// => achievement_zone_northrend_01
-            echo $temp['@attributes']['id'].' -<br>';// => 45
-            echo $temp['@attributes']['points'].' -<br>';// => 25
-            if (isset($temp['@attributes']['reward']))
-            {
-                  echo $temp['@attributes']['reward'].' -<br><br>';// => Reward: Tabard of the Explorer
-            }
-            //echo $achievements->{'@attributes'}['title'].' -<br>';
-            echo 'Criteria listing<br>';
-            foreach($achievement->criteria as $achievemen)
-            {
-            //echo '<pre>';
-            //print_r($achievement);
-                  $temp2 = get_object_vars($achievemen);
-                  if (isset($temp2['@attributes']['name']))
-                  {
-                        echo '##'.$temp2['@attributes']['name'].' -<br>';
-                  }
-                  if (isset($temp2['@attributes']['quantity']))
-                  {
-                        echo 'Quantity '.$temp2['@attributes']['quantity'].'-<br>';
-                  }
-                  if (isset($temp2['@attributes']['maxQuantity']))
-                  {
-                        echo 'maxQuantity '.$temp2['@attributes']['maxQuantity'].'-<br>';
-                  }
-            }
-            echo 'Achivement Criteria <BR>';
-            foreach($achievement->achievement as $achievemen)
-            {
-            $date = '';
-            $b1 = '';
-            $b2 = '';
-                  $temp2 = get_object_vars($achievemen);
-                  if (isset($temp2['@attributes']['dateCompleted']))
-                  {
-                        //echo '-------'.$temp2['@attributes']['date'].' -<br>';
-                        $date = '( ' . $temp2['@attributes']['dateCompleted'] . ' )';
-                        $b1 = '<b><span style="color:#7eff00;">';
-                        $b2 = '</span></b>';
-                  }
-                  else
-                  {
-                        $date = '';
-                        $b1 = '';
-                        $b2 = '';
-                  }
-                  if (isset($temp2['@attributes']['icon']))
-                  {
-                        echo '<img src="img/Interface/Icons/' .$temp2['@attributes']['icon'] . '.png" width="24" height="24"> ';
-                  }
-                  if (isset($temp2['@attributes']['title']))
-                  {
-                        echo $b1.$temp2['@attributes']['title'].$b2.' ' . $date . ' ';
-                  }
-
-                  if (isset($temp2['@attributes']['quantity']))
-                  {
-                        echo 'Quantity '.$temp2['@attributes']['quantity'].'-<br>';
-                  }
-                  if (isset($temp2['@attributes']['maxQuantity']))
-                  {
-                        echo 'maxQuantity '.$temp2['@attributes']['maxQuantity'].'-<br>';
-                  }
-                  if (isset($temp2['@attributes']['points']))
-                  {
-                        echo 'Points'.$temp2['@attributes']['points'].'-<br>';
-                  }
-                  
-            }
-            
-            
-            //echo '<pre>';
-            //print_R($achievements);
-            $g++;
-            echo '<br><hr><br>';
       }
-      
-      echo '<br><hr><br>';
-      $g = 1;
-      
-      foreach($category->category as $f => $achievements)
-      {
-      foreach ($achievements as $achiev)
-      {
-            
-            $temp = get_object_vars($achiev);
-            echo 'title '.$temp['@attributes']['title'].' -<br>';
-            echo 'categoryId '.$temp['@attributes']['categoryId'].' -<br>';// => 97
-            if (isset($temp['@attributes']['dateCompleted']))
-                  {
-            echo 'dateCompleted '.$temp['@attributes']['dateCompleted'].' -<br>';// => 2009-01-16-07:00
-                  }
-            echo 'desc '.$temp['@attributes']['desc'].' -<br>';// => Explore the regions of Northrend.
-            echo 'icon '.$temp['@attributes']['icon'].' -<br>';// => achievement_zone_northrend_01
-            echo 'id '.$temp['@attributes']['id'].' -<br>';// => 45
-            echo 'points '.$temp['@attributes']['points'].' -<br>';// => 25
-            if (isset($temp['@attributes']['reward']))
-            {
-            echo 'reward '.$temp['@attributes']['reward'].' -<br><br>';// => Reward: Tabard of the Explorer
-            }
-            //echo $achievements->{'@attributes'}['title'].' -<br>';
-            echo 'Criteria <BR>';
-            foreach($achiev->criteria as $achievement)
-            {
-            $date = '';
-            $b1 = '';
-            $b2 = '';
-            //echo '<pre>';
-            //print_r($achievement);
-                  $temp2 = get_object_vars($achievement);
-                  if (isset($temp2['@attributes']['date']))
-                  {
-                        //echo '-------'.$temp2['@attributes']['date'].' -<br>';
-                        $date = '( ' . $temp2['@attributes']['date'] . ' )';
-                        $b1 = '<b><span style="color:#7eff00;">';
-                        $b2 = '</span></b>';
-                  }
-                  else
-                  {
-                        $date = '';
-                        $b1 = '';
-                        $b2 = '';
-                  }
-                  if (isset($temp2['@attributes']['icon']))
-                  {
-                        echo '<img src="img/Interface/Icon/' .$temp2['@attributes']['icon'] . '.png"> ';
-                  }
-                  if (isset($temp2['@attributes']['name']))
-                  {
-                        echo $b1.$temp2['@attributes']['name'].$b2.' ' . $date . '-<br>';
-                  }
-
-                  if (isset($temp2['@attributes']['quantity']))
-                  {
-                        echo 'Quantity '.$temp2['@attributes']['quantity'].'-<br>';
-                  }
-                  if (isset($temp2['@attributes']['maxQuantity']))
-                  {
-                        echo 'maxQuantity '.$temp2['@attributes']['maxQuantity'].'-<br>';
-                  }
-                  
-            }
-            echo '<span style="color:red;">Achivement Criteria </span><BR>';
-            foreach($achiev->achievement as $achievemen)
-            {
-            $date = '';
-            $b1 = '';
-            $b2 = '';
-                  $temp2 = get_object_vars($achievemen);
-                  if (isset($temp2['@attributes']['date']))
-                  {
-                        //echo '-------'.$temp2['@attributes']['date'].' -<br>';
-                        $date = '( ' . $temp2['@attributes']['date'] . ' )';
-                        $b1 = '<b><span style="color:#7eff00;">';
-                        $b2 = '</span></b>';
-                  }
-                  else
-                  {
-                        $date = '';
-                        $b1 = '';
-                        $b2 = '';
-                  }
-                  if (isset($temp2['@attributes']['icon']))
-                  {
-                        echo '<img src="img/Interface/Icon/' .$temp2['@attributes']['icon'] . '.png"> ';
-                  }
-                  if (isset($temp2['@attributes']['name']))
-                  {
-                        echo $b1.$temp2['@attributes']['name'].$b2.' ' . $date . '-<br>';
-                  }
-
-                  if (isset($temp2['@attributes']['quantity']))
-                  {
-                        echo 'Quantity '.$temp2['@attributes']['quantity'].'-<br>';
-                  }
-                  if (isset($temp2['@attributes']['maxQuantity']))
-                  {
-                        echo 'maxQuantity '.$temp2['@attributes']['maxQuantity'].'-<br>';
-                  }
-                  
-            }
-      
-            //echo '<pre>';
-            //print_R($achievements);
-            echo '<br><hr><br>';
-            
-      }
-      $g++;
-      echo '<br><hr><br>';
-      }
-
-      echo '<br><hr><br>';
-echo '<br><hr><br>';
-}
-*/
-
-//}
-/*	
-	foreach($r as $a => $catagory)
-	{
-	     foreach ($catagory as $b => $achievement)
-	     {
-	     echo $a .' - '.$b.' - '.$achievement['title'].'-<br>';
-	     
-	           foreach ($achievement as $achv => $info)
-	           {
-	           if (isset($info['name']))
-	           {
-	           echo $info['name'].'--<br>';
-	           }
-	           if (isset($info['maxQuantity']))
-	           {
-	           //echo $achv .' - '.$info['quantity'].' / '.$info['maxQuantity'].'---<br>';
-	           }
-	           //print_r($info);
-	           if (isset($info['title']))
-	           {
-	           //echo $info['title'].'----<br>';
-	           }
-	                 foreach ( $info as $c => $achiv)
-	                 {
-	                       //echo $achiv['title'].'-----<br>';
-	                       foreach($achiv as $d => $crit)
-	                       {
-	                       //echo $crit['title'].'------<br>';
-	                       }
-	                 }
-	           }
-	      echo '<br><hr><br>';
-	     }
-	
-	     
-	}
-*/
 
 
 /**
