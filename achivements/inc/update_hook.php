@@ -232,9 +232,23 @@ var $pages = array(
                         {
 
                               $temp2 = get_object_vars($achievemen);
+                                    if (isset($temp2['@attributes']['date']))
+                                    {
+                        ////--echo '-------'.$temp2['@attributes']['date'].' -<br>';
+                                          $date = '( ' . $temp2['@attributes']['date'] . ' )';
+                                          $b1 = '<b><span style="color:#7eff00;">';
+                                          $b2 = '</span></b>';                             
+                                    }
+                                    else
+                                    {
+                                          $date = '';
+                                          $b1 = '';
+                                          $b2 = '';
+                                    }
+                                    
                               if (isset($temp2['@attributes']['name']))
                               {
-                                    $datae.= $temp2['@attributes']['name'].'<br>';//.' -<br>';
+                                    $datae.= $b1.$temp2['@attributes']['name'].$b2.'<br>';//.' -<br>';
                               }
                               if (isset($temp2['@attributes']['quantity']))
                               {
@@ -375,11 +389,24 @@ var $pages = array(
                               $datae = '';
                               foreach($achiev->criteria as $achievemen)
                               {
-
                                     $temp2 = get_object_vars($achievemen);
+                                    if (isset($temp2['@attributes']['date']))
+                                    {
+                        ////--echo '-------'.$temp2['@attributes']['date'].' -<br>';
+                                          $date = '( ' . $temp2['@attributes']['date'] . ' )';
+                                          $b1 = '<b><span style="color:#7eff00;">';
+                                          $b2 = '</span></b>';                             
+                                    }
+                                    else
+                                    {
+                                          $date = '';
+                                          $b1 = '';
+                                          $b2 = '';
+                                    }
+
                                     if (isset($temp2['@attributes']['name']))
                                     {
-                                          $datae.= $temp2['@attributes']['name'].'<br>';//.' -<br>';
+                                          $datae.= $b1.$temp2['@attributes']['name'].$b2.'<br>';//.' -<br>';
                                     }
                                     if (isset($temp2['@attributes']['quantity']))
                                     {
