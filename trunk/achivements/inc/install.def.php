@@ -72,7 +72,7 @@ CREATE TABLE `" . $installer->table('data') . "` (
   `achv_title` varchar(255) character set latin1 NOT NULL default '',
   `achv_reward_title` varchar(255) character set latin1 default NULL,
   `achv_disc` text character set latin1 NOT NULL,
-  `achv_date` date default NULL,
+  `achv_date` varchar(25) default NULL,
   `achv_criteria` text character set latin1 NOT NULL,
   `achv_progress` varchar(25) NOT NULL,
   `achv_progress_width` varchar(50) NOT NULL,
@@ -147,6 +147,7 @@ CREATE TABLE `" . $installer->table('summary') . "` (
 		$installer->remove_all_config();
 		$installer->remove_all_menu_button();
 		$installer->drop_table( $installer->table('data') );
+		$installer->drop_table( $installer->table('summary') );
 		
             return true;
 		
