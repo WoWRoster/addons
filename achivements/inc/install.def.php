@@ -30,7 +30,7 @@ class achivementsinstall
 	var $active = true;
 	var $icon = 'achievement_general';
 
-	var $version = '1.0.484';
+	var $version = '1.0.493';
 	
 	var $fullname = 'Player Achievements';
 	var $description = 'Displays Player Achievements';
@@ -72,7 +72,7 @@ CREATE TABLE `" . $installer->table('data') . "` (
   `achv_title` varchar(255) character set latin1 NOT NULL default '',
   `achv_reward_title` varchar(255) character set latin1 default NULL,
   `achv_disc` text character set latin1 NOT NULL,
-  `achv_date` varchar(25) default NULL,
+  `achv_date` varchar(50) default NULL,
   `achv_criteria` text character set latin1 NOT NULL,
   `achv_progress` varchar(25) NOT NULL,
   `achv_progress_width` varchar(50) NOT NULL,

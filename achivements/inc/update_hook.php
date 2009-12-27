@@ -219,9 +219,13 @@ var $pages = array(
                         $achv_disc              = $temp['@attributes']['desc'];
                         $achv_icon              = $temp['@attributes']['icon'];
                         $achv_id                = $temp['@attributes']['id'];
-                         if (isset($temp['@attributes']['points']))
+                        if (isset($temp['@attributes']['points']))
                         {
-                              $achv_points=$temp['@attributes']['points'];
+                              $achv_points            = $temp['@attributes']['points'];
+                        }
+                        else
+                        {
+                              $achv_points            = '0';
                         }
                         if (isset($temp['@attributes']['reward']))
                         {
@@ -384,7 +388,14 @@ var $pages = array(
                               $achv_disc                    = $temp['@attributes']['desc'];
                               $achv_icon                    = $temp['@attributes']['icon'];
                               $achv_id                      = $temp['@attributes']['id'];
-                              $achv_points                  = $temp['@attributes']['points'];
+                              if (isset($temp['@attributes']['points']))
+                              {
+                                    $achv_points            = $temp['@attributes']['points'];
+                              }
+                              else
+                              {
+                                    $achv_points            = '0';
+                              }
                               if (isset($temp['@attributes']['reward']))
                               {
                                     $achv_reward_title = $temp['@attributes']['reward'];
