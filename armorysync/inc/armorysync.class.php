@@ -410,22 +410,22 @@ class ArmorySync extends ArmorySyncBase {
                   $this->data["Attributes"]["Melee"]["CritChance"] = $tab->melee->critChance->percent;
                   $this->data["Attributes"]["Melee"]["AttackPowerDPS"] = $tab->melee->power->increasedDps;
 
-            if ( $tab->melee->mainHandWeaponSkill->value > 0 ) {
+            if ( $tab->melee->mainHandSpeed->value > 0 ) {
 
                 $this->data["Attributes"]["Melee"]["MainHand"]["AttackSpeed"] = $tab->melee->mainHandDamage->speed;
                 $this->data["Attributes"]["Melee"]["MainHand"]["AttackDPS"] = $tab->melee->mainHandDamage->dps;
-                $this->data["Attributes"]["Melee"]["MainHand"]["AttackSkill"] = $tab->melee->mainHandWeaponSkill->value;
+                $this->data["Attributes"]["Melee"]["MainHand"]["AttackSkill"] = $tab->melee->mainHandSpeed->value;
                 $this->data["Attributes"]["Melee"]["MainHand"]["DamageRange"] = $tab->melee->mainHandDamage->min . ":" . $tab->melee->mainHandDamage->max;
-                $this->data["Attributes"]["Melee"]["MainHand"]["AttackRating"] = $tab->melee->mainHandWeaponSkill->rating;
+                $this->data["Attributes"]["Melee"]["MainHand"]["AttackRating"] = $tab->melee->mainHandSpeed->hasteRating;
             }
 
-            if ( $tab->melee->offHandWeaponSkill->value > 0 ) {
+            if ( $tab->melee->offHandSpeed->value > 0 ) {
 
                 $this->data["Attributes"]["Melee"]["OffHand"]["AttackSpeed"] = $tab->melee->offHandDamage->speed;
                 $this->data["Attributes"]["Melee"]["OffHand"]["AttackDPS"] = $tab->melee->offHandDamage->dps;
-                $this->data["Attributes"]["Melee"]["OffHand"]["AttackSkill"] = $tab->melee->offHandWeaponSkill->value;
+                $this->data["Attributes"]["Melee"]["OffHand"]["AttackSkill"] = $tab->melee->offHandSpeed->value;
                 $this->data["Attributes"]["Melee"]["OffHand"]["DamageRange"] = $tab->melee->offHandDamage->min . ":" . $tab->melee->mainHandDamage->max;
-                $this->data["Attributes"]["Melee"]["OffHand"]["AttackRating"] = $tab->melee->offHandWeaponSkill->rating;
+                $this->data["Attributes"]["Melee"]["OffHand"]["AttackRating"] = $tab->melee->offHandSpeed->hasteRating;
             }
 
             // ??? $this->data["Attributes"]["Melee"]["DamageRangeTooltip"] = "";
@@ -493,7 +493,7 @@ class ArmorySync extends ArmorySyncBase {
 
 
 
-            $this->data["TalentPoints"] = ($char->level > 0) ? $char->level - $tab->talentGroup->talentSpec->treeOne - $tab->talentGroup->talentSpec->treeTwo - $tab->talentGroup->talentSpec->treeThree - 9 : 0;
+            //$this->data["TalentPoints"] = ($char->level > 0) ? $char->level - $tab->talentGroup->talentSpec->treeOne - $tab->talentGroup->talentSpec->treeTwo - $tab->talentGroup->talentSpec->treeThree - 9 : 0;
             $this->data["Race"] = $char->race;
             $this->data["RaceId"] = $char->raceId;
             $this->data["RaceEn"] = preg_replace( "/\s/", "", $roster->locale->act['race_to_en'][$char->race] );
@@ -703,36 +703,49 @@ class ArmorySync extends ArmorySyncBase {
 
             $this->data["Reputation"]["Count"] = 0;
             $is = 0;
-            //aprint($factionReputation);
+            //echo '<pre>';
+            //print_r($factionReputation);
             foreach ($factionReputation as $factiona) 
             {
-                  //echo $factiona->id.'<br>';
-                  foreach ($factiona as $factionRep) 
+                  //echo '<br><hr><br>'.$factiona->name.'<br>';
+                  $factionType= $factiona->name;
+                  foreach ($factiona->faction as $factionRep => $data) 
                   {
-                        //echo aprint($factionRep); //->id.'<br>';
+                        //aprint($data);
+                        //echo $data->name.' -+- '.$data->reputation.'<br>'; //->id.'<br>';
+                        //$this->_setFactionRep( $factionType, $data );
+                        $factionType2 = $data->name;
+                        if (isset($data->reputation))
+                        {
+                        $this->data["Reputation"][''.$factionType.''][''.$data->name.''] = array();
+                        $this->data["Reputation"][''.$factionType.''][''.$data->name.'']["Value"] = $this->_getRepValue($data->reputation) . ":" . $this->_getRepCap($data->reputation);
+                        $this->data["Reputation"][''.$factionType.''][''.$data->name.'']["Standing"] = $this->_getRepStanding($data->reputation);
+                        $this->data["Reputation"][''.$factionType.''][''.$data->name.'']["AtWar"] = $this->_getRepAtWar($data->reputation);
+                        }
+                        
+                        
+                        if (isset($data->faction))
+                        {
+                              foreach ($data->faction as $fact => $dat) 
+                              {
+                                    //echo '--'.$dat->name.' -+- '.$dat->reputation.'<br>';
+                                    //$this->_setFactionRep( $data->name, $dat );
+                                    $this->data["Reputation"]["Count"]++;
+                                    $this->data["Reputation"][''.$factionType2.''][''.$dat->name.''] = array();
+                                    $this->data["Reputation"][''.$factionType2.''][''.$dat->name.'']["Value"] = $this->_getRepValue($dat->reputation) . ":" . $this->_getRepCap($dat->reputation);
+                                    $this->data["Reputation"][''.$factionType2.''][''.$dat->name.'']["Standing"] = $this->_getRepStanding($dat->reputation);
+                                    $this->data["Reputation"][''.$factionType2.''][''.$dat->name.'']["AtWar"] = $this->_getRepAtWar($dat->reputation);
+                        
+                              }
+                        }
+                        $this->data["Reputation"]["Count"]++;
                   }
-            //aprint($factiona);
-                  //$factionType = $factiona['name'];
-/*
-                  foreach ($factiona as $factionRep) 
-                  {
-                        //$name = $factionRep['name'];
-            
-                        $is++;
-                        $this->data["Reputation"][''.$factionType.''][''.$name.''] = array();
-                        $this->data["Reputation"][''.$factionType.''][''.$name.'']["Value"] = $this->_getRepValue($factionRep['reputation']) . ":" . $this->_getRepCap($factionRep['reputation']);
-                        $this->data["Reputation"][''.$factionType.''][''.$name.'']["Standing"] = $this->_getRepStanding($factionRep['reputation']);
-                        $this->data["Reputation"][''.$factionType.''][''.$name.'']["AtWar"] = $this->_getRepAtWar($factionRep['reputation']);
 
-                        $this->status['reputationInfo'] += 1;
-
-                  }
-*/
             }
+            //aprint($this->data["Reputation"]);
             
             $this->_debug( 1, true, 'Parsed reputation info', 'OK' );
 
-        //}
     }
     /**
      * helper function to get classes for content
@@ -743,12 +756,12 @@ class ArmorySync extends ArmorySyncBase {
      */
     function _setFactionRep( $factionType, $faction ) {
             
-        $this->data["Reputation"][$factionType][$faction['name']] = array();
-        $this->data["Reputation"][$factionType][$faction['name']]["Value"] = $this->_getRepValue($faction['reputation']) . ":" . $this->_getRepCap($faction['reputation']);
-        $this->data["Reputation"][$factionType][$faction['name']]["Standing"] = $this->_getRepStanding($faction['reputation']);
-        $this->data["Reputation"][$factionType][$faction['name']]["AtWar"] = $this->_getRepAtWar($faction['reputation']);
+        $this->data["Reputation"][$factionType][$faction->name] = array();
+        $this->data["Reputation"][$factionType][$faction->name]["Value"] = $this->_getRepValue($faction->reputation) . ":" . $this->_getRepCap($faction->reputation);
+        $this->data["Reputation"][$factionType][$faction->name]["Standing"] = $this->_getRepStanding($faction->reputation);
+        $this->data["Reputation"][$factionType][$faction->name]["AtWar"] = $this->_getRepAtWar($faction->reputation);
         $this->status['reputationInfo'] += 1;
-        $this->_debug( 2, $this->data["Reputation"][$factionType][$faction['name']], 'Set reputation for single faction', 'OK' );
+        $this->_debug( 2, $this->data["Reputation"][$factionType][$faction->name], 'Set reputation for single faction', 'OK' );
     }
     
     function _getTalentInfo() 
@@ -760,55 +773,55 @@ class ArmorySync extends ArmorySyncBase {
 		$fromCache = false;
             
             $content = $this->getTalentData($this->server, $this->memberName );
-            //echo '<pre>';
-            //print_r($content);
-            
+//*
+//        since the new roster does not need the full talents anymore so we dont need to do this... files where messey any way ...
+                 
             if (file_exists($addon['dir'] . 'inc/talenticons_'.$this->data["ClassId"].'.php'))
             {
                   require_once ($addon['dir'] . 'inc/talenticons_'.$this->data["ClassId"].'.php');
                   require_once ($addon['dir'] . 'inc/'.$this->data["ClassId"]. '_talents.php');
                   if (isset($talent))
                   {
-                        echo 'talent file loaded<br>';
+                        //echo 'talent file loaded<br>';
                   }
                   $this->talentsc = $talent;
                   $this->talentst = $treeStartStop;
                   $this->tree = $tree;
                   $this->talentsr = $rank;
                   $this->talenticon = $talentIcons;
+                  
+  //          */
             foreach ($content->characterInfo->talents->talentGroup as $spec)
             {
             
              
             
 
-            foreach ($spec as $t_dat => $data)
-            {
-            
-                  if (isset($spec['active']) )
+                  foreach ($spec as $t_dat => $data)
                   {
-                  echo $spec['prim'].' Active '.$spec['active'].'<br>';
-                  $branch = '1';
-                  $this->process_talents($data['value'], $branch);//$data['value'];
-                  }
-                  else
-                  {
-                  $branch = '2';
-                  $this->process_talents($data['value'], $branch);//$data['value'];
-                  }
             
-                  //$this->process_talents($talentArray, $branch)                  
+                        if (isset($spec['active']) )
+                        {
+                              //echo $spec['prim'].' Active '.$spec['active'].'<br>';
+                              $branch = '1';
+                              $this->process_talents($data['value'], $branch);//$data['value'];
+                              //$this->data["DualSpec"]["Talents"][$branch]["Buildurl"] = $data['value'];
+                        }
+                        else
+                        {
+                              $branch = '2';
+                              $this->process_talents($data['value'], $branch);//$data['value'];
+                              //$this->data["DualSpec"]["Talents"][$branch]["Buildurl"] = $data['value'];
+                        }                 
                             
                         echo '<br>end return..--'.$data['value'].' ++ '.$branch.'<br>';
                         
                         $this->_debug( 1, true, 'Char: '. $this->memberName. ' ('.$class.') Parsed talent('.$branch.') info', 'OK' );
                   }
+                  aprint($this->data["DualSpec"]);
             }
             }
-            //$this->_debug( 1, true, 'Char: '. $this->memberName. ' ('.$class.') Parsed talent info', 'OK' );
-		
-		//echo '<pre>';
-		//print_R($this->data);
+
             
             return true;
 		
