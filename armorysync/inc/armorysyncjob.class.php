@@ -629,16 +629,16 @@ class ArmorySyncJob extends ArmorySyncBase {
         if ( !$memberlist ) {
             $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['name']));
         }
-        $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['guild']));
-        $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['realm']));
-        $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => "Infos<br />". $roster->locale->act['guild_short']));
+        $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['guild']." ".$roster->locale->act['name']));
+        //$roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['realm']));
+        $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['guild_short']."Info"));
 
         if ( ! $memberlist ) {
-            $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => "Infos<br />". $roster->locale->act['character_short']));
-            $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => "Infos<br />". $roster->locale->act['skill_short']));
-            $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => "Infos<br />". $roster->locale->act['reputation_short']));
-            $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => "Infos<br />". $roster->locale->act['equipment_short']));
-            $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => "Infos<br />". $roster->locale->act['talents_short']));
+            $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['character_short']));
+            $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['skill_short']));
+            $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['reputation_short']));
+            $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['equipment_short']));
+            $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['talents_short']));
         }
 
         $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['started']));
@@ -1173,7 +1173,7 @@ class ArmorySyncJob extends ArmorySyncBase {
 
 
 
-            $header = '
+            $header = '';/*'
 <script type="text/javascript">
 <!--
     function nextMember() {
@@ -1182,7 +1182,7 @@ class ArmorySyncJob extends ArmorySyncBase {
     self.setTimeout(\'nextMember()\', '. $reloadTime. ');
 //-->
 </script>
-';
+';*/
         
         $this->_debug( 1, htmlspecialchars($header), 'Printed reload java code', $header ? 'OK' : 'Failed');
         $this->header .= $header;
