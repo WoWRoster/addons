@@ -743,7 +743,7 @@ class ArmorySync extends ArmorySyncBase {
 
             }
             //aprint($this->data["Reputation"]);
-            
+            $this->status['reputationInfo'] = $this->data["Reputation"]["Count"];
             $this->_debug( 1, true, 'Parsed reputation info', 'OK' );
 
     }
@@ -760,71 +760,57 @@ class ArmorySync extends ArmorySyncBase {
         $this->data["Reputation"][$factionType][$faction->name]["Value"] = $this->_getRepValue($faction->reputation) . ":" . $this->_getRepCap($faction->reputation);
         $this->data["Reputation"][$factionType][$faction->name]["Standing"] = $this->_getRepStanding($faction->reputation);
         $this->data["Reputation"][$factionType][$faction->name]["AtWar"] = $this->_getRepAtWar($faction->reputation);
-        $this->status['reputationInfo'] += 1;
+        //$this->status['reputationInfo'] + 1;
         $this->_debug( 2, $this->data["Reputation"][$factionType][$faction->name], 'Set reputation for single faction', 'OK' );
     }
     
     function _getTalentInfo() 
     {
-        global $roster, $addon;
+	global $roster, $addon;
 
-		$content = array();
-		$cacheTag = 'characterTalents'. $this->memberName. $this->server. $this->region. 'xml';
-		$fromCache = false;
-            
-            $content = $this->getTalentData($this->server, $this->memberName );
-//*
+	$content = array();
+	$cacheTag = 'characterTalents'. $this->memberName. $this->server. $this->region. 'xml';
+	$fromCache = false;
+
+	$content = $this->getTalentData($this->server, $this->memberName );
 //        since the new roster does not need the full talents anymore so we dont need to do this... files where messey any way ...
                  
-            if (file_exists($addon['dir'] . 'inc/talenticons_'.$this->data["ClassId"].'.php'))
-            {
-                  require_once ($addon['dir'] . 'inc/talenticons_'.$this->data["ClassId"].'.php');
-                  require_once ($addon['dir'] . 'inc/'.$this->data["ClassId"]. '_talents.php');
-                  if (isset($talent))
-                  {
+	if (file_exists($addon['dir'] . 'inc/talenticons_'.$this->data["ClassId"].'.php'))
+	{
+	    require_once ($addon['dir'] . 'inc/talenticons_'.$this->data["ClassId"].'.php');
+	    require_once ($addon['dir'] . 'inc/'.$this->data["ClassId"]. '_talents.php');
+	
+	    if (isset($talent))
+	    {
                         //echo 'talent file loaded<br>';
-                  }
-                  $this->talentsc = $talent;
-                  $this->talentst = $treeStartStop;
-                  $this->tree = $tree;
-                  $this->talentsr = $rank;
-                  $this->talenticon = $talentIcons;
-                  
-  //          */
-            foreach ($content->characterInfo->talents->talentGroup as $spec)
-            {
-            
-             
-            
+	    }
+	    $this->talentsc = $talent;
+	    $this->talentst = $treeStartStop;
+	    $this->tree = $tree;
+	    $this->talentsr = $rank;
+	    $this->talenticon = $talentIcons;
 
-                  foreach ($spec as $t_dat => $data)
-                  {
-            
-                        if (isset($spec['active']) )
-                        {
-                              //echo $spec['prim'].' Active '.$spec['active'].'<br>';
-                              $branch = '1';
-                              $this->process_talents($data['value'], $branch);//$data['value'];
-                              //$this->data["DualSpec"]["Talents"][$branch]["Buildurl"] = $data['value'];
-                        }
-                        else
-                        {
-                              $branch = '2';
-                              $this->process_talents($data['value'], $branch);//$data['value'];
-                              //$this->data["DualSpec"]["Talents"][$branch]["Buildurl"] = $data['value'];
-                        }                 
-                            
-                        echo '<br>end return..--'.$data['value'].' ++ '.$branch.'<br>';
-                        
-                        $this->_debug( 1, true, 'Char: '. $this->memberName. ' ('.$class.') Parsed talent('.$branch.') info', 'OK' );
-                  }
-                  aprint($this->data["DualSpec"]);
-            }
-            }
-
-            
-            return true;
-		
+	    foreach ($content->characterInfo->talents->talentGroup as $spec)
+	    {
+		foreach ($spec as $t_dat => $data)
+		{
+		    if (isset($spec['active']) )
+		    {
+			$branch = '1';
+			$this->process_talents($data['value'], $branch);//$data['value'];
+		    }
+		    else
+		    {
+			$branch = '2';
+			$this->process_talents($data['value'], $branch);//$data['value'];
+		    }                 
+			
+		    $this->_debug( 1, true, 'Char: '. $this->memberName. ' ('.$class.') Parsed talent('.$branch.') info', 'OK' );
+		}
+	    }
+	}
+	    
+	return true;
     }
     
     function process_talents($armoryTalents, $branch)
