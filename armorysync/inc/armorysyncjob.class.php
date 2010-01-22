@@ -620,34 +620,94 @@ class ArmorySyncJob extends ArmorySyncBase {
                 )
                                  );
 
-        if (isset($this->active_member['name']) || isset($this->active_member['guild_name'])) {
-            $roster->tpl->assign_var( 'NEXT', $roster->locale->act['next_to_update']. ( $memberlist ? $this->active_member['guild_name'] : $this->active_member['name'] ) );
-        } else {
-            $roster->tpl->assign_var( 'NEXT', false );
-        }
+	if (isset($this->active_member['name']) || isset($this->active_member['guild_name']))
+	{
+	    $roster->tpl->assign_var( 'NEXT', $roster->locale->act['next_to_update']. ( $memberlist ? $this->active_member['guild_name'] : $this->active_member['name'] ) );
+	} 
+	else
+	{
+	    $roster->tpl->assign_var( 'NEXT', false );
+	}
 
-        if ( !$memberlist ) {
-            $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['name']));
-        }
-        $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['guild']." ".$roster->locale->act['name']));
-        //$roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['realm']));
-        $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['guild_short']."Info"));
+	if ( !$memberlist ) 
+	{
+	    $roster->tpl->assign_block_vars('head_col', array(
+		    'HEAD_TITLE' => $roster->locale->act['name'], 
+		    'HEAD_WIDTH' => '100px'
+		)
+	    );
+	}
+	    
+	$roster->tpl->assign_block_vars('head_col', array(
+		'HEAD_TITLE' => $roster->locale->act['guild']." ".$roster->locale->act['name'], 
+		'HEAD_WIDTH' => '100px'
+	    )
+	);
+	if ( $memberlist ) 
+	{
+	$roster->tpl->assign_block_vars('head_col', array(
+		'HEAD_TITLE' => $roster->locale->act['guild_short']."Info", 
+		'HEAD_WIDTH' => '50px'
+	    )
+	);
+	}
 
-        if ( ! $memberlist ) {
-            $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['character_short']));
-            $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['skill_short']));
-            $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['reputation_short']));
-            $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['equipment_short']));
-            $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['talents_short']));
-        }
+	if ( ! $memberlist ) 
+	{
+	    $roster->tpl->assign_block_vars('head_col', array(
+		    'HEAD_TITLE' => $roster->locale->act['character_short'], 
+		    'HEAD_WIDTH' => '25px'
+		)
+	    );
+	    
+	    $roster->tpl->assign_block_vars('head_col', array(
+		    'HEAD_TITLE' => $roster->locale->act['skill_short'], 
+		    'HEAD_WIDTH' => '25px'
+		)
+	    );
+	    
+	    $roster->tpl->assign_block_vars('head_col', array(
+		    'HEAD_TITLE' => $roster->locale->act['reputation_short'],
+		    'HEAD_WIDTH' => '25px'
+		)
+	    );
+	    
+	    $roster->tpl->assign_block_vars('head_col', array(
+		    'HEAD_TITLE' => $roster->locale->act['equipment_short'],
+		    'HEAD_WIDTH' => '25px'
+		)
+	    );
+	    
+	    $roster->tpl->assign_block_vars('head_col', array(
+		    'HEAD_TITLE' => $roster->locale->act['talents_short'],
+		    'HEAD_WIDTH' => '25px'
+		)
+	    );
+	}
 
-        $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['started']));
-        $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => $roster->locale->act['finished']));
-        $roster->tpl->assign_block_vars('head_col', array('HEAD_TITLE' => "Log" ));
+	$roster->tpl->assign_block_vars('head_col', array(
+		'HEAD_TITLE' => $roster->locale->act['started'],
+		'HEAD_WIDTH' => '100px'
+	    )
+	);
+	
+	$roster->tpl->assign_block_vars('head_col', array(
+		'HEAD_TITLE' => $roster->locale->act['finished'],
+		'HEAD_WIDTH' => '100px'
+	    )
+	);
 
-        $l = 1;
-        $roster->tpl->assign_var('CHARLIST', !$memberlist);
-        foreach ( $members as $member ) {
+	$roster->tpl->assign_block_vars('head_col', array(
+		'HEAD_TITLE' => "Log",
+		'HEAD_WIDTH' => '15px' 
+	    )
+	);
+	
+	$l = 1;
+	$roster->tpl->assign_var('CHARLIST', !$memberlist);
+	$roster->tpl->assign_var('MEMBERLIST', $memberlist);
+	
+	foreach ( $members as $member ) {
 
             $array = array();
             $array['COLOR'] = $roster->switch_row_class();
@@ -661,13 +721,13 @@ class ArmorySyncJob extends ArmorySyncBase {
                     continue;
                 }
                 if ( isset( $member[$key] ) && $member[$key] == 1 ) {
-                    $array[strtoupper($key)] = "<img src=\"". ROSTER_PATH. "img/pvp-win.gif\" alt=\"\"/>";
+                    $array[strtoupper($key)] = "<img style=\"float:center;\" src=\"". ROSTER_PATH. "img/pvp-win.gif\" alt=\"\"/>";
                 } elseif ( isset( $member[$key] ) && $member[$key] >= 1 ) {
                     $array[strtoupper($key)] = $member[$key];
                 } elseif ( isset( $member[$key] ) ) {
-                    $array[strtoupper($key)] = "<img src=\"". ROSTER_PATH. "img/pvp-loss.gif\" alt=\"\" />";
+                    $array[strtoupper($key)] = "<img style=\"float:center;\" src=\"". ROSTER_PATH. "img/pvp-loss.gif\" alt=\"\" />";
                 } else {
-                    $array[strtoupper($key)] = "<img src=\"". ROSTER_PATH. "img/blue-question-mark.gif\" alt=\"?\" />";
+                    $array[strtoupper($key)] = "<img style=\"float:center;\" src=\"". ROSTER_PATH. "img/blue-question-mark.gif\" alt=\"?\" />";
                 }
             }
 
@@ -1173,7 +1233,7 @@ class ArmorySyncJob extends ArmorySyncBase {
 
 
 
-            $header = '';/*'
+            $header = '
 <script type="text/javascript">
 <!--
     function nextMember() {
@@ -1182,7 +1242,7 @@ class ArmorySyncJob extends ArmorySyncBase {
     self.setTimeout(\'nextMember()\', '. $reloadTime. ');
 //-->
 </script>
-';*/
+';
         
         $this->_debug( 1, htmlspecialchars($header), 'Printed reload java code', $header ? 'OK' : 'Failed');
         $this->header .= $header;
