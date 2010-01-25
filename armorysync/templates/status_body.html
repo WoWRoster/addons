@@ -2,38 +2,32 @@
 
 <!-- ArmorySync Status Body -->
 							<!-- BEGIN body_row -->
-					
-	
-							<div class="tier-4-a">
-								<div class="tier-4-b">
-									<div class="text">
-									<table>
-									<tr>
+							<div class="tier-3-a">
+								<div class="tier-3-b">
+									<div class="text" style="color:#FFF;">
+
 									<!-- IF CHARLIST -->
-									<td width="100px" style="text-align: center;" id="as_status_name_{body_row.ASID}" class="membersRowCell">{body_row.NAME}</td>
+									<div style="width: 120px; text-align: left;" id="as_status_name_{body_row.ASID}">{body_row.NAME}</div>
 									<!-- ENDIF -->
-									<td width="100px" style="text-align: center;" id="as_status_guild_{body_row.ASID}" class="membersRowCell">{body_row.GUILD}</td>
+									<div style="width: 120px; text-align: left;" id="as_status_guild_{body_row.ASID}">{body_row.GUILD}</div>
 									<!-- IF MEMBERLIST -->
-									<td width="50px" style="text-align: center;" id="as_status_guild_info_{body_row.ASID}" class="membersRowCell">{body_row.GUILD_INFO}</td>
+									<div style="width: 50px; text-align: center;" id="as_status_guild_info_{body_row.ASID}">{body_row.GUILD_INFO}</div>
 									<!-- ENDIF -->
+									<div style="width: 150px; text-align: center;" id="as_status_starttimeutc_{body_row.ASID}">{body_row.STARTTIMEUTC}</div>
 									<!-- IF CHARLIST -->
-									<td width="25px" style="text-align: center;" id="as_status_character_info_{body_row.ASID}" class="membersRowCell">{body_row.CHARACTER_INFO}</td>
-									<td width="25px" style="text-align: center;" id="as_status_skill_info_{body_row.ASID}" class="membersRowCell">{body_row.SKILL_INFO}</td>
-									<td width="25px" style="text-align: center;" id="as_status_reputation_info_{body_row.ASID}" class="membersRowCell">{body_row.REPUTATION_INFO}</td>
-									<td width="25px" style="text-align: center;" id="as_status_equipment_info_{body_row.ASID}" class="membersRowCell">{body_row.EQUIPMENT_INFO}</td>
-									<td width="25px" style="text-align: center;" id="as_status_talent_info_{body_row.ASID}" class="membersRowCell">{body_row.TALENT_INFO}</td>
+									<div style="width: 50px; text-align: center;" id="as_status_character_info_{body_row.ASID}">{body_row.CHARACTER_INFO}</div>
+									<div style="width: 50px; text-align: center;" id="as_status_skill_info_{body_row.ASID}">{body_row.SKILL_INFO}</div>
+									<div style="width: 50px; text-align: center;" id="as_status_reputation_info_{body_row.ASID}">{body_row.REPUTATION_INFO}</div>
+									<div style="width: 50px; text-align: center;" id="as_status_equipment_info_{body_row.ASID}">{body_row.EQUIPMENT_INFO}</div>
+									<div style="width: 50px; text-align: center;" id="as_status_talent_info_{body_row.ASID}">{body_row.TALENT_INFO}</div>
 									<!-- ENDIF -->
-									<td width="100px" style="text-align: center;" id="as_status_starttimeutc_{body_row.ASID}" class="membersRowCell" width="80px">{body_row.STARTTIMEUTC}</td>
-									<td width="100px" style="text-align: center;" id="as_status_stoptimeutc_{body_row.ASID}" class="membersRowCell" width="80px">{body_row.STOPTIMEUTC}</td>
-									<td width="15px" style="text-align: center;" id="as_status_log_{body_row.ASID}" class="membersRowCell">{body_row.LOG}</td>
-									</tr>
-									<table>
+									<div style="width: 150px; text-align: center;" id="as_status_stoptimeutc_{body_row.ASID}">{body_row.STOPTIMEUTC}</div>
+									<div style="width: 30px; text-align: right;" id="as_status_log_{body_row.ASID}">{body_row.LOG}</div>
+
 									</div>
 								</div>
 							</div>
-		
 							<!-- END body_row -->
-						</table>
 						</div>
 					</div>
 				</div>
