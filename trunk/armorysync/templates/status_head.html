@@ -10,16 +10,16 @@
 		<!-- ENDIF -->
 </form>
 
-
+<div class="container">
 	<div class="tier-1-a">
         <div class="tier-1-b">
 			<div class="tier-1-c">
 				<div class="tier-1-title">
-					<div class="header_text">
+					<div class="header_text" style="background-image:none;">
 					<table align="center" width="100%" cellspacing="0" cellpadding="0">
 						<tr>
+							<td id="progress_title" width="33%" align="left">{TITLE}</td>
 							<td id="progress_next" width="33%" align="center">{NEXT}</td>
-							<td id="progress_title" width="33%" align="center">{TITLE}</td>
 							<td width="33%" align="right">
 								{PROGRESSBAR}
 							</td>
@@ -33,7 +33,7 @@
 						<table cellspacing="0" cellpadding="0" width="100%">
 							<tr>
 								<!-- BEGIN head_col -->
-									<td class="membersRowCell" style="text-align: center;" width="{head_col.HEAD_WIDTH}">{head_col.HEAD_TITLE}</td>
+									<td style="text-align: center;" width="{head_col.HEAD_WIDTH}">{head_col.HEAD_TITLE}</td>
 								<!-- END head_col -->
 							</tr>
 						</table>
