@@ -320,6 +320,44 @@ class ArmorySync extends ArmorySyncBase {
         }
     }
 
+    function _contentcheck($array, $keys = array() )
+    {
+        global $roster, $addon;
+        //aprint($array);
+        if (is_object($array))
+        {
+            if (is_array($keys))
+            {
+                foreach ( $keys as $key ) 
+                {
+                    if (array_key_exists($key, $array)) 
+                    {
+                        $this->_debug( 1, true, 'Checked "'.$key.'" on existence',  'Passed' );                
+                    }
+                    else
+                    {
+                        $this->_debug( 1, false, 'Checked "'.$key.'" on existence 3',  'Fail' );
+                        return false;
+                    }
+                }
+            $this->_debug( 1, True, 'Checked if array',  'Pass' );
+            return true;
+            
+            }
+            else
+            {
+                $this->_debug( 1, false, 'Checked if array 2',  'Fail' );
+                return false;
+            }
+            $this->_debug( 1, True, 'Checked if is_object',  'Pass' );
+            return true;
+        }
+        else
+        {
+            $this->_debug( 1, false, 'Checked if is_object',  'Fail' );
+            return false;
+        }
+    }
     /**
      * fetches character info
      *
@@ -328,16 +366,14 @@ class ArmorySync extends ArmorySyncBase {
             global $roster, $addon;
 
             include_once(ROSTER_LIB . 'armory.class.php');
-		$armory = new RosterArmory;
+		    $armory = new RosterArmory;
             $armory->region = $this->region;
             $this->_setUserAgent($armory);
 
-            $content = $this->_parseData($armory->fetchCharacter( $this->memberName, $roster->config['locale'], $this->server ));
-
-            /*
-            if ( $this->_checkContent($content, array('characterInfo', 'character' ) ) &&
-            $this->_checkContent($content, array('characterInfo', 'characterTab' ) ) ) 
-            {*/
+            $content = $this->_parseData($armory->fetchCharacter( $this->memberName, '', $roster->config['locale'], $this->server ));
+             //aprint($content);
+            if ( $this->_contentcheck($content->characterInfo, array('character', 'characterTab' ) ) ) 
+            {
             
                   $char = $content->characterInfo->character;
                   //$char = $charr['@attributes'];
@@ -410,7 +446,8 @@ class ArmorySync extends ArmorySyncBase {
                   $this->data["Attributes"]["Melee"]["CritChance"] = $tab->melee->critChance->percent;
                   $this->data["Attributes"]["Melee"]["AttackPowerDPS"] = $tab->melee->power->increasedDps;
 
-            if ( $tab->melee->mainHandSpeed->value > 0 ) {
+            if ( $tab->melee->mainHandSpeed->value > 0 ) 
+            {
 
                 $this->data["Attributes"]["Melee"]["MainHand"]["AttackSpeed"] = $tab->melee->mainHandDamage->speed;
                 $this->data["Attributes"]["Melee"]["MainHand"]["AttackDPS"] = $tab->melee->mainHandDamage->dps;
@@ -419,7 +456,8 @@ class ArmorySync extends ArmorySyncBase {
                 $this->data["Attributes"]["Melee"]["MainHand"]["AttackRating"] = $tab->melee->mainHandSpeed->hasteRating;
             }
 
-            if ( $tab->melee->offHandSpeed->value > 0 ) {
+            if ( $tab->melee->offHandSpeed->value > 0 ) 
+            {
 
                 $this->data["Attributes"]["Melee"]["OffHand"]["AttackSpeed"] = $tab->melee->offHandDamage->speed;
                 $this->data["Attributes"]["Melee"]["OffHand"]["AttackDPS"] = $tab->melee->offHandDamage->dps;
@@ -432,7 +470,8 @@ class ArmorySync extends ArmorySyncBase {
             // ??? $this->data["Attributes"]["Melee"]["AttackPowerTooltip"] = "";
 
 
-            if ( $tab->ranged->weaponSkill->value > 0 ) {
+            if ( $tab->ranged->weaponSkill->value > 0 ) 
+            {
 
                 $this->data["Attributes"]["Ranged"]["AttackPower"] = $tab->ranged->power->base . ":". ( $tab->ranged->power->effective - $tab->ranged->power->base ). ":0";
                 $this->data["Attributes"]["Ranged"]["HitRating"] = $tab->ranged->hitRating->value. ":0:0";
@@ -460,7 +499,8 @@ class ArmorySync extends ArmorySyncBase {
                                                                     $tab->spell->critChance->holy->percent,
                                                                     $tab->spell->critChance->nature->percent,
                                                                     $tab->spell->critChance->shadow->percent ) );
-            if (isset($tab->spell->manaRegen->notCasting) && isset($tab->spell->manaRegen->casting)){
+            if (isset($tab->spell->manaRegen->notCasting) && isset($tab->spell->manaRegen->casting))
+            {
                   $this->data["Attributes"]["Spell"]["ManaRegen"] = $tab->spell->manaRegen->notCasting . ":". $tab->spell->manaRegen->casting;
             }
             else
@@ -497,14 +537,17 @@ class ArmorySync extends ArmorySyncBase {
             $this->data["Race"] = $char->race;
             $this->data["RaceId"] = $char->raceId;
             $this->data["RaceEn"] = preg_replace( "/\s/", "", $roster->locale->act['race_to_en'][$char->race] );
-            if ( $this->data["RaceEn"] == "Undead" ) {
+
+            if ( $this->data["RaceEn"] == "Undead" ) 
+            {
                 $this->data["RaceEn"] = "Scourge";
             }
             $this->data["Class"] = $char->class;
             $this->class = $char->class;
 
             // This is an ugly workaround for an encoding error in the armory
-            if ( substr($this->data["Class"] ,0,1) == 'J' && substr($this->data["Class"] ,-3) == 'ger' ) {
+            if ( substr($this->data["Class"] ,0,1) == 'J' && substr($this->data["Class"] ,-3) == 'ger' ) 
+            {
                     $this->data["Class"] = utf8_encode('Jäger');
             }
             // This is an ugly workaround for an encoding error in the armory
@@ -513,6 +556,7 @@ class ArmorySync extends ArmorySyncBase {
             $this->data["ClassEn"] = $roster->locale->act['class_to_en'][$this->data["Class"]];
             $this->data["Health"] = $tab->characterBars->health->effective;
             $this->data["Mana"] = $tab->characterBars->secondBar->effective;
+
             if ( $tab->characterBars->secondBar->type == "m" ) 
             {
                 $this->data["Power"] = $roster->locale->act['mana'];
@@ -556,13 +600,16 @@ class ArmorySync extends ArmorySyncBase {
 
             $this->_debug( 1, true, 'Parsed character infos',  'OK' );
 
-           // if ( $this->_checkContent( $tab, array( 'items', 'item' ) ) ) {
+            if ( $this->_contentcheck($tab->items, array('item' ) )) //$this->_checkContent( $tab, array( 'items', 'item' ) ) ) 
+            {
                 $equip = $tab->items->item;
                 $this->_getEquipmentInfo( $equip );
-            //}
-        /*} else {
+            }
+        } 
+        else 
+        {
             $this->_debug( 1, false, 'Parsed character infos',  'Failed' );
-        }*/
+        }
     }
 
 
@@ -576,6 +623,7 @@ class ArmorySync extends ArmorySyncBase {
             
             //$this->data["Skills"]["Count"] = 0;
             $skills = $this->content2;
+            //aprint($skills);
             foreach ($skills as $skill) 
             {
                   foreach ($skill as $skil) 
@@ -731,10 +779,10 @@ class ArmorySync extends ArmorySyncBase {
                                     //echo '--'.$dat->name.' -+- '.$dat->reputation.'<br>';
                                     //$this->_setFactionRep( $data->name, $dat );
                                     $this->data["Reputation"]["Count"]++;
-                                    $this->data["Reputation"][''.$factionType2.''][''.$dat->name.''] = array();
-                                    $this->data["Reputation"][''.$factionType2.''][''.$dat->name.'']["Value"] = $this->_getRepValue($dat->reputation) . ":" . $this->_getRepCap($dat->reputation);
-                                    $this->data["Reputation"][''.$factionType2.''][''.$dat->name.'']["Standing"] = $this->_getRepStanding($dat->reputation);
-                                    $this->data["Reputation"][''.$factionType2.''][''.$dat->name.'']["AtWar"] = $this->_getRepAtWar($dat->reputation);
+                                    $this->data["Reputation"][''.$factionType.''][''.$factionType2.''][''.$dat->name.''] = array();
+                                    $this->data["Reputation"][''.$factionType.''][''.$factionType2.''][''.$dat->name.'']["Value"] = $this->_getRepValue($dat->reputation) . ":" . $this->_getRepCap($dat->reputation);
+                                    $this->data["Reputation"][''.$factionType.''][''.$factionType2.''][''.$dat->name.'']["Standing"] = $this->_getRepStanding($dat->reputation);
+                                    $this->data["Reputation"][''.$factionType.''][''.$factionType2.''][''.$dat->name.'']["AtWar"] = $this->_getRepAtWar($dat->reputation);
                         
                               }
                         }
@@ -917,13 +965,16 @@ class ArmorySync extends ArmorySyncBase {
       
     function _checkContent( $object = false, $keys = array( ) ) {
 
-        if ( is_object ($object ) && count (array_keys ( $keys ) ) !== 0 ) {
+        if ( is_object ($object ) && count (array_keys ( $keys ) ) !== 0 ) 
+        {
 
             $subobject = $object;
 
             foreach ( $keys as $key ) {
+                echo 'Key - '.$key.'<br>';
                 if ( $this->hasProp($key) ) {
                     $subobject = $subobject->$key;
+                    echo 'Sub - '.$subobject.'<br>';
                 } else {
                     $this->_debug( 3, $object, 'Checked XML content', 'Failed' );
                     return false;

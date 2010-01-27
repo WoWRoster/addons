@@ -633,7 +633,7 @@ class ArmorySyncJob extends ArmorySyncBase {
 	{
 	    $roster->tpl->assign_block_vars('head_col', array(
 		    'HEAD_TITLE' => $roster->locale->act['name'], 
-		    'HEAD_WIDTH' => '100px'
+		    'HEAD_WIDTH' => '90px'
 		)
 	    );
 	}
@@ -656,19 +656,19 @@ class ArmorySyncJob extends ArmorySyncBase {
 	{
 	    $roster->tpl->assign_block_vars('head_col', array(
 		    'HEAD_TITLE' => $roster->locale->act['character_short'], 
-		    'HEAD_WIDTH' => '25px'
+		    'HEAD_WIDTH' => '50px'
 		)
 	    );
 	    
 	    $roster->tpl->assign_block_vars('head_col', array(
 		    'HEAD_TITLE' => $roster->locale->act['skill_short'], 
-		    'HEAD_WIDTH' => '25px'
+		    'HEAD_WIDTH' => '50px'
 		)
 	    );
 	    
 	    $roster->tpl->assign_block_vars('head_col', array(
 		    'HEAD_TITLE' => $roster->locale->act['reputation_short'],
-		    'HEAD_WIDTH' => '25px'
+		    'HEAD_WIDTH' => '50px'
 		)
 	    );
 	    
@@ -680,30 +680,31 @@ class ArmorySyncJob extends ArmorySyncBase {
 	    
 	    $roster->tpl->assign_block_vars('head_col', array(
 		    'HEAD_TITLE' => $roster->locale->act['talents_short'],
-		    'HEAD_WIDTH' => '25px'
+		    'HEAD_WIDTH' => '50px'
 		)
 	    );
 	}
 
 	$roster->tpl->assign_block_vars('head_col', array(
 		'HEAD_TITLE' => $roster->locale->act['started'],
-		'HEAD_WIDTH' => '100px'
+		'HEAD_WIDTH' => '130px'
 	    )
 	);
 	
 	$roster->tpl->assign_block_vars('head_col', array(
 		'HEAD_TITLE' => $roster->locale->act['finished'],
-		'HEAD_WIDTH' => '100px'
+		'HEAD_WIDTH' => '130px'
 	    )
 	);
 
 	$roster->tpl->assign_block_vars('head_col', array(
 		'HEAD_TITLE' => "Log",
-		'HEAD_WIDTH' => '15px' 
+		'HEAD_WIDTH' => '30px' 
 	    )
 	);
 	
 	$l = 1;
+   
 	$roster->tpl->assign_var('CHARLIST', !$memberlist);
 	$roster->tpl->assign_var('MEMBERLIST', $memberlist);
 	
@@ -716,16 +717,20 @@ class ArmorySyncJob extends ArmorySyncBase {
             $array['GUILD'] = $member['guild_name'];
             $array['SERVER'] = $member['region']. "-". $member['server'];
 
-            foreach ( array( 'guild_info', 'character_info', 'skill_info', 'reputation_info', 'equipment_info', 'talent_info' ) as $key ) {
-                if ( $memberlist && $key !== 'guild_info' ) {
+            foreach ( array( 'guild_info', 'character_info', 'skill_info', 'reputation_info', 'equipment_info', 'talent_info' ) as $key ) 
+            {
+                if ( $memberlist && $key !== 'guild_info' ) 
+                {
                     continue;
                 }
                 if ( isset( $member[$key] ) && $member[$key] == 1 ) {
                     $array[strtoupper($key)] = "<img style=\"float:center;\" src=\"". ROSTER_PATH. "img/pvp-win.gif\" alt=\"\"/>";
+                    //$array['FINISHED'] = '3';
                 } elseif ( isset( $member[$key] ) && $member[$key] >= 1 ) {
                     $array[strtoupper($key)] = $member[$key];
                 } elseif ( isset( $member[$key] ) ) {
                     $array[strtoupper($key)] = "<img style=\"float:center;\" src=\"". ROSTER_PATH. "img/pvp-loss.gif\" alt=\"\" />";
+                    
                 } else {
                     $array[strtoupper($key)] = "<img style=\"float:center;\" src=\"". ROSTER_PATH. "img/blue-question-mark.gif\" alt=\"?\" />";
                 }
@@ -733,6 +738,7 @@ class ArmorySyncJob extends ArmorySyncBase {
 
             $array['STARTTIMEUTC'] = isset( $member['starttimeutc'] ) ? $this->_getLocalisedTime($member['starttimeutc']) : "<img src=\"". ROSTER_PATH. "img/blue-question-mark.gif\" alt=\"?\"/>";
             $array['STOPTIMEUTC'] = isset( $member['stoptimeutc'] ) ? $this->_getLocalisedTime($member['stoptimeutc']) : "<img src=\"". ROSTER_PATH. "img/blue-question-mark.gif\" alt=\"?\"/>";
+             $array['FINISHED'] = isset( $member['stoptimeutc'] ) ? "3" : "4";
 
             if ( !$memberlist && $member['log'] ) {
                 $array['LOG'] = "<img src=\"". $roster->config['theme_path'] . "/images/note.gif\"". makeOverlib( $member['log'] , $roster->locale->act['update_log'] , '' ,0 , '' , ',WRAP' ). " alt=\"\" />";
@@ -1232,9 +1238,8 @@ class ArmorySyncJob extends ArmorySyncBase {
 		}
 
 
-
-            $header = '
-<script type="text/javascript">
+//PAGERELOAD
+            $header = '<script type="text/javascript">
 <!--
     function nextMember() {
         document.linker.submit();
@@ -1242,7 +1247,7 @@ class ArmorySyncJob extends ArmorySyncBase {
     self.setTimeout(\'nextMember()\', '. $reloadTime. ');
 //-->
 </script>
-';
+';           
         
         $this->_debug( 1, htmlspecialchars($header), 'Printed reload java code', $header ? 'OK' : 'Failed');
         $this->header .= $header;
