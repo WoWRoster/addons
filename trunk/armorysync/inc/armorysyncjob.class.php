@@ -253,12 +253,13 @@ class ArmorySyncJob extends ArmorySyncBase {
 
                 $name = urldecode(trim(stripslashes( $_POST['name'] )));
                 $server = urldecode(trim(stripslashes( $_POST['server'] )));
+                $faction = urldecode(trim(stripslashes( $_POST['faction'] )));
                 $region = strtoupper($_POST['region']);
 
                 if ( $region == "EU" || $region == "US" ) {
                     if ( $this->_checkGuildExist( $name, $server, $region ) ) {
 
-                        if ( $id = $this->_insertGuild( $name, $server, $region ) ) {
+                        if ( $id = $this->_insertGuild( $name, $server, $region, $faction ) ) {
 
                             if ( $this->_insertUploadRule( $name, $server, $region, 0 ) ) {
                                 if ( $this->_prepareUpdateMemberlist( $id, $name, $server, $region ) ) {
@@ -956,6 +957,7 @@ class ArmorySyncJob extends ArmorySyncBase {
                         <th class="membersHeader" ' . makeOverlib($name) . '> ' . $name . '</th>
                         <th class="membersHeader" ' . makeOverlib($roster->locale->act['realmname']) . '> ' . $roster->locale->act['server'] . '</th>
                         <th class="membersHeader" ' . makeOverlib($roster->locale->act['regionname']) . '> ' . $roster->locale->act['region'] . '</th>
+                        <th class="membersHeader" ' . makeOverlib($roster->locale->act['factionname']) . '> ' . $roster->locale->act['faction'] . '</th>
                         <th class="membersHeaderRight">&nbsp;</th>
                 </tr>
         </thead>
@@ -980,6 +982,7 @@ class ArmorySyncJob extends ArmorySyncBase {
                         <td class="membersRow2"><input class="wowinput128" type="text" name="name" value="" /></td>
                         <td class="membersRow2"><input class="wowinput128" type="text" name="server" value="" /></td>
                         <td class="membersRow2"><input class="wowinput64" type="text" name="region" value="" /></td>
+                        <td class="membersRow2"><input class="wowinput64" type="text" name="faction" value="" /></td>
                         <td class="membersRowRight2"><button type="submit" class="input" onclick="setvalue(\'' . $type . '\',\'add\');">' . $roster->locale->act['add'] . '</button></td>
                 </tr>
         </tbody>
@@ -1758,7 +1761,7 @@ class ArmorySyncJob extends ArmorySyncBase {
      * @param string $server
      * @param string $region
      */
-    function _insertGuild( $name, $server, $region ) {
+    function _insertGuild( $name, $server, $region,$faction ) {
         global $roster;
 
         $query =    "SELECT ".
@@ -1767,6 +1770,7 @@ class ArmorySyncJob extends ArmorySyncBase {
                     "WHERE ".
                     "`guild_name`='". $roster->db->escape($name). "' ".
                     "AND `server`='". $roster->db->escape($server). "' ".
+                    "AND `faction`='". $roster->db->escape($faction). "' ".
                     "AND `region`='". $roster->db->escape($region). "';";
         $ret = $roster->db->query_first($query);
 
@@ -1777,6 +1781,7 @@ class ArmorySyncJob extends ArmorySyncBase {
                         "SET ".
                         "`guild_name`='". $roster->db->escape($name). "', ".
                         "`server`='". $roster->db->escape($server). "', ".
+                        "`faction`='". $roster->db->escape($faction). "', ".
                         "`region`='". $roster->db->escape($region). "';";
 
             if ( !$roster->db->query($query) ) {
