@@ -150,6 +150,7 @@ class armorysyncInstall
 		$installer->add_menu_button('async_button3','realm', '', 'as_char.jpg');
 		$installer->add_menu_button('async_button4','guild', 'memberlist', 'as_memberlist.jpg');
 		$installer->add_menu_button('async_button5','util', 'add', 'as_guild_add.jpg');
+        $installer->add_menu_button('async_button6','guild', 'guildInfo', 'as_guild_update.png');
 
 
 		$installer->create_table(
@@ -216,6 +217,7 @@ class armorysyncInstall
 			$installer->add_menu_button('async_button2','guild', '', 'as_char.jpg');
 			$installer->add_menu_button('async_button3','realm', '', 'as_char.jpg');
 			$installer->add_menu_button('async_button4','guild', 'memberlist', 'as_memberlist.jpg');
+            $installer->add_menu_button('async_button6','guild', 'guildInfo', 'as_guild_update.png'); 
 			$installer->add_menu_button('async_button5','util', 'add', 'as_guild_add.jpg');
 
 		}
