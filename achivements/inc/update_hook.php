@@ -196,7 +196,14 @@ var $pages = array(
                     $achv_icon          = $infos['Icon'];
                     $achv_title         = $infos['Name'];
                     $achv_disc          = $infos['Description'];
-                    $achv_date          = $infos['Dcomplete'];
+                    if (isset($infos['Dcomplete']))
+                    {
+                        $achv_date          = $infos['Dcomplete'];
+                    }
+                    else
+                    {
+                        $achv_date      = '';
+                    }
                     $achv_id            = $infos['Id'];
                     $achv_reward_title  = $infos['Rewardtext'];
                     
