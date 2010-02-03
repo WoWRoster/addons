@@ -53,7 +53,7 @@
                               );
                               
                               
-            if ($catee == '00')
+           /* if ($catee == '00')
                   {
                         $roster->tpl->assign_block_vars('body2',array(
                                           'ID' => '00',
@@ -143,6 +143,8 @@
                                     );
                          }
                   }
+                  
+                  */
                      
             foreach($data as $catagory => $cid)
             {
@@ -198,7 +200,7 @@
                                     {
                                           $bg = $addon['url'].'images/achievement_bg.jpg';
                                     }
-                                    if ($b['achv_complete'] == '')
+                                    if ($b['achv_complete'] == '0')
                                     {
                                           $bg = $addon['url'].'images/achievement_bg_locked.jpg';
                                     }
@@ -247,11 +249,11 @@
                                     }
                                     
                                     $roster->tpl->assign_block_vars('body.info.achv',array(
-                                          'ID' => 's'.$dat['menue'],
+                                          //'ID' => 's'.$dat['menue'],
                                           'IDS' => $xxx,
                                           'BACKGROUND' => $bg,
-                                          'NAME' => stripslashes($roster->locale->act[$b['achv_title']]),
-                                          'DESC' => stripslashes($roster->locale->act[$b['achv_disc']]),
+                                          'NAME' => stripslashes($b['achv_title']),
+                                          'DESC' => stripslashes($b['achv_disc']),
                                           'DATE' => $dat,
                                           'POINTS' => $b['achv_points'],
                                           'CRITERIA' => $achvg,
