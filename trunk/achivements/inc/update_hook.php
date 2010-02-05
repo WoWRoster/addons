@@ -158,6 +158,7 @@ var $pages = array(
 		
 		//aprint($roster);
 		$achi = $char['Achievements'];
+        $this->achnum =0;
         //aprint($achi);
         
         $sql = '';
