@@ -1,0 +1,68 @@
+<br />
+
+	
+	
+	<br>
+
+	<table width="500">
+		<tr>
+			<td>
+				<table width="550">
+					<tr>
+						<td valign="top">
+							<table class="border_frame" cellpadding="0" cellspacing="1">
+								<tr>
+									<td class="border_color sgrayborder">
+										<div class="header_text sgrayborder">Boss Menu</div>
+
+										<div >
+											<ul id="rp_menu" class="tab_menu">
+											<!-- BEGIN menue -->
+												<li<!-- IF menue.SELECTED --> class="selected"<!-- ENDIF -->><a href="#" rel="l{menue.ID}">{menue.NAME}</a></li>
+											<!-- END menue -->
+											</ul>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td valign="top">
+						<!-- BEGIN player_loot -->
+						<div id="l{player_loot.ID}" style="display:none">
+							<table class="border_frame" cellpadding="0" cellspacing="1">
+								<tr>
+									<td class="border_color sgreenborder">
+										<div class="header_text sgreenborder">{player_loot.P_B_NAME}</div>
+										<table width="600" cellspacing="0" cellpadding="0">
+											<tr>
+												<td><div class="header_text">{I_ICON}</div></td>
+												<td><div class="header_text">{I_NAME}</div></td>
+												<td><div class="header_text">{I_LOOTERS}</div></td>
+												<td><div class="header_text">{I_LOOTABLE}</div></td>
+											</tr>
+											<!-- BEGIN info -->
+											<tr>
+												<td class="membersRow{player_loot.info.I_STRIPE}" valign="center"><img src ="{player_loot.info.I_TEXTURE}" width="40" height="40"></a></td>
+												<td class="membersRow{player_loot.info.I_STRIPE}" valign="center"><a href="http://www.wowhead.com/?item={player_loot.info.I_ID}" class="{player_loot.info.I_QUALITY}" rel="nofollow">{player_loot.info.I_NAME}</a></td>
+												<td class="membersRow{player_loot.info.I_STRIPE}">{player_loot.info.I_LTRS}</td>
+												<td class="membersRow{player_loot.info.I_STRIPE}">{player_loot.info.I_LT_TABLE}</td>
+											</tr>
+											<!-- END info -->
+										</table>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<!-- END player_loot -->
+
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+
+<script type="text/javascript">
+var rp_menu=new tabcontent('rp_menu');
+rp_menu.init();
+</script>
