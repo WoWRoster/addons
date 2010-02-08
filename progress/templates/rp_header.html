@@ -1,0 +1,41 @@
+<br />
+<!-- BEGIN head -->
+<table class="border_frame" cellpadding="0" cellspacing="1">
+<tr>
+<td class="border_color sgreenborder">
+<div class="header_text sgreenborder">{head.ADDON_NAME}</div>
+<table width="500">
+<tr>
+<td>{head.WELCOME1}<br></td>
+</tr>
+<!-- END head -->
+<tr>
+<td>
+
+<select class="combobox" name="raid" onchange="if(options[selectedIndex].value){location = options[selectedIndex].value}">
+<option selected="selected">Select Raid Instance</option>
+
+<!-- BEGIN dropdown -->
+<option value="{dropdown.VALUE}" >{dropdown.NAME}</option>
+<!-- END dropdown -->
+</select></td>
+</tr>
+<tr>
+<td align=center>
+<!-- BEGIN stats -->
+<span class="raid-elem">
+			<a class="raid-link" mask="16384" name="{stats.INSTNAME}" href="{stats.LINK}">
+			<div id="{stats.IMAGE}" {stats.TOOLTIP}</div>
+                  </a>
+            <div class="raid-completion-status-kz">{stats.DOWN}/{stats.BOSSES}</div>
+            </span>
+<!-- END stats -->
+
+</table>
+</td>
+</tr>
+</table>
+<table width="500">
+<tr>
+<td>
+<br>

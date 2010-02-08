@@ -1,0 +1,95 @@
+<br />
+
+	
+	
+	<br>
+
+	<table width="500">
+		<tr>
+			<td colspan=2><h2>{INST_NAME}</h2></td>
+		</tr>
+		<tr>
+			<td>
+				<table width="550">
+					<tr>
+						<td valign="top">
+							<table class="border_frame" cellpadding="0" cellspacing="1">
+								<tr>
+									<td class="border_color sgrayborder">
+										<div class="header_text sgrayborder">Boss Menu</div>
+
+										<div >
+											<ul id="rp_menu" class="tab_menu">
+											<!-- BEGIN menue -->
+												<li<!-- IF menue.SELECTED --> class="selected"<!-- ENDIF -->><a href="#" rel="l{menue.ID}">{menue.NAME}</a></li>
+											<!-- END menue -->
+											</ul>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td valign="top">
+						<!-- BEGIN boss_block -->
+						<div id="l{boss_block.ID}" style="display:none">
+							<table class="border_frame" cellpadding="0" cellspacing="1">
+								<tr>
+									<td class="border_color sgreenborder">
+										<div class="header_text sgreenborder">{boss_block.B_NAME}</div>
+											<table width="600">
+												<tr>
+													<td valign="top">{boss_block.B_IMAGE}<br>
+													<br>Kills: {boss_block.B_KILLS}<br />
+														<table>
+															<tr>
+																<td>
+																	<div class="xp">
+																		<div class="xpbox">
+																			<img src="img/expbar-var2.gif" alt="" class="bit" width="{boss_block.B_PERCENT}"/>
+																			<span class="level">{boss_block.B_PERCENT}</span>
+																		</div>
+																	</div>
+																</td>
+															</tr>
+														</table>
+													</td>
+													<td>
+														<table class="border_frame" cellpadding="0" cellspacing="1" width="400">
+															<tr>
+																<td class="border_color sgreenborder">
+																	<div class="header_text syellowborder">Loots</div>
+																	<div style="height:300px;width:350;overflow:auto;text-align:left;font-size:10px;">
+																		<table width="375" cellspacing="0" cellpadding="0">
+																		<!-- BEGIN info -->
+																			<tr>
+																				<td {boss_block.info.I_CLASS} valign="center" ><a href="#" {boss_block.info.I_TOOLTIP}><img src ="{boss_block.info.I_TEXTURE}" width="40" height="40"></a></td>
+																				<td {boss_block.info.I_CLASS} valign="center" ><a href="#" {boss_block.info.I_TOOLTIP} class="{boss_block.info.I_QUALITY}" rel="nofollow">{boss_block.info.NAME}</a></td>
+																				<td {boss_block.info.I_CLASS}>{boss_block.info.I_LOOTED}</td>
+																			</tr>
+																		<!-- END info -->
+																		</table>
+																	</div>
+																</td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+											</table>
+                                    </td>
+                                </tr>
+								
+							</table>
+						</div>
+						<!-- END boss_block -->
+
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+
+<script type="text/javascript">
+var rp_menu=new tabcontent('rp_menu');
+rp_menu.init();
+</script>

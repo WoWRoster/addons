@@ -1,0 +1,89 @@
+<br />
+
+	
+	
+	<br>
+
+	<table width="500">
+		<tr>
+			<td>
+				<table width="550">
+					<tr>
+						<td valign="top">
+							<table class="border_frame" cellpadding="0" cellspacing="1">
+								<tr>
+									<td class="border_color sgrayborder">
+										<div class="header_text sgrayborder">Boss Menu</div>
+
+										<div >
+											<ul id="rp_menu" class="tab_menu">
+											<!-- BEGIN menue -->
+												<li<!-- IF menue.SELECTED --> class="selected"<!-- ENDIF -->><a href="#" rel="l{menue.ID}">{menue.NAME}</a></li>
+											<!-- END menue -->
+											</ul>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</td>
+						<td valign="top">
+						<!-- BEGIN key1_block -->
+						<div id="l{key1_block.ID}" style="display:none">
+							<table class="border_frame" cellpadding="0" cellspacing="1">
+								<tr>
+									<td class="border_color sgreenborder">
+										<div class="header_text sgreenborder">{key1_block.B_NAME}</div>
+											<table width="600">
+												<tr>
+													<td>
+														<!-- BEGIN key2_block-->
+														<table class="border_frame" cellpadding="0" cellspacing="0">
+															<tr>
+																<td class="border_color sgreenborder">
+																	<table width="600" cellpadding="0" cellspacing="0">
+																	<tr>
+																		<td align="right" width="33%"><img src="{key1_block.key2_block.KEY2_TEXTURE}"></a></td>
+																		<td><div class="{key1_block.key2_block.KEY2_QUALITY}">{key1_block.key2_block.KEY2_NAME}</div><br>
+																		<div class="{key1_block.key2_block.KEY2_SUBNAME2}">{key1_block.key2_block.KEY2_SUBNAME1}</div></td>
+																	</tr>
+																	<tr>
+																		<td><div class="header_text">{I_ICON}</div></td>
+																		<td><div class="header_text">{I_NAME}</div></td>
+																		<td><div class="header_text">{I_LOOTERS}</div></td>
+																		<td><div class="header_text">{I_LOOTABLE}</div></td>
+																	</tr>
+																	<!-- BEGIN items -->
+																		<tr>
+																			<td class="membersRow{key1_block.key2_block.items.INFO_STRIPE}" valign="center"><a href="#" {key1_block.key2_block.items.INFO_TOOLTIP}><img src ="{key1_block.key2_block.items.INFO_TEXTURE}" width="40" height="40"></a></td>
+																			<td class="membersRow{key1_block.key2_block.items.INFO_STRIPE}" valign="center"><a href="http://www.wowhead.com/?item={key1_block.key2_block.items.INFO_ID}" class="{key1_block.key2_block.items.INFO_QUALITY}" rel="nofollow">{key1_block.key2_block.items.INFO_NAME}</a></td>
+																			<td class="membersRow{key1_block.key2_block.items.INFO_STRIPE}">{key1_block.key2_block.items.INFO_LOOTED}</td>
+																			<td class="membersRow{key1_block.key2_block.items.INFO_STRIPE}">{key1_block.key2_block.items.INFO_LOOTERS}</td>
+																		</tr>
+																	<!-- END items -->
+																	</table>
+																</td>
+															</tr>
+														</table>
+														<br>
+														<!-- END key2_block-->
+													</td>
+												</tr>
+											</table>
+                                    </td>
+                                </tr>
+								
+							</table>
+						</div>
+						<!-- END key1_block -->
+
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+
+<script type="text/javascript">
+var rp_menu=new tabcontent('rp_menu');
+rp_menu.init();
+</script>
