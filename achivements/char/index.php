@@ -285,4 +285,3 @@
       
 $roster->tpl->set_handle('body', $addon['basename'] . '/index.html');
 $roster->tpl->display('body');
-
