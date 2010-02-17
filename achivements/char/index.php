@@ -15,10 +15,10 @@
 */
 
       include( $addon['dir'] . 'inc/functions.php' );
-      $achv = new achv;
+      $fachv = new achv;
       
-      $data = $achv->getConfigDatamod($roster->data['member_id']);
-      $data2 = $achv->getConfigDatamod2($roster->data['member_id']);
+      $data = $fachv->getConfigDatamod($roster->data['member_id']);
+      $data2 = $fachv->getConfigDatamod2($roster->data['member_id']);
 
 //echo '<pre>';
 //print_r($data2);
@@ -27,7 +27,7 @@
             $roster->output['html_head'] = '
             <link href="'.$addon['url_path'] . 'css/achievements.css" rel="stylesheet" type="text/css" />';
       
-            $roster->output['body_onload'] .= 'initARC(\'rp_menu\',\'rp_menu2\',\'radioOn\',\'radioOff\',\'checkboxOn\',\'checkboxOff\');';
+            //$roster->output['body_onload'] .= 'initARC(\'rp_menu\',\'rp_menu2\',\'radioOn\',\'radioOff\',\'checkboxOn\',\'checkboxOff\');';
 
             $first_tab = ' class="selected"';
                  // $menu .= '<li class="selected">';
@@ -48,13 +48,13 @@
                                     'ID' => '00',
                                     'LINK' => makelink('&amp;cat=00'),
                                     'NAME' => $roster->locale->act['Summary'],
-                                    'SELECTED' => (isset($sx) && $sx == 1 ? true : false)
+                                    'SELECTED' => true,
                                     )
                               );
                               
                               
            /* if ($catee == '00')
-                  {
+                 {
                         $roster->tpl->assign_block_vars('body2',array(
                                           'ID' => '00',
                                           'NAME' => $roster->locale->act['Summary'],
@@ -145,10 +145,26 @@
                   }
                   
                   */
-                     
+			/*	
+			General
+			Quests
+			Exploration
+			Player vs. Player
+			Dungeons & Raids
+			Professions
+			Reputation
+			World Events		
+			Feats of Strength
+			*/
+			// this will rebuild the status page for us......
+			$status = array();
+			
+			
+			$total="0";
             foreach($data as $catagory => $cid)
             {
-
+					$catt="0";
+					$catc="0";
                   foreach($cid as $achv => $achv_info)
                   {
                   
@@ -160,9 +176,11 @@
                                     'SELECTED' => (isset($sx) && $sx == 0 ? true : false)
                                     )
                               );
+							  echo $achv.' '.$catagory.'<br>';
+						$status[$catagory]= array();
                   $e++;
-                  if ($catee == $catagory)
-                  {
+                  //if ($catee == $catagory)
+                 //{
             
                         $roster->tpl->assign_block_vars('body',array(
                                           'ID' => $catagory,
@@ -195,14 +213,18 @@
                               foreach ($dat['info'] as $a =>$b)
                               {
                                     $xxx++;
-                                    
+                                    $catt++;
+									$total++;
                                     if ($b['achv_complete'] == '1')
                                     {
                                           $bg = $addon['url'].'images/achievement_bg.jpg';
+										  $complete = 1;
+										  $catc++;
                                     }
                                     if ($b['achv_complete'] == '0')
                                     {
                                           $bg = $addon['url'].'images/achievement_bg_locked.jpg';
+										  $complete = 0;
                                     }
 
                                     $d = explode("<br>", $b['achv_criteria']);
@@ -254,6 +276,7 @@
                                           'BACKGROUND' => $bg,
                                           'NAME' => stripslashes($b['achv_title']),
                                           'DESC' => stripslashes($b['achv_disc']),
+										  'STATUS' => $complete,
                                           'DATE' => $dat,
                                           'POINTS' => $b['achv_points'],
                                           'CRITERIA' => $achvg,
@@ -278,9 +301,130 @@
                                     }                                    
                               }
                         }
-                  }
-                  }
+                  //}
+				  $status[$catagory]["name"] = $achv;
+                  $status[$catagory]["complete"] = $catc;
+				  $status[$catagory]["total"] = $catt;
+				  }
+				  
             }
+			
+			$roster->tpl->assign_block_vars('body2',array(
+                                          'ID' => '00',
+                                          'NAME' => $roster->locale->act['Summary'],
+                                          'TOTAL' => $total,
+                                          'MEN' => '00',
+                                          'IMG_PATH' => $addon['url_path'],
+                                          'RECENT' => $roster->locale->act['Recent'],
+                                          )
+                                    );
+				foreach($status as $cat => $datx)
+				{
+					$c = $datx['complete'];
+					$t = $datx['total'];
+					//$width=$achv->bar_width($c,$t);
+					$roster->tpl->assign_block_vars('body2.'.$cat.'',array(
+                                          'NAME' => $datx['name'],
+                                          'WIDTH' => $fachv->bar_width($c,$t),
+                                          'STANDING' => $datx['complete'].' / '.$datx['total'],
+                                          )
+                                    );
+				}				
+									
+			/* if ($catee == '00')
+             //     {
+                        $roster->tpl->assign_block_vars('body2',array(
+                                          'ID' => '00',
+                                          'NAME' => $roster->locale->act['Summary'],
+                                          'TOTAL' => $total,
+                                          'MEN' => '00',
+                                          'IMG_PATH' => $addon['url_path'],
+                                          'RECENT' => $roster->locale->act['Recent'],
+                                          )
+                                    );
+                                    
+                        //list($c,$t ) = explode(" / ", "18 / 49", 2);
+                        //$width = ($c / $t)*100;
+                        //general
+                        $roster->tpl->assign_block_vars('body2.general',array(
+                                          'NAME' => $roster->locale->act['General'],
+                                          'WIDTH' => $achv->bar_width($status[92][complete],$status[92][total]),
+                                          'STANDING' => $data2['Summary']['general'],
+                                          )
+                                    );
+                        //quests
+                        $roster->tpl->assign_block_vars('body2.quest',array(
+                                          'NAME' => $roster->locale->act['Quests'],
+                                          'WIDTH' => $achv->bar_width($status[96]["complete"],$status[96]["total"]),
+                                          'STANDING' => $data2['Summary']['quests'],
+                                          )
+                                    );
+                        //Exploration
+                        $roster->tpl->assign_block_vars('body2.exploration',array(
+                                          'NAME' => $roster->locale->act['Exploration'],
+                                          'WIDTH' => $achv->bar_width($data2['Summary']['exploration']),
+                                          'STANDING' => $data2['Summary']['exploration'],
+                                          )
+                                    );
+                        //Player vs. Player
+                        $roster->tpl->assign_block_vars('body2.pvp',array(
+                                          'NAME' => $roster->locale->act['Player vs. Player'],
+                                          'WIDTH' => $achv->bar_width($data2['Summary']['pvp']),
+                                          'STANDING' => $data2['Summary']['pvp'],
+                                          )
+                                    );
+                        //Dungeons & Raids
+                        $roster->tpl->assign_block_vars('body2.dn_raids',array(
+                                          'NAME' => $roster->locale->act['Dungeons & Raids'],
+                                          'WIDTH' => $achv->bar_width($data2['Summary']['dn_raids']),
+                                          'STANDING' => $data2['Summary']['dn_raids'],
+                                          )
+                                    );
+                        //Professions
+                        $roster->tpl->assign_block_vars('body2.prof',array(
+                                          'NAME' => $roster->locale->act['Professions'],
+                                          'WIDTH' => $achv->bar_width($data2['Summary']['prof']),
+                                          'STANDING' => $data2['Summary']['prof'],
+                                          )
+                                    );
+                        //Reputation
+                        $roster->tpl->assign_block_vars('body2.rep',array(
+                                          'NAME' => $roster->locale->act['Reputation'],
+                                          'WIDTH' => $achv->bar_width($data2['Summary']['rep']),
+                                          'STANDING' => $data2['Summary']['rep'],
+                                          )
+                                    );
+                        //World Events
+                        $roster->tpl->assign_block_vars('body2.world_events',array(
+                                          'NAME' => $roster->locale->act['World Events'],
+                                          'WIDTH' => $achv->bar_width($data2['Summary']['world_events']),
+                                          'STANDING' => $data2['Summary']['world_events'],
+                                          )
+                                    );
+                        //Feats of Strength
+                        $roster->tpl->assign_block_vars('body2.feats',array(
+                                          'NAME' => $roster->locale->act['Feats of Strength'],
+                                          'WIDTH' => $achv->bar_width($data2['Summary']['feats']),
+                                          'STANDING' => $data2['Summary']['feats'],
+                                          )
+                                    );
+                                    
+                        // last 5 achivements compleated
+                        for( $t=1; $t <= 5; $t++)
+                        {
+                        $roster->tpl->assign_block_vars('body2.lst5',array(
+                                          'NAME' => $data2['Summary']['title_'.$t.''],
+                                          'DESC' => $data2['Summary']['disc_'.$t.''],
+                                          'POINTS' => $data2['Summary']['points_'.$t.''],
+                                          'DATE' => $data2['Summary']['date_'.$t.''],
+                                          )
+                                    );
+                         }
+                  }
+                  
+                  */
+				  
+				  
 
       
 $roster->tpl->set_handle('body', $addon['basename'] . '/index.html');

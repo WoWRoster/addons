@@ -135,10 +135,11 @@ function getConfigDatamod2($member_id)
 		}
 	}
 	
-	function bar_width( $val )
+	function bar_width( $c, $t )
 	{
+	global $roster, $addon;
 	
-            list($c,$t) = explode(" / ", $val);
+            //list($c,$t) = explode(" / ", $val);
             $width = ($c / $t)*100;
             return $width;
 	
