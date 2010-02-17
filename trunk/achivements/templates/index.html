@@ -1,10 +1,5 @@
+<div style="float: left;">
 
-	<table width="500">
-		<tr>
-			<td>
-				<table width="550">
-					<tr>
-						<td valign="top">
 							<table class="border_frame" cellpadding="0" cellspacing="1">
 								<tr>
 									<td class="border_color sgrayborder">
@@ -20,12 +15,13 @@
 									</td>
 								</tr>
 							</table>
-						</td>
-						<td valign="top">
 
-						<!-- BEGIN body2 -->
-					<div id="00">	
-						<table >
+</div>
+
+<div style="float: right; width: 750px;">
+<!-- BEGIN body2 -->
+	<div id="00">	
+		<table width="20px">
 							<tr>
 								<td valign="top" class="border_color sgreenborder">
 									<table class="border_frame" cellpadding="0" cellspacing="1">
@@ -224,82 +220,57 @@
 						</table>
 						</div>
 						<!-- END body2 -->
+
 						
-						<!-- BEGIN body -->
-			<div id="{body.ID}" style="display:none">
-				<table width="550" >
-					<tr>
-						<td valign="top" colspan="2" class="border_color sgreenborder">
-							<table class="border_frame" cellpadding="0" cellspacing="1">
-								<tr>
-									<td class="border_color sgreenborder" colspan="2">
-										<div class="header_text">{body.NAME}</div>
-									</td>
-								</tr>
-								<tr>
-									<td valign="top" >
-										<table>
-											<tr>
-												<td class="border_color sgrayborder" valign="top" colspan="2">
-													<div class="header_text sgrayborder">Sub Catagories</div>
-														<div >
+<!-- BEGIN body -->
+<div id="{body.ID}" style="display:none;">
+
+														<div>
 															<ul id="rp_menu{body.MEN}" class="tab_menu">
 															<!-- BEGIN menue2 -->
 																<li<!-- IF body.menue2.SELECTED --> class="selected"<!-- ENDIF -->><a href="#" rel="{body.menue2.ID}">{body.menue2.NAME}</a></li>
 															<!-- END menue2 -->
 															</ul>
 														</div>
-												</td>
-											</tr>
-										</table>
-									</td>
-									<td>
-										<!-- BEGIN info -->
-											<div id="{body.info.ID}" style="display:none">
-												<table width=500>
-												<!-- BEGIN achv -->
-													<tr>
-														<td style="background-image:url({body.info.achv.BACKGROUND});background-position: bottom left;">
-															<table width="100%">
-																<tr>
-																	<td align="center" width="68">
-																		<img src ="{body.info.achv.ICON}"></a>
-																	</td>
-																	<td align="center"width="364">
-																		<h3><font color="black">{body.info.achv.NAME}</font></h3>
-																	</td>
-																	<td width="70" style="right:12px; top:5px; background:url({body.info.achv.SHIELD}point_shield.png);width:68px; height:61px; font:22px Georgia; color:white;">
-																		{body.info.achv.POINTS}
-																	</td>
-																</tr>
-																<tr>
-																	<td colspan=3><center><span style="color:#4169E1;">{body.info.achv.DESC}</span><br><font color="black" size="1">{body.info.achv.DATE}</font></center><br></td>
-																</tr>
-																
-															</table>
-														</td>
-													</tr>
-												<!-- END achv -->
-												</table>
-											</div>
-										<!-- END info -->
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-				</table>
-			</div>
-						<!-- END body -->
 
+<div class="tier-1-a">
+	<div class="tier-1-b">
+    	<div class="tier-1-c">
+        	<div class="tier-1-title">{body.NAME}</div>
+    <!-- BEGIN info -->
+    	<div id="{body.info.ID}" style="display:none">
+        <!-- BEGIN achv -->
+        	<div class="achievement-{body.info.achv.STATUS}">
+            	<div class="achievement-2">
+                	<div class="icon">
+                   		<div class="icon"><img src ="{body.info.achv.ICON}" /><div class="mask"></div></div>
+                    </div>
+                    <div class="shield">
+						<div class="points">{body.info.achv.POINTS}</div>
+					</div>
+                    <div class="info">
+                    	<div class="name">{body.info.achv.NAME}</div>
+                        <div class="desc">{body.info.achv.DESC}</div>
+                        <!-- IF body.info.achv.DATE -->
+                        <div class="date">{body.info.achv.DATE}</div>
+                        <!-- ENDIF -->
+                    </div>
+                    <div style="height: 0px; clear: both;"></div>
+                </div>
+            </div>
+		<!-- END achv -->
+        </div>
+	<!-- END info -->
+		</div>
+	</div>
+</div>
 
-						</td>
-					</tr>
-				</table>
-				
-			</td>
-		</tr>
-	</table>
+</div>
+<!-- END body -->
+</div>
+
+<br clear="all">
+
 
 <script type="text/javascript">
 var rp_menu=new tabcontent('rp_menu');
