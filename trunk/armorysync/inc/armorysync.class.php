@@ -169,9 +169,10 @@ class ArmorySync extends ArmorySyncBase {
         global $roster, $addon;
 
         $content = $this->getguilddata( $roster->data['guild_name'], $this->region, $this->server, $fetch_type='array' );//$this->fetchGuild( $this->memberName, $roster->config['locale'], $this->server );
-        
+        //aprint($content);
         //if ( $this->_checkContent( $content, array( 'guildInfo', 'guild' ) ) ) {
             $guild = $content->guildInfo->guild;
+            $guildh = $content->guildInfo->guildHeader;
 
 
             //$this->data['Ranks'] = $this->_getGuildRanks( $roster->data['guild_id'] );
@@ -183,8 +184,9 @@ class ArmorySync extends ArmorySyncBase {
             $this->data['timestamp']['init']['DateUTC'] = gmdate('Y-m-d H:i:s');
 
             $this->data['GPprovider'] = "armorysync";
+            $this->datd['FactionEn'] = $roster->locale->act['id_to_faction'][$guildh['faction']];
             $this->data["DBversion"] = $roster->config['minGPver'];
-		$this->data["GPversion"] = $roster->config['minGPver'];
+			$this->data["GPversion"] = $roster->config['minGPver'];
             //$this->data['GPversion'] = "v2.6.0";
             //$this->data['name'] = $roster->data['guild_name'];
             $this->data['name'] = $this->memberName;
