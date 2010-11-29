@@ -247,6 +247,7 @@ class ArmorySyncJob extends ArmorySyncBase {
     function _startAddGuild() {
         global $roster;
         $out = '';
+        echo 'Add guild';
         if ( isset($_POST['action']) && $_POST['action'] == 'add' ) {
 
             if ( isset($_POST['name']) && isset($_POST['server']) && isset($_POST['region']) ) {
@@ -256,10 +257,12 @@ class ArmorySyncJob extends ArmorySyncBase {
                 $faction = urldecode(trim(stripslashes( $_POST['faction'] )));
                 $region = strtoupper($_POST['region']);
 
-                if ( $region == "EU" || $region == "US" ) {
+                if ( $region == "EU" || $region == "US" )
+                {
+
                     if ( $this->_checkGuildExist( $name, $server, $region ) ) {
 
-                        if ( $id = $this->_insertGuild( $name, $server, $region, $faction ) ) {
+                        if ( $this->_insertGuild( $name, $server, $region, $faction ) ) {
 
                             if ( $this->_insertUploadRule( $name, $server, $region, 0 ) ) {
                                 if ( $this->_prepareUpdateMemberlist( $id, $name, $server, $region ) ) {
@@ -292,6 +295,8 @@ class ArmorySyncJob extends ArmorySyncBase {
                                 "&nbsp;&nbsp;";
                         $out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
                     }
+
+
                 } else {
                     $html = "&nbsp;&nbsp;".
                             $roster->locale->act['error_wrong_region'].
@@ -1093,6 +1098,7 @@ class ArmorySyncJob extends ArmorySyncBase {
             if ( ! $this->ArmorySync->synchGuildByID( $active_member['server'], $active_member['guild_id'], $active_member['guild_name'], $active_member['region']) ) {
                 $this->dataNotAccepted = 1;
             }
+            $this->_updateGuild( $active_member['guild_name'], $active_member['server'], $active_member['region'] );
 
             $this->active_member['guild_info'] = $this->ArmorySync->status['guildInfo'];
             $this->active_member['stoptimeutc'] = gmdate('Y-m-d H:i:s');
@@ -1101,6 +1107,7 @@ class ArmorySyncJob extends ArmorySyncBase {
                 $this->members = $this->_getMembersFromJobqueue( $this->jobid );
                 list ( $this->done, $this->total ) = $this->_getJobProgress($this->jobid);
                 $this->_debug( 1, true, 'Updated memberlist job status', 'OK');
+                $this->_updateGuild( $active_member['guild_name'], $active_member['server'], $active_member['region'] );
                 return true;
             } else {
                 $this->_debug( 0, false, 'Updated memberlist job status', 'Failed');
@@ -1332,7 +1339,8 @@ class ArmorySyncJob extends ArmorySyncBase {
                     "LEFT JOIN `". $roster->db->table('updates',$addon['basename']). "` updates ".
                     "ON members.member_id = updates.member_id ".
                     "WHERE ". $where.
-                    "members.level >= " . $addon['config']['armorysync_minlevel'] . " " .
+                    //"members.level >= " . $addon['config']['armorysync_minlevel'] . " " .
+                     "members.level >= 80 " .
                     //"AND ( ".
                     //"   ISNULL(updates.dateupdatedutc) ".
                     //"   OR ".
@@ -1753,6 +1761,39 @@ class ArmorySyncJob extends ArmorySyncBase {
         $this->_debug( 2, $ret, 'Inserted upload rule to DB', $ret ? 'OK' : 'Failed');
         return $ret;
     }
+    function _updateGuild( $name, $server, $region ) {
+        global $roster;
+
+        // we are gona get a lil more guild info now a days......
+
+        include_once (ROSTER_LIB .'armory.class.php');
+ 	$armory = new Rosterarmory;
+ 	$data = $armory->pull_xmln('', $name, $server, 'roster');
+
+           if ($data->guildInfo->guildHeader['faction'] == "0") {$faction = "Alliance";}
+    	   if ($data->guildInfo->guildHeader['faction'] == "1") {$faction = "Horde";}
+
+
+          //UPDATE `wowroster`.`roster_guild` SET `guild_num_members` = '1741' WHERE `roster_guild`.`guild_id` =9;
+            $query =    "Update `". $roster->db->table('guild'). "` ".
+                        "SET ".
+                        "`server`='". $roster->db->escape($server). "', ".
+                        "`faction`='". $roster->db->escape($faction). "', ".
+                        "`guild_num_members`='". $data->guildInfo->guildHeader['count']. "', ".
+                        "`region`='". $roster->db->escape($region). "' ".
+                        " WHERE `guild_name`='". $roster->db->escape($name). "';";
+               $ret = $roster->db->query($query);
+            if ( !$roster->db->query($query) ) {
+                die_quietly($roster->db->error(),'Database Error',__FILE__,__LINE__,$query);
+            } else {
+                $query = "SELECT LAST_INSERT_ID();";
+                $ret = $roster->db->query_first($query);
+            }
+
+        $this->_debug( 2, $ret, 'Update Guild to DB', $ret ? 'OK' : 'Failed');
+        return $ret;
+    }
+
 
     /**
      * Inserts new guild
@@ -1763,6 +1804,9 @@ class ArmorySyncJob extends ArmorySyncBase {
      */
     function _insertGuild( $name, $server, $region,$faction ) {
         global $roster;
+
+
+
 
         $query =    "SELECT ".
                     "guild_id ".
@@ -1775,6 +1819,15 @@ class ArmorySyncJob extends ArmorySyncBase {
         $ret = $roster->db->query_first($query);
 
         if ( ! $ret ) {
+        // we are gona get a lil more guild info now a days......
+
+        include (ROSTER_LIB .'armory.class.php');
+ 	$armory = new Rosterarmory;
+ 	$data = $armory->pull_xmln('', $name, $server, 'roster');
+
+
+
+
 
             $query =    "INSERT ".
                         "INTO `". $roster->db->table('guild'). "` ".
@@ -1782,6 +1835,7 @@ class ArmorySyncJob extends ArmorySyncBase {
                         "`guild_name`='". $roster->db->escape($name). "', ".
                         "`server`='". $roster->db->escape($server). "', ".
                         "`faction`='". $roster->db->escape($faction). "', ".
+                        "`guild_num_members`='". $data->guildInfo->guildHeader['count']. "', ".
                         "`region`='". $roster->db->escape($region). "';";
 
             if ( !$roster->db->query($query) ) {

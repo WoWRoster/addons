@@ -27,13 +27,13 @@ if ( !defined('IN_ROSTER') )
 class armorysyncInstall
 {
 	var $active = true;
-	var $icon = 'inv_misc_missilesmall_blue';
+	var $icon = 'spell_deathknight_bladedarmor';
 
 	var $version = '2.7.1.474';
 	var $wrnet_id  = '122';
 
-	var $fullname = 'Armory Sync';
-	var $description = 'Syncronizes chars with Blizzard\'s Armory';
+	var $fullname = 'Roster Armory';
+	var $description = 'Syncronizes WoWRoster with Blizzard\'s Armory';
 	var $credits = array(
             array(	"name"=>	"Ulminia",
 			"info"=>	"Author of 2.7 rewrite and new maintainer"),
@@ -148,8 +148,9 @@ class armorysyncInstall
 		$installer->add_menu_button('async_button1','char', '', 'as_char.jpg');
 		$installer->add_menu_button('async_button2','guild', '', 'as_char.jpg');
 		$installer->add_menu_button('async_button3','realm', '', 'as_char.jpg');
-		$installer->add_menu_button('async_button4','guild', 'memberlist', 'as_memberlist.jpg');
-		$installer->add_menu_button('async_button5','util', 'add', 'as_guild_add.jpg');
+		//$installer->add_menu_button('async_button4','guild', 'memberlist', 'as_memberlist.jpg');
+		//$installer->add_menu_button('async_button5','util', 'add', 'as_guild_add.jpg');
+                $installer->add_menu_button('async_button6','guild', 'bob', 'memberlist_update.png');
         //$installer->add_menu_button('async_button6','guild', 'guildInfo', 'as_guild_update.png');
 
 
