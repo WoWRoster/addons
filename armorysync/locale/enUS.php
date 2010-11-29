@@ -22,6 +22,7 @@ $lang['async_button2']			= 'ArmorySync Character|Synchronize your guild\'s chara
 $lang['async_button3']			= 'ArmorySync Character|Synchronize your realm\'s character with Blizzard\'s Armory';
 $lang['async_button4']			= 'ArmorySync Memberlist|Synchronize your memberlist with Blizzard\'s Armory';
 $lang['async_button5']			= 'ArmorySync Memberlist for a new guild|Add a new guild and synchronize<br />the memberlist with Blizzard\'s Armory';
+$lang['async_button6']			= 'ArmorySync Guild Players|Synchronize your guild\'s Players <br />data with Blizzard\'s Armory';
 
 // Config strings
 $lang['admin']['armorysync_conf']			= 'General|Configure base settings for ArmorySync';
