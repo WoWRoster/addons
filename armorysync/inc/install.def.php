@@ -29,7 +29,7 @@ class armorysyncInstall
 	var $active = true;
 	var $icon = 'spell_deathknight_bladedarmor';
 
-	var $version = '2.7.1.474';
+	var $version = '2.7.2.515';
 	var $wrnet_id  = '122';
 
 	var $fullname = 'Roster Armory';
@@ -148,10 +148,10 @@ class armorysyncInstall
 		$installer->add_menu_button('async_button1','char', '', 'as_char.jpg');
 		$installer->add_menu_button('async_button2','guild', '', 'as_char.jpg');
 		$installer->add_menu_button('async_button3','realm', '', 'as_char.jpg');
+                // dont uncoment these they do not work!
 		//$installer->add_menu_button('async_button4','guild', 'memberlist', 'as_memberlist.jpg');
 		//$installer->add_menu_button('async_button5','util', 'add', 'as_guild_add.jpg');
                 $installer->add_menu_button('async_button6','guild', 'bob', 'memberlist_update.png');
-        //$installer->add_menu_button('async_button6','guild', 'guildInfo', 'as_guild_update.png');
 
 
 		$installer->create_table(
@@ -202,6 +202,16 @@ class armorysyncInstall
 	{
 		global $installer;
 
+		if ( version_compare('2.7.2.515', $oldversion,'>') == true ) {
+			$installer->remove_all_menu_button();
+                        $installer->update_config('1250', 'config_value=0');
+                        $installer->add_menu_button('async_button1','char', '', 'as_char.jpg');
+			$installer->add_menu_button('async_button2','guild', '', 'as_char.jpg');
+			$installer->add_menu_button('async_button3','realm', '', 'as_char.jpg');
+                	$installer->add_menu_button('async_button6','guild', 'bob', 'memberlist_update.png');
+                        
+                        
+                }
 		if ( version_compare('2.6.0.235', $oldversion,'>') == true ) {
 			$installer->create_table(
 				$installer->table('updates'),
@@ -309,7 +319,11 @@ class armorysyncInstall
 		}
 
 		if ( version_compare('2.6.0.273', $oldversion,'>') == true ) {
-			$installer->update_config('1250', 'config_value=1');
+			$installer->update_config('1250', 'config_value=0');
+		}
+               //2.7.1.474
+                if ( version_compare('2.7.1.474', $oldversion,'>') == true ) {
+			$installer->update_config('1250', 'config_value=0');
 		}
 		return true;
 	}
