@@ -205,7 +205,7 @@ $lang['start_message_this_realm'] = "all characters of this realm";
 
 $lang['id_to_faction'] = array(
     "0" => "Alliance",
-    "1" => "Hord"
+    "1" => "Horde"
 );
 
 $lang['month_to_en'] = array(

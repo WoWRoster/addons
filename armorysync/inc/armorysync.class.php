@@ -137,24 +137,24 @@ $output = '';
                 if (isset($loc))
                 {
                 switch( $loc )
-		{
-		        case 'en_us':
+					{
+		        	case 'en_us':
 		                $val = 'US';
-		        break;
-		        case 'fr_fr':
+		        	break;
+		        	case 'fr_fr':
 		                $val = 'FR';
-		        break;
-		        case 'de_de':
+		        	break;
+		        	case 'de_de':
 		                $val = 'DE';
-		        break;
-		        case 'es_es':
+		        	break;
+		        	case 'es_es':
 		                $val = 'ES';
 		        break;
-		}
+					}
                 }
                 else
                 {
-                $var = 'US';
+                	$val = 'US';
                 }
                 return $val;
         }
@@ -434,26 +434,20 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 
             $guild = $content->guildInfo->guild;
             $guildh = $content->guildInfo->guildHeader;
-			//$this->data = array();
-
-            //$this->data['Ranks'] = $this->_getGuildRanks( $roster->data['guild_id'] );
+            
 			$this->data['timestamp']['init']['datakey'] = $roster->data['3'];
             $this->data['Ranks'] = $this->_getGuildRanks( $this->guildId );
             //$this->data['timestamp']['init']['datakey'] = $this->region;
             $this->data['timestamp']['init']['TimeStamp'] = time();
             $this->data['timestamp']['init']['Date'] = date('Y-m-d H:i:s');
             $this->data['timestamp']['init']['DateUTC'] = gmdate('Y-m-d H:i:s');
-	//echo $roster->locale->act['id_to_faction'][''.$guildh["faction"].''].'-=-=-=-<br>';
             $this->data['GPprovider'] = "armorysync";
-            $this->data['FactionEn'] = $roster->locale->act['id_to_faction'][''.$guildh["faction"].''];
+            $this->data['FactionEn'] = $roster->locale->act['id_to_faction'][(string)$guildh["faction"]];
             $this->data["DBversion"] = $roster->config['minGPver'];
 			$this->data["GPversion"] = $roster->config['minGPver'];
-            //$this->data['GPversion'] = "v2.6.0";
             $this->data["GuildName"] = $roster->data['guild_name'];
             $this->data['name'] = $this->memberName;
-            $this->data['Info'] = ''; //$roster->data['guild_info_text'];
-
-            //$members = $this->_getGuildMembers( $roster->data['guild_id'] );
+            $this->data['Info'] = '';
             $members = $this->_getGuildMembers( $gid );
 
             $min = 60;
@@ -463,14 +457,10 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
             $year = 365 * $day;
 
             foreach ( $guild->members->character as $ch => $char ) {
-                //aprint($char);
                 $player = array();
                 $player["name"] = ''.$char['name'].'';
                 $player["ClassId"] = ''.$char['classId'].'';
                 $player['Class'] = $roster->locale->act['id_to_class'][''.$player["ClassId"].''];//$char['class'];
-
-
-               	//$player["ClassId"] = $char->classId;
             	$player["ClassEn"] = $roster->locale->act['class_to_en'][''.$player["Class"].''];
                 if ( substr($player["Class"] ,0,1) == 'J' && substr($player["Class"] ,-3) == 'ger' ) {
                         $player["Class"] = utf8_encode('Jäger');
@@ -557,8 +547,7 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 		$armory = new RosterArmory;
 		
             $content = $this->_parseData($armory->fetchGuild( $name, $region, $server,$fetch_type='array' ));//$this->getguilddata( $roster->data['guild_name'], $this->region, $this->server, $fetch_type='array' );//$this->fetchGuild( $this->memberName, $roster->config['locale'], $this->server );
-            //echo $name.'<br><pre>';
-            //aprint($content);
+
         if ( $this->_xcheckarray( $content, array( 'guildInfo', 'guildHeader' ) ) ) //_checkContent( $content, array( 'guildInfo', 'guild' ) ) )
         {
             $this->_debug( 1, true, 'Checked guild on existence',  'OK' );

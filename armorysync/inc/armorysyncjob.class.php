@@ -1767,8 +1767,8 @@ class ArmorySyncJob extends ArmorySyncBase {
         // we are gona get a lil more guild info now a days......
 
         include_once (ROSTER_LIB .'armory.class.php');
- 	$armory = new Rosterarmory;
- 	$data = $armory->pull_xmln('', $name, $server, 'roster');
+ 		$armory = new Rosterarmory;
+ 		$data = $armory->pull_xmln('', $name, $server, 'roster');
 
            if ($data->guildInfo->guildHeader['faction'] == "0") {$faction = "Alliance";}
     	   if ($data->guildInfo->guildHeader['faction'] == "1") {$faction = "Horde";}
@@ -1821,9 +1821,9 @@ class ArmorySyncJob extends ArmorySyncBase {
         if ( ! $ret ) {
         // we are gona get a lil more guild info now a days......
 
-        include (ROSTER_LIB .'armory.class.php');
- 	$armory = new Rosterarmory;
- 	$data = $armory->pull_xmln('', $name, $server, 'roster');
+        include_once (ROSTER_LIB .'armory.class.php');
+ 		$armory = new Rosterarmory;
+ 		$data = $armory->pull_xmln('', $name, $server, 'roster');
 
 
 
