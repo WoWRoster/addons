@@ -151,7 +151,9 @@ class armorysyncInstall
                 // dont uncoment these they do not work!
 		//$installer->add_menu_button('async_button4','guild', 'memberlist', 'as_memberlist.jpg');
 		//$installer->add_menu_button('async_button5','util', 'add', 'as_guild_add.jpg');
-                $installer->add_menu_button('async_button6','guild', 'bob', 'memberlist_update.png');
+		$installer->add_menu_button('async_button6','guild', 'bob', 'memberlist_update.png');
+		
+		//ROSTER_CACHEDIR
 
 
 		$installer->create_table(
