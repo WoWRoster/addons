@@ -749,7 +749,7 @@ class ArmorySyncJob extends ArmorySyncBase {
             if ( !$memberlist && $member['log'] ) {
                 $array['LOG'] = "<img src=\"". $roster->config['theme_path'] . "/images/note.gif\"". makeOverlib( $member['log'] , $roster->locale->act['update_log'] , '' ,0 , '' , ',WRAP' ). " alt=\"\" />";
             } elseif( $member['log'] ) {
-                $array['LOG'] = "<img src=\"". $roster->config['theme_path'] . "/images/note.gif\"". makeOverlib( "<div style=\"height:300px;width:500px;overflow:auto;\">". $member['log']. "</div>", $roster->locale->act['update_log'] , '' ,0 , '' , ',STICKY, WRAP, CLOSECLICK' ). " alt=\"\" />";
+                $array['LOG'] = "<img src=\"". $roster->config['theme_path'] . "/images/note.gif\"". makeOverlib( "<div style=\"height:300px;width:500px;overflow:auto;\">". $member['log']. " -+-</div>", $roster->locale->act['update_log'] , '' ,0 , '' , ',STICKY, WRAP, CLOSECLICK' ). " alt=\"\" />";
             } else {
                 $array['LOG'] = "<img src=\"". $roster->config['theme_path'] . "/images/no_note.gif\" alt=\"\" />";
             }
