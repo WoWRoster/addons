@@ -232,8 +232,7 @@ function _synchGuildByID( $server, $memberId = 0, $memberName = false, $region =
         $this->region = $region;
         $this->memberName = $memberName;
         $this->build_guild($guilddata, $this->guildId);
-       /// if ( $this->status['guildInfo'] ) {
-       //aprint($this-data);
+
             include_once(ROSTER_LIB . 'update.lib.php');
             $update = new update;
             $update->fetchAddonData();
@@ -243,11 +242,9 @@ function _synchGuildByID( $server, $memberId = 0, $memberName = false, $region =
             $tmp = explode( "\n", $this->message);
             $this->message = implode( '', $tmp);
 
-            $this->_debug( 1, true, 'Synced armory data '. $this->data['GuileName'] . ' with roster',  'OK' );
+            $this->_debug( 1, true, 'Synced armory data '. $this->data['GuildName'] . ' with roster',  'OK' );
             return true;
-       // }
-       // $this->_debug( 0, false, 'Synced armory data '. $this->memberName. ' with roster',  'Failed' );
-       // return false;
+
     }
     
 function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = false, $data) {
@@ -446,9 +443,9 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
             $this->data['timestamp']['init']['TimeStamp'] = time();
             $this->data['timestamp']['init']['Date'] = date('Y-m-d H:i:s');
             $this->data['timestamp']['init']['DateUTC'] = gmdate('Y-m-d H:i:s');
-
+	//echo $roster->locale->act['id_to_faction'][''.$guildh["faction"].''].'-=-=-=-<br>';
             $this->data['GPprovider'] = "armorysync";
-            $this->data['FactionEn'] = $roster->locale->act['id_to_faction'][$guildh->faction];
+            $this->data['FactionEn'] = $roster->locale->act['id_to_faction'][''.$guildh["faction"].''];
             $this->data["DBversion"] = $roster->config['minGPver'];
 			$this->data["GPversion"] = $roster->config['minGPver'];
             //$this->data['GPversion'] = "v2.6.0";

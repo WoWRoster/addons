@@ -159,9 +159,9 @@ $armoryclass = new ArmorySync;
 			}
 		}
 
-	$guilddata = $armoryclass->build_guild($data,$gID);
+	//$guilddata = $armoryclass->build_guild($data,$gID);
 	
-	$armoryclass->_synchGuildByID( $roster->db->escape($data->guildInfo->guildHeader['realm']), $gID, $memberName = false, $roster->data['3'], $guilddata);
+	$armoryclass->_synchGuildByID( $roster->db->escape($data->guildInfo->guildHeader['realm']), $gID, $memberName = false, $roster->data['3'], $data);
 
 	echo '<div class="tier-1-a">
 			<div class="tier-1-b">
