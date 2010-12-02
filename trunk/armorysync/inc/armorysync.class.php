@@ -62,6 +62,40 @@ class ArmorySync extends ArmorySyncBase {
                             'equipmentInfo' => 0,
                             'talentInfo' => 0,
                         );
+                        
+
+	function getMessages()
+	
+	{
+	global $roster, $addon;
+		$message = $this->message;
+$output = '';
+		if( !empty($message) )
+		{
+			// Replace newline feeds with <br />, then newline
+			$messageArr = explode("\n",$message);
+
+			$row=0;
+			foreach( $messageArr as $line )
+			{
+				if( $line != '' )
+				{
+					$output .= ''.$line.'<BR>';
+				}
+			}
+
+			return $output;
+		}
+		else
+		{
+			return '';
+		}
+	}
+	function setMessage($message)
+	{
+		$this->message .= $message;
+	}
+	
     function reset_values()
 	{
 		$this->assignstr = '';
@@ -190,6 +224,56 @@ class ArmorySync extends ArmorySyncBase {
        // return false;
     }
 
+function _synchGuildByID( $server, $memberId = 0, $memberName = false, $region = false, $guilddata) {
+        global $addon, $roster, $update;
+
+        $this->server = $server;
+        $this->guildId = $memberId;
+        $this->region = $region;
+        $this->memberName = $memberName;
+        $this->build_guild($guilddata, $this->guildId);
+       /// if ( $this->status['guildInfo'] ) {
+       //aprint($this-data);
+            include_once(ROSTER_LIB . 'update.lib.php');
+            $update = new update;
+            $update->fetchAddonData();
+
+            $update->uploadData['characterprofiler']['myProfile'][$this->server]['Guild'][$this->data['GuildName']] = $this->data;
+            $this->message = $update->processGuildRoster();
+            $tmp = explode( "\n", $this->message);
+            $this->message = implode( '', $tmp);
+
+            $this->_debug( 1, true, 'Synced armory data '. $this->data['GuileName'] . ' with roster',  'OK' );
+            return true;
+       // }
+       // $this->_debug( 0, false, 'Synced armory data '. $this->memberName. ' with roster',  'Failed' );
+       // return false;
+    }
+    
+function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = false, $data) {
+        global $addon, $roster, $update;
+
+        $this->server = $server;
+        $this->guildId = $memberId;
+        $this->region = $region;
+        $this->memberName = $memberName;
+        //$this->_getGuildInfo();
+       /// if ( $this->status['guildInfo'] ) {
+            include_once(ROSTER_LIB . 'update.lib.php');
+            $update = new update;
+            $update->fetchAddonData();
+
+            $update->uploadData['characterprofiler']['cpProfile'][$server]['Guild'][$data['GuildName']] = $data;
+            echo $update->processGuildRoster();
+            //$tmp = explode( "\n", $this->message);
+            //$this->message = implode( '', $tmp);
+			echo ''.$this->message.'<br>';
+            $this->_debug( 1, true, 'Synced armory data '. $this->memberName. ' with roster',  'OK' );
+            return true;
+       // }
+       // $this->_debug( 0, false, 'Synced armory data '. $this->memberName. ' with roster',  'Failed' );
+       // return false;
+    }
     /**
      * fetches seperate parts of the character sheet
      *
@@ -340,6 +424,132 @@ class ArmorySync extends ArmorySyncBase {
             $this->_debug( 1, $this->data, 'Parsed guild info',  'OK' );
     }
 
+    /*
+     * 
+     * had to get evil and make a new guild data paser for the new adding style...
+     * 
+     */
+    
+    
+    
+    function build_guild( $content, $gid ) {
+        global $roster, $addon;
+
+            $guild = $content->guildInfo->guild;
+            $guildh = $content->guildInfo->guildHeader;
+			//$this->data = array();
+
+            //$this->data['Ranks'] = $this->_getGuildRanks( $roster->data['guild_id'] );
+			$this->data['timestamp']['init']['datakey'] = $roster->data['3'];
+            $this->data['Ranks'] = $this->_getGuildRanks( $this->guildId );
+            //$this->data['timestamp']['init']['datakey'] = $this->region;
+            $this->data['timestamp']['init']['TimeStamp'] = time();
+            $this->data['timestamp']['init']['Date'] = date('Y-m-d H:i:s');
+            $this->data['timestamp']['init']['DateUTC'] = gmdate('Y-m-d H:i:s');
+
+            $this->data['GPprovider'] = "armorysync";
+            $this->data['FactionEn'] = $roster->locale->act['id_to_faction'][$guildh->faction];
+            $this->data["DBversion"] = $roster->config['minGPver'];
+			$this->data["GPversion"] = $roster->config['minGPver'];
+            //$this->data['GPversion'] = "v2.6.0";
+            $this->data["GuildName"] = $roster->data['guild_name'];
+            $this->data['name'] = $this->memberName;
+            $this->data['Info'] = ''; //$roster->data['guild_info_text'];
+
+            //$members = $this->_getGuildMembers( $roster->data['guild_id'] );
+            $members = $this->_getGuildMembers( $gid );
+
+            $min = 60;
+            $hour = 60 * $min;
+            $day = 24 * $hour;
+            $month = 30 * $day;
+            $year = 365 * $day;
+
+            foreach ( $guild->members->character as $ch => $char ) {
+                //aprint($char);
+                $player = array();
+                $player["name"] = ''.$char['name'].'';
+                $player["ClassId"] = ''.$char['classId'].'';
+                $player['Class'] = $roster->locale->act['id_to_class'][''.$player["ClassId"].''];//$char['class'];
+
+
+               	//$player["ClassId"] = $char->classId;
+            	$player["ClassEn"] = $roster->locale->act['class_to_en'][''.$player["Class"].''];
+                if ( substr($player["Class"] ,0,1) == 'J' && substr($player["Class"] ,-3) == 'ger' ) {
+                        $player["Class"] = utf8_encode('Jäger');
+                }
+                $player['Level'] = ''.$char['level'].'';
+                $player['Rank'] = ''.$char['rank'].'';
+                if ( array_key_exists( ''.$char['name'].'', $members ) ) {
+                    $player['Note'] = $members[''.$char['name'].'']['note'];
+                    $player['Zone'] = $members[''.$char['name'].'']['zone'];
+                    $player['Status'] = $members[''.$char['name'].'']['status'];
+                    $player['Online'] = "0";
+
+                    $curtime = time();
+                    $diff = $curtime - strtotime( $members[''.$char['name'].'']['last_online'] );
+                    $years = floor( $diff / $year );
+                    $diff -= $years * $year;
+                    $months = floor( $diff / $month );
+                    $diff -= $months * $month;
+                    $days = floor ( $diff / $day );
+                    $diff -= $days * $day;
+                    $hours = floor ( $diff / $hour );
+
+                    $player['LastOnline'] = $years. ":". $months. ":". $days. ":". $hours;
+
+                    $members[''.$char['name'].'']['done'] = 1;
+                } else {
+                    $player['Online'] = "1";
+                }
+                $this->data['Members'][''.$char['name'].''] = $player;
+                $this->status['guildInfo'] += 1;
+            }
+
+			if ( isset($roster->addon_data['guildbank']) && $roster->addon_data['guildbank']['active'] == 1 ) {
+				$guildbank = getaddon('guildbank');
+			}
+           // //aprint($members);
+            foreach ( $members as $member ) {
+                if ( ! array_key_exists( 'done', $member ) ) {
+                    if ( is_int( array_search( $member['guild_title'], explode( ',', $addon['config']['armorysync_protectedtitle'] ) ) )
+						||
+						( isset($guildbank) && strstr($member[$guildbank['config']['banker_fieldname']], $guildbank['config']['banker_rankname']) )
+						) {
+                        echo $roster->locale->wordings['enUS']['id_to_class'][$member['classid']];
+                        $player['name'] = $member['name'];
+                        $player['Class'] = $roster->locale->wordings['enUS']['id_to_class'][$member['classid']];//$member['class'];
+                        $player['Level'] = $member['level'];
+                        $player['Rank'] = $member['guild_rank'];
+                        $player['Note'] = $member['note'];
+                        $player['Zone'] = $member['zone'];
+                        $player['Status'] = $member['status'];
+                        $player['Online'] = $member['online'];
+
+                        $curtime = time();
+                        $diff = $curtime - strtotime( $member['last_online'] );
+                        $years = floor( $diff / $year );
+                        $diff -= $years * $year;
+                        $months = floor( $diff / $month );
+                        $diff -= $months * $month;
+                        $days = floor ( $diff / $day );
+                        $diff -= $days * $day;
+                        $hours = floor ( $diff / $hour );
+
+                        $player['LastOnline'] = $years. ":". $months. ":". $days. ":". $hours;
+
+                        $this->data['Members'][$member['name']] = $player;
+                    }
+                }
+            }
+			//$this->data;
+            $this->_debug( 1, $this->data, 'Parsed guild info',  'OK' );
+    }
+    
+    /*
+     * end new guild data phasing....
+     * /
+     */
     /**
      * fetches guild info
      *
@@ -1052,7 +1262,7 @@ class ArmorySync extends ArmorySyncBase {
                 
                 foreach( $returndata as $tree => $data )
 		{
-                       // aprint($data);
+                       // ($data);
 	                $order = $data['order'];
                             
                         $this->reset_values();
