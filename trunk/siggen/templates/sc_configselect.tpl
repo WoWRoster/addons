@@ -3,33 +3,13 @@
  * Project: SigGen - Signature and Avatar Generator for WoWRoster
  * File: /templates/sc_configselect.tpl
  *
- * Licensed under the Creative Commons
- * "Attribution-NonCommercial-ShareAlike 2.5" license
- *
- * Short summary:
- *  http://creativecommons.org/licenses/by-nc-sa/2.5/
- *
- * Legal Information:
- *  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
- *
- * Full License:
- *  license.txt (Included within this library)
- *
- * You should have recieved a FULL copy of this license in license.txt
- * along with this library, if you did not and you are unable to find
- * and agree to the license you may not use this library.
- *
- * For questions, comments, information and documentation please visit
- * the official website at cpframework.org
- *
  * @link http://www.wowroster.net
- * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
+ * @license    http://www.gnu.org/licenses/gpl.html   Licensed under the GNU General Public License v3.
  * @author Joshua Clark
  * @version $Id$
- * @copyright 2005-2007 Joshua Clark
+ * @copyright 2005-2011 Joshua Clark
  * @package SigGen
  * @filesource
- *
  */
 
 if ( !defined('IN_ROSTER') )
@@ -39,29 +19,66 @@ if ( !defined('IN_ROSTER') )
 ?>
 
 <!-- Begin Config Select Box -->
-<?php print border('sgreen','start','Select Config Mode'); ?>
-		<table width="150" class="sc_table" cellspacing="0" cellpadding="2">
-			<tr>
-				<td class="sc_row_right2">Current Mode: <span class="titletext"><?php print $config_name; ?></span></td>
-			</tr>
-			<tr>
-				<td class="sc_row_right1"><form action="<?php print makelink(); ?>" method="post" enctype="multipart/form-data" name="config_select" onsubmit="submitonce(this)">
-					<?php print $functions->createOptionList($config_list,$config_name,'config_name',3,'',false); ?>
-					<input type="hidden" name="config_mode" value="switch" />
-					<input type="submit" value="Go" /></form></td>
-			</tr>
-			<tr>
-				<td class="sc_row_right2"><form action="<?php print makelink(); ?>" method="post" enctype="multipart/form-data" name="config_delete" onsubmit="submitonce(this)">
-					<input type="hidden" name="config_mode" value="delete" />
-					<input type="hidden" name="config_name" value="<?php print $config_name; ?>" />
-					<input type="submit" value="Delete Current" /></form></td>
-			</tr>
-			<tr>
-				<td class="sc_row_right1"><form action="<?php print makelink(); ?>" method="post" enctype="multipart/form-data" name="config_new" onsubmit="submitonce(this)">
-					<input type="text" maxlength="20" size="15" value="*create new*" name="config_name" onclick="clickclear(this, '*create new*')" onblur="clickrecall(this,'*create new*')" />
-					<input type="hidden" name="config_mode" value="new" />
-					<input type="submit" value="New" /></form></td>
-			</tr>
-		</table>
-<?php print border('sgreen','end'); ?>
+<div id="tc">
+
+  <div class="tier-2-a">
+    <div class="tier-2-b">
+      <div class="tier-2-title">Config Select</div>
+
+      <form action="<?php print makelink(); ?>" method="post" enctype="multipart/form-data" name="config_select">
+        <div class="tier-3-a">
+          <div class="tier-3-b">
+            <div class="config">
+              <div class="config-name">
+                Select a configuration
+              </div>
+              <div class="config-input">
+                <?php print $functions->createOptionList($config_list,$config_name,'config_name',3,'',false); ?>
+                <input type="submit" value="Set" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <form action="<?php print makelink(); ?>" method="post" enctype="multipart/form-data" name="config_delete">
+        <input type="hidden" name="config_mode" value="delete" />
+        <input type="hidden" name="config_name" value="<?php print $config_name; ?>" />
+        
+        <div class="tier-3-a">
+          <div class="tier-3-b">
+            <div class="config">
+              <div class="config-name">
+                Delete the current configuration [<?php print $config_name; ?>]
+              </div>
+              <div class="config-input">
+                <input type="submit" value="Delete" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <form action="<?php print makelink(); ?>" method="post" enctype="multipart/form-data" name="config_new">
+        <input type="hidden" name="config_mode" value="new" />
+
+        <div class="tier-3-a">
+          <div class="tier-3-b">
+            <div class="config">
+              <div class="config-name">
+                Create New
+              </div>
+              <div class="config-input">
+                <input type="text" maxlength="20" size="15" value="*new config*" name="config_name" onclick="clickclear(this, '*new config*')" onblur="clickrecall(this,'*new config*')" />
+                <input type="submit" value="New" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+</div>
 <!-- End Config Select Box -->

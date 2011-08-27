@@ -3,33 +3,13 @@
  * Project: SigGen - Signature and Avatar Generator for WoWRoster
  * File: /admin/index.php
  *
- * Licensed under the Creative Commons
- * "Attribution-NonCommercial-ShareAlike 2.5" license
- *
- * Short summary:
- *  http://creativecommons.org/licenses/by-nc-sa/2.5/
- *
- * Legal Information:
- *  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
- *
- * Full License:
- *  license.txt (Included within this library)
- *
- * You should have recieved a FULL copy of this license in license.txt
- * along with this library, if you did not and you are unable to find
- * and agree to the license you may not use this library.
- *
- * For questions, comments, information and documentation please visit
- * the official website at cpframework.org
- *
  * @link http://www.wowroster.net
- * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
+ * @license    http://www.gnu.org/licenses/gpl.html   Licensed under the GNU General Public License v3.
  * @author Joshua Clark
  * @version $Id$
- * @copyright 2005-2007 Joshua Clark
+ * @copyright 2005-2011 Joshua Clark
  * @package SigGen
  * @filesource
- *
  */
 
 // Bad monkey! You can view this directly. And you are stupid for trying. HA HA, take that!
@@ -44,6 +24,28 @@ $roster->output['title'] .= $roster->locale->act['menu_siggen_config'];
 
 // ----[ Include the Color Palet js ]-----------------------
 $roster->output['html_head'] .= "<script type=\"text/javascript\" src=\"" .  ROSTER_PATH  . "js/color_functions.php?path=" . $roster->config['theme_path'] . "\"></script>\n";
+$roster->output['html_head'] .= "<script type=\"text/javascript\">
+<!--
+$(function() {
+  var siggen_menu = new tabcontent('siggen_menu');
+  siggen_menu.init();
+  var siggen_text_menu = new tabcontent('siggen_text_menu');
+  siggen_text_menu.init();
+  
+  $('select#name_test').selectmenu({style:'dropdown' , menuWidth: 200 , maxHeight: 300});
+});
+function clickclear(thisfield, defaulttext) {
+  if (thisfield.value == defaulttext) {
+    thisfield.value = '';
+  }
+}
+function clickrecall(thisfield, defaulttext) {
+  if (thisfield.value == '') {
+    thisfield.value = defaulttext;
+  }
+}
+//-->
+</script>\n";
 
 
 // ----[ Clear file status cache ]--------------------------
@@ -443,17 +445,24 @@ $imgTypeArr = array('png' => 'png','jpeg' => 'jpg','gif' => 'gif');
 
 
 
+// ----[ Include the config select box ]--------------------
+ob_start();
+include_once( SIGGEN_DIR . 'templates/sc_configselect.tpl' );
+$body .= ob_get_contents();
+ob_end_clean();
+
+
 // ----[ Include the name test box ]------------------------
 ob_start();
 include_once( SIGGEN_DIR . 'templates/sc_nametest.tpl' );
-$body = ob_get_contents();
+$body .= ob_get_contents();
 ob_end_clean();
 
 
 // ----[ Include the body ]---------------------------------
 ob_start();
 include_once( SIGGEN_DIR . 'templates/sc_body.tpl' );
-$body .= '<br />' . ob_get_contents();
+$body .= ob_get_contents();
 ob_end_clean();
 
 
@@ -467,28 +476,23 @@ ob_end_clean();
 // ----[ Include export settings box ]-----------------------
 ob_start();
 include_once( SIGGEN_DIR . 'templates/sc_export.tpl' );
-$body .= '<br />' . ob_get_contents();
-ob_end_clean();
-
-
-// ----[ Include the java ]---------------------------------
-ob_start();
-include_once( SIGGEN_DIR . 'templates/sc_java.tpl' );
 $body .= ob_get_contents();
 ob_end_clean();
 
 
-// ----[ Include the config select box ]--------------------
+// ----[ Include the java ]---------------------------------
+/*
 ob_start();
-include_once( SIGGEN_DIR . 'templates/sc_configselect.tpl' );
-$menu = ob_get_contents();
+include_once( SIGGEN_DIR . 'templates/sc_java.tpl' );
+$body .= ob_get_contents();
 ob_end_clean();
+*/
 
 
 // ----[ Include the menu ]---------------------------------
 ob_start();
 include_once( SIGGEN_DIR . 'templates/sc_menu.tpl' );
-$menu .= '<br />' . ob_get_contents();
+$menu .= ob_get_contents();
 ob_end_clean();
 
 
@@ -497,19 +501,9 @@ ob_end_clean();
 $messages = $functions->getMessage();
 if( !empty($messages) )
 {
-	$messages .= '<br />';
+  $roster->set_message($messages);
 }
 
-
-
-// ----[ Render the entire page ]---------------------------
-$header .= '<span class="title_text">' . sprintf($roster->locale->act['title_siggen_config'],$addon['version']) . '</span><br />'
-		.  $messages;
-
-$all_body = ",'radioOn','radioOff','checkboxOn','checkboxOff'";
-$roster->output['body_attr'] = "onload=\"initARC('reset_settings'$all_body);initARC('images_upload'$all_body);\"";
-
-// ----[ Output to addon.php ]------------------------------
 
 
 /**
@@ -527,14 +521,9 @@ function errorMode($message,$text=null)
 		// Replace newline feeds with <br />, then newline
 		$message = nl2br( $message );
 
-		$message = messagebox($message,$text,'sred');
+		$message = messagebox($message, $text, 'sred');
 
-		ob_start();
-		include_once( SIGGEN_DIR . 'templates/sc_java.tpl' );
-		$body .= ob_get_contents();
-		ob_end_clean();
-
-		return '<br />' . $message;
+		return $message;
 	}
 	else
 	{

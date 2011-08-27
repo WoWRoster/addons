@@ -3,33 +3,13 @@
  * Project: SigGen - Signature and Avatar Generator for WoWRoster
  * File: /templates/sc_custimg.tpl
  *
- * Licensed under the Creative Commons
- * "Attribution-NonCommercial-ShareAlike 2.5" license
- *
- * Short summary:
- *  http://creativecommons.org/licenses/by-nc-sa/2.5/
- *
- * Legal Information:
- *  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
- *
- * Full License:
- *  license.txt (Included within this library)
- *
- * You should have recieved a FULL copy of this license in license.txt
- * along with this library, if you did not and you are unable to find
- * and agree to the license you may not use this library.
- *
- * For questions, comments, information and documentation please visit
- * the official website at cpframework.org
- *
  * @link http://www.wowroster.net
- * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
+ * @license    http://www.gnu.org/licenses/gpl.html   Licensed under the GNU General Public License v3.
  * @author Joshua Clark
  * @version $Id$
- * @copyright 2005-2007 Joshua Clark
+ * @copyright 2005-2011 Joshua Clark
  * @package SigGen
  * @filesource
- *
  */
 
 if ( !defined('IN_ROSTER') )
@@ -39,50 +19,76 @@ if ( !defined('IN_ROSTER') )
 ?>
 
 <!-- Begin Custom Member Image Section -->
-<div id="t9" style="display:none;">
-<table>
-	<tr>
-		<td valign="top">
+<div id="t9">
 
-<?php
-if( $allow_upload )
-{
-?>
-<form id="images_upload" method="post" action="<?php print makelink(); ?>" enctype="multipart/form-data" name="images_upload" onsubmit="submitonce(this)">
-<?php print border('sgray','start','<div style="width:187px;"><img src="'.$roster->config['img_url'].'blue-question-mark.gif" style="float:right;" alt="" />'.$functions->createTip( 'Images are currently located in:<br />\n&quot;'.str_replace('\\','/',SIGGEN_DIR.$configData['image_dir'].$configData['user_dir']).'&quot;','Upload User Images' ).'</div>'); ?>
-	<table width="198" class="sc_table" cellspacing="0" cellpadding="2">
-		<tr>
-			<td class="sc_row_right1" align="center">Character Name:<br />
-				<?php print $functions->createMemberList($member_list,$name_test,'image_name' ); ?></td>
-		</tr>
-		<tr>
-			<td class="sc_row_right2" align="left">Image Upload Type:<br />
-				<input type="radio" id="image_type_ch" name="image_type" value="" checked="checked" /><label for="image_type_ch">Character Image</label>
-				<br />
-				<input type="radio" id="image_type_bk" name="image_type" value="bk-" /><label for="image_type_bk">Background</label></td>
-		</tr>
-		<tr>
-			<td class="sc_row_right1" align="left">Image location:<br />
-				<input name="userfile" type="file" /></td>
-		</tr>
-		<tr>
-			<td class="sc_row_right2" align="center"><input type="hidden" name="sc_op" value="upload_image" />
-				<input type="submit" value="Upload Image" name="fileupload" /></td>
-		</tr>
-	</table>
-<?php print border('sgray','end'); ?>
+<?php if( $allow_upload ) { ?>
+
+<form id="images_upload" method="post" action="<?php print makelink(); ?>" enctype="multipart/form-data" name="images_upload">
+  <input type="hidden" name="sc_op" value="upload_image" />
+  <div class="tier-2-a">
+    <div class="tier-2-b">
+      <div class="tier-2-title">
+        <div class="right">
+          <input type="submit" value="Upload" name="fileupload" />
+        </div>
+        <?php print $functions->createTip('Images are currently located in:<br />\n&quot;'.str_replace('\\','/',SIGGEN_DIR.$configData['image_dir'].$configData['user_dir']).'&quot;', 'Upload User Images'); ?>
+      </div>
+
+      <div class="tier-3-a">
+        <div class="tier-3-b">
+          <div class="config">
+            <div class="config-name">
+              Character Name
+            </div>
+            <div class="config-input">
+              <?php print $functions->createMemberList($member_list,$name_test,'image_name' ); ?>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tier-3-a">
+        <div class="tier-3-b">
+          <div class="config">
+            <div class="config-name">
+              Image Upload Type
+            </div>
+            <div class="config-input">
+              <div class="radioset">
+                <input type="radio" id="image_type_ch" name="image_type" value="" checked="checked" /><label for="image_type_ch">Character Image</label>
+                <input type="radio" id="image_type_bk" name="image_type" value="bk-" /><label for="image_type_bk">Background</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tier-3-a">
+        <div class="tier-3-b">
+          <div class="config">
+            <div class="config-name">
+              Image Upload
+            </div>
+            <div class="config-input">
+              <input name="userfile" type="file" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
 </form>
 <?php
 }
 else
 {
-	print border('sred','start','Uploads DISABLED' );
-	print border('sred','end');
+  print messagebox('Uploads are disabled, see error message above.', 'Uploads DISABLED', 'sred');
 }
 ?>
 
-		</td>
-		<td valign="top">
+
 <?php
 	// Get regular image files
 	$userFilesArr = $functions->listFiles( SIGGEN_DIR.$configData['image_dir'].$configData['user_dir'],array('png','gif','jpeg','jpg') );
@@ -93,31 +99,40 @@ else
 if( $allow_upload )
 {
 ?>
-  <form method="post" action="<?php print makelink(); ?>" enctype="multipart/form-data" name="image_delete" onsubmit="submitonce(this)">
-<?php print border('sgray','start','<div style="width:187px;"><img src="'.$roster->config['img_url'].'blue-question-mark.gif" style="float:right;" alt="" />'.$functions->createTip( 'Images are currently located in:<br />\n&quot;'.str_replace('\\','/',SIGGEN_DIR.$configData['image_dir'].$configData['user_dir']).'&quot;','Delete User Images' ).'</div>'); ?>
-    <table width="198" class="sc_table" cellspacing="0" cellpadding="2">
-      <tr>
-        <td class="sc_row_right1" align="center">Character Image:
-          <?php print $functions->createOptionList( $userFilesArr,$name_test,'image_name',2 ); ?></td>
-      </tr>
-      <tr>
-        <td class="sc_row_right2" align="center">
-          <input type="hidden" name="sc_op" value="delete_image" />
-          <input type="submit" value="Delete Image" name="delete_image" /></td>
-      </tr>
-    </table>
-<?php print border('sgray','end'); ?>
-  </form>
+<form method="post" action="<?php print makelink(); ?>" enctype="multipart/form-data" name="image_delete">
+  <input type="hidden" name="sc_op" value="delete_image" />
+  <div class="tier-2-a">
+    <div class="tier-2-b">
+      <div class="tier-2-title">
+        <div class="right">
+          <input type="submit" value="Delete" name="delete_image" />
+        </div>
+        <?php print $functions->createTip('Images are currently located in:<br />\n&quot;'.str_replace('\\','/',SIGGEN_DIR.$configData['image_dir'].$configData['user_dir']).'&quot;', 'Delete User Images'); ?>
+      </div>
+
+      <div class="tier-3-a">
+        <div class="tier-3-b">
+          <div class="config">
+            <div class="config-name">
+              Choose Image
+            </div>
+            <div class="config-input">
+              <?php print $functions->createOptionList( $userFilesArr,$name_test,'image_name',2 ); ?>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</form>
+
 <?php
 }
 else
 {
-	print border('sred','start','Delete DISABLED' );
-	print border('sred','end');
+  print messagebox('Delete is disabled, see error message above.', 'Delete DISABLED', 'sred');
 }
 ?>
-		</td>
-	</tr>
-</table>
 </div>
 <!-- End Image Upload Box -->

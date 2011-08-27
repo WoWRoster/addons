@@ -3,33 +3,13 @@
  * Project: SigGen - Signature and Avatar Generator for WoWRoster
  * File: /siggen.php
  *
- * Licensed under the Creative Commons
- * "Attribution-NonCommercial-ShareAlike 2.5" license
- *
- * Short summary:
- *  http://creativecommons.org/licenses/by-nc-sa/2.5/
- *
- * Legal Information:
- *  http://creativecommons.org/licenses/by-nc-sa/2.5/legalcode
- *
- * Full License:
- *  license.txt (Included within this library)
- *
- * You should have recieved a FULL copy of this license in license.txt
- * along with this library, if you did not and you are unable to find
- * and agree to the license you may not use this library.
- *
- * For questions, comments, information and documentation please visit
- * the official website at cpframework.org
- *
  * @link http://www.wowroster.net
- * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
+ * @license    http://www.gnu.org/licenses/gpl.html   Licensed under the GNU General Public License v3.
  * @author Joshua Clark
  * @version $Id$
- * @copyright 2005-2007 Joshua Clark
+ * @copyright 2005-2011 Joshua Clark
  * @package SigGen
  * @filesource
- *
  */
 
 if ( !defined('IN_ROSTER') )
@@ -245,28 +225,38 @@ if( isset($_GET['format']) )
 	// Get Talent Spec
 	if( isset($playersData['name']) )
 	{
-		$spec_str = 'SELECT `pointsspent`, `tree`, `background` FROM `' . $roster->db->table('talenttree') . "` WHERE `member_id` = '$member_id' ORDER BY `order` ASC;";
+		//$spec_str = 'SELECT `pointsspent`, `tree`, `background` FROM `' . $roster->db->table('talenttree') . "` WHERE `member_id` = '$member_id' ORDER BY `build`, `order` ASC;";
+		$spec_str = "SELECT GROUP_CONCAT(`build` , '|',  `tree` , '|', `pointsspent` , '|', `background` ORDER BY `build` , `order`) AS 'talents'
+			FROM `" . $roster->db->table('talenttree') . "`
+			WHERE `member_id` = '{$member_id}';";
 		$spec_sql = $roster->db->query($spec_str);
 
 		$spec_rows = $roster->db->num_rows();
 
 		if( $spec_rows != 0 )
 		{
-			$specData = array();
-			$point_holder = 0;
-			for( $n=0; $n<$spec_rows; $n++ )
-			{
-				$tempData = $roster->db->fetch($spec_sql, SQL_ASSOC);
+			$row = $roster->db->fetch($spec_sql, SQL_ASSOC);
+			$talents = explode(',', $row['talents']);
 
-				if( $tempData['pointsspent'] > $point_holder )
+			$_t = array();
+			$notalent = true;
+			$point_holder = 0;
+			foreach( $talents as $talent )
+			{
+				list($_b, $name, $points, $icon) = explode('|', $talent);
+				$_t[$_b]['tip'][] = $points;
+				if( !isset($_t[$_b]['point']) || $points > $_t[$_b]['point'] )
 				{
-					$point_holder = $tempData['pointsspent'];
-					$specData['tree'] = $tempData['tree'];
-					$specData['icon'] = $tempData['background'];
+					$_t[$_b]['icon'] = $icon;
+					$_t[$_b]['point'] = $points;
+					$_t[$_b]['name'] = $name;
+					$notalent = false;
 				}
-				$specData['points'][] = $tempData['pointsspent'];
 			}
-			$specData['points'] = implode(' / ',$specData['points']);
+
+			$specData['tree'] = $_t[0]['name'];
+			$specData['icon'] = $_t[0]['icon'];
+			$specData['points'] = implode(' / ', $_t[0]['tip']);
 		}
 		$roster->db->free_result();
 	}
@@ -1469,9 +1459,11 @@ if( isset($_GET['format']) )
 	{
 		// Catch the override
 		$configData['image_type'] = ( isset($img_format) ? $img_format : $configData['image_type'] );
+		$saved_name = $sig_name . '@' . $sig_region_name . '-' . $sig_server_name;
 
 		// Set the header
 		header( 'Content-type: image/' . $configData['image_type'] );
+		header( 'Content-Disposition: filename=' . $saved_name . '.' . $configData['image_type'] );
 
 		switch ( $configData['image_type'] )
 		{
