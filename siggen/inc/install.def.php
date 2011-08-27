@@ -1,18 +1,17 @@
 <?php
 /**
- * WoWRoster.net WoWRoster
- *
- * LICENSE: Licensed under the Creative Commons
- *          "Attribution-NonCommercial-ShareAlike 2.5" license
+ * Project: SigGen - Signature and Avatar Generator for WoWRoster
+ * File: /inc/install.def.php
  *
  * @link http://www.wowroster.net
- * @license http://creativecommons.org/licenses/by-nc-sa/2.5/
+ * @license    http://www.gnu.org/licenses/gpl.html   Licensed under the GNU General Public License v3.
  * @author Joshua Clark
  * @version $Id$
- * @copyright 2005-2007 Joshua Clark
+ * @copyright 2005-2011 Joshua Clark
  * @package SigGen
  * @subpackage Installer
-*/
+ * @filesource
+ */
 
 if ( !defined('IN_ROSTER') )
 {
@@ -31,7 +30,7 @@ class siggenInstall
 	var $active = true;
 	var $icon = 'inv_misc_book_13';
 
-	var $version = '0.3.2.410';
+	var $version = '0.3.3.523';
 	var $wrnet_id = '20';
 
 	var $fullname = 'SigGen';
