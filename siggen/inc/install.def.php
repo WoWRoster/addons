@@ -30,7 +30,7 @@ class siggenInstall
 	var $active = true;
 	var $icon = 'inv_misc_dmc_02';
 
-	var $version = '0.3.4.526';
+	var $version = '0.3.4.527';
 	var $wrnet_id = '20';
 
 	var $fullname = 'SigGen';

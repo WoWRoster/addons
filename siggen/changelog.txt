@@ -3,6 +3,10 @@
 SigGen Change Log
 
 
+09.03.2011 - v0.3.4.527
+* Updated reset with latest sql
+
+
 09.03.2011 - v0.3.4.526
 * Fixed character images for the correct size
 * Fixed error with death knight class images
