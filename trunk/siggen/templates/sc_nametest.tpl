@@ -29,7 +29,7 @@ if( $name_test != '' ) {
       <div class="tier-2-b">
         <div class="tier-2-title">
           <div class="right">
-            <?php print $functions->createMemberList($member_list,$name_test,'name_test',1,'class="no-style"' ); ?>
+            <?php print $functions->createMemberList($member_list,$name_test,'name_test',1); ?>
             <input type="submit" value="Go" />
           </div>
           Preview

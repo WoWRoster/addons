@@ -3,6 +3,15 @@
 SigGen Change Log
 
 
+09.03.2011 - v0.3.4.526
+* Fixed character images for the correct size
+* Fixed error with death knight class images
+* Changed color pickers to show color selected better, like Roster
+* Reverted big select boxes, as Roster 2.1.1 will fix them
+* Fixed changing config modes, left out a hidden input, oops
+* New icon, it's SHINNY!
+
+
 08.26.2011 - v0.3.3.523
 * Changed license to GPL v3
 * Many fixes for Roster v2.1
@@ -11,6 +20,8 @@ SigGen Change Log
    o Changed some select drop downs to not have a --none-- option
 * Changed: Right-clicking to save images should now save as [name@region-server.ext]
 * SigGen now shows the active talent build and spec
+* Added Worgen, Goblin, and Death Knight character images
+* Added Worgen and Goblin background images
 
 
 07.02.2008 - v0.3.2.410

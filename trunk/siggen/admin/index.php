@@ -15,7 +15,7 @@
 // Bad monkey! You can view this directly. And you are stupid for trying. HA HA, take that!
 if ( !defined('IN_ROSTER') )
 {
-    exit('Detected invalid access to this file!');
+  exit('Detected invalid access to this file!');
 }
 
 // ----[ Set the Title Text ]-------------------------------
@@ -31,8 +31,6 @@ $(function() {
   siggen_menu.init();
   var siggen_text_menu = new tabcontent('siggen_text_menu');
   siggen_text_menu.init();
-  
-  $('select#name_test').selectmenu({style:'dropdown' , menuWidth: 200 , maxHeight: 300});
 });
 function clickclear(thisfield, defaulttext) {
   if (thisfield.value == defaulttext) {
@@ -154,7 +152,7 @@ if( isset($_POST['sc_op']) && $_POST['sc_op'] != '' )
 	switch ( $_POST['sc_op'] )
 	{
 		case 'delete_image':
-			$functions->deleteImage( SIGGEN_DIR . $checkData['image_dir'] . $checkData['user_dir'],$_POST['image_name'] );
+			$functions->deleteImage( SIGGEN_DIR . $checkData['image_dir'] . $checkData['user_dir'],$_POST['del_image_name'] );
 			break;
 
 		case 'reset_defaults':
@@ -174,7 +172,7 @@ if( isset($_POST['sc_op']) && $_POST['sc_op'] != '' )
 			break;
 
 		case 'upload_image':
-			$functions->uploadImage( SIGGEN_DIR . $checkData['image_dir'] . $checkData['user_dir'],$_POST['image_name'] );
+			$functions->uploadImage( SIGGEN_DIR . $checkData['image_dir'] . $checkData['user_dir'],$_POST['up_image_name'] );
 			break;
 
 		case 'process':
