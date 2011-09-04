@@ -32,14 +32,12 @@ print '
 ';
 
 $config_sql = $roster->db->query($config_str);
-if( $config_sql && $roster->db->num_rows($config_sql) > 0 )
-{
+if( $config_sql && $roster->db->num_rows($config_sql) > 0 ) {
   $member_name = $roster->data['name'];
   $member_realm = str_replace(' ', '%20', $roster->data['server']);
   $member_str = $member_name . '@' . $roster->data['region'] . '-' . $member_realm;
 
-  while( $row = $roster->db->fetch($config_sql, SQL_ASSOC) )
-  {
+  while( $row = $roster->db->fetch($config_sql, SQL_ASSOC) ) {
     $siggen_saved_find = array('/', '%r', '%s');
     $siggen_saved_rep  = array(DIR_SEP, ROSTER_URL, $addon['url_full']);
     $save_loc = str_replace('\\', '/', str_replace($siggen_saved_find, $siggen_saved_rep, $row['save_images_dir']));
@@ -49,16 +47,13 @@ if( $config_sql && $roster->db->num_rows($config_sql) > 0 )
 
     $roster->config['seo_url'] = ( $row['link_type'] == 'forceseo' ? 1 : $curr_seo );
 
-    if( $row['link_type'] == 'short' )
-    {
+    if( $row['link_type'] == 'short' ) {
       print messagebox($image_link . '<br />' . ROSTER_URL . $row['config_id'] . '/' . $member_str . '.' . $row['image_type']) . '<br />';
     }
-    elseif( $row['link_type'] == 'saved' )
-    {
+    elseif( $row['link_type'] == 'saved' ) {
       print messagebox($image_link . '<br />' . $save_loc . $member_str . '.' . $row['image_type'], ucfirst($row['config_id']), '', '100%') . '<br />';
     }
-    else
-    {
+    else {
       print messagebox($image_link . '<br />' . makelink('util-' . $addon['basename'] . '-' . $row['config_id'] . '&amp;member=' . $member_str, true, false, $row['image_type']), ucfirst($row['config_id']), '', '100%') . '<br />';
     }
 

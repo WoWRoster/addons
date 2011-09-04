@@ -19,7 +19,7 @@ if ( !defined('IN_ROSTER') )
 ?>
 
 <!-- Begin Settings Import/Export Box -->
-<div id="t10">
+<div id="t9">
 
   <div class="tier-2-a">
     <div class="tier-2-b">

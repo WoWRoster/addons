@@ -14,12 +14,12 @@
 
 if ( !defined('IN_ROSTER') )
 {
-    exit('Detected invalid access to this file!');
+  exit('Detected invalid access to this file!');
 }
 ?>
 
 <!-- Begin Custom Member Image Section -->
-<div id="t9">
+<div id="t8">
 
 <?php if( $allow_upload ) { ?>
 
@@ -41,7 +41,7 @@ if ( !defined('IN_ROSTER') )
               Character Name
             </div>
             <div class="config-input">
-              <?php print $functions->createMemberList($member_list,$name_test,'image_name' ); ?>
+              <?php print $functions->createMemberList($member_list,$name_test,'up_image_name',1); ?>
             </div>
           </div>
         </div>
@@ -86,19 +86,14 @@ else
 {
   print messagebox('Uploads are disabled, see error message above.', 'Uploads DISABLED', 'sred');
 }
-?>
 
+// Get regular image files
+$userFilesArr = $functions->listFiles( SIGGEN_DIR.$configData['image_dir'].$configData['user_dir'],array('png','gif','jpeg','jpg') );
 
-<?php
-	// Get regular image files
-	$userFilesArr = $functions->listFiles( SIGGEN_DIR.$configData['image_dir'].$configData['user_dir'],array('png','gif','jpeg','jpg') );
-
-?>
-<!-- Begin Image Delete Box -->
-<?php
 if( $allow_upload )
 {
 ?>
+<!-- Begin Image Delete Box -->
 <form method="post" action="<?php print makelink(); ?>" enctype="multipart/form-data" name="image_delete">
   <input type="hidden" name="sc_op" value="delete_image" />
   <div class="tier-2-a">
@@ -117,7 +112,7 @@ if( $allow_upload )
               Choose Image
             </div>
             <div class="config-input">
-              <?php print $functions->createOptionList( $userFilesArr,$name_test,'image_name',2 ); ?>
+              <?php print $functions->createOptionList($userFilesArr,$name_test,'del_image_name',2); ?>
             </div>
           </div>
         </div>

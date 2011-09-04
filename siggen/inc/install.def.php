@@ -28,9 +28,9 @@ if ( !defined('IN_ROSTER') )
 class siggenInstall
 {
 	var $active = true;
-	var $icon = 'inv_misc_book_13';
+	var $icon = 'inv_misc_dmc_02';
 
-	var $version = '0.3.3.523';
+	var $version = '0.3.4.526';
 	var $wrnet_id = '20';
 
 	var $fullname = 'SigGen';
@@ -359,6 +359,14 @@ PRIMARY KEY  (`config_id`)");
 			$installer->add_query("UPDATE `" . $installer->table('config') . "` SET `spec_img_loc_y` = '20';");
 
 			$installer->add_query("UPDATE `" . $installer->table('config') . "` SET `image_order` = CONCAT(`image_order`,':spec');");
+		}
+
+		/**
+		 * Update character menu icon
+		  */
+		if( version_compare('0.3.4.526', $oldversion,'>') == true )
+		{
+			$installer->update_menu_button('menu_siggen_char', 'char', '', 'inv_misc_dmc_02');
 		}
 
 		// Nothing to upgrade from yet

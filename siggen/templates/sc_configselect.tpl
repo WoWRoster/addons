@@ -26,6 +26,8 @@ if ( !defined('IN_ROSTER') )
       <div class="tier-2-title">Config Select</div>
 
       <form action="<?php print makelink(); ?>" method="post" enctype="multipart/form-data" name="config_select">
+        <input type="hidden" name="config_mode" value="switch" />
+
         <div class="tier-3-a">
           <div class="tier-3-b">
             <div class="config">
