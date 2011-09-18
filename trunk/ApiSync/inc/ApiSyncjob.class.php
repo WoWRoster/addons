@@ -86,7 +86,7 @@ class ApiSyncJob extends ApiSyncBase {
 	function _showErrorRosterDeprecated() {
 		global $roster, $addon;
 
-		$html = sprintf( $roster->locale->act['roster_deprecated_message'], ROSTER_VERSION, ApiSync_VERSION, ApiSync_REQUIRED_ROSTER_VERSION);
+		$html = sprintf( $roster->locale->act['roster_deprecated_message'], ROSTER_VERSION, APISYNC_VERSION, APISYNC_REQUIRED_ROSTER_VERSION);
 		$out = messagebox( $html , "<span class=\"title_text\">". $roster->locale->act['roster_deprecated']."</span>" , $style='sred' , '400px' );
 		print $out;
 		$this->_debug( 3, $out, 'Printed error message', 'OK');
@@ -97,7 +97,7 @@ class ApiSyncJob extends ApiSyncBase {
 	 *
 	 */
 	function _isRequiredRosterVersion() {
-		$ret = version_compare( ApiSync_REQUIRED_ROSTER_VERSION, ROSTER_VERSION, '<=');
+		$ret = version_compare( APISYNC_REQUIRED_ROSTER_VERSION, ROSTER_VERSION, '<=');
 		$this->_debug( 1, $ret, 'Check required Roster version', $ret ? 'OK': 'Failed' );
 		return $ret;
 	}
@@ -109,7 +109,7 @@ class ApiSyncJob extends ApiSyncBase {
 	function _showErrorApiSyncNotUpgraded() {
 		global $roster, $addon;
 
-		$html = sprintf( $roster->locale->act['ApiSync_not_upgraded_message'], ApiSync_VERSION, $addon['version']);
+		$html = sprintf( $roster->locale->act['ApiSync_not_upgraded_message'], APISYNC_VERSION, $addon['version']);
 		$out = messagebox( $html , "<span class=\"title_text\">". $roster->locale->act['ApiSync_not_upgraded']."</span>" , $style='sred' , '400px' );
 		$this->_debug( 3, $out, 'Printed error message', 'OK');
 		print $out;
@@ -121,7 +121,7 @@ class ApiSyncJob extends ApiSyncBase {
 	 */
 	function _isRequiredApiSyncVersion() {
 		global $addon;
-		$ret =  version_compare( ApiSync_VERSION, $addon['version'], '<=');
+		$ret =  version_compare( APISYNC_VERSION, $addon['version'], '<=');
 		$this->_debug( 1, $ret, 'Check required ApiSync version', $ret ? 'OK': 'Failed' );
 		return $ret;
 	}
@@ -561,10 +561,8 @@ class ApiSyncJob extends ApiSyncBase {
 
 		$jscript = "<script type=\"text/javascript\" src=\"". $addon['url_path']. "js/ApiSync.js\"></script>\n";
 
-		if ( $addon['config']['ApiSync_pic_effects'] &&
-			(   $addon['config']['ApiSync_pic1_show'] ||
-				$addon['config']['ApiSync_pic2_show'] ||
-				$addon['config']['ApiSync_pic3_show'] ) ) {
+		if ( $addon['config']['ApiSync_pic_effects']  )
+		{
 
 			$jscript .= "<script type=\"text/javascript\" src=\"". $addon['url_path']. "js/prototype.js\"></script>\n";
 			$jscript .= "<script type=\"text/javascript\" src=\"". $addon['url_path']. "js/scriptaculous.js\"></script>\n";
@@ -594,24 +592,6 @@ class ApiSyncJob extends ApiSyncBase {
 				'IMAGE_PATH' => $addon['image_path'],
 
 				'USE_EFFECTS' => $addon['config']['ApiSync_pic_effects'],
-				'SHOW_PIC_TABLE' => (   $addon['config']['ApiSync_pic1_show'] ||
-										$addon['config']['ApiSync_pic2_show'] ||
-										$addon['config']['ApiSync_pic3_show'] ),
-
-				'PIC1_SHOW' => ( $addon['config']['ApiSync_pic1_show'] && $addon['config']['ApiSync_pic1_min_rows'] <= $this->total ) ? true: false,
-				'PIC1_LEFT' => $addon['config']['ApiSync_pic1_pos_left'],
-				'PIC1_TOP' => $addon['config']['ApiSync_pic1_pos_top'],
-				'PIC1_HIGHT' => $addon['config']['ApiSync_pic1_size'],
-
-				'PIC2_SHOW' => ( $addon['config']['ApiSync_pic2_show'] && $addon['config']['ApiSync_pic2_min_rows'] <= $this->total ) ? true: false,
-				'PIC2_LEFT' => $addon['config']['ApiSync_pic2_pos_left'],
-				'PIC2_TOP' => $addon['config']['ApiSync_pic2_pos_top'],
-				'PIC2_HIGHT' => $addon['config']['ApiSync_pic2_size'],
-
-				'PIC3_SHOW' => ( $addon['config']['ApiSync_pic3_show'] && $addon['config']['ApiSync_pic3_min_rows'] <= $this->total ) ? true: false,
-				'PIC3_LEFT' => $addon['config']['ApiSync_pic3_pos_left'],
-				'PIC3_TOP' => $addon['config']['ApiSync_pic3_pos_top'],
-				'PIC3_HIGHT' => $addon['config']['ApiSync_pic3_size'],
 
 				'LINK' => ( $this->link ? $this->link : makelink() ),
 				'DEBUG' => $addon['config']['ApiSync_xdebug_php'] ? "<input type=\"hidden\" name=\"XDEBUG_SESSION_START\" value=\"". $addon['config']['ApiSync_xdebug_idekey']. "\" />" : "",
@@ -662,44 +642,44 @@ class ApiSyncJob extends ApiSyncBase {
 	{
 		$roster->tpl->assign_block_vars('head_col', array(
 			'HEAD_TITLE' => $roster->locale->act['character_short'], 
-			'HEAD_WIDTH' => '50px'
+			'HEAD_WIDTH' => '40px'
 		)
 		);
 		
 		$roster->tpl->assign_block_vars('head_col', array(
 			'HEAD_TITLE' => $roster->locale->act['skill_short'], 
-			'HEAD_WIDTH' => '50px'
+			'HEAD_WIDTH' => '40px'
 		)
 		);
 		
 		$roster->tpl->assign_block_vars('head_col', array(
 			'HEAD_TITLE' => $roster->locale->act['reputation_short'],
-			'HEAD_WIDTH' => '50px'
+			'HEAD_WIDTH' => '40px'
 		)
 		);
 		
 		$roster->tpl->assign_block_vars('head_col', array(
 			'HEAD_TITLE' => $roster->locale->act['equipment_short'],
-			'HEAD_WIDTH' => '25px'
+			'HEAD_WIDTH' => '45px'
 		)
 		);
 		
 		$roster->tpl->assign_block_vars('head_col', array(
 			'HEAD_TITLE' => $roster->locale->act['talents_short'],
-			'HEAD_WIDTH' => '50px'
+			'HEAD_WIDTH' => '40px'
 		)
 		);
 	}
 
 	$roster->tpl->assign_block_vars('head_col', array(
 		'HEAD_TITLE' => $roster->locale->act['started'],
-		'HEAD_WIDTH' => '130px'
+		'HEAD_WIDTH' => '110px'
 		)
 	);
 	
 	$roster->tpl->assign_block_vars('head_col', array(
 		'HEAD_TITLE' => $roster->locale->act['finished'],
-		'HEAD_WIDTH' => '130px'
+		'HEAD_WIDTH' => '110px'
 		)
 	);
 
@@ -806,14 +786,14 @@ class ApiSyncJob extends ApiSyncBase {
 
 		$roster->tpl->assign_vars( array (
 			'IMAGE_PATH' => $addon['image_path'],
-			'ApiSync_VERSION' => $addon['version']. ' by Ulminia',
-			'ApiSync_CREDITS' => $roster->locale->act['ApiSync_credits'],
+			'APISYNC_VERSION' => $addon['version']. ' by Ulminia',
+			'APISYNC_CREDITS' => $roster->locale->act['ApiSync_credits'],
 			'ERROR' => count( $this->errormessages ) > 0,
 			'DEBUG' => $addon['config']['ApiSync_debuglevel'],
 			'DEBUG_DATA' => $addon['config']['ApiSync_debugdata'],
 			'D_START_BORDER' => border( 'sblue', 'start', 'ApiSync Debugging '. ( $addon['config']['ApiSync_debugdata'] ? 'Infos & Data' : 'Infos'), '100%' ),
 			'E_START_BORDER' => border( 'sred', 'start', 'ApiSync Error '. ( $addon['config']['ApiSync_debugdata'] ? 'Infos & Data' : 'Infos'), '100%' ),
-			'RUNTIME' => round((format_microtime() - ApiSync_STARTTIME), 4),
+			'RUNTIME' => round((format_microtime() - APISYNC_STARTTIME), 4),
 			'S_SQL_WIN' => $addon['config']['ApiSync_sqldebug'],
 			));
 
@@ -1239,7 +1219,7 @@ class ApiSyncJob extends ApiSyncBase {
 
 		$reloadTime = $addon['config']['ApiSync_reloadwaittime'] * 500;
 		$link = ROSTER_URL. 'index.php?p=ajax-addon-ApiSync-status_update&cont=doUpdateStatus';
-		$posts = 'job_id='. $this->jobid. '&memberlist='. $this->isMemberList. '&scope='. $roster->scope. '&page='. ( isset($roster->pages[2]) ? $roster->pages[2] : '' ). '&ApiSync_STARTTIME='. ApiSync_STARTTIME;
+		$posts = 'job_id='. $this->jobid. '&memberlist='. $this->isMemberList. '&scope='. $roster->scope. '&page='. ( isset($roster->pages[2]) ? $roster->pages[2] : '' ). '&APISYNC_STARTTIME='. APISYNC_STARTTIME;
 
 		$postadd = '';
 

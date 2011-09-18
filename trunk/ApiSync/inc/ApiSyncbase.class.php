@@ -33,7 +33,7 @@ class ApiSyncBase {
         if ( $level > $addon['config']['ApiSync_debuglevel'] ) {
             return;
         }
-        $timestamp = round((format_microtime() - ApiSync_STARTTIME), 4);
+        $timestamp = round((format_microtime() - APISYNC_STARTTIME), 4);
 		if( version_compare(phpversion(), '4.3.0','>=') ) {
 			$tmp = debug_backtrace();
 			$trace = $tmp[1];

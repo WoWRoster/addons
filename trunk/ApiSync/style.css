@@ -28,3 +28,35 @@
 	border: 1px solid #565656;
 
 }
+table.asupdate {
+border: 1px solid #ddd;
+}
+table.asupdate tr {
+	display: block; line-height: 24px; height: 24px; font-weight: bold; clear: both;
+}
+
+table.asupdate tr.asrow2 {
+	cursor:pointer; 
+	background: url(./images/bg-dark-menu.png) repeat-x left top; 
+	font: bold 11px Geneva, Arial, Helvetica, sans-serif;color:#ffcc00;
+	color: #000000;
+}
+table.asupdate tr.asrow1{
+	cursor:pointer; 
+	background: url(./images/bg-dark-menu.png) repeat-x left bottom; 
+	font: bold 11px Geneva, Arial, Helvetica, sans-serif;color:#ffcc00;
+	color: #000000;
+}
+table.asupdate tr:hover { background: url(./images/char_row_link.png) repeat-x left bottom; }
+
+
+#asrow1{
+	cursor:pointer; 
+	background: url(/images/bg-dark-menu.png) repeat-x left top; 
+	color: #000000;
+}
+#asrow2{
+	cursor:pointer; 
+	background: url(/images/bg-dark-menu.png) repeat-x left bottom; 
+	color: #000000;
+}
