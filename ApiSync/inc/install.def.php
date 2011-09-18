@@ -62,18 +62,14 @@ class ApiSyncInstall
 		$installer->add_config("'1','startpage','ApiSync_conf','display','master'");
 		$installer->add_config("'10','ApiSync_conf',NULL,'blockframe','menu'");
 		$installer->add_config("'15','ApiSync_ranks',NULL,'blockframe','menu'");
-		$installer->add_config("'20','ApiSync_images',NULL,'page{1','menu'");
 		$installer->add_config("'30','ApiSync_access',NULL,'blockframe','menu'");
 		$installer->add_config("'90','ApiSync_debug',NULL,'blockframe','menu'");
 
 		$installer->add_config("'302','ApiSync_frm1',NULL,'page{1','ApiSync_images'");
 		$installer->add_config("'303','ApiSync_frm2',NULL,'page{1','ApiSync_images'");
 		$installer->add_config("'304','ApiSync_frm3',NULL,'page{3','ApiSync_images'");
-		$installer->add_config("'310','ApiSync_logo',NULL,'blockframe','ApiSync_frm1'");
 		$installer->add_config("'320','ApiSync_effects',NULL,'blockframe','ApiSync_frm2'");
-		$installer->add_config("'330','ApiSync_pic1',NULL,'blockframe','ApiSync_frm3'");
-		$installer->add_config("'340','ApiSync_pic2',NULL,'blockframe','ApiSync_frm3'");
-		$installer->add_config("'350','ApiSync_pic3',NULL,'blockframe','ApiSync_frm3'");
+
 
 		$installer->add_config("'1100', 'ApiSync_minlevel', '10', 'text{2|2', 'ApiSync_conf'");
 		$installer->add_config("'1200', 'ApiSync_synchcutofftime', '1', 'text{4|4', 'ApiSync_conf'");
@@ -101,11 +97,6 @@ class ApiSyncInstall
 		$installer->add_config("'1460', 'ApiSync_guild_memberlist_update_access', '2', 'access', 'ApiSync_access'");
 		$installer->add_config("'1470', 'ApiSync_realm_update_access', '3', 'access', 'ApiSync_access'");
 		$installer->add_config("'1480', 'ApiSync_guild_add_access', '3', 'access', 'ApiSync_access'");
-
-		$installer->add_config("'2110', 'ApiSync_logo_show', '1', 'radio{On^1|Off^0', 'ApiSync_logo'");
-		$installer->add_config("'2120', 'ApiSync_logo_pos_left', '410', 'text{5|5', 'ApiSync_logo'");
-		$installer->add_config("'2130', 'ApiSync_logo_pos_top', '-170', 'text{5|5', 'ApiSync_logo'");
-		$installer->add_config("'2140', 'ApiSync_logo_size', '250', 'text{5|5', 'ApiSync_logo'");
 
 		$installer->add_config("'2200', 'ApiSync_pic_effects', '1', 'radio{On^1|Off^0', 'ApiSync_effects'");
 
