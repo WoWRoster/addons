@@ -1085,12 +1085,19 @@ function return_gender($genderid) {
 			foreach ($rep as $var => $info)
   				{
 						$ft = 'Reputation';
-						$ft2 = $info['name'];
+						if ($info['name'] == 'Guild')
+						{
+							$ft2 = $this->apidata['guild']['name'];
+						}
+						else
+						{
+							$ft2 = $info['name'];
+						}
 						if (isset($info['name']))
 						{
 						$this->data["Reputation"][''.$ft.''][''.$ft2.''] = array();
 						$this->data["Reputation"][''.$ft.''][''.$ft2.'']["Value"] = $info['value'] . ":" . $info['max'];
-						$this->data["Reputation"][''.$ft.''][''.$ft2.'']["Standing"] = $this->_getRepStanding($info['value']);
+						$this->data["Reputation"][''.$ft.''][''.$ft2.'']["Standing"] = $this->_getRepStanding($info['standing']);
 						$this->data["Reputation"][''.$ft.''][''.$ft2.'']["AtWar"] = $this->_getRepAtWar($info['value']);
 						}
 
@@ -1742,14 +1749,14 @@ function build_talenttree_data( $class )
 		global $roster, $addon;
 
 		$ret = '';
-		if ($value >= 42000 && $value < 43000) { $ret = $roster->locale->act['exalted']; }
-		if ($value >= 21000 && $value < 42000) { $ret = $roster->locale->act['revered']; }
-		if ($value >= 9000 && $value < 21000) { $ret = $roster->locale->act['honored']; }
-		if ($value >= 3000 && $value < 9000) { $ret = $roster->locale->act['friendly']; }
-		if ($value >= 0 && $value < 3000) { $ret = $roster->locale->act['neutral']; }
-		if ($value >= -3000 && $value < 0) { $ret = $roster->locale->act['unfriendly']; }
-		if ($value >= -6000 && $value < -3000) { $ret = $roster->locale->act['hostile']; }
-		if ($value >= -42000 && $value < -6000) { $ret = $roster->locale->act['hated']; }
+		if ($value == '7') { $ret = $roster->locale->act['exalted']; }
+		if ($value == '6') { $ret = $roster->locale->act['revered']; }
+		if ($value == '5') { $ret = $roster->locale->act['honored']; }
+		if ($value == '4') { $ret = $roster->locale->act['friendly']; }
+		if ($value == '3') { $ret = $roster->locale->act['neutral']; }
+		if ($value == '2') { $ret = $roster->locale->act['unfriendly']; }
+		if ($value == '1') { $ret = $roster->locale->act['hostile']; }
+		if ($value == '0') { $ret = $roster->locale->act['hated']; }
 
 		$this->_debug( 2, $ret, 'Determined reputation standing', 'OK' );
 		return $ret;
