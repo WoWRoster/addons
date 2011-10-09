@@ -282,6 +282,32 @@ class SigConfigClass
 
 
   /**
+   * Create a color picker input field
+   *
+   * @param string $id       html name of field
+   * @param array $value     value of field
+   * @return string          color picker html
+   */
+  function createColorPicker( $name , $value )
+  {
+    global $roster;
+
+    // Check for Roster version to determine which color picker to use
+    if (version_compare(ROSTER_VERSION, '2.1.9', '<')) {
+      $color = '<input type="text" maxlength="7" size="10" class="colorinput" style="background-color:' . $value . ';" value="' . $value . '" name="' . $name . '" id="' . $name . '" />'
+        . '<img src="' . $roster->config['theme_path'] . '/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById(\'' . $name . '\'))" alt="" />';
+    }
+    else
+    {
+      $color = '<input type="text" maxlength="7" size="8" class="color-picker" value="' . $value . '" name="' . $name . '" id="' . $name . '" />'
+        . '<div class="color-display" style="background-color:' . $value . ';"></div>' . "\n";
+    }
+
+    return $color;
+  }
+
+
+  /**
    * Get a list of files from a directory
    *
    * @param string $dir | directory to get list of files
