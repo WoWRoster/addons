@@ -22,28 +22,83 @@ if ( !defined('IN_ROSTER') )
 $roster->output['title'] .= $roster->locale->act['menu_siggen_config'];
 
 
-// ----[ Include the Color Palet js ]-----------------------
-$roster->output['html_head'] .= "<script type=\"text/javascript\" src=\"" .  ROSTER_PATH  . "js/color_functions.php?path=" . $roster->config['theme_path'] . "\"></script>\n";
-$roster->output['html_head'] .= "<script type=\"text/javascript\">
-<!--
-$(function() {
-  var siggen_menu = new tabcontent('siggen_menu');
-  siggen_menu.init();
-  var siggen_text_menu = new tabcontent('siggen_text_menu');
-  siggen_text_menu.init();
-});
-function clickclear(thisfield, defaulttext) {
-  if (thisfield.value == defaulttext) {
-    thisfield.value = '';
-  }
+// ----[ Include the Color Palet JS ]-----------------------
+if (version_compare(ROSTER_VERSION, '2.1.9', '<'))
+{
+	$roster->output['html_head'] .= "<script type=\"text/javascript\" src=\"" .  ROSTER_PATH  . "js/color_functions.php?path=" . $roster->config['theme_path'] . "\"></script>\n";
+	$roster->output['html_head'] .= "<script type=\"text/javascript\">
+	<!--
+	$(function() {
+		var siggen_menu = new tabcontent('siggen_menu');
+		siggen_menu.init();
+		var siggen_text_menu = new tabcontent('siggen_text_menu');
+		siggen_text_menu.init();
+	});
+	function clickclear(thisfield, defaulttext) {
+		if (thisfield.value == defaulttext) {
+			thisfield.value = '';
+		}
+	}
+	function clickrecall(thisfield, defaulttext) {
+		if (thisfield.value == '') {
+			thisfield.value = defaulttext;
+		}
+	}
+	//-->
+	</script>\n";
 }
-function clickrecall(thisfield, defaulttext) {
-  if (thisfield.value == '') {
-    thisfield.value = defaulttext;
-  }
+else
+{
+	roster_add_js('js/colorpicker.js');
+	$jscript_head = '
+	function clickclear(thisfield, defaulttext) {
+		if (thisfield.value == defaulttext) {
+			thisfield.value = "";
+		}
+	}
+	function clickrecall(thisfield, defaulttext) {
+		if (thisfield.value == "") {
+			thisfield.value = defaulttext;
+		}
+	}';
+
+	$jscript_foot = '
+		$(function() {
+			var siggen_menu = new tabcontent("siggen_menu");
+			siggen_menu.init();
+			var siggen_text_menu = new tabcontent("siggen_text_menu");
+			siggen_text_menu.init();
+
+			$(".color-picker").ColorPicker({
+				onSubmit: function(hsb, hex, rgb, el) {
+					$(el).val("#" + hex.toUpperCase());
+					$(el).next().css("background-color", "#" + hex.toUpperCase());
+					$(el).ColorPickerHide();
+				},
+				onShow: function (colpkr) {
+					$(colpkr).fadeIn(500);
+					return false;
+				},
+				onBeforeShow: function () {
+					$(this).ColorPickerSetColor(this.value);
+				},
+				onHide: function (colpkr) {
+					$(colpkr).fadeOut(500);
+					return false;
+				}
+			})
+			.bind("keyup", function(){
+				$(this).ColorPickerSetColor(this.value);
+				$(this).next().css("background-color", this.value);
+			})
+			.next().click(function(){
+				$(this).prev().click();
+			});
+		});';
+	roster_add_js($jscript_head, 'inline', 'header');
+	roster_add_js($jscript_foot, 'inline', 'footer');
+	roster_add_css('templates/' . $roster->tpl->tpl . '/colorpicker.css', 'theme');
 }
-//-->
-</script>\n";
 
 
 // ----[ Clear file status cache ]--------------------------

@@ -542,7 +542,7 @@ if ( !defined('IN_ROSTER') )
               <?php print $functions->createTip( 'Select a color to fill the background with<br />Setting is for &quot;Color fill background&quot;','Background fill color' ); ?>
             </div>
             <div class="config-input">
-              <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['backg_fill_color']; ?>;" value="<?php print $configData['backg_fill_color']; ?>" name="backg_fill_color" id="backg_fill_color" /><img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('backg_fill_color'))" alt="" />
+              <?php print $functions->createColorPicker('backg_fill_color', $configData['backg_fill_color']); ?>
             </div>
           </div>
         </div>
@@ -895,8 +895,7 @@ if ( !defined('IN_ROSTER') )
               Border Color
             </div>
             <div class="config-input">
-              <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['expbar_color_border']; ?>;" value="<?php print $configData['expbar_color_border']; ?>" name="expbar_color_border" id="expbar_color_border" />
-              <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_color_border'))" alt="" />
+              <?php print $functions->createColorPicker('expbar_color_border', $configData['expbar_color_border']); ?>
               <?php print $functions->createTipIcon( 'Make the border transparent/translucent<br /><br />Accepted values are 0-127<br />0 = Opaque | 127 = Transparent','Alpha' ); ?>a:
               <input name="expbar_trans_border" type="text" value="<?php print $configData['expbar_trans_border']; ?>" size="2" maxlength="3" />
             </div>
@@ -911,8 +910,7 @@ if ( !defined('IN_ROSTER') )
               Inside fill color
             </div>
             <div class="config-input">
-              <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['expbar_color_inside']; ?>;" value="<?php print $configData['expbar_color_inside']; ?>" name="expbar_color_inside" id="expbar_color_inside" />
-              <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_color_inside'))" alt="" />
+              <?php print $functions->createColorPicker('expbar_color_inside', $configData['expbar_color_inside']); ?>
               <?php print $functions->createTipIcon( 'Make the inside fill transparent/translucent<br /><br />Accepted values are 0-127<br />0 = Opaque | 127 = Transparent','Alpha' ); ?>a:
               <input name="expbar_trans_inside" type="text" value="<?php print $configData['expbar_trans_inside']; ?>" size="2" maxlength="3" />
             </div>
@@ -927,8 +925,7 @@ if ( !defined('IN_ROSTER') )
               Progress bar color
             </div>
             <div class="config-input">
-              <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['expbar_color_bar']; ?>;" value="<?php print $configData['expbar_color_bar']; ?>" name="expbar_color_bar" id="expbar_color_bar" />
-              <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_color_bar'))" alt="" />
+              <?php print $functions->createColorPicker('expbar_color_bar', $configData['expbar_color_bar']); ?>
               <?php print $functions->createTipIcon( 'Make the progress bar transparent/translucent<br /><br />Accepted values are 0-127<br />0 = Opaque | 127 = Transparent','Alpha' ); ?>a:
               <input name="expbar_trans_bar" type="text" value="<?php print $configData['expbar_trans_bar']; ?>" size="2" maxlength="3" />
             </div>
@@ -943,8 +940,7 @@ if ( !defined('IN_ROSTER') )
               Max eXp bar color
             </div>
             <div class="config-input">
-              <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['expbar_color_maxbar']; ?>;" value="<?php print $configData['expbar_color_maxbar']; ?>" name="expbar_color_maxbar" id="expbar_color_maxbar" />
-              <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_color_maxbar'))" alt="" />
+              <?php print $functions->createColorPicker('expbar_color_maxbar', $configData['expbar_color_maxbar']); ?>
               <?php print $functions->createTipIcon( 'Make the &quot;Max Level&quot; bar transparent/translucent<br /><br />Accepted values are 0-127<br />0 = Opaque | 127 = Transparent','Alpha' ); ?>a:
               <input name="expbar_trans_maxbar" type="text" value="<?php print $configData['expbar_trans_maxbar']; ?>" size="2" maxlength="3" />
             </div>
@@ -967,8 +963,7 @@ if ( !defined('IN_ROSTER') )
             </div>
             <div class="config-input">
               <?php print $functions->createOptionList($fontFilesArr,$configData['expbar_font_name'],'expbar_font_name',1,'',false); ?>
-              c: <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['expbar_font_color']; ?>;" value="<?php print $configData['expbar_font_color']; ?>" name="expbar_font_color" id="expbar_font_color" />
-                <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_font_color'))" alt="" />
+              c: <?php print $functions->createColorPicker('expbar_font_color', $configData['expbar_font_color']); ?>
               s: <input name="expbar_font_size" type="text" value="<?php print $configData['expbar_font_size']; ?>" size="3" maxlength="3" />
             </div>
           </div>
@@ -982,8 +977,7 @@ if ( !defined('IN_ROSTER') )
               <?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
             </div>
             <div class="config-input">
-              <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['expbar_text_shadow']; ?>;" value="<?php print $configData['expbar_text_shadow']; ?>" name="expbar_text_shadow" id="expbar_text_shadow" />
-              <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('expbar_text_shadow'))" alt="" />
+              <?php print $functions->createColorPicker('expbar_text_shadow', $configData['expbar_text_shadow']); ?>
             </div>
           </div>
         </div>
@@ -1088,8 +1082,7 @@ if ( !defined('IN_ROSTER') )
             </div>
             <div class="config-input">
               <?php print $functions->createOptionList($fontFilesArr,$configData['lvl_font_name'],'lvl_font_name',1,'',false); ?>
-              c: <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['lvl_font_color']; ?>;" value="<?php print $configData['lvl_font_color']; ?>" name="lvl_font_color" id="lvl_font_color" />
-                <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('lvl_font_color'))" alt="" />
+              c: <?php print $functions->createColorPicker('lvl_font_color', $configData['lvl_font_color']); ?>
               s: <input name="lvl_font_size" type="text" value="<?php print $configData['lvl_font_size']; ?>" size="3" maxlength="3" />
             </div>
           </div>
@@ -1103,8 +1096,7 @@ if ( !defined('IN_ROSTER') )
               <?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
             </div>
             <div class="config-input">
-              <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['lvl_text_shadow']; ?>;" value="<?php print $configData['lvl_text_shadow']; ?>" name="lvl_text_shadow" id="lvl_text_shadow" />
-              <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('lvl_text_shadow'))" alt="" />
+              <?php print $functions->createColorPicker('lvl_text_shadow', $configData['lvl_text_shadow']); ?>
             </div>
           </div>
         </div>
@@ -1327,8 +1319,7 @@ if ( !defined('IN_ROSTER') )
             </div>
             <div class="config-input">
               <?php print $functions->createOptionList($fontFilesArr,$configData['skills_font_name'],'skills_font_name',1,'',false); ?>
-              c: <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['skills_font_color']; ?>;" value="<?php print $configData['skills_font_color']; ?>" name="skills_font_color" id="skills_font_color" />
-                <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('skills_font_color'))" alt="" />
+              c: <?php print $functions->createColorPicker('skills_font_color', $configData['skills_font_color']); ?>
               s: <input name="skills_font_size" type="text" value="<?php print $configData['skills_font_size']; ?>" size="3" maxlength="3" />
             </div>
           </div>
@@ -1342,8 +1333,7 @@ if ( !defined('IN_ROSTER') )
               <?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
             </div>
             <div class="config-input">
-              <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['skills_shadow']; ?>;" value="<?php print $configData['skills_shadow']; ?>" name="skills_shadow" id="skills_shadow" />
-              <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('skills_shadow'))" alt="" />
+              <?php print $functions->createColorPicker('skills_shadow', $configData['skills_shadow']); ?>
             </div>
           </div>
         </div>
@@ -1560,8 +1550,7 @@ if ( !defined('IN_ROSTER') )
               </div>
               <div class="config-input">
                 <?php print $functions->createOptionList($fontFilesArr,$configData['text_name_font_name'],'text_name_font_name',1,'',false); ?>
-                c: <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['text_name_font_color']; ?>;" value="<?php print $configData['text_name_font_color']; ?>" name="text_name_font_color" id="text_name_font_color" />
-                  <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_name_font_color'))" alt="" />
+                c: <?php print $functions->createColorPicker('text_name_font_color', $configData['text_name_font_color']); ?>
                 s: <input name="text_name_font_size" type="text" value="<?php print $configData['text_name_font_size']; ?>" size="3" maxlength="3" />
               </div>
             </div>
@@ -1575,8 +1564,7 @@ if ( !defined('IN_ROSTER') )
                 <?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
               </div>
               <div class="config-input">
-                <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['text_name_shadow']; ?>;" value="<?php print $configData['text_name_shadow']; ?>" name="text_name_shadow" id="text_name_shadow" />
-                <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_name_shadow'))" alt="" />
+                <?php print $functions->createColorPicker('text_name_shadow', $configData['text_name_shadow']); ?>
               </div>
             </div>
           </div>
@@ -1635,8 +1623,7 @@ if ( !defined('IN_ROSTER') )
               </div>
               <div class="config-input">
                 <?php print $functions->createOptionList($fontFilesArr,$configData['text_class_font_name'],'text_class_font_name',1,'',false); ?>
-                c: <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['text_class_font_color']; ?>;" value="<?php print $configData['text_class_font_color']; ?>" name="text_class_font_color" id="text_class_font_color" />
-                  <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_class_font_color'))" alt="" />
+                c: <?php print $functions->createColorPicker('text_class_font_color', $configData['text_class_font_color']); ?>
                 s: <input name="text_class_font_size" type="text" value="<?php print $configData['text_class_font_size']; ?>" size="3" maxlength="3" />
               </div>
             </div>
@@ -1650,8 +1637,7 @@ if ( !defined('IN_ROSTER') )
                 <?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
               </div>
               <div class="config-input">
-                <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['text_class_shadow']; ?>;" value="<?php print $configData['text_class_shadow']; ?>" name="text_class_shadow" id="text_class_shadow" />
-                <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_class_shadow'))" alt="" />
+                <?php print $functions->createColorPicker('text_class_shadow', $configData['text_class_shadow']); ?>
               </div>
             </div>
           </div>
@@ -1710,8 +1696,7 @@ if ( !defined('IN_ROSTER') )
               </div>
               <div class="config-input">
                 <?php print $functions->createOptionList($fontFilesArr,$configData['text_honor_font_name'],'text_honor_font_name',1,'',false); ?>
-                c: <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['text_honor_font_color']; ?>;" value="<?php print $configData['text_honor_font_color']; ?>" name="text_honor_font_color" id="text_honor_font_color" />
-                  <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_honor_font_color'))" alt="" />
+                c: <?php print $functions->createColorPicker('text_honor_font_color', $configData['text_honor_font_color']); ?>
                 s: <input name="text_honor_font_size" type="text" value="<?php print $configData['text_honor_font_size']; ?>" size="3" maxlength="3" />
               </div>
             </div>
@@ -1725,8 +1710,7 @@ if ( !defined('IN_ROSTER') )
                 <?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
               </div>
               <div class="config-input">
-                <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['text_honor_shadow']; ?>;" value="<?php print $configData['text_honor_shadow']; ?>" name="text_honor_shadow" id="text_honor_shadow" />
-                <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_honor_shadow'))" alt="" />
+                <?php print $functions->createColorPicker('text_honor_shadow', $configData['text_honor_shadow']); ?>
               </div>
             </div>
           </div>
@@ -1785,8 +1769,7 @@ if ( !defined('IN_ROSTER') )
               </div>
               <div class="config-input">
                 <?php print $functions->createOptionList($fontFilesArr,$configData['text_guildname_font_name'],'text_guildname_font_name',1,'',false); ?>
-                c: <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['text_guildname_font_color']; ?>;" value="<?php print $configData['text_guildname_font_color']; ?>" name="text_guildname_font_color" id="text_guildname_font_color" />
-                  <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_guildname_font_color'))" alt="" />
+                c: <?php print $functions->createColorPicker('text_guildname_font_color', $configData['text_guildname_font_color']); ?>
                 s: <input name="text_guildname_font_size" type="text" value="<?php print $configData['text_guildname_font_size']; ?>" size="3" maxlength="3" />
               </div>
             </div>
@@ -1800,8 +1783,7 @@ if ( !defined('IN_ROSTER') )
                 <?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
               </div>
               <div class="config-input">
-                <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['text_guildname_shadow']; ?>;" value="<?php print $configData['text_guildname_shadow']; ?>" name="text_guildname_shadow" id="text_guildname_shadow" />
-                <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_guildname_shadow'))" alt="" />
+                <?php print $functions->createColorPicker('text_guildname_shadow', $configData['text_guildname_shadow']); ?>
               </div>
             </div>
           </div>
@@ -1860,8 +1842,7 @@ if ( !defined('IN_ROSTER') )
               </div>
               <div class="config-input">
                 <?php print $functions->createOptionList($fontFilesArr,$configData['text_guildtitle_font_name'],'text_guildtitle_font_name',1,'',false); ?>
-                c: <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['text_guildtitle_font_color']; ?>;" value="<?php print $configData['text_guildtitle_font_color']; ?>" name="text_guildtitle_font_color" id="text_guildtitle_font_color" />
-                  <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_guildtitle_font_color'))" alt="" />
+                c: <?php print $functions->createColorPicker('text_guildtitle_font_color', $configData['text_guildtitle_font_color']); ?>
                 s: <input name="text_guildtitle_font_size" type="text" value="<?php print $configData['text_guildtitle_font_size']; ?>" size="3" maxlength="3" />
               </div>
             </div>
@@ -1875,8 +1856,7 @@ if ( !defined('IN_ROSTER') )
                 <?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
               </div>
               <div class="config-input">
-                <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['text_guildtitle_shadow']; ?>;" value="<?php print $configData['text_guildtitle_shadow']; ?>" name="text_guildtitle_shadow" id="text_guildtitle_shadow" />
-                <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_guildtitle_shadow'))" alt="" />
+                <?php print $functions->createColorPicker('text_guildtitle_shadow', $configData['text_guildtitle_shadow']); ?>
               </div>
             </div>
           </div>
@@ -1935,8 +1915,7 @@ if ( !defined('IN_ROSTER') )
               </div>
               <div class="config-input">
                 <?php print $functions->createOptionList($fontFilesArr,$configData['text_servername_font_name'],'text_servername_font_name',1,'',false); ?>
-                c: <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['text_servername_font_color']; ?>;" value="<?php print $configData['text_servername_font_color']; ?>" name="text_servername_font_color" id="text_servername_font_color" />
-                  <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_servername_font_color'))" alt="" />
+                c: <?php print $functions->createColorPicker('text_servername_font_color', $configData['text_servername_font_color']); ?>
                 s: <input name="text_servername_font_size" type="text" value="<?php print $configData['text_servername_font_size']; ?>" size="3" maxlength="3" />
               </div>
             </div>
@@ -1950,8 +1929,7 @@ if ( !defined('IN_ROSTER') )
                 <?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
               </div>
               <div class="config-input">
-                <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['text_servername_shadow']; ?>;" value="<?php print $configData['text_servername_shadow']; ?>" name="text_servername_shadow" id="text_servername_shadow" />
-                <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_servername_shadow'))" alt="" />
+                <?php print $functions->createColorPicker('text_servername_shadow', $configData['text_servername_shadow']); ?>
               </div>
             </div>
           </div>
@@ -2023,8 +2001,7 @@ if ( !defined('IN_ROSTER') )
               </div>
               <div class="config-input">
                 <?php print $functions->createOptionList($fontFilesArr,$configData['text_sitename_font_name'],'text_sitename_font_name',1,'',false); ?>
-                c: <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['text_sitename_font_color']; ?>;" value="<?php print $configData['text_sitename_font_color']; ?>" name="text_sitename_font_color" id="text_sitename_font_color" />
-                  <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_sitename_font_color'))" alt="" />
+                c: <?php print $functions->createColorPicker('text_sitename_font_color', $configData['text_sitename_font_color']); ?>
                 s: <input name="text_sitename_font_size" type="text" value="<?php print $configData['text_sitename_font_size']; ?>" size="3" maxlength="3" />
               </div>
             </div>
@@ -2038,8 +2015,7 @@ if ( !defined('IN_ROSTER') )
                 <?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
               </div>
               <div class="config-input">
-                <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['text_sitename_shadow']; ?>;" value="<?php print $configData['text_sitename_shadow']; ?>" name="text_sitename_shadow" id="text_sitename_shadow" />
-                <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_sitename_shadow'))" alt="" />
+                <?php print $functions->createColorPicker('text_sitename_shadow', $configData['text_sitename_shadow']); ?>
               </div>
             </div>
           </div>
@@ -2111,8 +2087,7 @@ if ( !defined('IN_ROSTER') )
               </div>
               <div class="config-input">
                 <?php print $functions->createOptionList($fontFilesArr,$configData['text_custom_font_name'],'text_custom_font_name',1,'',false); ?>
-                c: <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['text_custom_font_color']; ?>;" value="<?php print $configData['text_custom_font_color']; ?>" name="text_custom_font_color" id="text_custom_font_color" />
-                  <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_custom_font_color'))" alt="" />
+                c: <?php print $functions->createColorPicker('text_custom_font_color', $configData['text_custom_font_color']); ?>
                 s: <input name="text_custom_font_size" type="text" value="<?php print $configData['text_custom_font_size']; ?>" size="3" maxlength="3" />
               </div>
             </div>
@@ -2126,8 +2101,7 @@ if ( !defined('IN_ROSTER') )
                 <?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
               </div>
               <div class="config-input">
-                <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['text_custom_shadow']; ?>;" value="<?php print $configData['text_custom_shadow']; ?>" name="text_custom_shadow" id="text_custom_shadow" />
-                <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_custom_shadow'))" alt="" />
+                <?php print $functions->createColorPicker('text_custom_shadow', $configData['text_custom_shadow']); ?>
               </div>
             </div>
           </div>
@@ -2186,8 +2160,7 @@ if ( !defined('IN_ROSTER') )
               </div>
               <div class="config-input">
                 <?php print $functions->createOptionList($fontFilesArr,$configData['text_spec_font_name'],'text_spec_font_name',1,'',false); ?>
-                c: <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['text_spec_font_color']; ?>;" value="<?php print $configData['text_spec_font_color']; ?>" name="text_spec_font_color" id="text_spec_font_color" />
-                  <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_spec_font_color'))" alt="" />
+                c: <?php print $functions->createColorPicker('text_spec_font_color', $configData['text_spec_font_color']); ?>
                 s: <input name="text_spec_font_size" type="text" value="<?php print $configData['text_spec_font_size']; ?>" size="3" maxlength="3" />
               </div>
             </div>
@@ -2201,8 +2174,7 @@ if ( !defined('IN_ROSTER') )
                 <?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
               </div>
               <div class="config-input">
-                <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['text_spec_shadow']; ?>;" value="<?php print $configData['text_spec_shadow']; ?>" name="text_spec_shadow" id="text_spec_shadow" />
-                <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_spec_shadow'))" alt="" />
+                <?php print $functions->createColorPicker('text_spec_shadow', $configData['text_spec_shadow']); ?>
               </div>
             </div>
           </div>
@@ -2261,8 +2233,7 @@ if ( !defined('IN_ROSTER') )
               </div>
               <div class="config-input">
                 <?php print $functions->createOptionList($fontFilesArr,$configData['text_talpoints_font_name'],'text_talpoints_font_name',1,'',false); ?>
-                c: <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['text_talpoints_font_color']; ?>;" value="<?php print $configData['text_talpoints_font_color']; ?>" name="text_talpoints_font_color" id="text_talpoints_font_color" />
-                  <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_talpoints_font_color'))" alt="" />
+                c: <?php print $functions->createColorPicker('text_talpoints_font_color', $configData['text_talpoints_font_color']); ?>
                 s: <input name="text_talpoints_font_size" type="text" value="<?php print $configData['text_talpoints_font_size']; ?>" size="3" maxlength="3" />
               </div>
             </div>
@@ -2276,8 +2247,7 @@ if ( !defined('IN_ROSTER') )
                 <?php print $functions->createTip( 'Create a pseudo-shadow behind the text<br />Clearing this box turns off the shadow','Shadow Text' ); ?>
               </div>
               <div class="config-input">
-                <input type="text" maxlength="7" size="10" class="colorinput" style="background-color:<?php print $configData['text_talpoints_shadow']; ?>;" value="<?php print $configData['text_talpoints_shadow']; ?>" name="text_talpoints_shadow" id="text_talpoints_shadow" />
-                <img src="<?php print $roster->config['theme_path']; ?>/images/color/select_arrow.gif" style="cursor:pointer;vertical-align:middle;margin-bottom:2px;" onclick="showColorPicker(this,document.getElementById('text_talpoints_shadow'))" alt="" />
+                <?php print $functions->createColorPicker('text_talpoints_shadow', $configData['text_talpoints_shadow']); ?>
               </div>
             </div>
           </div>
