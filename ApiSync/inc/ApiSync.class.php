@@ -830,8 +830,8 @@ function return_gender($genderid) {
 
 				if ( isset($skil['name']) )
 				{ 			
-					$this->data["Skills"]["Professions"][''.$skil['name'].''] = "".$skil['rank'].":".$skil['max']."";
-					$this->data["Skills"]["Professions"]["Order"] = $o;
+					$this->data["Skills"][''.$roster->locale->act['professions'].''][''.$roster->locale->act[$skil['name']].''] = "".$skil['rank'].":".$skil['max']."";
+					$this->data["Skills"][''.$roster->locale->act['professions'].'']["Order"] = $o;
 					$this->status['skillInfo'] += 1;
 					$o++;
 				}
@@ -845,8 +845,8 @@ function return_gender($genderid) {
 			{
 				if ( isset($skil['name']) )
 				{ 			
-					$this->data["Skills"]["Secondary Skills"][''.$skil['name'].''] = "".$skil['rank'].":".$skil['max']."";
-					$this->data["Skills"]["Secondary Skills"]["Order"] = $o;
+					$this->data["Skills"][''.$roster->locale->act['secondary'].''][''.$roster->locale->act[$skil['name']].''] = "".$skil['rank'].":".$skil['max']."";
+					$this->data["Skills"][''.$roster->locale->act['secondary'].'']["Order"] = $o;
 					$this->status['skillInfo'] += 1;
 					$o++;
 				}
