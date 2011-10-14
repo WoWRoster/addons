@@ -1085,7 +1085,7 @@ function return_gender($genderid) {
 			foreach ($rep as $var => $info)
   				{
 						$ft = 'Reputation';
-						if ($info['name'] == 'Guild')
+						if ($info['name'] == $roster->locale->act['guild'])
 						{
 							$ft2 = $this->apidata['guild']['name'];
 						}
