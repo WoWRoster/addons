@@ -760,13 +760,7 @@ class ApiSyncJob extends ApiSyncBase {
 	function _showHeader() {
 		global $roster, $addon;
 
-		$roster->tpl->assign_vars( array (
-			'SHOW_LOGO' => $addon['config']['ApiSync_logo_show'],
-			'IMAGE_PATH' => $addon['image_path'],
-			'LEFT' => $addon['config']['ApiSync_logo_pos_left'],
-			'TOP' => $addon['config']['ApiSync_logo_pos_top'],
-			'HIGHT' => $addon['config']['ApiSync_logo_size'],
-			));
+
 		$roster->tpl->set_filenames(array(
 				'header' => $addon['basename'] . '/header.html',
 				));
