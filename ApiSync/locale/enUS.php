@@ -191,7 +191,7 @@ $lang['rage'] = "Rage";
 $lang['energy'] = "Energy";
 $lang['focus'] = "Focus";
 
-$lang['ApiSync_credits'] = 'Thanks to <a target="_blank" href="http://www.papy-team.fr">tuigii</a>, <a target="_blank" href="http://xent.homeip.net">zanix</a>, <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=1126.html">ds</a> and <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=711.html">Subxero</a> for testing, translating and supporting.<br />Special thanks to <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=13101.html">kristoff22</a> for the original code of ApiSync and <a target="_blank" href="http://www.iceguild.org.uk/forum">Pugro</a> for his changes to it.';
+$lang['ApiSync_credits'] = 'ApiSync Based off of armorysync built on blizzards API.';
 
 $lang['start'] = "Start";
 $lang['start_message'] = "You're about to start ApiSync for %s %s.<br /><br />By doing this, all data for %s will be overwritten<br />with details from Blizzard's Armory. This can only be undone<br />by uploading a current CharacterProfiler.lua.<br /><br />Do you want to start this process yet?";

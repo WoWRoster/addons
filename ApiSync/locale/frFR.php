@@ -181,7 +181,7 @@ $lang['rage'] = "Rage";
 $lang['energy'] = "Énergie";
 $lang['focus'] = "Focus";
 
-$lang['ApiSync_credits'] = 'Thanks to <a target="_blank" href="http://www.papy-team.fr">tuigii</a>, <a target="_blank" href="http://xent.homeip.net">zanix</a>, <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=1126.html">ds</a> and <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=711.html">Subxero</a> for testing, translating and supporting.<br />Spezial thanks to <a target="_blank" href="http://www.wowroster.net/Your_Account/profile=13101.html">kristoff22</a> for the original code of ApiSync and <a target="_blank" href="http://www.iceguild.org.uk/forum">Pugro</a> for his changes to it.';
+$lang['ApiSync_credits'] = 'ApiSync Based off of armorysync built on blizzards API.';
 
 $lang['start'] = "Démarrage";
 $lang['start_message'] = "Vous êtes prêt pour démarrer <b>ApiSync</b> pour la Guilde %s %s.<br /><br />Avec cette démarche, toutes les données de %s <br />seront remplacé(s) avec les détails de Blizzards Armory.<br />  Ceci pourrait être annulé après par le téléchargement d'un CharacterProfiler.lua <b>récent</b> de chaque membre.  <br />Voulez-vous démarrer la synchronisation ";
