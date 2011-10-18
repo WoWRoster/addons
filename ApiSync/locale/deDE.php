@@ -18,28 +18,28 @@
 
 // Button names
 $lang['async_button1']			= 'ApiSync Charakter|Synchronisiere deinen Charaktere mit Blizzards Armory';
-$lang['async_button2']			= 'ApiSync Charakters|Synchronisiere die Charaktere deiner Gilde mit Blizzards Armory';
-$lang['async_button3']			= 'ApiSync Charakters|Synchronisiere die Charaktere deines Realms mit Blizzards Armory';
-$lang['async_button4']			= 'ApiSync Memberlist|Synchronisiere deine Mitgliederliste mit Blizzards Armory';
-$lang['async_button5']			= 'ApiSync Memberlist für eine neue Gilde|Füge eine neue Gilde ein und synchronisiere<br />die Mitgliederliste mit Blizzards Armory';
+$lang['async_button2']			= 'ApiSync Charaktere|Synchronisiere die Charaktere deiner Gilde mit Blizzards Armory';
+$lang['async_button3']			= 'ApiSync Charaktere|Synchronisiere die Charaktere deines Realms mit Blizzards Armory';
+$lang['async_button4']			= 'ApiSync Mitgliederliste|Synchronisiere deine Mitgliederliste mit Blizzards Armory';
+$lang['async_button5']			= 'ApiSync Mitgliederliste für eine neue Gilde|Füge eine neue Gilde ein und synchronisiere<br />die Mitgliederliste mit Blizzards Armory';
 // Config strings
-$lang['admin']['ApiSync_conf']			= 'Allgemein|Konfiguriere die Grundeinstellungen für ApiSync';
-$lang['admin']['ApiSync_ranks']			= 'Ränge|Konfiguriere die Gildenränge für ApiSync';
-$lang['admin']['ApiSync_images']			= 'Bilder|Konfiguriere die Anzeige von Bildern für ApiSync';
-$lang['admin']['ApiSync_access']			= 'Zugriffsrechte|Konfiguriere die Zugriffsrechte für ApiSync';
-$lang['admin']['ApiSync_debug']			= 'Debugging|Konfiguriere das Debugging für ApiSync';
+$lang['admin']['ApiSync_conf']			   = 'Allgemein|Konfiguriere die Grundeinstellungen für ApiSync';
+$lang['admin']['ApiSync_ranks']		       = 'Ränge|Konfiguriere die Gildenränge für ApiSync';
+$lang['admin']['ApiSync_images']	       = 'Bilder|Konfiguriere die Anzeige von Bildern für ApiSync';
+$lang['admin']['ApiSync_access']           = 'Zugriffsrechte|Konfiguriere die Zugriffsrechte für ApiSync';
+$lang['admin']['ApiSync_debug']		       = 'Debugging|Konfiguriere das Debugging für ApiSync';
 
-$lang['admin']['ApiSync_host']			= 'Host|Host mit dem synchronisiert werden soll.';
-$lang['admin']['ApiSync_minlevel']		= 'Minimum Level|Minimum Level der Charaktere die synchronisiert werden.';
-$lang['admin']['ApiSync_synchcutofftime']	= 'Sync cutoff time|Zeit in Tagen.<br />Alle Charaktere die nicht in den letzten (x) Tagen aktualisiert wurden werden synchronisiert.';
-$lang['admin']['ApiSync_use_ajax']	= 'Benutze AJAX|Benutze AJAX für Status Updates oder nicht.';
-$lang['admin']['ApiSync_reloadwaittime']	= 'Reload wait time|Zeit in Sekunden.<br />Zeit in Sekunden bevor die nächste Synchronisierung angestossen wird.';
-$lang['admin']['ApiSync_fetch_timeout'] = 'Armory Fetch timeout|Zeit in Sekunden bis das Herunterladen<br />einer einzelnen XML Datei abgebrochen wird.';
-$lang['admin']['ApiSync_skip_start'] = 'Überspringe die Startseite|Überspringe die Startseite bei <b>ApiSync</b> updates.';
-$lang['admin']['ApiSync_status_hide'] = 'Verstecke das Statusfenster initial|Versteckt das Status Fenster von <b>ApiSync</b> beim ersten Laden.';
-$lang['admin']['ApiSync_protectedtitle']	= "Geschützer Gildentitel|Charaktere mit diesen Gildentiteln sind davor geschützt,<br />durch einen Abgleich der Mitgliederliste gegen die Armory gelöscht zu werden.<br />Dieses Problem besteht häufig mit Bank Charakteren.<br />Mehrfachnennung durch trennen mit \",\" möglich. Z.B. Banker,Lager";
+$lang['admin']['ApiSync_host']			   = 'Host|Host mit dem Synchronisiert werden soll.';
+$lang['admin']['ApiSync_minlevel']		   = 'Minimum Level|Minimum Level der Charaktere die Synchronisiert werden.';
+$lang['admin']['ApiSync_synchcutofftime']  = 'Sync cutoff time|Zeit in Tagen.<br />Alle Charaktere die nicht in den letzten (x) Tagen aktualisiert wurden werden synchronisiert.';
+$lang['admin']['ApiSync_use_ajax']	       = 'Benutze AJAX|Benutze AJAX für Status Updates oder nicht.';
+$lang['admin']['ApiSync_reloadwaittime']   = 'Reload wait time|Zeit in Sekunden.<br />Zeit in Sekunden bevor die nächste Synchronisierung angestossen wird.';
+$lang['admin']['ApiSync_fetch_timeout']    = 'Armory Fetch timeout|Zeit in Sekunden bis das Herunterladen<br />einer einzelnen XML Datei abgebrochen wird.';
+$lang['admin']['ApiSync_skip_start']       = 'Überspringe die Startseite|Überspringe die Startseite bei <b>ApiSync</b> updates.';
+$lang['admin']['ApiSync_status_hide']      = 'Verstecke das Statusfenster initial|Versteckt das Status Fenster von <b>ApiSync</b> beim ersten Laden.';
+$lang['admin']['ApiSync_protectedtitle']   = "Geschützer Gildentitel|Charaktere mit diesen Gildentiteln sind davor geschützt,<br />durch einen Abgleich der Mitgliederliste gegen die Armory gelöscht zu werden.<br />Dieses Problem besteht häufig mit Bank Charakteren.<br />Mehrfachnennung durch trennen mit \",\" möglich. Z.B. Banker,Lager";
 
-$lang['admin']['ApiSync_rank_set_order']	= "Reihenfolge zum setzen der Gildenränge|Bestimmt in welcher Reihenfolge die Gildentitel gesetzt werden.";
+$lang['admin']['ApiSync_rank_set_order']   = "Reihenfolge zum setzen der Gildenränge|Bestimmt in welcher Reihenfolge die Gildentitel gesetzt werden.";
 $lang['admin']['ApiSync_rank_0']	= "Titel des Gilden Meisters|Dieser Titel wird gesetzt wenn im Roster für die Gilde kein Titel existiert.";
 $lang['admin']['ApiSync_rank_1']	= "Titel Rang 1|Dieser Titel wird gesetzt wenn im Roster für die Gilde kein Titel existiert.";
 $lang['admin']['ApiSync_rank_2']	= "Titel Rang 2|Dieser Titel wird gesetzt wenn im Roster für die Gilde kein Titel existiert.";
@@ -51,11 +51,11 @@ $lang['admin']['ApiSync_rank_7']	= "Titel Rang 7|Dieser Titel wird gesetzt wenn 
 $lang['admin']['ApiSync_rank_8']	= "Titel Rang 8|Dieser Titel wird gesetzt wenn im Roster für die Gilde kein Titel existiert.";
 $lang['admin']['ApiSync_rank_9']	= "Titel Rang 9|Dieser Titel wird gesetzt wenn im Roster für die Gilde kein Titel existiert.";
 
-$lang['admin']['ApiSync_char_update_access'] = 'Char Update Access Level|Wer ist in der Lage Charakter zu aktualisieren';
-$lang['admin']['ApiSync_guild_update_access'] = 'Guild Update Access Level|Wer ist in der Lage Gilden zu aktualisieren';
-$lang['admin']['ApiSync_guild_memberlist_update_access'] = 'Guild Memberlist Update Access Level|Wer ist in der Lage Gilden Mitgliederlisten zu aktualisieren';
-$lang['admin']['ApiSync_realm_update_access'] = 'Realm Update Access Level|Wer ist in der Lage Realms zu aktualisieren';
-$lang['admin']['ApiSync_guild_add_access'] = 'Guild Add Access Level|Wer ist in der Lage neue Gilden einzufügen';
+$lang['admin']['ApiSync_char_update_access'] = 'Charaketer Update Zugriff|Wer ist in der Lage Charakter zu aktualisieren';
+$lang['admin']['ApiSync_guild_update_access'] = 'Gilden Update Zugriff|Wer ist in der Lage Gilden zu aktualisieren';
+$lang['admin']['ApiSync_guild_memberlist_update_access'] = 'Gildenmitgliederliste Update Zugriff|Wer ist in der Lage Gilden Mitgliederlisten zu aktualisieren';
+$lang['admin']['ApiSync_realm_update_access'] = 'Realm Update Zugriff|Wer ist in der Lage Realms zu aktualisieren';
+$lang['admin']['ApiSync_guild_add_access'] = 'Gilde hinzufügen Zugriff|Wer ist in der Lage neue Gilden einzufügen';
 
 $lang['admin']['ApiSync_logo'] = 'ApiSync Logo|';
 $lang['admin']['ApiSync_pic1'] = 'ApiSync Bild 1|';
@@ -174,15 +174,16 @@ $lang['error_wrong_region'] = "Ungültige Region. Nur EU und US sind gültige Re
 $lang['ApiSync_guildadd'] = "Gilde hinzufügen und Mitgliederliste<br />mit der Armory synchronisieren.";
 $lang['ApiSync_charadd'] = "Charakter hinzufügen und<br />mit der Armory synchronisieren.";
 $lang['ApiSync_add_help'] = "Hinweis";
-$lang['ApiSync_add_helpText'] = "Schreibe die Gilde / den Charakter und den Server exakt so wie sie, bzw. er,<br /> bei Blizzard geführt werden. Die Region ist EU für europäische Gilden<br />und US für amerikanische. Es wird zuerst überprüft ob der Charakter oder die Gilde<br />existiert. Anschließend wird eine Synchronisierung angestoßen.";
+$lang['ApiSync_add_helpText'] = "Schreibe die Gilde / den Charakter und den Server exakt so wie dieser<br /> bei Blizzard geführt werden. Die Region ist EU für europäische Gilden<br />und US für amerikanische. Es wird zuerst überprüft ob der Charakter oder die Gilde<br />existiert. Anschließend wird eine Synchronisierung angestoßen.";
 
 $lang['guildleader'] = "Gildenmeister";
 
 $lang['rage'] = "Wut";
 $lang['energy'] = "Energie";
-$lang['focus'] = "Focus";
+$lang['focus'] = "Fokus";
 
 $lang['ApiSync_credits'] = 'ApiSync Based off of armorysync built on blizzards API.';
+
 
 $lang['start'] = "Start";
 $lang['start_message'] = "Du bist dabei <b>ApiSync</b> für %s <b style=\"color:yellow\"; >%s</b> auszuführen.<br /><br />Hierdurch werden die Daten für %s mit den Angaben<br />aus Blizzards Armory überschrieben. Dieser Vorgang kann nur rückgängig<br />gemacht werden, in dem eine <b style=\"color:red\"; >aktuelle</b> CharacterProfiler.lua<br />hochgeladen wird.<br /><br />Willst du diesen Vorgang jetzt starten";

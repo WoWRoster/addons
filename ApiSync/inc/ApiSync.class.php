@@ -1017,14 +1017,10 @@ function return_gender($genderid) {
 						}
 					$t++;
 					}
-					//echo '<pre>';
-					//print_r($this->data["Equipment"][$slot]['Gem']);
+
 				}
-			} //*/
 			}
-			//echo '<pre>';
-			//print_r($this->data["Equipment"][$slot]);
-			//echo '</pre>';
+			}
 					
 			$this->status['equipmentInfo'] += 1;
    		}
@@ -1095,10 +1091,10 @@ function return_gender($genderid) {
 						}
 						if (isset($info['name']))
 						{
-						$this->data["Reputation"][''.$ft.''][''.$ft2.''] = array();
-						$this->data["Reputation"][''.$ft.''][''.$ft2.'']["Value"] = $info['value'] . ":" . $info['max'];
-						$this->data["Reputation"][''.$ft.''][''.$ft2.'']["Standing"] = $this->_getRepStanding($info['standing']);
-						$this->data["Reputation"][''.$ft.''][''.$ft2.'']["AtWar"] = $this->_getRepAtWar($info['value']);
+							$this->data["Reputation"][''.$ft.''][''.$ft2.''] = array();
+							$this->data["Reputation"][''.$ft.''][''.$ft2.'']["Value"] = $info['value'] . ":" . $info['max'];
+							$this->data["Reputation"][''.$ft.''][''.$ft2.'']["Standing"] = $this->_getRepStanding($info['standing']);
+							$this->data["Reputation"][''.$ft.''][''.$ft2.'']["AtWar"] = $this->_getRepAtWar($info['value']);
 						}
 
 						$this->data["Reputation"]["Count"]++;
@@ -1135,25 +1131,7 @@ function return_gender($genderid) {
 		$branch=null;
 		$talentBuildData=array();
 		$main=false;
-/*
-		foreach ($content->characterInfo->talents->talentGroup as $spec)
-		{
-			if (isset($spec['active']) )
-			{
-				$branch = '0';
-				$main = $this->Build_talenttreedata($spec->talentSpec['value'], $branch);
-				$this->data["Talents"] = $main;
-			}
-			else
-			{
-				$branch = '1';
-				$dual = $this->Build_talenttreedata($spec->talentSpec['value'], $branch);
-				$this->data["DualSpec"]["Talents"] = $dual;
-			} 				
-			
-			$this->_debug( 1, true, 'Char: '. $this->memberName. ' ('.$this->class.') Parsed talent('.$branch.') info', 'OK' );
-		}
-*/
+
 		foreach ($content as $key => $spec)
 		{
 			$talentBuildData=null;
@@ -1237,8 +1215,7 @@ function return_gender($genderid) {
 			{
 				$spent = 0;
 				$n=null;
-				//echo '<pre>';
-				//print_r($talentdata);
+
 				for( $r = 1; $r < ROSTER_TALENT_ROWS + 1; $r++ )
 				{
 					for( $c = 1; $c < ROSTER_TALENT_COLS + 1; $c++ )
@@ -1260,8 +1237,6 @@ function return_gender($genderid) {
 					}
 				}
 				
-				//$spent = '';
-				//$returndata[$ti]['icon'] = $treed[$ti]['icon'];
 				$returndata[$ti]['PointsSpent'] = $spent;
 				$returndata[$ti]['Background'] = $treed[$ti]['background'];
 				$returndata[$ti]['Order'] = $treed[$ti]['order'];
@@ -1974,317 +1949,6 @@ function build_talenttree_data( $class )
 	}
 	
 
-
-  	/*
-  	
-			adding xml grabbing code here ... to locallise and standalone this addon...
-  	
-  	*/
-  	
-  	
-  	function getArmoryDataXML($url) 
-  	{
-			global $xmlDataCache, $roster, $addon;
-			$data = null;
-		if(!$data) 
-			{
-			$f = "";
-			if(USE_CURL) {
-				$ch = curl_init();
-				$timeout = 30; // set to zero for no timeout
-				$useragent="Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1";
-				curl_setopt ($ch, CURLOPT_URL, $url);
-				curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-				curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-				curl_setopt ($ch, CURLOPT_USERAGENT, $useragent);
-				$f = curl_exec($ch);
-				curl_close($ch);			
-			} else {
-				$f = file_get_contents($url);
-			}
-			$xml = simplexml_load_string($f, 'SimpleXMLElement', LIBXML_NOCDATA);
-			if($xml)
-				$this->setCachedXML($url, $f);
-		} 
-			else 
-			{
-			$xml = @simplexml_load_string($data);
-			
-			if(!$xml) 
-  				{
-				$f = file_get_contents($url);
-				$this->setCachedXML($url, $f);
-				$xml = simplexml_load_string($f);
-			}
-		}
-		return $xml;
-  	}
-	
-function pharsexml($url)
-  	{
-			$ch = curl_init();
-			curl_setopt ($ch, CURLOPT_URL, $url);
-			curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, '10');
-			curl_setopt ($ch, CURLOPT_HEADER, 0);
-			curl_setopt ($ch, CURLOPT_HTTPHEADER, array("Accept-Language: ".$lang)); 
-		
-			$f = curl_exec($ch);
-			curl_close($ch);
-			
-			return $f;
-  	}
-	
-
-function getGuildMembers($base_url, $realm, $guild, $minLevel, $clsFilter = false) {
-	$url = $base_url . "/guild-info.xml?r=" . urlencode(stripslashes($realm)) . "&n=" . urlencode(stripslashes($guild)) . "&p=1";
-	$xml = $this->pharsexml($url);
-	$node = $xml->xpath("/page/guildInfo/guild/members");
-	$attr = attribs($node[0]);
-	$maxPages = $attr["maxPage"];
-	
-	$cList = $this->getCharacterList($xml, $minLevel, $clsFilter);
-	for($i=2; $i<=$maxPages; $i++) {
-		$url = $base_url . "/guild-info.xml?r=" . urlencode(stripslashes($realm)) . "&n=" . urlencode(stripslashes($guild)) . "&p=$i";
-		$xml = $this->getArmoryDataXML($url);
-		$cList = array_merge($cList, getCharacterList($xml, $minLevel, $clsFilter));
-	}
-	
-	return $cList;
-}
-
-function getTeamInfo($base_url, $realm, $teamSize, $teamName) {
-	$url = $base_url . "/team-info.xml?r=" . urlencode(stripslashes($realm)) . "&ts=" . $teamSize . "&t=" . urlencode(stripslashes($teamName));
-	$xml = $this->getArmoryDataXML($url);
-	$n = $xml->xpath("/page/teamInfo/arenaTeam");
-	return attribs($n[0]);
-}
-
-function getTeamMembers($base_url, $realm, $teamSize, $teamName) {
-	$url = $base_url . "/team-info.xml?r=" . urlencode(stripslashes($realm)) . "&ts=" . $teamSize . "&t=" . urlencode(stripslashes($teamName));
-	$xml = $this->getArmoryDataXML($url);
-	$n = $xml->xpath("/page/teamInfo/arenaTeam/members/character");
-	$chars = array();
-	foreach($n as $char) {
-		$a = attribs($char);
-		$chars[$a["name"]] = $char;
-	}
-	return array_values($chars);
-}
-
-function getTeamEmblem($base_url, $realm, $teamSize, $teamName) {
-	$url = $base_url . "/team-info.xml?r=" . urlencode(stripslashes($realm)) . "&ts=" . $teamSize . "&t=" . urlencode(stripslashes($teamName));
-	$xml = $this->getArmoryDataXML($url);
-	$n = $xml->xpath("/page/teamInfo/arenaTeam/emblem");
-	$b = $n[0];
-	return $b;	
-}
-
-function getCachedXML($url) {
-	$max_age = 60 * 60 * 11.5;		// 11.5 hours to allow for Coralization race conditions
-	$db = $this->getDBCacheConnection();
-	$result = mysql_query("select * from cache where hash = '" . md5($url) . "'", $db);
-	if(mysql_num_rows($result) == 0) return false;
-	$row = mysql_fetch_assoc($result);
-	if(time() - strtotime($row["updated_at"]) > $max_age) return false;
-	$data = @gzuncompress($row["data"]);
-	return $data;
-}
-
-function setCachedXML($url, $xml) {
-/*	$db = getDBCacheConnection();
-	$result = mysql_query("select * from cache where hash = '" . md5($url) . "'", $db);
-	$mu = md5($url);
-	$md = mysql_real_escape_string(gzcompress($xml, 9));
-	if(mysql_num_rows($result) == 0) {
-		$sql = "insert into cache (hash, data, updated_at) values ('$mu', '$md', NOW())";
-	} else {
-		$sql = "update cache set data = '$md', updated_at = NOW() where hash = '$mu'";
-	}
-	mysql_query($sql, $db);
-	*/return;
-}
-
-function attribs($node) {
-	$attribs = array();
-	if(!$node) {
-		throw new Exception("Unable to get node attributes; this likely means that we were unable to retrieve data for the entered realm/guild from the Armory. Please check your input and/or try again later.");
-	}
-		
-	foreach($node->attributes() as $key => $attrib) {
-		$attribs[$key] = (string)$attrib;
-	}
-	return $attribs;
-}
-
-function getCharacterList($xml, $minLevel, $class) {
-	$cList = array();
-	$characters = $xml->xpath("/page/guildInfo/guild/members/character");
-	if(sizeof($characters) == 0) {
-		echo "<font style='color: #f00; font-weight: bold;'>Warning! No characters found!</font><p />";
-	}
-	foreach($characters as $character) {
-		$attribs = attribs($character);
-		if((int)($attribs["level"]) >= $minLevel) {
-			if (!$class || $class == $attribs["class"]) {
-				$cList[] = array($attribs["name"], $attribs["level"], $attribs["class"]);
-			}
-		}	
-	}
-	return $cList;
-}
-
-function killCacheEntry($url) {
-//	$db = getDBCacheConnection();
-	$key = md5($url);
-	$sql = "delete from cache where hash = '$key'";
-	mysql_query($sql, $db);
-}
-
-
-function getguilddata( $guild, $locale, $realm, $fetch_type='array' )
-	{
-			$url = $this->_makeUrl( '3', $locale, $id=false, $char=false, $realm, $guild );
-		return $this->getArmoryDataXML($url);//return $this->fetchArmory( 3, false, $guild, $realm, false, $fetch_type );
-	}
-	
-function getCharacterData($realm, $name)
-{
-	$url = $this->_makeUrl( 2, $this->region, $id=false, $name, $realm, $guild );//
-	return $this->getArmoryDataXML($url);
-}
-function getTalentData($realm, $name) {
-	$url = $this->_makeUrl( 4, $this->region, $id=false, $name, $realm, $guild );//
-  	//$url = $base_url . "/character-talents.xml?r=" . urlencode(stripslashes($realm)) . "&n=" . urlencode(stripslashes($name));
-	return $this->getArmoryDataXML($url);
-}
-
-function getCharacterRep($realm, $name) {
-  	$url = $this->_makeUrl( 6, $this->region, $id=false, $name, $realm, $guild );//
-	//$url = $base_url . "/character-reputation.xml?r=" . urlencode(stripslashes($realm)) . "&n=" . urlencode(stripslashes($name));
-	return $this->getArmoryDataXML($url);
-}
-
-function logReferer($output) {
-	return;
-	$db = $this->getDBCacheConnection();
-	$url = preg_replace("/(sid|jsessionid)=[0-9A-F]{32}/i", "", @$_SERVER["HTTP_REFERER"]);
-	$hash = md5($url);
-	$url = mysql_real_escape_string($url);
-	$output = mysql_real_escape_string($output);
-	if(!preg_match("/tachyonsix\.com/i", @$_SERVER["HTTP_REFERER"]) && strlen(@$_SERVER["HTTP_REFERER"]) > 0) {
-		$sql = "select id from referrer_log where referrer_hash = '$hash' and app = '$output'";
-		$result = mysql_query($sql, $db);
-		if(mysql_num_rows($result) == 0) {
-			$sql = "insert into referrer_log (referrer_url, referrer_hash, hits, created_at, updated_at, app) values (\"$url\", \"$hash\", 1, NOW(), NOW(), '$output')";
-			mysql_query($sql, $db);
-		} else {
-			$row = mysql_fetch_assoc($result);
-			$id = $row["id"];
-			$sql = "update referrer_log set hits = hits + 1, updated_at = NOW() where id = '$id'";
-			mysql_query($sql, $db);
-		}
-	}
-}
-
-function _makeUrl( $mode, $locale, $id=false, $char=false, $realm=false, $guild=false )
-	{
-		if( $locale == 'US' )
-		{
-			//$base_url = 'http://localhost:18080/?url=http://www.wowarmory.com/';
-			$base_url = 'http://www.wowarmory.com/';
-		}
-		else
-		{
-			//$base_url = 'http://localhost:18080/?url=http://eu.wowarmory.com/';
-			$base_url = 'http://eu.wowarmory.com/';
-		}
-
-		// get request mode
-		switch( $mode )
-		{
-			case 0:
-			case 'item-tooltip':
-				$mode = 'item-tooltip.xml?i=' . $id;
-				if( $char )
-				{
-					$mode .= '&n=' . urlencode($char) . '&r=' . urlencode($realm);
-				}
-				break;
-			case 1:
-			case 'item-info':
-				$mode = 'item-info.xml?i=' . $id;
-				if( $char )
-				{
-					$mode .= '&n=' . urlencode($char) . '&r=' . urlencode($realm);
-				}
-				break;
-			case 2:
-			case 'character-sheet':
-				$mode = 'character-sheet.xml?n=' . urlencode($char) . '&r=' . urlencode($realm);
-				break;
-			case 3:
-			case 'guild-info':
-				$mode = 'guild-info.xml?r=' . urlencode($realm) . '&gn=' . urlencode($guild) . '&p=1';
-				break;
-			case 4:
-			case 'character-talents':
-				$mode = 'character-talents.xml?cn=' . urlencode($char) . '&r=' . urlencode($realm);
-				break;
-			case 5:
-			case 'character-skills':
-				$mode = 'character-skills.xml?n=' . urlencode($char) . '&r=' . urlencode($realm);
-				break;
-			case 6:
-			case 'character-reputation':
-				$mode = 'character-reputation.xml?cn=' . urlencode($char) . '&r=' . urlencode($realm);
-				break;
-			case 7:
-			case 'character-arenateams':
-				$mode = 'character-arenateams.xml?n=' . urlencode($char) . '&r=' . urlencode($realm);
-				break;
-			case 8:
-			case 'strings':
-				switch( substr($this->locale, 0, 2) )
-				{
-					case 'en':
-						$val = 'en_us';
-						break;
-					case 'fr':
-						$val = 'fr_fr';
-						break;
-					case 'de':
-						$val = 'de_de';
-						break;
-					case 'es':
-						$val = 'es_es';
-						break;
-				}
-				$mode = 'strings/' . $val . '/strings.xml?';
-				break;
-			case 9:
-			case 'search':
-				$mode = 'search.xml?searchQuery=' . urlencode($id) . '&searchType=items';
-				break;
-
-		}
-
-		$url = $base_url . $mode;
-
-		if( $this->debug_url )
-		{
-			//echo $url;
-			trigger_error('Debug: Sending [' . $url . '] to urlgrabber()', E_NOTICE);
-		}
-		return $url;
-	}
-
-
-/*
-
-  	end my localisaiation for xml....
-
-*/
 	function clean_tooltip($tip)
 	{
   		global $roster, $addon;
