@@ -38,7 +38,7 @@ class ApiSyncInstall
             array(	"name"=>	"Ulminia",
 			"info"=>	"Author API Dev"),
 			array(	"name"=>	"poetter@WoWRoster.net",
-			"info"=>	"Author of ApiSync"),
+			"info"=>	"Author of ArmorySync"),
 
 	);
 
