@@ -3,6 +3,10 @@
 SigGen Change Log
 
 
+11.26.2011 - v0.3.4.542
+* Set svn:props correctly for all files
+
+
 10.09.2011 - v0.3.4.536
 * Added new color picker for Roster 2.2
    o Roster 2.1 users will see old color picker
