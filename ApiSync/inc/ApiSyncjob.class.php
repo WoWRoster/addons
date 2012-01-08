@@ -42,6 +42,7 @@ class ApiSyncJob extends ApiSyncBase {
 	var $link;
 	var $dataNotAccepted = 0;
 	var $util_type = '';
+	var $api_data = array();
 
 	var $header;
 
@@ -245,9 +246,8 @@ class ApiSyncJob extends ApiSyncBase {
 	 *
 	 */
 	function _startAddGuild() {
-		global $roster;
+		global $roster, $update;
 		$out = '';
-		echo 'Add guild';
 		if ( isset($_POST['action']) && $_POST['action'] == 'add' ) {
 
 			if ( isset($_POST['name']) && isset($_POST['server']) && isset($_POST['region']) ) {
@@ -260,12 +260,49 @@ class ApiSyncJob extends ApiSyncBase {
 				if ( $region == "EU" || $region == "US" )
 				{
 
-					if ( $this->_checkGuildExist( $name, $server, $region ) ) {
+					if ( $this->_checkGuildExist( $name, $server, $region ) )
+					{
+						// ok the guild exists now we have functions to do this all in one 
+						//move because we have allready set th guild to allow in upload rules
+						include_once(ROSTER_LIB . 'update.lib.php');
+						$update = new update;
+			
+						$this->ApiSync->server = $server;
+						$this->ApiSync->region = $region;
+						$this->ApiSync->guild_name = $name;
+						$this->ApiSync->_getGuildInfo();
+						$guild_data = $this->ApiSync->data;
+						$update->uploadData['wowroster']['cpProfile'][$server]['Guild'][$name] = $guild_data;
+						$log =  $update->processFiles();
+						
+						echo '<div class="tier-1-a">
+							<div class="tier-1-b">
+								<div class="tier-1-c">
+									<div class="tier-1-title"> adding '.$name.' @ '.$region.'-'.$server.'</div>
+							
+							
+								<div class="tier-2-a">
+									<div class="tier-2-b">
+										<div class="tier-2-title">
+											Log
+										</div>
 
-						if ( $this->_insertGuild( $name, $server, $region, $faction ) ) {
+										<div class="border_color syellowborder"  style="background:black;height:300px;width:100%;overflow:auto;text-align:left;font-size:10px;">
+											'.$log.'
+										</div>
 
-							if ( $this->_insertUploadRule( $name, $server, $region, 0 ) ) {
-								if ( $this->_prepareUpdateMemberlist( $id, $name, $server, $region ) ) {
+									</div>
+								</div>
+							</div>
+						</div>';
+						/*
+						if ( $this->_insertGuild( $name, $server, $region, $faction ) )
+						{
+
+							if ( $this->_insertUploadRule( $name, $server, $region, 0 ) )
+							{
+								if ( $this->_prepareUpdateMemberlist( $id, $name, $server, $region ) )
+								{
 									$ret = $this->_updateStatusMemberlist();
 									$link = makelink('guild-ApiSync-memberlist&guild='. $id);
 									$this->_showStatusMemberlist();
@@ -274,22 +311,32 @@ class ApiSyncJob extends ApiSyncBase {
 										$this->_link();//_guildMemberlist( $id )
 									}
 									$this->_debug( 1, null, 'Added guild', 'OK');
-								} else {
+								}
+								else
+								{
 									$this->_debug( 0, null, 'Added guild', 'Failed. No job found');
 								}
-							} else {
+							}
+							else
+							{
 								$html = "&nbsp;&nbsp;".
 										$roster->locale->act['error_uploadrule_insert'].
 										"&nbsp;&nbsp;";
 								$out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
 							}
-						} else {
+						}
+						*
+						else 
+						{
 							$html = "&nbsp;&nbsp;".
 									$roster->locale->act['error_guild_insert'].
 									"&nbsp;&nbsp;";
 							$out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
 						}
-					} else {
+						*/
+					}
+					else
+					{
 						$html = "&nbsp;&nbsp;".
 								$roster->locale->act['error_guild_notexist'].
 								"&nbsp;&nbsp;";
@@ -297,20 +344,25 @@ class ApiSyncJob extends ApiSyncBase {
 					}
 
 
-				} else {
+				}
+				else
+				{
 					$html = "&nbsp;&nbsp;".
 							$roster->locale->act['error_wrong_region'].
 							"&nbsp;&nbsp;";
 					$out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
 				}
-			} else {
+			}
+			else
+			{
 				$html = "&nbsp;&nbsp;".
 						$roster->locale->act['error_missing_params'].
 						"&nbsp;&nbsp;";
 				$out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
 			}
 		}
-		if ( $out ) {
+		if ( $out )
+		{
 			$this->_debug( 1, $out, 'Added guild', 'Failed');
 			print $out;
 		}
@@ -515,14 +567,18 @@ class ApiSyncJob extends ApiSyncBase {
 
 		$this->time_started = gmdate('Y-m-d H:i:s');
 
-		$this->members = array(
-					array(
-							'name' => false,
-							'member_id' => false,
-							'guild_id' => $id,
-							'guild_name' => $name,
-							'server' => $server,
-							'region' => $region ) );
+			
+		$this->members = array();
+		foreach ($this->ApiSync->data['members'] as $id => $member )
+		{
+			$this->members[] = array(
+				'name' => $member['character']['name'],
+				'member_id' => false,
+				'guild_id' => $id,
+				'guild_name' => $name,
+				'server' => $member['character']['realm'],
+				'region' => $region );
+		}
 
 		if ( array_keys( $this->members ) ) {
 
@@ -1389,7 +1445,8 @@ class ApiSyncJob extends ApiSyncBase {
 		global $roster, $addon;
 
 		$ret = false;
-		if ( array_keys( $members ) ) {
+		if ( is_array( $members ) )
+		{
 
 			$query =	"INSERT INTO ". $roster->db->table('jobqueue',$addon['basename']). " ".
 						"VALUES ";
@@ -1779,9 +1836,6 @@ class ApiSyncJob extends ApiSyncBase {
 	function _insertGuild( $name, $server, $region,$faction ) {
 		global $roster;
 
-
-
-
 		$query =	"SELECT ".
 					"guild_id ".
 					"FROM `". $roster->db->table('guild'). "` ".
@@ -1792,16 +1846,11 @@ class ApiSyncJob extends ApiSyncBase {
 					"AND `region`='". $roster->db->escape($region). "';";
 		$ret = $roster->db->query_first($query);
 
-		if ( ! $ret ) {
+		if ( ! $ret )
+		{
 		// we are gona get a lil more guild info now a days......
 
-		include_once (ROSTER_LIB .'armory.class.php');
- 		$armory = new Rosterarmory;
- 		$data = $armory->pull_xmln('', $name, $server, 'roster');
-
-
-
-
+			$data = $this->ApiSync->data;
 
 			$query =	"INSERT ".
 						"INTO `". $roster->db->table('guild'). "` ".
@@ -1809,7 +1858,7 @@ class ApiSyncJob extends ApiSyncBase {
 						"`guild_name`='". $roster->db->escape($name). "', ".
 						"`server`='". $roster->db->escape($server). "', ".
 						"`faction`='". $roster->db->escape($faction). "', ".
-						"`guild_num_members`='". $data->guildInfo->guildHeader['count']. "', ".
+						"`guild_num_members`='". count($data['members']). "', ".
 						"`region`='". $roster->db->escape($region). "';";
 
 			if ( !$roster->db->query($query) ) {

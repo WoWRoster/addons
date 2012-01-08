@@ -30,6 +30,7 @@ class ApiSync extends ApiSyncBase {
 	var $memberId = 0;
 	var $guildId = 0;
 	var $server = '';
+	var $guild_name = '';
 	var $region = '';
 
 	var $content = array();
@@ -311,7 +312,8 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 	function _getGuildInfo() {
 		global $roster, $addon;
 
-		$content = $roster->api->Guild->getGuildInfo($this->server, $roster->data['guild_name'], '?fields=members');
+		$guild_name = (isset($roster->data['guild_name']) ? $roster->data['guild_name'] : $this->guild_name);
+		$content = $this->datas;//$roster->api->Guild->getGuildInfo($this->server, $roster->data['guild_name'], '?fields=members');
 		//print_r($content);
 
 			$this->data['Ranks'] = $this->_getGuildRanks( $this->guildId );
@@ -323,9 +325,10 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 			$this->data['GPprovider'] = "ApiSync";
 			$this->data['FactionEn'] = $roster->locale->act['id_to_faction'][$content['side']];
 			$this->data['Faction'] = $roster->locale->act['id_to_faction'][$content['side']];
-			$this->data["DBversion"] = $roster->config['minGPver'];
+			$this->data["DBversion"] = '3.1';
 			$this->data["GPversion"] = $roster->config['minGPver'];
-			$this->data['name'] = $this->memberName;
+			$this->data['name'] = $guild_name;
+			$this->data['GuildLevel'] = $content['level'];
 			$this->data['NumMembers'] = count($content['members']);
 			$this->data['GuildLevel'] = $content['level'];
 			$this->data['Info'] = ''; //$roster->data['guild_info_text'];
@@ -499,14 +502,16 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
  	* fetches guild info
  	*
  	*/
-	function checkGuildInfo( $name = false, $server = false, $region = false ) {
+	function checkGuildInfo( $name = false, $server = false, $region = false ) 
+	{
 		global $roster, $addon;
-			include_once(ROSTER_LIB . 'armory.class.php');
+		
+		include_once(ROSTER_LIB . 'armory.class.php');
 		$armory = new RosterArmory;
 		
-			$content = $this->_parseData($armory->fetchGuild( $name, $region, $server,$fetch_type='array' ));//$this->getguilddata( $roster->data['guild_name'], $this->region, $this->server, $fetch_type='array' );//$this->fetchGuild( $this->memberName, $roster->config['locale'], $this->server );
-
-		if ( $this->_xcheckarray( $content, array( 'guildInfo', 'guildHeader' ) ) ) //_checkContent( $content, array( 'guildInfo', 'guild' ) ) )
+		$content = $roster->api->Guild->getGuildInfo($server,$name,'?fields=members');
+		$this->datas = $content;
+		if ( $this->_xcheckarray( $content, array( 'members', 'emblem' ) ) ) //_checkContent( $content, array( 'guildInfo', 'guild' ) ) )
 		{
 			$this->_debug( 1, true, 'Checked guild on existence',  'OK' );
 			return true;
@@ -526,9 +531,9 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 		global $roster, $addon;
 
 		$this->region = $region;
-		$content = $this->getCharacterData($realm, $name);
+		$this->apidata = $roster->api->Char->getCharInfo($server,$name,'1:2:3:4:5:7:11:14');
 
-		if (is_array($content['characterInfo']) && is_array($content['characterInfo']['characterTab'])) 
+		if (is_array($this->apidata) && isset($this->apidata['name'])) 
 		{
 			$this->_debug( 1, false, 'Checked char on existence',  'passed' );	
 			return true;
@@ -589,7 +594,7 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 			
 			$this->_setUserAgent($armory);
 
-			$char = $roster->api->Char->getCharInfo($this->server,$this->memberName,'1:2:3:4:5:7:11:14');
+			$char = (!empty($this->apidata) ? $this->apidata :$roster->api->Char->getCharInfo($this->server,$this->memberName,'1:2:3:4:5:7:11:14'));
 
 			$this->apidata = $char;
 
