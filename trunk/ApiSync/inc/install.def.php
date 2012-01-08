@@ -29,7 +29,7 @@ class ApiSyncInstall
 	var $active = true;
 	var $icon = 'spell_deathknight_bladedarmor';
 
-	var $version = '1.0';
+	var $version = '1.0.1';
 	var $wrnet_id  = '';
 
 	var $fullname = 'Roster APIsync';
@@ -114,7 +114,7 @@ class ApiSyncInstall
 		$installer->add_menu_button('async_button3','realm', '', 'as_char.jpg');
         // dont uncoment these they do not work!
 		$installer->add_menu_button('async_button4','guild', 'memberlist', 'as_memberlist.jpg');
-		//$installer->add_menu_button('async_button5','util', 'add', 'as_guild_add.jpg');
+		$installer->add_menu_button('async_button5','util', 'add', 'as_guild_add.jpg');
 		
 		//ROSTER_CACHEDIR
 
@@ -166,7 +166,8 @@ class ApiSyncInstall
 	function upgrade($oldversion)
 	{
 		global $installer;
-/*
+		
+		/*
 		if ( version_compare('2.7.2.515', $oldversion,'>') == true ) {
 			$installer->remove_all_menu_button();
                         $installer->update_config('1250', 'config_value=0');
@@ -177,16 +178,11 @@ class ApiSyncInstall
                         
                         
                 }
-		if ( version_compare('2.6.0.235', $oldversion,'>') == true ) {
-			$installer->create_table(
-				$installer->table('updates'),
-							"
-							`member_id` int(11) NOT NULL,
-							`dateupdatedutc` datetime default NULL,
-							PRIMARY KEY  (`member_id`)
-							" );
+		*/
+		if ( version_compare('1.0.1', $oldversion,'>') == true ) {
+			$installer->add_menu_button('async_button5','util', 'add', 'as_guild_add.jpg');
 	    }
-*/
+
 		return true;
 	}
 
