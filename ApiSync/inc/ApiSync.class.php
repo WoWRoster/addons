@@ -66,7 +66,80 @@ class ApiSync extends ApiSyncBase {
 							'talentInfo' => 0,
 						);
 						
-
+	var $rep = array(
+    "Wildhammer Clan" => array ("parent" => "Cataclysm"),
+	"Baradin's Wardens" => array ("parent" => "Cataclysm"),
+	"The Earthen Ring" => array ("parent" => "Cataclysm"),
+	"Avengers of Hyjal" => array("parent" => "Cataclysm"),
+	"Ramkahen" => array ("parent" => "Cataclysm"),
+	"Guardians of Hyjal" => array ("parent" => "Cataclysm"),
+	"Therazane" => array ("parent" => "Cataclysm"),
+	"Knights of the Ebon Blade" => array ("parent" => "Wrath of the Lich King"),
+	"Argent Crusade" => array ("parent" => "Wrath of the Lich King"),
+	"The Kalu'ak" => array ("parent" => "Wrath of the Lich King"),
+	"The Sons of Hodir" => array ("parent" => "Wrath of the Lich King"),
+	"Alliance Vanguard" => array ("parent" => "Wrath of the Lich King"),
+	"Valiance Expedition" => array ("parent" => "Wrath of the Lich King","faction" => "Alliance Vanguard"),
+	"Explorers' League" => array ("parent" => "Wrath of the Lich King","faction" => "Alliance Vanguard"),
+	"The Silver Covenant" => array ("parent" => "Wrath of the Lich King","faction" => "Alliance Vanguard"),
+	"The Frostborn" => array ("parent" => "Wrath of the Lich King","faction" => "Alliance Vanguard"),
+	"Kirin Tor" => array ("parent" => "Wrath of the Lich King"),
+	"Sholazar Basin" => array ("parent" => "Wrath of the Lich King"),
+	"Frenzyheart Tribe" => array ("parent" => "Wrath of the Lich King","faction" => "Sholazar Basin"),
+	"The Oracles" => array ("parent" => "Wrath of the Lich King","faction" => "Sholazar Basin"),
+	"The Wyrmrest Accord" => array ("parent" => "Wrath of the Lich King"),
+	"The Ashen Verdict" => array ("parent" => "Wrath of the Lich King"),
+	"The Violet Eye" => array ("parent" => "The Burning Crusade"),
+	"Sporeggar" => array ("parent" => "The Burning Crusade"),
+	"Ashtongue Deathsworn" => array ("parent" => "The Burning Crusade"),
+	"Ogri'la" => array ("parent" => "The Burning Crusade"),
+	"The Scale of the Sands" => array ("parent" => "The Burning Crusade"),
+	"Shattrath City" => array ("parent" => "The Burning Crusade"),
+	"The Sha'tar" => array ("parent" => "The Burning Crusade","faction" => "Shattrath City"),
+	"Shattered Sun Offensive" => array ("parent" => "The Burning Crusade","faction" => "Shattrath City"),
+	"The Scryers" => array ("parent" => "The Burning Crusade","faction" => "Shattrath City"),
+	"Lower City" => array ("parent" => "The Burning Crusade","faction" => "Shattrath City"),
+	"The Aldor" => array ("parent" => "The Burning Crusade","faction" => "Shattrath City"),
+	"Sha'tari Skyguard" => array ("parent" => "The Burning Crusade","faction" => "Shattrath City"),
+	"Kurenai" => array ("parent" => "The Burning Crusade"),
+	"Netherwing" => array ("parent" => "The Burning Crusade"),
+	"The Consortium" => array ("parent" => "The Burning Crusade"),
+	"Keepers of Time" => array ("parent" => "The Burning Crusade"),
+	"Honor Hold" => array ("parent" => "The Burning Crusade"),
+	"Cenarion Expedition" => array ("parent" => "The Burning Crusade"),
+	"Thorium Brotherhood" => array ("parent" => "Classic"),
+	"Bloodsail Buccaneers" => array ("parent" => "Classic"),
+	"Cenarion Circle" => array ("parent" => "Classic"),
+	"Darkmoon Faire" => array ("parent" => "Classic"),
+	"Gelkis Clan Centaur" => array ("parent" => "Classic"),
+	"Magram Clan Centaur" => array ("parent" => "Classic"),
+	"Alliance Forces" => array ("parent" => "Classic"),
+	"Stormpike Guard" => array ("parent" => "Classic","faction" => "Alliance Forces"),
+	"Silverwing Sentinels" => array ("parent" => "Classic","faction" => "Alliance Forces"),
+	"The League of Arathor" => array ("parent" => "Classic","faction" => "Alliance Forces"),
+	"Timbermaw Hold" => array ("parent" => "Classic"),
+	"Zandalar Tribe" => array ("parent" => "Classic"),
+	"Alliance" => array ("parent" => "Classic"),
+	"Exodar" => array ("parent" => "Classic","faction" => "Alliance"),
+	"Gilneas" => array ("parent" => "Classic","faction" => "Alliance"),
+	"Gnomeregan" => array ("parent" => "Classic","faction" => "Alliance"),
+	"Stormwind" => array ("parent" => "Classic","faction" => "Alliance"),
+	"Ironforge" => array ("parent" => "Classic","faction" => "Alliance"),
+	"Darnassus" => array ("parent" => "Classic","faction" => "Alliance"),
+	"Shen'dralar" => array ("parent" => "Classic"),
+	"Brood of Nozdormu" => array ("parent" => "Classic"),
+	"Ravenholdt" => array ("parent" => "Classic"),
+	"Steamwheedle Cartel" => array ("parent" => "Classic"),
+	"Everlook" => array ("parent" => "Classic","faction" => "Steamwheedle Cartel"),
+	"Gadgetzan" => array ("parent" => "Classic","faction" => "Steamwheedle Cartel"),
+	"Ratchet" => array ("parent" => "Classic","faction" => "Steamwheedle Cartel"),
+	"Booty Bay" => array ("parent" => "Classic","faction" => "Steamwheedle Cartel"),
+	"Hydraxian Waterlords" => array ("parent" => "Classic"),
+	"Argent Dawn" => array ("parent" => "Classic"),
+	"Wintersaber Trainers" => array ("parent" => "Other"),
+	"Syndicate" => array ("parent" => "Other"),
+	"" => array ("parent" => "Guild"),);
+	
 	function getMessages()
 	
 	{
@@ -608,7 +681,7 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
   				$this->data["Name"] = ''.$char['name'].'';//$char['name'];
   				$this->data["Level"] = ''.$char['level'].'';
   				$this->data["Server"] = ''.$char['realm'].'';
-				
+				$this->guild_name=$char['guild']['name'];
 				$this->data["Guild"]["Name"] = $char['guild']['name'];
   				$this->data["Guild"]["Title"] = '';
   				$this->data["Guild"]["Rank"] = '';
@@ -1080,6 +1153,81 @@ function return_gender($genderid) {
 			
 			$rep = $this->apidata['reputation'];
 
+			
+			$xrep = array(
+    "Wildhammer Clan" => array ("parent" => "Cataclysm"),
+	"Baradin's Wardens" => array ("parent" => "Cataclysm"),
+	"The Earthen Ring" => array ("parent" => "Cataclysm"),
+	"Avengers of Hyjal" => array ("parent" => "Cataclysm"),
+	"Ramkahen" => array ("parent" => "Cataclysm"),
+	"Guardians of Hyjal" => array ("parent" => "Cataclysm"),
+	"Therazane" => array ("parent" => "Cataclysm"),
+	"Knights of the Ebon Blade" => array ("parent" => "Wrath of the Lich King"),
+	"Argent Crusade" => array ("parent" => "Wrath of the Lich King"),
+	"The Kalu'ak" => array ("parent" => "Wrath of the Lich King"),
+	"The Sons of Hodir" => array ("parent" => "Wrath of the Lich King"),
+	"Alliance Vanguard" => array ("parent" => "Wrath of the Lich King"),
+	"Valiance Expedition" => array ("parent" => "Wrath of the Lich King","faction" => "Alliance Vanguard"),
+	"Explorers' League" => array ("parent" => "Wrath of the Lich King","faction" => "Alliance Vanguard"),
+	"The Silver Covenant" => array ("parent" => "Wrath of the Lich King","faction" => "Alliance Vanguard"),
+	"The Frostborn" => array ("parent" => "Wrath of the Lich King","faction" => "Alliance Vanguard"),
+	"Kirin Tor" => array ("parent" => "Wrath of the Lich King"),
+	"Sholazar Basin" => array ("parent" => "Wrath of the Lich King"),
+	"Frenzyheart Tribe" => array ("parent" => "Wrath of the Lich King","faction" => "Sholazar Basin"),
+	"The Oracles" => array ("parent" => "Wrath of the Lich King","faction" => "Sholazar Basin"),
+	"The Wyrmrest Accord" => array ("parent" => "Wrath of the Lich King"),
+	"The Ashen Verdict" => array ("parent" => "Wrath of the Lich King"),
+	"The Violet Eye" => array ("parent" => "The Burning Crusade"),
+	"Sporeggar" => array ("parent" => "The Burning Crusade"),
+	"Ashtongue Deathsworn" => array ("parent" => "The Burning Crusade"),
+	"Ogri'la" => array ("parent" => "The Burning Crusade"),
+	"The Scale of the Sands" => array ("parent" => "The Burning Crusade"),
+	"Shattrath City" => array ("parent" => "The Burning Crusade"),
+	"The Sha'tar" => array ("parent" => "The Burning Crusade","faction" => "Shattrath City"),
+	"Shattered Sun Offensive" => array ("parent" => "The Burning Crusade","faction" => "Shattrath City"),
+	"The Scryers" => array ("parent" => "The Burning Crusade","faction" => "Shattrath City"),
+	"Lower City" => array ("parent" => "The Burning Crusade","faction" => "Shattrath City"),
+	"The Aldor" => array ("parent" => "The Burning Crusade","faction" => "Shattrath City"),
+	"Sha'tari Skyguard" => array ("parent" => "The Burning Crusade","faction" => "Shattrath City"),
+	"Kurenai" => array ("parent" => "The Burning Crusade"),
+	"Netherwing" => array ("parent" => "The Burning Crusade"),
+	"The Consortium" => array ("parent" => "The Burning Crusade"),
+	"Keepers of Time" => array ("parent" => "The Burning Crusade"),
+	"Honor Hold" => array ("parent" => "The Burning Crusade"),
+	"Cenarion Expedition" => array ("parent" => "The Burning Crusade"),
+	"Thorium Brotherhood" => array ("parent" => "Classic"),
+	"Bloodsail Buccaneers" => array ("parent" => "Classic"),
+	"Cenarion Circle" => array ("parent" => "Classic"),
+	"Darkmoon Faire" => array ("parent" => "Classic"),
+	"Gelkis Clan Centaur" => array ("parent" => "Classic"),
+	"Magram Clan Centaur" => array ("parent" => "Classic"),
+	"Alliance Forces" => array ("parent" => "Classic"),
+	"Stormpike Guard" => array ("parent" => "Classic","faction" => "Alliance Forces"),
+	"Silverwing Sentinels" => array ("parent" => "Classic","faction" => "Alliance Forces"),
+	"The League of Arathor" => array ("parent" => "Classic","faction" => "Alliance Forces"),
+	"Timbermaw Hold" => array ("parent" => "Classic"),
+	"Zandalar Tribe" => array ("parent" => "Classic"),
+	"Alliance" => array ("parent" => "Classic"),
+	"Exodar" => array ("parent" => "Classic","faction" => "Alliance"),
+	"Gilneas" => array ("parent" => "Classic","faction" => "Alliance"),
+	"Gnomeregan" => array ("parent" => "Classic","faction" => "Alliance"),
+	"Stormwind" => array ("parent" => "Classic","faction" => "Alliance"),
+	"Ironforge" => array ("parent" => "Classic","faction" => "Alliance"),
+	"Darnassus" => array ("parent" => "Classic","faction" => "Alliance"),
+	"Shen'dralar" => array ("parent" => "Classic"),
+	"Brood of Nozdormu" => array ("parent" => "Classic"),
+	"Ravenholdt" => array ("parent" => "Classic"),
+	"Steamwheedle Cartel" => array ("parent" => "Classic"),
+	"Everlook" => array ("parent" => "Classic","faction" => "Steamwheedle Cartel"),
+	"Gadgetzan" => array ("parent" => "Classic","faction" => "Steamwheedle Cartel"),
+	"Ratchet" => array ("parent" => "Classic","faction" => "Steamwheedle Cartel"),
+	"Booty Bay" => array ("parent" => "Classic","faction" => "Steamwheedle Cartel"),
+	"Hydraxian Waterlords" => array ("parent" => "Classic"),
+	"Argent Dawn" => array ("parent" => "Classic"),
+	"Wintersaber Trainers" => array ("parent" => "Other"),
+	"Syndicate" => array ("parent" => "Other"),
+	"".$this->guild_name."" => array ("parent" => "Guild"),);
+	
 			$this->data["Reputation"]["Count"] = 0;
 			$is = 0;
 
@@ -1096,10 +1244,20 @@ function return_gender($genderid) {
 						}
 						if (isset($info['name']))
 						{
-							$this->data["Reputation"][''.$ft.''][''.$ft2.''] = array();
-							$this->data["Reputation"][''.$ft.''][''.$ft2.'']["Value"] = $info['value'] . ":" . $info['max'];
-							$this->data["Reputation"][''.$ft.''][''.$ft2.'']["Standing"] = $this->_getRepStanding($info['standing']);
-							$this->data["Reputation"][''.$ft.''][''.$ft2.'']["AtWar"] = $this->_getRepAtWar($info['value']);
+							if (isset($xrep[$ft2]['faction']))
+							{
+								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$xrep[$ft2]['faction'].''][''.$ft2.''] = array();
+								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$xrep[$ft2]['faction'].''][''.$ft2.'']["Value"] = $info['value'] . ":" . $info['max'];
+								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$xrep[$ft2]['faction'].''][''.$ft2.'']["Standing"] = $this->_getRepStanding($info['standing']);
+								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$xrep[$ft2]['faction'].''][''.$ft2.'']["AtWar"] = $this->_getRepAtWar($info['value']);
+							}
+							else
+							{
+								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$ft2.''] = array();
+								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$ft2.'']["Value"] = $info['value'] . ":" . $info['max'];
+								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$ft2.'']["Standing"] = $this->_getRepStanding($info['standing']);
+								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$ft2.'']["AtWar"] = $this->_getRepAtWar($info['value']);
+							}
 						}
 
 						$this->data["Reputation"]["Count"]++;

@@ -53,11 +53,11 @@ $lang['admin']['ApiSync_rank_7']	= "Title Rank 7|This title will be set if in Wo
 $lang['admin']['ApiSync_rank_8']	= "Title Rank 8|This title will be set if in WoWRoster for that guild none is defined.";
 $lang['admin']['ApiSync_rank_9']	= "Title Rank 9|This title will be set if in WoWRoster for that guild none is defined.";
 
-$lang['admin']['ApiSync_char_update_access'] = 'Char Update Access Level|Who is able to do character updates';
-$lang['admin']['ApiSync_guild_update_access'] = 'Guild Update Access Level|Who is able to do guild updates';
-$lang['admin']['ApiSync_guild_memberlist_update_access'] = 'Guild Memberlist Update Access Level|Who is able to do guild memberlist updates';
-$lang['admin']['ApiSync_realm_update_access'] = 'Realm Update Access Level|Who is able to do realm updates';
-$lang['admin']['ApiSync_guild_add_access'] = 'Guild Add Access Level|Who is able to add new guilds';
+$lang['admin']['ApiSync_char_update_access'] = 'Char Update Access|Who is able to do character updates';
+$lang['admin']['ApiSync_guild_update_access'] = 'Guild Update Access|Who is able to do guild updates';
+$lang['admin']['ApiSync_guild_memberlist_update_access'] = 'Guild Memberlist Update Access|Who is able to do guild memberlist updates';
+$lang['admin']['ApiSync_realm_update_access'] = 'Realm Update Access|Who is able to do realm updates';
+$lang['admin']['ApiSync_guild_add_access'] = 'Guild Add Access|Who is able to add new guilds';
 
 $lang['admin']['ApiSync_logo'] = 'ApiSync Logo|';
 $lang['admin']['ApiSync_pic1'] = 'ApiSync Image 1|';
