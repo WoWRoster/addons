@@ -3,6 +3,10 @@
 SigGen Change Log
 
 
+05.27.2012 - v0.3.4.547
+* Fixed notices when there are no members in roster
+
+
 05.27.2012 - v0.3.4.546
 * Changed color css location for 2.2 color picker
 

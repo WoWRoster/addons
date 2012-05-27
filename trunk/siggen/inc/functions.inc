@@ -141,29 +141,32 @@ class SigConfigClass
 
     $option_list = "\n\t<select id=\"{$id}\" name=\"{$id}\" $param>\n\t\t<option value=\"\" style=\"color:grey;\">--None--</option>\n";
 
-    foreach( $values as $value )
+    if (is_array($values) && count($values) > 0)
     {
-      $array[$value['server']][$value['member_id']] = $value['name'];
-    }
-
-    foreach( $array as $server => $data )
-    {
-      $option_list .= "\t\t<optgroup label=\"{$server}\">\n";
-
-      foreach( $data as $member_id => $name )
+      foreach( $values as $value )
       {
-        $value = ($type ? $member_id : "$name@$server");
-        if( $selected == $value && $select_one )
-        {
-          $option_list .= "\t\t\t<option value=\"{$value}\" selected=\"selected\">{$name}</option>\n";
-          $select_one = false;
-        }
-        else
-        {
-          $option_list .= "\t\t\t<option value=\"{$value}\">{$name}</option>\n";
-        }
+        $array[$value['server']][$value['member_id']] = $value['name'];
       }
-      $option_list .= "\t\t</optgroup>\n";
+
+      foreach( $array as $server => $data )
+      {
+        $option_list .= "\t\t<optgroup label=\"{$server}\">\n";
+
+        foreach( $data as $member_id => $name )
+        {
+          $value = ($type ? $member_id : "$name@$server");
+          if( $selected == $value && $select_one )
+          {
+            $option_list .= "\t\t\t<option value=\"{$value}\" selected=\"selected\">{$name}</option>\n";
+            $select_one = false;
+          }
+          else
+          {
+            $option_list .= "\t\t\t<option value=\"{$value}\">{$name}</option>\n";
+          }
+        }
+        $option_list .= "\t\t</optgroup>\n";
+      }
     }
     $option_list .= "\t</select>";
 
