@@ -3,6 +3,10 @@
 SigGen Change Log
 
 
+05.27.2012 - v0.3.4.546
+* Changed color css location for 2.2 color picker
+
+
 11.26.2011 - v0.3.4.542
 * Set svn:props correctly for all files
 
