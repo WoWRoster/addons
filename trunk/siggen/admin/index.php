@@ -97,7 +97,7 @@ else
 		});';
 	roster_add_js($jscript_head, 'inline', 'header');
 	roster_add_js($jscript_foot, 'inline', 'footer');
-	roster_add_css('templates/' . $roster->tpl->tpl . '/colorpicker.css', 'theme');
+	roster_add_css('templates/' . $roster->tpl->tpl . '/style/colorpicker.css', 'theme');
 }
 
 
