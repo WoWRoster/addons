@@ -48,6 +48,8 @@
 		
 		var $debugmessages = array();
 		var $errormessages = array();
+		var $log;
+		var $is_listupdate = 0;
 		
 		var $functions = array(
 		array(
@@ -71,7 +73,8 @@
 		function _init() {
 			global $addon;
 			
-			if ( ! is_object( $this->ApiSync ) ) {
+			if ( ! is_object( $this->ApiSync ) )
+			{
 				require_once ($addon['dir'] . 'inc/ApiSync.class.php');
 				$this->ApiSync = new ApiSync();
 				$this->ApiSync->debugmessages = &$this->debugmessages;
@@ -84,7 +87,8 @@
 			* Show error on deprecated Roster
 			*
 		*/
-		function _showErrorRosterDeprecated() {
+		function _showErrorRosterDeprecated()
+		{
 			global $roster, $addon;
 			
 			$html = sprintf( $roster->locale->act['roster_deprecated_message'], ROSTER_VERSION, APISYNC_VERSION, APISYNC_REQUIRED_ROSTER_VERSION);
@@ -97,7 +101,8 @@
 			* Check if Roster is new enough
 			*
 		*/
-		function _isRequiredRosterVersion() {
+		function _isRequiredRosterVersion()
+		{
 			$ret = version_compare( APISYNC_REQUIRED_ROSTER_VERSION, ROSTER_VERSION, '<=');
 			$this->_debug( 1, $ret, 'Check required Roster version', $ret ? 'OK': 'Failed' );
 			return $ret;
@@ -107,7 +112,8 @@
 			* Show error on deprecated Roster
 			*
 		*/
-		function _showErrorApiSyncNotUpgraded() {
+		function _showErrorApiSyncNotUpgraded()
+		{
 			global $roster, $addon;
 			
 			$html = sprintf( $roster->locale->act['ApiSync_not_upgraded_message'], APISYNC_VERSION, $addon['version']);
@@ -120,7 +126,8 @@
 			* Check if ApiSync is new enough
 			*
 		*/
-		function _isRequiredApiSyncVersion() {
+		function _isRequiredApiSyncVersion()
+		{
 			global $addon;
 			$ret =  version_compare( APISYNC_VERSION, $addon['version'], '<=');
 			$this->_debug( 1, $ret, 'Check required ApiSync version', $ret ? 'OK': 'Failed' );
@@ -131,49 +138,53 @@
 			* fetch insert jobid, fill jobqueue
 			*
 		*/
-		function start() {
+		function start()
+		{
 			global $roster, $addon;
 			
 			$this->_showHeader();
 			$this->_checkEnv();
-			
-			if ( ! $this->isAuth ) {
+			//print_r($_POST['process']);
+			if ( ! $this->isAuth )
+			{
 				$this->_showFooter();
 				return;
 			}
-			if ( ! $this->_isRequiredRosterVersion() ) {
+			if ( ! $this->_isRequiredRosterVersion() )
+			{
 				$this->_showErrorRosterDeprecated();
 				return;
 			}
 			
-			if ( ! $this->_isRequiredApiSyncVersion() ) {
+			if ( ! $this->_isRequiredApiSyncVersion() )
+			{
 				$this->_showErrorApiSyncNotUpgraded();
 				return;
 			}
-			
-			if ( !$this->id && isset($roster->pages[2]) && $roster->pages[2] == 'add' && !isset($_POST['process']) ) {
-				
+
+			if ( !$this->id && isset($roster->pages[2]) && $roster->pages[2] == 'add' && !isset($_POST['process']) )
+			{
 				$this->_showAddScreen();
-				
-				} elseif ( !$this->id && isset($roster->pages[2]) && $roster->pages[2] == 'add' && isset($_POST['process']) && $_POST['process'] == 'addguild' ) {
-				
+			}
+			elseif ( !$this->id && isset($roster->pages[2]) && $roster->pages[2] == 'add' && isset($_POST['process']) && $_POST['process'] == 'addguild' )
+			{
 				$this->isMemberList = 1;
 				$this->_startAddGuild();
-				
-				} elseif ( !$this->id && isset($roster->pages[2]) && $roster->pages[2] == 'add' && isset($_POST['process']) && $_POST['process'] == 'addchar' ) {
-				
+			}
+			elseif ( !$this->id && isset($roster->pages[2]) && $roster->pages[2] == 'add' && isset($_POST['process']) && $_POST['process'] == 'addchar' )
+			{
 				$this->_startAddChar();
-				
-				} elseif ( $this->id && $addon['config']['ApiSync_skip_start'] == 0 && !( isset($_GET['job_id']) || isset($_POST['job_id']) ) ) {
-				
+			}
+			elseif ( $this->id && $addon['config']['ApiSync_skip_start'] == 0 && !( isset($_GET['job_id']) || isset($_POST['job_id']) ) )
+			{
 				$this->_showStartPage();
-				
-				} elseif ( $this->id && ( isset($_GET['job_id']) || isset($_POST['job_id']) || $addon['config']['ApiSync_skip_start'] == 1 ) ) {
-				
+			}
+			elseif ( $this->id && ( isset($_GET['job_id']) || isset($_POST['job_id']) || $addon['config']['ApiSync_skip_start'] == 1 ) )
+			{
 				$this->_startSyncing();
-				
-				} else {
-				
+			}
+			else
+			{
 				$this->_showErrors();
 			}
 			$this->_showFooter();
@@ -186,15 +197,21 @@
 			* fetch insert jobid, fill jobqueue
 			*
 		*/
-		function _showErrors() {
+		function _showErrors() 
+		{
 			global $roster;
-			if ( $roster->scope == 'char' ) {
+			if ( $roster->scope == 'char' ) 
+			{
 				$html = $roster->locale->act['error_no_character']. "<br />&nbsp;&nbsp;".
 				$roster->locale->act['error_use_menu']. "&nbsp;&nbsp;";
-				} elseif ( $roster->scope == 'guild' ) {
+			} 
+			elseif ( $roster->scope == 'guild' ) 
+			{
 				$html = $roster->locale->act['error_no_guild']. "<br />&nbsp;&nbsp;".
 				$roster->locale->act['error_use_menu']. "&nbsp;&nbsp;";
-				} elseif ( $roster->scope == 'realm' ) {
+			} 
+			elseif ( $roster->scope == 'realm' ) 
+			{
 				$html = $roster->locale->act['error_no_realm']. "<br />&nbsp;&nbsp;".
 				$roster->locale->act['error_use_menu']. "&nbsp;&nbsp;";
 			}
@@ -211,30 +228,41 @@
 		function _startSyncing() {
 			global $roster;
 			
-			if ( isset($_GET['job_id']) ) {
+			if ( isset($_GET['job_id']) )
+			{
 				$this->jobid = $_GET['job_id'];
 			}
-			if ( isset($_POST['job_id']) ) {
+			if ( isset($_POST['job_id']) )
+			{
 				$this->jobid = $_POST['job_id'];
 			}
 			$functions = $this->functions[$this->isMemberList];
-			if ( $this->jobid == 0 ) {
-				if ( $this->$functions['prepare_update']() ) {
+			if ( $this->jobid == 0 )
+			{
+				if ( $this->$functions['prepare_update']() )
+				{
 					$ret = $this->$functions['update_status']();
 					$this->$functions['show_status']();
-					if ( $ret ) {
+					if ( $ret )
+					{
 						$this->$functions['link']();
 					}
-					} else {
+				}
+				else
+				{
 					$this->_nothingToDo();
 				}
-				} else {
+			}
+			else
+			{
 				$ret = $this->$functions['update_status']();
-				if ( $ret ) {
+				if ( $ret )
+				{
 					$ret = $this->$functions['update_status']();
 				}
 				$this->$functions['show_status']();
-				if ( $ret ) {
+				if ( $ret )
+				{
 					$this->$functions['link']();
 				}
 			}
@@ -245,12 +273,15 @@
 			* Adding new guild to roster
 			*
 		*/
-		function _startAddGuild() {
+		function _startAddGuild()
+		{
 			global $roster, $update;
 			$out = '';
-			if ( isset($_POST['action']) && $_POST['action'] == 'add' ) {
+			if ( isset($_POST['action']) && $_POST['action'] == 'add' )
+			{
 				
-				if ( isset($_POST['name']) && isset($_POST['server']) && isset($_POST['region']) ) {
+				if ( isset($_POST['name']) && isset($_POST['server']) && isset($_POST['region']) )
+				{
 					
 					$name = urldecode(trim(stripslashes( $_POST['name'] )));
 					$server = urldecode(trim(stripslashes( $_POST['server'] )));
@@ -372,66 +403,85 @@
 			* Adding new character to roster
 			*
 		*/
-		function _startAddChar() {
+		function _startAddChar()
+		{
 			global $roster;
 			$out = '';
-			if ( isset($_POST['action']) && $_POST['action'] == 'add' ) {
+			if ( isset($_POST['action']) && $_POST['action'] == 'add' )
+			{
 				
-				if ( isset($_POST['name']) && isset($_POST['server']) && isset($_POST['region']) ) {
+				if ( isset($_POST['name']) && isset($_POST['server']) && isset($_POST['region']) )
+				{
 					
 					$name = urldecode(trim(stripslashes( $_POST['name'] )));
 					$server = urldecode(trim(stripslashes( $_POST['server'] )));
 					$region = strtoupper($_POST['region']);
 					
 					if ( $region == "EU" || $region == "US" ) {
-						if ( $this->_checkCharExist( $name, $server, $region ) ) {
-							
-							if ( $id = $this->_insertChar( $name, $server, $region ) ) {
-								
-								if ( $this->_insertUploadRule( $name, $server, $region, 2 ) ) {
-									if ( $this->_prepareUpdate( $id, $name, $server, $region ) ) {
+						if ( $this->_checkCharExist( $name, $server, $region ) )
+						{
+							if ( $id = $this->_insertChar( $name, $server, $region ) )
+							{
+								if ( $this->_insertUploadRule( $name, $server, $region, 2 ) )
+								{
+									if ( $this->_prepareUpdate( $id, $name, $server, $region ) )
+									{
 										$ret = $this->_updateStatus();
 										$this->_showStatus();
-										if ( $ret ) {
+										if ( $ret )
+										{
 											$this->util_type = 'addchar';
 											$this->_link();
 										}
 										$this->_debug( 1, null, 'Added char', 'OK');
-										} else {
+									}
+									else
+									{
 										$this->_debug( 0, null, 'Added char', 'Failed. No job found');
 									}
-									} else {
+								}
+								else
+								{
 									$html = "&nbsp;&nbsp;".
 									$roster->locale->act['error_uploadrule_insert'].
 									"&nbsp;&nbsp;";
 									$out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
 								}
-								} else {
+							}
+							else
+							{
 								$html = "&nbsp;&nbsp;".
 								$roster->locale->act['error_guild_insert'].
 								"&nbsp;&nbsp;";
 								$out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
 							}
-							} else {
+						}
+						else
+						{
 							$html = "&nbsp;&nbsp;".
 							$roster->locale->act['error_guild_notexist'].
 							"&nbsp;&nbsp;";
 							$out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
 						}
-						} else {
+					}
+					else
+					{
 						$html = "&nbsp;&nbsp;".
 						$roster->locale->act['error_wrong_region'].
 						"&nbsp;&nbsp;";
 						$out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
 					}
-					} else {
+				}
+				else
+				{
 					$html = "&nbsp;&nbsp;".
 					$roster->locale->act['error_missing_params'].
 					"&nbsp;&nbsp;";
 					$out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
 				}
 			}
-			if ( $out ) {
+			if ( $out )
+			{
 				$this->_debug( 1, $out, 'Added guild', 'Failed');
 				print $out;
 			}
@@ -441,52 +491,78 @@
 			* fetch insert jobid, fill jobqueue
 			*
 		*/
-		function _checkEnv() {
+		function _checkEnv()
+		{
 			global $roster;
-			if ( $roster->pages[0] == 'ajax') {
+			if ( $roster->pages[0] == 'ajax')
+			{
 				$this->isMemberlist = $_POST['memberlist'];
-				if ( $_POST['scope'] == 'char') {
+				if ( $_POST['scope'] == 'char')
+				{
 					$this->isAuth = $this->_checkAuth('ApiSync_char_update_access');
-					} elseif ( $_POST['scope'] == 'guild') {
-					if ( isset( $_POST['page']) && $_POST['page'] == 'memberlist' ) {
+				}
+				elseif ( $_POST['scope'] == 'guild')
+				{
+					if ( isset( $_POST['page']) && $_POST['page'] == 'memberlist' )
+					{
 						$this->isAuth = $this->_checkAuth('ApiSync_guild_memberlist_update_access');
 						$this->isMemberList = 1;
-						} else {
+					}
+					else
+					{
 						$this->isAuth = $this->_checkAuth('ApiSync_guild_update_access');
 					}
-					} elseif ( $_POST['scope'] == 'realm') {
+				}
+				elseif ( $_POST['scope'] == 'realm')
+				{
 					$this->isAuth = $this->_checkAuth('ApiSync_realm_update_access');
-					} elseif ( $_POST['scope'] == 'util') {
-					if ( isset($_POST['util_type']) ) {
-						if ( $_POST['util_type'] == 'addguild' ) {
+				}
+				elseif ( $_POST['scope'] == 'util')
+				{
+					if ( isset($_POST['util_type']) )
+					{
+						if ( $_POST['util_type'] == 'addguild' )
+						{
 							$this->isMemberList = 1;
 						}
 					}
 					$this->isAuth = $this->_checkAuth('ApiSync_guild_add_access');
 				}
-				} elseif ( $roster->scope == 'char' ) {
+			}
+			elseif ( $roster->scope == 'char' )
+			{
 				$this->id = $roster->data['member_id'];
 				$this->title = "<span class=\"title_text\">". $roster->locale->act['ApiSyncTitle_Char']. "</span>\n";
 				$this->isAuth = $this->_checkAuth('ApiSync_char_update_access');
-				} elseif ( $roster->scope == 'guild' && isset( $roster->pages[2] ) && $roster->pages[2] == 'memberlist' ) {
+			}
+			elseif ( $roster->scope == 'guild' && isset( $roster->pages[2] ) && $roster->pages[2] == 'memberlist' )
+			{
 				$this->id = $roster->data['guild_id'];
 				$this->title = "<span class=\"title_text\">". $roster->locale->act['ApiSyncTitle_Guildmembers']. "</span>\n";
 				$this->isMemberList = 1;
 				$this->isAuth = $this->_checkAuth('ApiSync_guild_update_access');
-				} elseif ( $roster->scope == 'guild' ) {
+			} 
+			elseif ( $roster->scope == 'guild' )
+			{
 				$this->id = $roster->data['guild_id'];
 				$this->title = "<span class=\"title_text\">". $roster->locale->act['ApiSyncTitle_Guild']. "</span>\n";
 				$this->isAuth = $this->_checkAuth('ApiSync_guild_memberlist_update_access');
-				} elseif ( $roster->scope == 'realm' ) {
+			} 
+			elseif ( $roster->scope == 'realm' )
+			{
 				$this->id = $roster->data['server'];
 				$this->title = "<span class=\"title_text\">". $roster->locale->act['ApiSyncTitle_Realm']. "</span>\n";
 				$this->isAuth = $this->_checkAuth('ApiSync_realm_update_access');
-				} elseif ( $roster->scope == 'util' ) {
+			} 
+			elseif ( $roster->scope == 'util' )
+			{
 				$this->title = "<span class=\"title_text\">". $roster->locale->act['ApiSyncTitle_Guildmembers']. "</span>\n";
 				$this->id = isset($_POST['job_id']) ? $_POST['job_id'] : null;
 				//$this->isMemberList = 1;
 				$this->isAuth = $this->_checkAuth('ApiSync_guild_add_access');
-				} else {
+			}
+			else
+			{
 				$this->_debug( 0, array( '$_GET' => $_GET, '$_POST' => $_POST, 'scope' => $roster->scope, 'data' => $roster->data ), 'Checking environment', 'Failed');
 				return;
 			}
@@ -497,25 +573,31 @@
 			* fetch insert jobid, fill jobqueue
 			*
 		*/
-		function _prepareUpdate( $id = 0, $name = false , $server = false , $region = false ) {
+		function _prepareUpdate( $id = 0, $name = false , $server = false , $region = false )
+		{
 			global $roster, $addon;
 			
-			if ( ! $id ) {
+			if ( ! $id )
+			{
 				$id = isset($roster->data['member_id']) ? $roster->data['member_id'] : 0;
 			}
-			if ( ! $name ) {
+			if ( ! $name )
+			{
 				$name = isset($roster->data['name']) ? $roster->data['name'] : false;
 			}
-			if ( ! $server ) {
+			if ( ! $server )
+			{
 				$server = isset($roster->data['server']) ? $roster->data['server'] : false;
 			}
-			if ( ! $region ) {
+			if ( ! $region )
+			{
 				$region = isset($roster->data['region']) ? $roster->data['region'] : false;
 			}
 			
 			$this->time_started = gmdate('Y-m-d H:i:s');
 			
-			if ( $roster->scope == 'char' || $roster->scope == 'util' ) {
+			if ( $roster->scope == 'char' || $roster->scope == 'util' )
+			{
 				
 				$this->members = array(
 				array(
@@ -525,16 +607,18 @@
 				'guild_name' => $roster->data['guild_name'] ? $roster->data['guild_name'] : '',
 				'server' => $server,
 				'region' => $region ) );
-				} elseif ( $roster->scope == 'guild' ) {
-				
+			}
+			elseif ( $roster->scope == 'guild' )
+			{
 				$this->members = $this->_getGuildMembersToUpdate();
-				} elseif ( $roster->scope == 'realm' ) {
-				
+			}
+			elseif ( $roster->scope == 'realm' )
+			{
 				$this->members = $this->_getRealmMembersToUpdate();
 			}
 			
-			if ( array_keys( $this->members ) ) {
-				
+			if ( array_keys( $this->members ) )
+			{
 				$this->jobid = $this->_insertJobID($this->time_started);
 				$this->_insertMembersToJobqueue($this->jobid, $this->members);
 				$this->_debug( 1, true, 'Prepared character update job', 'OK');
@@ -548,47 +632,32 @@
 			* fetch insert jobid, fill jobqueue
 			*
 		*/
-		function _prepareUpdateMemberlist( $id = 0, $name = false , $server = false , $region = false ) {
+		function _prepareUpdateMemberlist( $id = 0, $name = false , $server = false , $region = false )
+		{
 			global $roster, $addon;
 			
-			if ( ! $id ) {
+			if ( ! $id )
+			{
 				$id = $roster->data['guild_id'];
 			}
-			if ( ! $name ) {
+			if ( ! $name )
+			{
 				$name = $roster->data['guild_name'];
 			}
-			if ( ! $server ) {
+			if ( ! $server )
+			{
 				$server = $roster->data['server'];
 			}
-			if ( ! $region ) {
+			if ( ! $region )
+			{
 				$region = $roster->data['region'];
 			}
-			
-			
 			$this->time_started = gmdate('Y-m-d H:i:s');
-			
-			
-			$this->members = array();
-			foreach ($this->ApiSync->data['members'] as $id => $member )
-			{
-				$this->members[] = array(
-				'name' => $member['character']['name'],
-				'member_id' => false,
-				'guild_id' => $id,
-				'guild_name' => $name,
-				'server' => $member['character']['realm'],
-				'region' => $region );
-			}
-			
-			if ( array_keys( $this->members ) ) {
-				
-				$this->jobid = $this->_insertJobID($this->time_started);
-				$this->_insertMembersToJobqueue($this->jobid, $this->members);
-				$this->_debug( 1, true, 'Prepared memberlist update job', 'OK');
-				return true;
-			}
-			$this->_debug( 1, false, 'Prepared memberlist update job', 'Failed');
-			return false;
+			$this->_checkGuildExist( $name, $server, $region );
+			$this->ApiSync->_getGuildInfo();
+			$this->log = $this->ApiSync->synchGuildbob( $server, $memberId = 0, $name, $region, null);
+			$this->is_listupdate = 1;
+			return true;
 		}
 		
 		/**
@@ -596,7 +665,8 @@
 			*
 			* @param int $jobid
 		*/
-		function _nothingToDo() {
+		function _nothingToDo()
+		{
 			global $roster;
 			
 			$html = '<span class="title_text">&nbsp;&nbsp;'. $roster->locale->act['nothing_to_do']. '&nbsp;&nbsp;</span>';
@@ -612,7 +682,8 @@
 			*
 			* @param int $jobid
 		*/
-		function _showStatus( $jobid = 0, $memberlist = false ) {
+		function _showStatus( $jobid = 0, $memberlist = false )
+		{
 			global $roster, $addon;
 			
 			$jscript = "<script type=\"text/javascript\" src=\"". $addon['url_path']. "js/ApiSync.js\"></script>\n";
@@ -645,22 +716,22 @@
 			$style = 'syellow';
 			
 			$roster->tpl->assign_vars(array(
-			'IMAGE_PATH' => $addon['image_path'],
-			
-			'USE_EFFECTS' => $addon['config']['ApiSync_pic_effects'],
-			
-			'LINK' => ( $this->link ? $this->link : makelink() ),
-			'DEBUG' => $addon['config']['ApiSync_xdebug_php'] ? "<input type=\"hidden\" name=\"XDEBUG_SESSION_START\" value=\"". $addon['config']['ApiSync_xdebug_idekey']. "\" />" : "",
-			'STATUSHIDDEN' => $status,
-			'JOB_ID' => $this->jobid,
-			'DISPLAY' => $display,
-			'ICON' => $icon,
-			'START_BORDER' => border( $style, 'start', '', '848px' ),
-			'STYLE' => $style,
-			'TITLE' => $this->title,
-			'PROGRESSBAR' => $this->_getProgressBar($this->done, $this->total),
-			)
-			);
+				'IMAGE_PATH' => $addon['image_path'],
+				
+				'USE_EFFECTS' => $addon['config']['ApiSync_pic_effects'],
+				
+				'LINK' => ( $this->link ? $this->link : makelink() ),
+				'DEBUG' => $addon['config']['ApiSync_xdebug_php'] ? "<input type=\"hidden\" name=\"XDEBUG_SESSION_START\" value=\"". $addon['config']['ApiSync_xdebug_idekey']. "\" />" : "",
+				'STATUSHIDDEN' => $status,
+				'JOB_ID' => $this->jobid,
+				'MEMBERSLIST' => $this->is_listupdate,
+				'DISPLAY' => $display,
+				'ICON' => $icon,
+				'START_BORDER' => border( $style, 'start', '', '848px' ),
+				'STYLE' => $style,
+				'TITLE' => $this->title,
+				'PROGRESSBAR' => $this->_getProgressBar($this->done, $this->total),
+			));
 			
 			if (isset($this->active_member['name']) || isset($this->active_member['guild_name']))
 			{
@@ -674,84 +745,85 @@
 			if ( !$memberlist ) 
 			{
 				$roster->tpl->assign_block_vars('head_col', array(
-				'HEAD_TITLE' => $roster->locale->act['name'], 
-				'HEAD_WIDTH' => '90px'
-				)
-				);
+						'HEAD_TITLE' => $roster->locale->act['name'], 
+						'HEAD_WIDTH' => '120px'
+				));
 			}
 			
 			$roster->tpl->assign_block_vars('head_col', array(
-			'HEAD_TITLE' => $roster->locale->act['guild']." ".$roster->locale->act['name'], 
-			'HEAD_WIDTH' => '100px'
-			)
-			);
+					'HEAD_TITLE' => $roster->locale->act['guild']." ".$roster->locale->act['name'], 
+					'HEAD_WIDTH' => '140px'
+			));
+			
 			if ( $memberlist ) 
 			{
 				$roster->tpl->assign_block_vars('head_col', array(
-				'HEAD_TITLE' => $roster->locale->act['guild_short']."Info", 
-				'HEAD_WIDTH' => '50px'
-				)
-				);
+					'HEAD_TITLE' => $roster->locale->act['guild_short']."Info", 
+					'HEAD_WIDTH' => '55px'
+				));
 			}
 			
 			if ( ! $memberlist ) 
 			{
 				$roster->tpl->assign_block_vars('head_col', array(
-				'HEAD_TITLE' => $roster->locale->act['character_short'], 
-				'HEAD_WIDTH' => '40px'
-				)
-				);
+					'HEAD_TITLE' => $roster->locale->act['character_short'], 
+					'HEAD_WIDTH' => '55px'
+				));
 				
 				$roster->tpl->assign_block_vars('head_col', array(
-				'HEAD_TITLE' => $roster->locale->act['skill_short'], 
-				'HEAD_WIDTH' => '40px'
-				)
-				);
+					'HEAD_TITLE' => $roster->locale->act['skill_short'], 
+					'HEAD_WIDTH' => '55px'
+				));
 				
 				$roster->tpl->assign_block_vars('head_col', array(
-				'HEAD_TITLE' => $roster->locale->act['reputation_short'],
-				'HEAD_WIDTH' => '40px'
-				)
-				);
+					'HEAD_TITLE' => $roster->locale->act['reputation_short'],
+					'HEAD_WIDTH' => '55px'
+				));
 				
 				$roster->tpl->assign_block_vars('head_col', array(
-				'HEAD_TITLE' => $roster->locale->act['equipment_short'],
-				'HEAD_WIDTH' => '45px'
-				)
-				);
+					'HEAD_TITLE' => $roster->locale->act['equipment_short'],
+					'HEAD_WIDTH' => '55px'
+				));
 				
 				$roster->tpl->assign_block_vars('head_col', array(
-				'HEAD_TITLE' => $roster->locale->act['talents_short'],
-				'HEAD_WIDTH' => '40px'
-				)
-				);
+					'HEAD_TITLE' => $roster->locale->act['talents_short'],
+					'HEAD_WIDTH' => '55px'
+				));
 			}
 			
 			$roster->tpl->assign_block_vars('head_col', array(
-			'HEAD_TITLE' => $roster->locale->act['started'],
-			'HEAD_WIDTH' => '110px'
-			)
-			);
+				'HEAD_TITLE' => $roster->locale->act['started'],
+				'HEAD_WIDTH' => '110px'
+			));
 			
 			$roster->tpl->assign_block_vars('head_col', array(
-			'HEAD_TITLE' => $roster->locale->act['finished'],
-			'HEAD_WIDTH' => '110px'
-			)
-			);
+				'HEAD_TITLE' => $roster->locale->act['finished'],
+				'HEAD_WIDTH' => '110px'
+			));
 			
 			$roster->tpl->assign_block_vars('head_col', array(
-			'HEAD_TITLE' => "Log",
-			'HEAD_WIDTH' => '30px' 
-			)
-			);
+				'HEAD_TITLE' => "Log",
+				'HEAD_WIDTH' => '30px' 
+			));
 			
 			$l = 1;
 			
 			$roster->tpl->assign_var('CHARLIST', !$memberlist);
 			$roster->tpl->assign_var('MEMBERLIST', $memberlist);
 			
-			foreach ( $members as $member ) {
-				
+
+			if ($this->is_listupdate == 1)
+			{
+				$roster->tpl->assign_block_vars('body_rowx', array(
+					'LOG' => $this->log
+				));
+				$roster->tpl->assign_block_vars('body_row', array(
+					'LINE_VALUE' => $roster->data['guild_name'], 
+					'WIDTH' => '120px'
+				));
+			}
+			foreach ( $members as $member ) 
+			{
 				$array = array();
 				$array['COLOR'] = $roster->switch_row_class();
 				$array['ASID'] = $memberlist ? $member['guild_id'] : $member['member_id'];
@@ -789,10 +861,68 @@
 					} else {
 					$array['LOG'] = "<img src=\"". $roster->config['theme_path'] . "/images/no_note.gif\" alt=\"\" />";
 				}
+				$roster->tpl->assign_block_vars('body_row', array(
+					'LINE_VALUE' => $array['NAME'], 
+					'WIDTH' => '120px'
+			));
+			$roster->tpl->assign_block_vars('body_row.line', array(
+					'LINE_VALUE' => $array['GUILD'], 
+					'WIDTH' => '140px'
+			));
+			if ( $memberlist ) 
+			{
+				$roster->tpl->assign_block_vars('body_row.line', array(
+					'LINE_VALUE' => $array['GUILD_INFO'], 
+					'WIDTH' => '70px'
+				));
+			}
+			echo $this->is_listupdate.' - ';
+			if ($this->is_listupdate == 1)
+			{echo 'list update';
+				$roster->tpl->assign_block_vars('body_rowx', array(
+					'LOG' => $this->log
+				));
+			}
+			if ( ! $memberlist ) 
+			{
+				$roster->tpl->assign_block_vars('body_row.line', array(
+					'LINE_VALUE' => $array['CHARACTER_INFO'], 
+					'WIDTH' => '55px'
+				));
+				$roster->tpl->assign_block_vars('body_row.line', array(
+					'LINE_VALUE' => $array['SKILL_INFO'], 
+					'WIDTH' => '55px'
+				));
+				$roster->tpl->assign_block_vars('body_row.line', array(
+					'LINE_VALUE' => $array['REPUTATION_INFO'],
+					'WIDTH' => '55px'
+				));
+				$roster->tpl->assign_block_vars('body_row.line', array(
+					'LINE_VALUE' => $array['EQUIPMENT_INFO'],
+					'WIDTH' => '55px'
+				));
+				$roster->tpl->assign_block_vars('body_row.line', array(
+					'LINE_VALUE' => $array['TALENT_INFO'],
+					'WIDTH' => '55px'
+				));
+			}
+			$roster->tpl->assign_block_vars('body_row.line', array(
+				'LINE_VALUE' => $array['STARTTIMEUTC'],
+				'WIDTH' => '110px'
+			));
+			$roster->tpl->assign_block_vars('body_row.line', array(
+				'LINE_VALUE' => $array['STOPTIMEUTC'],
+				'WIDTH' => '110px'
+			));
+			$roster->tpl->assign_block_vars('body_row.line', array(
+				'LINE_VALUE' =>$array['LOG'],
+				'WIDTH' => '30px' 
+			));
 				
 				
-				$roster->tpl->assign_block_vars('body_row', $array );
-				$l++;
+				
+				//$roster->tpl->assign_block_vars('body_row', $array );
+				//$l++;
 			}
 			
 			$roster->tpl->assign_var('STOP_BORDER', border( 'syellow', 'end' ));
@@ -800,7 +930,7 @@
 			
 			$roster->tpl->set_filenames(array(
 			'status_head' => $addon['basename'] . '/status_head.html',
-			'status_body' => $addon['basename'] . '/status_body.html',
+			'status_body' => $addon['basename'] . '/body.html',
 			));
 			
 			$roster->tpl->display('status_head');
@@ -1284,7 +1414,7 @@
 			function nextMember() {
 			document.linker.submit();
 			}
-			self.setTimeout(\'nextMember()\', '. $reloadTime. ');
+			self.setTimeout(\'nextMember()\', '. ($reloadTime). ');
 			//-->
 			</script>
 			';		   
