@@ -336,14 +336,13 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 			include_once(ROSTER_LIB . 'update.lib.php');
 			$update = new update;
 			$update->fetchAddonData();
-
-			$update->uploadData['wowroster']['cpProfile'][$server]['Guild'][$data['GuildName']] = $data;
-			echo $update->processGuildRoster();
+			$update->uploadData['wowroster']['cpProfile'][$server]['Guild'][ $memberName] = $this->data;
+			$x = $update->processGuildRoster();
 			//$tmp = explode( "\n", $this->message);
 			//$this->message = implode( '', $tmp);
-			echo ''.$this->message.'<br>';
+			$x .= ''.$this->message.'<br>';
 			$this->_debug( 1, true, 'Synced armory data '. $this->memberName. ' with roster',  'OK' );
-			return true;
+			return $x;//true;
    	// }
    	// $this->_debug( 0, false, 'Synced armory data '. $this->memberName. ' with roster',  'Failed' );
    	// return false;
@@ -390,17 +389,19 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 		//print_r($content);
 
 			$this->data['Ranks'] = $this->_getGuildRanks( $this->guildId );
-			$this->data['timestamp']['init']['datakey'] = $this->region;
+			$this->data['timestamp']['init']['datakey'] = $roster->data['region'];
 			$this->data['timestamp']['init']['TimeStamp'] = time();
 			$this->data['timestamp']['init']['Date'] = date('Y-m-d H:i:s');
 			$this->data['timestamp']['init']['DateUTC'] = gmdate('Y-m-d H:i:s');
 
-			$this->data['GPprovider'] = "ApiSync";
+			$this->data['GPprovider'] = "ApiSyncGuild";
 			$this->data['FactionEn'] = $roster->locale->act['id_to_faction'][$content['side']];
 			$this->data['Faction'] = $roster->locale->act['id_to_faction'][$content['side']];
 			$this->data["DBversion"] = '3.1';
 			$this->data["GPversion"] = $roster->config['minGPver'];
 			$this->data['name'] = $guild_name;
+			$this->data['Server'] = $this->datas['realm'];
+			$this->data['GuildName'] = $guild_name;
 			$this->data['GuildLevel'] = $content['level'];
 			$this->data['NumMembers'] = count($content['members']);
 			$this->data['GuildLevel'] = $content['level'];
@@ -414,11 +415,11 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 			$month = 30 * $day;
 			$year = 365 * $day;
 			foreach ( $content['members'] as $id => $member ) {
-					//echo $roster->locale->wordings['enUS']['id_to_class'][$member['classid']];
+					//echo $roster->locale->act['enUS']['id_to_class'][$member['classid']];
 
 					$player['AchRank'] = '';
 					$player['Zone'] = "";
-					$player['Class'] = $roster->locale->wordings['enUS']['id_to_class'][$member['character']['class']];
+					$player['Class'] = $roster->locale->act['id_to_class'][$member['character']['class']];
 					$player['ClassId'] = $member['character']['class'];
 					$player['Name'] = $member['character']['name'];
 					$player['Level'] = $member['character']['level'];
@@ -537,9 +538,9 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 						||
 						( isset($guildbank) && strstr($member[$guildbank['config']['banker_fieldname']], $guildbank['config']['banker_rankname']) )
 						) {
-						echo $roster->locale->wordings['enUS']['id_to_class'][$member['classid']];
+						echo $roster->locale->act['enUS']['id_to_class'][$member['classid']];
 						$player['name'] = $member['name'];
-						$player['Class'] = $roster->locale->wordings['enUS']['id_to_class'][$member['classid']];//$member['class'];
+						$player['Class'] = $roster->locale->act['enUS']['id_to_class'][$member['classid']];//$member['class'];
 						$player['Level'] = $member['level'];
 						$player['Rank'] = $member['guild_rank'];
 						$player['Note'] = $member['note'];
@@ -579,12 +580,9 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 	{
 		global $roster, $addon;
 		
-		include_once(ROSTER_LIB . 'armory.class.php');
-		$armory = new RosterArmory;
-		
-		$content = $roster->api->Guild->getGuildInfo($server,$name,'?fields=members');
+		$content = $roster->api->Guild->getGuildInfo($server,$name,'1');
 		$this->datas = $content;
-		if ( $this->_xcheckarray( $content, array( 'members', 'emblem' ) ) ) //_checkContent( $content, array( 'guildInfo', 'guild' ) ) )
+		if ( is_array( $content['members']) ) //_checkContent( $content, array( 'guildInfo', 'guild' ) ) )
 		{
 			$this->_debug( 1, true, 'Checked guild on existence',  'OK' );
 			return true;
@@ -686,7 +684,7 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
   				$this->data["Guild"]["Title"] = '';
   				$this->data["Guild"]["Rank"] = '';
   				
-				$this->data["CPprovider"] = 'ApiSync';
+				$this->data["CPprovider"] = 'ApiSyncChar';
   				$this->data["CPversion"] = $roster->config['minCPver'];//'2.6.0';
 
   				$this->data["Honor"]["Lifetime"]["HK"] = ''.$char['pvp']['totalHonorableKills'].'';
@@ -942,7 +940,8 @@ function return_gender($genderid) {
  	* fetches character equipment info
  	*
  	*/
-	function _getEquipmentInfo( $equip = array() ) {
+	function _getEquipmentInfo( $equip = array() )
+	{
 		global $roster, $addon;
 
 		foreach($equip as $slot => $item) 
@@ -955,10 +954,11 @@ function return_gender($genderid) {
 		//echo '</pre>';
 			// prepare some data
 			$enchant =  $gem0 =  $gem1 =  $gem2 = $es = $set = $reforge = $suffex = $seed = null;
-			$gam['enchant']=$gam['enchant']=$gam['reforge']=$gam['suffix']=$gam['seed']=$gam['set']=$gam['gem0']=$gam['gem1']=$gam['gem2']=$gam['extraSocket']=null;
+			$gam['enchant']=$gam['enchant']=$gam['reforge']=$gam['suffix']=$gam['seed']=$gam['set']=null;
+			$gam['gem0']=$gam['gem1']=$gam['gem2']=$gam['extraSocket']=null;
 			$tip = '';//str_replace($string, '', $x);
 			$gam = null;
-			//$this->gemx = array();
+			$this->gemx = array();
 			$gam = array();
 			foreach ($item['tooltipParams'] as $ge => $id)
 			{
@@ -989,30 +989,36 @@ function return_gender($genderid) {
 				}
 				$set = preg_replace('/,$/', '', $e);
 			}
-			if (isset($gam['gem0']))
+			
+			if (isset($item['tooltipParams']['gem0']))
 			{
-				$gem0 = $gam['gem0'] ? $gam['gem0'] : '0';
-				if (!isset($this->gemx[$gem0]))
-				{
-					$this->gemx[$gem0] = $roster->api->Data->getItemInfo($gem0);
-				}
+				$gem0 = $item['tooltipParams']['gem0'];
+				$g0 = $roster->api->Data->getItemInfo($item['tooltipParams']['gem0']);
+				$this->gemx['gem0'] = $g0;
+				$this->gemx['gem0']['Tooltip'] = $roster->db->escape($g0['name']."<br>".$g0['gemInfo']['bonus']['name']."<br>".$g0['description']);
+				$this->gemx['gem0']['gem_bonus'] = $roster->db->escape($g0['gemInfo']['bonus']['name']);
+				$this->gemx['gem0']['gem_color'] = strtolower($g0['gemInfo']['type']['type']);
 			}
-			if (isset($gam['gem1']))
+			if (isset($item['tooltipParams']['gem1']))
 			{
-				$gem1 = $gam['gem1'] ? $gam['gem1'] : '0';
-				if (!isset($this->gemx[$gem1]))
-				{
-					$this->gemx[$gem1] = $roster->api->Data->getItemInfo($gem1);
-				}
+				$gem1 = $item['tooltipParams']['gem1'];
+				$g1 = $roster->api->Data->getItemInfo($item['tooltipParams']['gem1']);
+				$this->gemx['gem1'] = $g1;
+				$this->gemx['gem1']['Tooltip'] = $roster->db->escape($g1['name']."<br>".$g1['gemInfo']['bonus']['name']."<br>".$g1['description']);
+				$this->gemx['gem1']['gem_bonus'] = $roster->db->escape($g1['gemInfo']['bonus']['name']);
+				$this->gemx['gem1']['gem_color'] = strtolower($g1['gemInfo']['type']['type']);
 			}
-			if (isset($gam['gem2']))
+			if (isset($item['tooltipParams']['gem2']))
 			{
-				$gem2 = $gam['gem2'] ? $gam['gem2'] : '0';
-				if (!isset($this->gemx[$gem2]))
-				{
-					$this->gemx[$gem2] = $roster->api->Data->getItemInfo($gem2);
-				}
+				$gem2 = $item['tooltipParams']['gem2'];
+				$g2 = $roster->api->Data->getItemInfo($item['tooltipParams']['gem2']);
+				$this->gemx['gem2'] = $g2;
+				$this->gemx['gem2']['Tooltip'] = $roster->db->escape($g2['name']."<br>".$g2['gemInfo']['bonus']['name']."<br>".$g2['description']);
+				$this->gemx['gem2']['gem_bonus'] = $roster->db->escape($g2['gemInfo']['bonus']['name']);
+				$this->gemx['gem2']['gem_color'] = strtolower($g2['gemInfo']['type']['type']);
 			}
+			$this->_insertGems();
+	
 			if (isset($gam['extraSocket']))
 			{
 				$es = $gam['extraSocket'] ? true : false;
@@ -1038,7 +1044,6 @@ function return_gender($genderid) {
 			$slot = 'Trinket1';
 			}
 			
-			
 			$item_api = $roster->api->Data->getItemInfo($item['id']);
 			$this->data["Equipment"][$slot] = array();
 			$this->data["Equipment"][$slot]['Item'] = $item['id'];
@@ -1049,7 +1054,6 @@ function return_gender($genderid) {
 			$this->data["Equipment"][$slot]['Color'] = $this->_getItemColor($item['quality']);
 			// api gen tooltip some issues may occure
 			// woraroud itemapi makes html tooltips roster dont like them so we remove them
-			
 			$tx =  $roster->api->Item->item($item_api,$item,$this->gemx);
 			$tt = $this->processtooltips($tx);
 			//echo '<br><hr><br>'.$tt.'<br><hr><br>';
@@ -1062,42 +1066,20 @@ function return_gender($genderid) {
 			$this->data["Equipment"][$slot]['Item'] .= ":". "0"; // ???
 			$this->data["Equipment"][$slot]['Item'] .= ":". "0"; // ???
 			$this->data["Equipment"][$slot]['Item'] .= ":". $seed;
-			//*
-			if ( isset($item['tooltipParams']['gem0']) ) 
-  			{
-				$t = 0;
-				//socketInfo] => Array([sockets
-				if( $gem0 || $gem1 || $gem2 )
+				// gems !!!!
+				$this->data["Equipment"][$slot]["Gem"]= array();
+				foreach($this->gemx as $gid => $gd)
 				{
-					$gems = array($gem0,$gem1,$gem2);
-					$i = 1;
-					//print_r($gems);
-					foreach( $gems as $gem )
-					{
-					//echo $gem.'<br>';
-						if ( isset($gem))// != '0'  ) 
-						{
-							//$this->data["Equipment"][$slot]['Gem'][$t]["gemID"] = "4033",
-							//echo '---'.$gem.'<br>';
-							$item_api = $this->gemx[$gem];
-							/*
-							$this->data["Equipment"][$slot]['Gem'][$t]["Name"] = $item_api['name'];
-							$this->data["Equipment"][$slot]['Gem'][$t]["Link"] = "|cffa335ee|Hitem:52258:0:0:0:0:0:0:0:85:0|h[".$item_api['name']."]|h|r";
-							*/
-							$tx =  $roster->api->Item->item($item_api,$item,$this->gemx);
-							$tooltip = $this->processtooltips($tx);
-							$this->gemx[$gem]['Tooltip'] = $roster->db->escape($tooltip);
-							/*
-							$this->data["Equipment"][$slot]['Gem'][$t]["Color"] = strtolower($item_api['gemInfo']['type']['type']);
-							$this->data["Equipment"][$slot]['Gem'][$t]["Tooltip"] = $tooltip;
-							$this->data["Equipment"][$slot]['Gem'][$t]["Icon"] = $item_api['icon'];
-							$this->data["Equipment"][$slot]['Gem'][$t]["Item"] = $item_api['id'];*/
-						}
-					$t++;
-					}
-
+					$gm = array();
+					$gm["gemID"] = $gd['id'];
+					$gm["Name"] = $gd['name'];
+					$gm["Link"] = "|cff".$this->_getItemColor($gd['quality'])."|Hitem:".$gd['id'].":0:0:0:0:0:0:0:".$gd['itemLevel'].":0|h[".$gd['name']."]|h|r";
+					$gm["Color"] = $this->_getItemColor($gd['quality']);
+					$gm["Tooltip"] = $gd['Tooltip'];
+					$gm["Icon"] = $gd['icon'];
+					$gm["Item"] = $gd['id'];
+					$this->data["Equipment"][$slot]["Gem"][] = $gm;
 				}
-			}
 			}
 					
 			$this->status['equipmentInfo'] += 1;
@@ -1122,9 +1104,9 @@ function return_gender($genderid) {
 			$query ="REPLACE INTO `roster_gems` SET 
 			`gem_id` = '".$info['id']."', 
 			`gem_name` = '".addslashes($info['name'])."', 
-			`gem_color` = '".strtolower($info['gemInfo']['type']['type'])."', 
+			`gem_color` = '".$info['gem_color']."', 
 			`gem_tooltip` = '".$info['Tooltip']."', 
-			`gem_bonus` = '".$info['gemInfo']['bonus']['name']."', 
+			`gem_bonus` = '".$info['gem_bonus']."', 
 			`gem_socketid` = '".$info['id']."', 
 			`gem_texture` = '".$info['icon']."', 
 			`locale` = '".$roster->config['locale']."';";
@@ -1545,88 +1527,6 @@ function build_talenttree_data( $class )
 		$userAgent .= '; rv:1.8.1.1) Gecko/20061204 Firefox/2.0.0.1';
 		$armory->setUserAgent($userAgent);
 
-	}
-
-	/**
- 	* helper function to get classes for content
- 	*
- 	* @param string $class
- 	* @param string $tree
- 	* @return string
- 	*/
-	function _parseData ( $array = array() ) {
-		$this->datas = array();
-		$this->_makeSimpleClass( $array );
-		$this->_debug( 3, true, 'Parsed XML data', 'OK' );
-		return $this->datas[0];
-		$this->_debug( 3, '', 'Parsed XML data', 'OK' );
-	}
-
-	function _makeSimpleClass ( $array = array() ) {
-
-		$tags = array_keys( $array );
-		foreach ( $array as $tag => $content ) {
-			foreach ( $content as $leave ) {
-				$this->_initClass( $tag, $leave['attribs'] );
-				$this->datas[count($this->datas)-1]->setProp("_CDATA", $leave['data']);
-				if ( array_keys($leave['child']) ) {
-					$this->_makeSimpleClass( $leave['child'] );
-				}
-				$this->_finalClass( $tag );
-			}
-		}
-		$this->_debug( 3, '', 'Made simple class', 'OK' );
-	}
-
-	/**
- 	* helper function initialise a simpleClass Object
- 	*
- 	* @param string $class
- 	* @param string $tree
- 	* @return string
- 	*/
-	function _initClass( $tag, $attribs = array() ) {
-		$node = new SimpleClass();
-		$node->setArray($attribs);
-		$node->setProp("_TAGNAME", $tag);
-		$this->datas[] = $node;
-		$this->_debug( 3, '', 'Initialized simple class', 'OK' );
-	}
-
-
-	/**
- 	* helper function finalize a simpleClass Object
- 	*
- 	* @param string $class
- 	* @param string $tree
- 	* @return string
- 	*/
-	function _finalClass( $tag, $val = array() ) {
-		if (count($this->datas) > 1) {
-			$child = array_pop($this->datas);
-
-			if (count($this->datas) > 0) {
-				$parent = &$this->datas[count($this->datas)-1];
-				$tag = $child->_TAGNAME;
-
-				if ($parent->hasProp($tag)) {
-					if (is_array($parent->$tag)) {
-						//Add to children array
-						$array = &$parent->$tag;
-						$array[] = $child;
-					} else {
-						//Convert node to an array
-						$children = array();
-						$children[] = $parent->$tag;
-						$children[] = $child;
-						$parent->$tag = $children;
-					}
-				} else {
-					$parent->setProp($tag, $child);
-				}
-			}
-		}
-		$this->_debug( 3, '', 'Finalized simple class', 'OK' );
 	}
 
 	/**
@@ -2110,115 +2010,19 @@ function build_talenttree_data( $class )
 			return $array;
 		}
 	}
-	
 
-	function clean_tooltip($tip)
-	{
-  		global $roster, $addon;
-
-  		$f = str_replace('<!DOCTYPE table PUBLIC \"<\/i>-//W3C//DTD XHTML 1.0 Transitional//EN\"<\/i> \"<\/i>http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"<\/i>>','',$tip);
-	   	$f = str_replace('<\/i>' , '', $f);
-  		$content = str_replace("\n", "", $f );
-  		$content = str_replace('<div id="XssName'.$itemid.'" style="display:none">'.$name.'</div>', "\t", $content );
-  		$content = str_replace('<div id="XssIcon'.$itemid.'" style="display:none">'.$icon.'</div>', "\t", $content );
-  		$content = str_replace('<span class="tooltipRight">', "\t", $content );
-  		$content = preg_replace('/<img class="socketImg p".*?>(.*?)<br>/', '|cffffffff${1}|r<br>', $content );
-  		$content = str_replace("&nbsp;", " ", $content );
-  		$content = str_replace("<br/>", "%__BRTAG%", $content );
-  		$content = str_replace("<br>", "%__BRTAG%", $content );
-  		$content = strip_tags( $content );
-  		$content = str_replace("%__BRTAG%", "\n", $content );
-  		/// $content = str_replace($roster->locale->act['bindings']['bind_on_pickup'], $roster->locale->act['bindings']['bind'], $content);
-		//$content = str_replace($roster->locale->act['bindings']['bind_on_equip'], $roster->locale->act['bindings']['bind'], $content);
-		$string = array('<!DOCTYPE table PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">','<table border="0" cellpadding="0" cellspacing="0">','<tbody>','<span class="">','</span>','</tr>','</td>','</table>','<tr>','<td>','<table>','<td valign="top">','<div class="myTable">','</tbody>');
-		$tp = str_replace($string, '', $content);
-	  
-	
-		return $tp;
-	}	
-	
-			function get_tooltip($itemid,$user='',$server='',$name='',$icon='')
-			{
-				  global $roster, $addon;
-
-	  
-				  $filename = $addon['dir'] . 'cache\\'.$itemid.'-US-tooltip.html';
-
-				  $lang = 'US';
-
-				  $url = 'http://www.wowarmory.com/item-tooltip.xml?i='.$itemid.'&n='.$user.'&r='.$server.'';
-
-				  if (function_exists('curl_init'))
-				  {
-						$ch = curl_init();
-						curl_setopt ($ch, CURLOPT_URL, $url);
-						curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-						curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, '10');
-						curl_setopt ($ch, CURLOPT_HEADER, 0);
-						curl_setopt ($ch, CURLOPT_HTTPHEADER, array("Accept-Language: ".$lang)); 
-		
-						$f = curl_exec($ch);
-						curl_close($ch);
-				  } 
-				  elseif(ini_get('allow_url_fopen') == 1) 
-				  {
-						$contextOptions = array('http'=>array('method'=>"GET",'header'=>"Accept-language: ".$lang."\r\n"));
-						$context = stream_context_create($contextOptions);
-						$f = '';
-						$handle = fopen($url, 'r', false, $context);
-						while(!feof($handle))
-						{
-							  $f .= fgets($handle);
-						}
-						fclose ($handle);
-						return $f;
-				  }
-			 
-				  elseif(function_exists('stream_context_create') && function_exists('file_get_contents')) 
-				  {
-						$contextOptions = array('http'=>array('method'=>"GET",'header'=>"Accept-language: ".$lang."\r\n"));
-						$context = stream_context_create($contextOptions);
-						$f = file_get_contents($url,false, $context);
-				  } 
-				  else 
-				  {
-						die('There couldn\'t be found any function on your server, which work!<br /><br />Try this functions:<br />- curl<br />- file_get_contents with stream_context_create<br />- fopen with stream_context_create<br /><br />Ask your hoster to activate these functions.');
-				  }
-	
-				  $f = str_replace('<!DOCTYPE table PUBLIC \"<\/i>-//W3C//DTD XHTML 1.0 Transitional//EN\"<\/i> \"<\/i>http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"<\/i>>','',$f);
-			   $f = str_replace('<\/i>' , '', $f);
-				  $content = str_replace("\n", "", $f );
-				  $content = str_replace('<div id="XssName'.$itemid.'" style="display:none">'.$name.'</div>', "\t", $content );
-				  $content = str_replace('<div id="XssIcon'.$itemid.'" style="display:none">'.$icon.'</div>', "\t", $content );
-				  $content = str_replace('<span class="tooltipRight">', "\t", $content );
-				  $content = preg_replace('/<img class="socketImg p".*?>(.*?)<br>/', '|cffffffff${1}|r<br>', $content );
-				  $content = str_replace("&nbsp;", " ", $content );
-				  $content = str_replace("<br/>", "%__BRTAG%", $content );
-				  $content = str_replace("<br>", "%__BRTAG%", $content );
-				  $content = strip_tags( $content );
-				  $content = str_replace("%__BRTAG%", "\n", $content );
-				  /// $content = str_replace($roster->locale->act['bindings']['bind_on_pickup'], $roster->locale->act['bindings']['bind'], $content);
-				  //$content = str_replace($roster->locale->act['bindings']['bind_on_equip'], $roster->locale->act['bindings']['bind'], $content);
-				  $string = array('<!DOCTYPE table PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">','<table border="0" cellpadding="0" cellspacing="0">','<tbody>','<span class="">','</span>','</tr>','</td>','</table>','<tr>','<td>','<table>','<td valign="top">','<div class="myTable">','</tbody>');
-				  $tip = str_replace($string, '', $content);
-	  
-	
-				  return $tip;
-
-		 }
-	
-	  function arraydisplay($array)
+	function arraydisplay($array)
 	{
 		 ////echo '<pre>';
 		 ////print_r($array);
 	}
 	
-function setProp($propName, $propValue) {
+	function setProp($propName, $propValue) {
 		$this->$propName = $propValue;
 		if (!in_array($propName, $this->properties)) {
 			$this->properties[] = $propName;
 		}
-  } 
+	} 
   
 	function setArray($array) {
 		if (is_array($array)) {
@@ -2231,10 +2035,70 @@ function setProp($propName, $propValue) {
 	function hasProp($propName) {
 		return in_array($propName, $this->properties);
 	}
-			function fix_icon( $icon_name )
+	function fix_icon( $icon_name )
 	{
 		$icon_name = str_replace('Interface\\\\Icons\\\\','',$icon_name);
 		return strtolower(str_replace(' ','_',$icon_name));
 	}
+	// get gem color
+	function gemcolor( $gem_data)
+	{
+		global $roster;
+
+		$gemtt = explode( '<br>', $gem_data );
+
+		if( $gemtt[0] !== '' )
+		{
+			foreach( $gemtt as $line )
+			{
+				$colors = array();
+				$line = preg_replace('/\|c[a-f0-9]{8}(.+?)\|r/i','$1',$line); // CP error? strip out color
+				// -- start the parsing
+				if( preg_match('/'.$roster->locale->act['tooltip_boss'] . '|' . $roster->locale->act['tooltip_source'] . '|' . $roster->locale->act['tooltip_droprate'].'/', $line) )
+				{
+					continue;
+				}
+				elseif( preg_match('/%|\+|'.$roster->locale->act['tooltip_chance'].'/', $line) )  // if the line has a + or % or the word Chance assume it's bonus line.
+				{
+					$gem_bonus = $line;
+				}
+				elseif( preg_match($roster->locale->act['gem_preg_meta'], $line) )
+				{
+					$gem_color = 'meta';
+				}
+				elseif( preg_match($roster->locale->act['gem_preg_multicolor'], $line, $colors) )
+				{
+					if( $colors[1] == $roster->locale->act['gem_colors']['red'] && $colors[2] == $roster->locale->act['gem_colors']['blue'] || $colors[1] == $roster->locale->act['gem_colors']['blue'] && $colors[2] == $roster->locale->act['gem_colors']['red'] )
+					{
+						$gem_color = 'purple';
+					}
+					elseif( $colors[1] == $roster->locale->act['gem_colors']['yellow'] && $colors[2] == $roster->locale->act['gem_colors']['red'] || $colors[1] == $roster->locale->act['gem_colors']['red'] && $colors[2] == $roster->locale->act['gem_colors']['yellow'] )
+					{
+						$gem_color = 'orange';
+					}
+					elseif( $colors[1] == $roster->locale->act['gem_colors']['yellow'] && $colors[2] == $roster->locale->act['gem_colors']['blue'] || $colors[1] == $roster->locale->act['gem_colors']['blue'] && $colors[2] == $roster->locale->act['gem_colors']['yellow'] )
+					{
+						$gem_color = 'green';
+					}
+				}
+				elseif( preg_match($roster->locale->act['gem_preg_singlecolor'], $line, $colors) )
+				{
+					$tmp = array_flip($roster->locale->act['gem_colors']);
+					$gem_color = $tmp[$colors[1]];
+				}
+				elseif( preg_match($roster->locale->act['gem_preg_prismatic'], $line) )
+				{
+					$gem_color = 'prismatic';
+				}
+			}
+
+			return $gem_color;
+		}
+		else
+		{
+			return '';
+		}
+	}
+	
 
 }
