@@ -1,7 +1,0 @@
-ApiSync v1.0
-Package updated Month DD, YYYY
-$Id$
-
-[Initial]
-ArmorySync is no more this addon is now an api based updater for wowroster 
--all api commands can be found in the wowroster forums 
