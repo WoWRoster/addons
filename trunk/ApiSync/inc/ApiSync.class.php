@@ -538,7 +538,7 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 						||
 						( isset($guildbank) && strstr($member[$guildbank['config']['banker_fieldname']], $guildbank['config']['banker_rankname']) )
 						) {
-						echo $roster->locale->act['enUS']['id_to_class'][$member['classid']];
+						//echo $roster->locale->act['enUS']['id_to_class'][$member['classid']];
 						$player['name'] = $member['name'];
 						$player['Class'] = $roster->locale->act['enUS']['id_to_class'][$member['classid']];//$member['class'];
 						$player['Level'] = $member['level'];

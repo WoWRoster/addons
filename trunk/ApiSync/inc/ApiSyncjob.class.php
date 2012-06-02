@@ -876,9 +876,9 @@
 					'WIDTH' => '70px'
 				));
 			}
-			echo $this->is_listupdate.' - ';
+
 			if ($this->is_listupdate == 1)
-			{echo 'list update';
+			{
 				$roster->tpl->assign_block_vars('body_rowx', array(
 					'LOG' => $this->log
 				));
