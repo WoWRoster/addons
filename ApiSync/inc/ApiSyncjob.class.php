@@ -306,65 +306,28 @@
 							$update->uploadData['wowroster']['cpProfile'][$server]['Guild'][$name] = $guild_data;
 							$log =  $update->processFiles();
 							
-							echo '<div class="tier-1-a">
-							<div class="tier-1-b">
-							<div class="tier-1-c">
-							<div class="tier-1-title"> adding '.$name.' @ '.$region.'-'.$server.'</div>
-							
-							
-							<div class="tier-2-a">
-							<div class="tier-2-b">
-							<div class="tier-2-title">
-							Log
-							</div>
-							
-							<div class="border_color syellowborder"  style="background:black;height:300px;width:100%;overflow:auto;text-align:left;font-size:10px;">
-							'.$log.'
-							</div>
-							
-							</div>
-							</div>
-							</div>
-							</div>';
-							/*
-								if ( $this->_insertGuild( $name, $server, $region, $faction ) )
-								{
-								
-								if ( $this->_insertUploadRule( $name, $server, $region, 0 ) )
-								{
-								if ( $this->_prepareUpdateMemberlist( $id, $name, $server, $region ) )
-								{
-								$ret = $this->_updateStatusMemberlist();
-								$link = makelink('guild-ApiSync-memberlist&guild='. $id);
-								$this->_showStatusMemberlist();
-								if ( $ret ) {
-								$this->util_type = 'addguild';
-								$this->_link();//_guildMemberlist( $id )
-								}
-								$this->_debug( 1, null, 'Added guild', 'OK');
-								}
-								else
-								{
-								$this->_debug( 0, null, 'Added guild', 'Failed. No job found');
-								}
-								}
-								else
-								{
-								$html = "&nbsp;&nbsp;".
-								$roster->locale->act['error_uploadrule_insert'].
-								"&nbsp;&nbsp;";
-								$out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
-								}
-								}
-								*
-								else 
-								{
-								$html = "&nbsp;&nbsp;".
-								$roster->locale->act['error_guild_insert'].
-								"&nbsp;&nbsp;";
-								$out = messagebox( $html , $roster->locale->act['error'] , $style='sred' , '' );
-								}
-							*/
+							echo '
+								<div class="tier-1-a">
+									<div class="tier-1-b">
+										<div class="tier-1-c">
+											<div class="tier-1-title"> adding '.$name.' @ '.$region.'-'.$server.'</div>
+											
+											
+											<div class="tier-2-a">
+												<div class="tier-2-b">
+													<div class="tier-2-title">
+														Log
+													</div>
+											
+													<div class="border_color syellowborder"  style="background:black;height:300px;width:100%;overflow:auto;text-align:left;font-size:10px;">
+													'.$log.'
+													</div>
+											
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>';
 						}
 						else
 						{
@@ -1378,8 +1341,8 @@
 			{
 				print
 				'<span class="title_text">'. $this->title. '</span><br />'.
-				$roster_login->getMessage().
-				$roster_login->getLoginForm($addon['config'][$scope]);
+				$roster->auth->getMessage().
+				$roster->auth->getLoginForm($addon['config'][$scope]);
 				$ret = false;
 				} else {
 				$ret = true;
