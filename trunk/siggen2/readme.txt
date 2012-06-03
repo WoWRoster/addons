@@ -56,3 +56,11 @@ Per player settings stored as "themes"
 "Themes" are configs and styles for a design,
   basically the second half of the old configs from v0.x SigGen
 "Layers" are...well..layers. Any image or piece of text is a layer
+
+A "Design" needs to be tied to a scope, like guild, realm, character, user
+Don't know if util would have a use
+Could set up a designs folder, and split index.php into guild, char, realm, user
+
+The char design would have the signature and avatar themes
+Guild would have the banner theme
+Realm, no idea
