@@ -24,6 +24,7 @@ $lang['async_button4']			= 'ApiSync Memberlist|Synchronize your memberlist with 
 $lang['async_button5']			= 'ApiSync Memberlist for a new guild|Add a new guild and synchronize<br />the memberlist with Blizzard\'s Armory';
 $lang['async_button6']			= 'ApiSync Guild Players|Synchronize your guild\'s Players <br />data with Blizzard\'s Armory';
 
+$lang['faction'] = 'Faction';
 // Config strings
 $lang['admin']['ApiSync_conf']			= 'General|Configure base settings for ApiSync';
 $lang['admin']['ApiSync_ranks']			= 'Ranks|Configure guild ranks for ApiSync';

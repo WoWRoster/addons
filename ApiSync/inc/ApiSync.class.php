@@ -331,6 +331,7 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 		$this->guildId = $memberId;
 		$this->region = $region;
 		$this->memberName = $memberName;
+		$this->active_member['starttimeutc'] = gmdate('Y-m-d H:i:s');
 		//$this->_getGuildInfo();
    	/// if ( $this->status['guildInfo'] ) {
 			include_once(ROSTER_LIB . 'update.lib.php');
@@ -393,7 +394,7 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 			$this->data['timestamp']['init']['TimeStamp'] = time();
 			$this->data['timestamp']['init']['Date'] = date('Y-m-d H:i:s');
 			$this->data['timestamp']['init']['DateUTC'] = gmdate('Y-m-d H:i:s');
-
+			$this->data['Locale'] = $roster->data['region'];
 			$this->data['GPprovider'] = "ApiSyncGuild";
 			$this->data['FactionEn'] = $roster->locale->act['id_to_faction'][$content['side']];
 			$this->data['Faction'] = $roster->locale->act['id_to_faction'][$content['side']];
@@ -481,6 +482,7 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 			$this->data["DBversion"] = $roster->config['minGPver'];
 			$this->data["GPversion"] = $roster->config['minGPver'];
 			$this->data["GuildName"] = $roster->data['guild_name'];
+			$this->data['EventLog'] = array();
 			$this->data['name'] = $this->memberName;
 			$this->data['Info'] = '';
 			$members = $this->_getGuildMembers( $gid );

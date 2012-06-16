@@ -616,6 +616,7 @@
 				$region = $roster->data['region'];
 			}
 			$this->time_started = gmdate('Y-m-d H:i:s');
+			$this->active_member['starttimeutc'] = gmdate('Y-m-d H:i:s');
 			$this->_checkGuildExist( $name, $server, $region );
 			$this->ApiSync->_getGuildInfo();
 			$this->log = $this->ApiSync->synchGuildbob( $server, $memberId = 0, $name, $region, null);
@@ -722,7 +723,7 @@
 			{
 				$roster->tpl->assign_block_vars('head_col', array(
 					'HEAD_TITLE' => $roster->locale->act['guild_short']."Info", 
-					'HEAD_WIDTH' => '55px'
+					'HEAD_WIDTH' => '64px'
 				));
 			}
 			
@@ -777,6 +778,7 @@
 
 			if ($this->is_listupdate == 1)
 			{
+				//echo '<pre>';print_r($this->active_member);echo '</pre><br>';
 				$roster->tpl->assign_block_vars('body_rowx', array(
 					'LOG' => $this->log
 				));
@@ -784,6 +786,20 @@
 					'LINE_VALUE' => $roster->data['guild_name'], 
 					'WIDTH' => '120px'
 				));
+				
+				$roster->tpl->assign_block_vars('body_row.line', array(
+					'LINE_VALUE' => isset( $this->active_member['guild_info'] ) ? $this->active_member['guild_info'] : "<img src=\"". ROSTER_PATH. "img/blue-question-mark.gif\" alt=\"?\"/>", 
+					'WIDTH' => '90px'
+				));
+				$roster->tpl->assign_block_vars('body_row.line', array(
+					'LINE_VALUE' => isset($this->active_member['starttimeutc'] ) ? $this->active_member['starttimeutc'] : "<img src=\"". ROSTER_PATH. "img/blue-question-mark.gif\" alt=\"?\"/>", 
+					'WIDTH' => '120px'
+				));
+				$roster->tpl->assign_block_vars('body_row.line', array(
+					'LINE_VALUE' => isset( $this->active_member['stoptimeutc'] ) ? $this->active_member['stoptimeutc'] : "<img src=\"". ROSTER_PATH. "img/blue-question-mark.gif\" alt=\"?\"/>", 
+					'WIDTH' => '120px'
+				));
+
 			}
 			foreach ( $members as $member ) 
 			{
@@ -1084,9 +1100,9 @@
 			$output .= '
 			<th class="membersHeader" ' . makeOverlib($name) . '> ' . $name . '</th>
 			<th class="membersHeader" ' . makeOverlib($roster->locale->act['realmname']) . '> ' . $roster->locale->act['server'] . '</th>
-			<th class="membersHeader" ' . makeOverlib($roster->locale->act['regionname']) . '> ' . $roster->locale->act['region'] . '</th>
-			<th class="membersHeader" ' . makeOverlib($roster->locale->act['factionname']) . '> ' . $roster->locale->act['faction'] . '</th>
-			<th class="membersHeaderRight">&nbsp;</th>
+			<th class="membersHeader" ' . makeOverlib($roster->locale->act['regionname']) . '> ' . $roster->locale->act['region'] . '</th>'.
+			//<th class="membersHeader" ' . makeOverlib($roster->locale->act['factionname']) . '> ' . $roster->locale->act['faction'] . '</th>
+			'<th class="membersHeaderRight">&nbsp;</th>
 			</tr>
 			</thead>
 			<tbody>' . "\n";
@@ -1110,7 +1126,6 @@
 			<td class="membersRow2"><input class="wowinput128" type="text" name="name" value="" /></td>
 			<td class="membersRow2"><input class="wowinput128" type="text" name="server" value="" /></td>
 			<td class="membersRow2"><input class="wowinput64" type="text" name="region" value="" /></td>
-			<td class="membersRow2"><input class="wowinput64" type="text" name="faction" value="" /></td>
 			<td class="membersRowRight2"><button type="submit" class="input" onclick="setvalue(\'' . $type . '\',\'add\');">' . $roster->locale->act['add'] . '</button></td>
 			</tr>
 			</tbody>
@@ -1193,50 +1208,63 @@
 		function _updateStatusMemberlist( $jobid = 0 ) {
 			global $roster;
 			
-			$this->_init();
-			$this->active_member = $this->_isPostSyncStatus( $this->jobid );
-			$active_member = $this->active_member;
+			$this->_init();	
 			
-			if ( ! isset ($active_member['guild_name']) ) {
-				$this->active_member = $this->_getNextGuildToUpdate( $this->jobid );
+			//$this->active_member = $this->_isPostSyncStatus( $this->jobid );
+			$active_member = $this->active_member;
+
+			if ( ! isset ($active_member['guild_name']) )
+			{
+				//$this->active_member = $this->_getNextGuildToUpdate( $this->jobid );
 				$active_member = $this->active_member;
+				//echo '<pre>';print_r($this->active_member);echo '</pre><br>';
 				$cleanup = 0;
-				if ( isset ($active_member['guild_name']) ) {
+				if ( isset ($active_member['guild_name']) )
+				{
 					$this->active_member['starttimeutc'] = gmdate('Y-m-d H:i:s');
-					if ( $this->_updateGuildJobStatus( $this->jobid, $this->active_member ) ) {
+					if ( $this->_updateGuildJobStatus( $this->jobid, $this->active_member ) )
+					{
 						$ret = true;
 					}
-					} else {
+				}
+				else
+				{
 					$cleanup = 1;
 					$ret = false;
+					
 				}
-				$this->members = $this->_getMembersFromJobqueue( $this->jobid );
-				list ( $this->done, $this->total ) = $this->_getJobProgress($this->jobid);
-				if ( $cleanup ) {
-					$this->_cleanUpJob( $this->jobid );
-				}
+				$this->active_member['guild_info'] = $this->ApiSync->status['guildInfo'];
+				$this->active_member['stoptimeutc'] = gmdate('Y-m-d H:i:s');
+
 				$this->_debug( 1, $ret, 'Updated memberlist job status', $ret ? 'OK': 'FINISHED');
 				return $ret;
-				} else {
-				if ( ! $this->ApiSync->synchGuildByID( $active_member['server'], $active_member['guild_id'], $active_member['guild_name'], $active_member['region']) ) {
+			}
+			else
+			{
+				if ( ! $this->ApiSync->_synchGuildByID( $active_member['server'], $active_member['guild_id'], $active_member['guild_name'], $active_member['region']) )
+				{
 					$this->dataNotAccepted = 1;
 				}
+				//echo '<pre>';print_r($this->active_member);echo '</pre><br>';
 				//$this->_updateGuild( $active_member['guild_name'], $active_member['server'], $active_member['region'] );
 				
 				$this->active_member['guild_info'] = $this->ApiSync->status['guildInfo'];
 				$this->active_member['stoptimeutc'] = gmdate('Y-m-d H:i:s');
 				$this->active_member['log'] = $this->ApiSync->message;
-				if ( $this->_updateGuildJobStatus( $this->jobid, $this->active_member ) ) {
-					$this->members = $this->_getMembersFromJobqueue( $this->jobid );
-					list ( $this->done, $this->total ) = $this->_getJobProgress($this->jobid);
+				if ( $this->dataNotAccepted != 1 )
+				{
+					$this->done = $this->total = '1';
 					$this->_debug( 1, true, 'Updated memberlist job status', 'OK');
 					//$this->_updateGuild( $active_member['guild_name'], $active_member['server'], $active_member['region'] );
 					return true;
-					} else {
+				}
+				else
+				{
 					$this->_debug( 0, false, 'Updated memberlist job status', 'Failed');
 					return false;
 				}
 			}
+			
 		}
 		
 		// Helper functions
