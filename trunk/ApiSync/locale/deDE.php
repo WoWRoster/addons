@@ -186,7 +186,7 @@ $lang['ApiSync_credits'] = 'ApiSync Based off of armorysync built on blizzards A
 
 
 $lang['start'] = "Start";
-$lang['start_message'] = "Du bist dabei <b>ApiSync</b> für %s <b style=\"color:yellow\"; >%s</b> auszuführen.<br /><br />Hierdurch werden die Daten für %s mit den Angaben<br />aus Blizzards Armory überschrieben. Dieser Vorgang kann nur rückgängig<br />gemacht werden, in dem eine <b style=\"color:red\"; >aktuelle</b> CharacterProfiler.lua<br />hochgeladen wird.<br /><br />Willst du diesen Vorgang jetzt starten";
+$lang['start_message'] = "Du bist dabei <b>ApiSync</b> für %s <b style=\"color:yellow\"; >%s</b> auszuführen.<br /><br />Hierdurch werden die Daten für %s mit den Angaben<br />aus Blizzards Armory überschrieben. Dieser Vorgang kann nur rückgängig<br />gemacht werden, in dem eine <b style=\"color:red\"; >aktuelle</b> wowroster.lua<br />hochgeladen wird.<br /><br />Willst du diesen Vorgang jetzt starten";
 
 $lang['start_message_the_char'] = "den Charakter";
 $lang['start_message_this_char'] = "diesen Charakter";

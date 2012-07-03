@@ -195,7 +195,7 @@ $lang['focus'] = "Focus";
 $lang['ApiSync_credits'] = 'ApiSync Based off of armorysync built on blizzards API.';
 
 $lang['start'] = "Start";
-$lang['start_message'] = "You're about to start ApiSync for %s %s.<br /><br />By doing this, all data for %s will be overwritten<br />with details from Blizzard's Armory. This can only be undone<br />by uploading a current CharacterProfiler.lua.<br /><br />Do you want to start this process yet?";
+$lang['start_message'] = "You're about to start ApiSync for %s %s.<br /><br />By doing this, all data for %s will be overwritten<br />with details from Blizzard Api. This can only be undone<br />by uploading a current wowroster.lua.<br /><br />Do you want to start this process yet?";
 
 $lang['start_message_the_char'] = "the character";
 $lang['start_message_this_char'] = "this character";

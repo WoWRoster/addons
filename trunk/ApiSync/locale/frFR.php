@@ -184,7 +184,7 @@ $lang['focus'] = "Focus";
 $lang['ApiSync_credits'] = 'ApiSync Based off of armorysync built on blizzards API.';
 
 $lang['start'] = "Démarrage";
-$lang['start_message'] = "Vous êtes prêt pour démarrer <b>ApiSync</b> pour la Guilde %s %s.<br /><br />Avec cette démarche, toutes les données de %s <br />seront remplacé(s) avec les détails de Blizzards Armory.<br />  Ceci pourrait être annulé après par le téléchargement d'un CharacterProfiler.lua <b>récent</b> de chaque membre.  <br />Voulez-vous démarrer la synchronisation ";
+$lang['start_message'] = "Vous êtes prêt pour démarrer <b>ApiSync</b> pour la Guilde %s %s.<br /><br />Avec cette démarche, toutes les données de %s <br />seront remplacé(s) avec les détails de Blizzards Armory.<br />  Ceci pourrait être annulé après par le téléchargement d'un wowroster.lua <b>récent</b> de chaque membre.  <br />Voulez-vous démarrer la synchronisation ";
 
 $lang['start_message_the_char'] = "le personnage";
 $lang['start_message_this_char'] = "ce personnage";
