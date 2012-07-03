@@ -1,4 +1,19 @@
 <?php
+	
+	/*
+	$queryx = "SELECT * FROM `" . $roster->db->table('talenttree_data') . "`";
+	$resultx = $roster->db->query($queryx);
+	$usage = array();
+	while ($row = $roster->db->fetch($resultx))
+	{
+		echo '<img src="img/Interface/icons/'.$row['icon'].'.png"></a>';
+	}
+	*/
+	foreach($roster->locale->act['ts_iconArray'] as $name => $icon)
+	{
+	echo '<img src="img/Interface/icons/'.$icon.'.png"></a>';
+	}
+	
 /*
 $name = 'Zonous';
 $server = 'Zangarmarsh';
@@ -35,7 +50,6 @@ function save_image($inPath,$outPath)
 echo $c[0].'<br>';
 echo basename($e);
 /*
-*/
 function save_image($inPath,$outPath)
 {
 	//Download images from remote server
@@ -122,7 +136,7 @@ function save_image($inPath,$outPath)
 			"DXoHAgTQoHcgQAANegcCBNCgdyBAgAEAMpcDTTQWJVEAAAAASUVORK5CYII=";
 		return $c;
 	}
-//*/
+*/
 
 /*
 require_once (ROSTER_LIB . 'update.lib.php');
