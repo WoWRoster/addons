@@ -242,7 +242,7 @@ $output = '';
 		$this->server = $server;
 		$this->memberId = $memberId;
 		$this->memberName = $memberName;
-		$this->region = $region;
+		$roster->data['region'] = $region;
 		$this->guildId = $guildId;
 		//aprint($this->data);
 		$this->_getRosterData();
@@ -250,7 +250,12 @@ $output = '';
 			include_once(ROSTER_LIB . 'update.lib.php');
 			$update = new update;
 			$update->fetchAddonData();
-			$update->uploadData['wowroster']['cpProfile'][$this->server]['Character'][$this->data['Name']] = $this->data;
+			
+			echo'<pre>';
+			print_r($this->data);
+			echo '</pre>';
+			
+			$update->uploadData['wowrcp']['cpProfile'][$this->server]['Character'][$this->data['Name']] = $this->data;
 			$this->message = $update->processMyProfile();
 			$tmp = explode( "\n", $this->message);
 			$this->message = implode( '', $tmp);
@@ -280,7 +285,7 @@ $output = '';
 
 		$this->server = $server;
 		$this->guildId = $memberId;
-		$this->region = $region;
+		$roster->data['region'] = $region;
 		$this->memberName = $memberName;
 		$this->_getGuildInfo();
    	/// if ( $this->status['guildInfo'] ) {
@@ -305,7 +310,7 @@ function _synchGuildByID( $server, $memberId = 0, $memberName = false, $region =
 
 		$this->server = $server;
 		$this->guildId = $memberId;
-		$this->region = $region;
+		$roster->data['region'] = $region;
 		$this->memberName = $memberName;
 		$this->build_guild($guilddata, $this->guildId);
 		$this->_getGuildInfo();
@@ -329,7 +334,7 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 
 		$this->server = $server;
 		$this->guildId = $memberId;
-		$this->region = $region;
+		$roster->data['region'] = $region;
 		$this->memberName = $memberName;
 		$this->active_member['starttimeutc'] = gmdate('Y-m-d H:i:s');
 		//$this->_getGuildInfo();
@@ -473,7 +478,7 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 			
 			$this->data['timestamp']['init']['datakey'] = $roster->data['3'];
 			$this->data['Ranks'] = $this->_getGuildRanks( $this->guildId );
-			//$this->data['timestamp']['init']['datakey'] = $this->region;
+			$this->data['timestamp']['init']['datakey'] = $roster->data['region'];
 			$this->data['timestamp']['init']['TimeStamp'] = time();
 			$this->data['timestamp']['init']['Date'] = date('Y-m-d H:i:s');
 			$this->data['timestamp']['init']['DateUTC'] = gmdate('Y-m-d H:i:s');
@@ -603,7 +608,7 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 	function checkCharInfo( $name = false, $server = false, $region = false ) {
 		global $roster, $addon;
 
-		$this->region = $region;
+		$roster->data['region'] = $region;
 		$this->apidata = $roster->api->Char->getCharInfo($server,$name,'1:2:3:4:5:7:11:14');
 
 		if (is_array($this->apidata) && isset($this->apidata['name'])) 
@@ -856,8 +861,8 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 			$this->data["Money"]["Gold"] = 0;
 			$this->data["Experience"] = 0;
 			$this->data["timestamp"]["init"]["DateUTC"] = ''.$this->_getDate($char['lastModified']).'';
-			$this->data['timestamp']['init']['datakey'] = $this->region. ":";
-			$this->data['Region']=$this->region;
+			$this->data['timestamp']['init']['datakey'] = $roster->data['region']. ":";
+			$this->data['Region']=$roster->data['region'];
 			$this->data["Locale"] = $roster->config['locale'];
 			$this->data["Inventory"] = array();
 			$this->data["Equipment"] = array();
@@ -1270,160 +1275,40 @@ function return_gender($genderid) {
 	function _getTalentInfo() 
 	{
 		global $roster, $addon;
-		include_once(ROSTER_LIB . 'armory.class.php');
-		$armory = new RosterArmory;
 				
 		$content = array();
 		$content = $this->apidata['talents'];
 		$branch=null;
 		$talentBuildData=array();
 		$main=false;
+		$defaulttalents = $this->build_talent_data($this->data["ClassId"]);
+		$_talents = array();
+		$talent = array();
 
 		foreach ($content as $key => $spec)
 		{
-			$talentBuildData=null;
-			if (isset($spec['selected']))
+			$_talents=null;
+			$_talents = $defaulttalents;
+			foreach($spec['talents'] as $s => $spell)
 			{
-				if (isset($spec['name']))
-				{
-					$branch = '0';
-					$main=true;
-				}
+				$_talents['Talents'][$spell['spell']['name']]['Selected'] = true;
+				$this->status['talentInfo']+= 1;
 			}
-			elseif(isset($spec['name']) && !$main)
-			{
-				$branch = '1';
-			}
-			else
-			{
-				$branch = '0';
-			}
-			$main = $this->Build_talenttreedata($spec['build'], $branch);
-			if ($branch == '0' )
-			{
-				$this->data["Talents"] = $main;
-			}
-			else
-			{
-				$this->data["DualSpec"]["Talents"] = $main;
-			}
+			
+			$_talents["Background"] = $spec['spec']['backgroundImage'];//"bg-hunter-marksman",
+			$_talents["Icon"] 		= $spec['spec']['icon'];//"Ability_Hunter_FocusedAim",
+			$_talents["Desc"] 		= $spec['spec']['description'];//"A master archer or sharpshooter who excels in bringing down enemies from afar.",
+			$_talents["Name"] 		= $spec['spec']['name'];//Beast Mastery
+			$_talents["Role"] 		= $spec['spec']['role'];//DPS
+			$_talents["Active"]		= (isset($spec['selected']) ? true : false);
+			$talent[] = $_talents;
 		}
+
+		$this->data["Talents"] = $talent;
 		
 	return true;
 	}
 	
-	function process_talents($armoryTalents, $branch)
-	{
-		global $roster, $addon;
-
-		$this->Build_talenttreedata($armoryTalents, $branch);
-		$querystr = "INSERT INTO `" . $roster->db->table('talent_builds') . "` SET "
-		. "`build` = '".$branch."',"
-		. "`member_id` = '".$this->memberId."',"
-		. "`tree` = '".$armoryTalents."'";
-
-	$result = $roster->db->query($querystr);
-	if( !$result )
-	{
-		$this->_debug( 1, true, 'Char: '.$roster->locale->act['talent_build_' . $branch] . ' could not be inserted', 'Fail' );
-				return false;
-	}
-		else
-		{
-		return true;
-		}
-	}
-	
-	// incente tree builds... this code sucks.....
-
-		function Build_talenttreedata($build, $branch)
-		{
-			global $roster, $addon;
-   			// echo $build.'<br>';
-   			
-			$talentArray = preg_split('//', $build, -1, PREG_SPLIT_NO_EMPTY);
-			$talentinfo = $this->build_talent_data($this->data["ClassId"]);
-				
-			$sqlquery = "SELECT * FROM `" . $roster->db->table('talenttree_data') . "`"
-			. " WHERE `class_id` = '" . $this->data["ClassId"] . "' ORDER BY `order` ASC;";
-
-			$result = $roster->db->query($sqlquery);
-
-			$treed = array();
-			while( $row = $roster->db->fetch($result, SQL_ASSOC) )
-			{
-				$treed[$row['tree']]['background'] = $row['background'];
-				$treed[$row['tree']]['icon'] = $row['icon'];
-				$treed[$row['tree']]['order'] = $row['order'];
-			}
-			$i=0;
-					
-			foreach( $talentinfo as $ti => $talentdata )
-			{
-				$spent = 0;
-				$n=null;
-
-				for( $r = 1; $r < ROSTER_TALENT_ROWS + 1; $r++ )
-				{
-					for( $c = 1; $c < ROSTER_TALENT_COLS + 1; $c++ )
-					{
-						if ( isset($talentdata[$r][$c]['name']) )
-						{
-							$returndata[$ti][$talentdata[$r][$c]['name']]['Name'] = $talentdata[$r][$c]['name'];
-							$returndata[$ti][$talentdata[$r][$c]['name']]['Location'] = $r.':'.$c;
-							$returndata[$ti][$talentdata[$r][$c]['name']]['Rank'] = $talentArray[$i].':'.count($talentdata[$r][$c]['tooltip']);
-							$spent = ($spent + $talentArray[$i]);
-							$this->status['talentInfo']+= 1;
-							if( $talentdata[$r][$c]['name'] != $n )
-							{
-								$i++;
-
-							}
-							$n = $talentdata[$r][$c]['name'];
-						}
-					}
-				}
-				
-				$returndata[$ti]['PointsSpent'] = $spent;
-				$returndata[$ti]['Background'] = $treed[$ti]['background'];
-				$returndata[$ti]['Order'] = $treed[$ti]['order'];
-				//$t++;
-			}
-		
-				return $returndata;
-	}
-  
-
-
-
-function build_talenttree_data( $class )
-	{
-		global $roster, $addon;
-		$sql = "SELECT * FROM `" . $roster->db->table('talenttree_data') . "`"
-			. " WHERE `class_id` = '" . $class . "'"
-			. " ORDER BY `order` ASC;";
-
-		$t = array();
-		$results = $roster->db->query($sql);
-		$is = '';
-		$ii = '';
-
-		if( $results && $roster->db->num_rows($results) > 0 )
-		{
-			while( $row = $roster->db->fetch($results, SQL_ASSOC) )
-			{
-				$is++;
-				$ii++;
-				$t[$row['tree']]['name'] = $row['tree'];
-				$t[$row['tree']]['background'] = $row['background'];
-				$t[$row['tree']]['icon'] = $row['icon'];
-				$t[$row['tree']]['order'] = $row['order'];
-			}
-		}
-		return $t;
-
-	}
-
 	function build_talent_data( $class )
 	{
 		global $roster, $addon;
@@ -1443,10 +1328,12 @@ function build_talenttree_data( $class )
 			{
 				$is++;
 				$ii++;
-				$t[$row['tree']][$row['row']][$row['column']]['name'] = $row['name'];
-				$t[$row['tree']][$row['row']][$row['column']]['id'] = $row['talent_id'];
-				$t[$row['tree']][$row['row']][$row['column']]['tooltip'][$row['rank']] = $row['tooltip'];
-				$t[$row['tree']][$row['row']][$row['column']]['icon'] = $row['texture'];
+				$t["Talents"][$row['name']]['Name'] = $row['name'];
+				$t["Talents"][$row['name']]['id'] = $row['talent_id'];
+				//$t[$row['name']]['Tooltip'] = $row['tooltip'];
+				$t["Talents"][$row['name']]['Texture'] = $row['texture'];
+				$t["Talents"][$row['name']]['Selected'] = false;
+				$t["Talents"][$row['name']]['Location'] = $row['row'].':'.$row['column'];
 			}
 		}
 		return $t;
