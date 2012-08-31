@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * WoWRoster.net WoWRoster
  *
@@ -138,6 +138,26 @@ class ApiSync extends ApiSyncBase {
 	"Argent Dawn" => array ("parent" => "Classic"),
 	"Wintersaber Trainers" => array ("parent" => "Other"),
 	"Syndicate" => array ("parent" => "Other"),
+	"The Anglers" 					=> array ("parent" => "Mists of Pandaria"),
+	"Nat Pagle" 					=> array ("parent" => "Mists of Pandaria","faction" => "The Anglers"),
+	"The August Celestials" 		=> array ("parent" => "Mists of Pandaria"),
+	"Order of the Cloud Serpent" 	=> array ("parent" => "Mists of Pandaria"),
+	"The Klaxxi" 					=> array ("parent" => "Mists of Pandaria"),
+	"Golden Lotus" 					=> array ("parent" => "Mists of Pandaria"),
+	"The Lorewalkers" 				=> array ("parent" => "Mists of Pandaria"),
+	"Shado-Pan" 					=> array ("parent" => "Mists of Pandaria"),
+	"The Black Prince" 				=> array ("parent" => "Mists of Pandaria"),
+	"The Tillers" 					=> array ("parent" => "Mists of Pandaria"),
+	"Fish Fellreed" 				=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
+	"Chee Chee" 					=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
+	"Haohan Mudclaw" 				=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
+	"Old Hillpaw" 					=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
+	"Farmer Fung"					=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
+	"Gina Mudclaw" 					=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
+	"Sho" 							=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
+	"Tina Mudclaw"					=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
+	"Jogu the Drunk" 				=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
+	"Ella" 							=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
 	"" => array ("parent" => "Guild"),);
 	
 	function getMessages()
@@ -251,9 +271,9 @@ $output = '';
 			$update = new update;
 			$update->fetchAddonData();
 			
-			echo'<pre>';
-			print_r($this->data);
-			echo '</pre>';
+			//echo'<pre>';
+			//print_r($this->data);
+			//echo '</pre>';
 			
 			$update->uploadData['wowrcp']['cpProfile'][$this->server]['Character'][$this->data['Name']] = $this->data;
 			$this->message = $update->processMyProfile();
@@ -421,7 +441,7 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 			$month = 30 * $day;
 			$year = 365 * $day;
 			foreach ( $content['members'] as $id => $member ) {
-					//echo $roster->locale->act['enUS']['id_to_class'][$member['classid']];
+					////echo $roster->locale->act['enUS']['id_to_class'][$member['classid']];
 
 					$player['AchRank'] = '';
 					$player['Zone'] = "";
@@ -456,9 +476,9 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 					$this->status['guildInfo'] += 1;
 					$this->data['Members'][$member['character']['name']] = $player;
 				}
-				//echo '<pre>';
+				////echo '<pre>';
 				//print_r($this->data);
-				//echo '</pre><br>';
+				////echo '</pre><br>';
 			$this->_debug( 1, $this->data, 'Parsed guild info',  'OK' );
 	}
 
@@ -545,7 +565,7 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 						||
 						( isset($guildbank) && strstr($member[$guildbank['config']['banker_fieldname']], $guildbank['config']['banker_rankname']) )
 						) {
-						//echo $roster->locale->act['enUS']['id_to_class'][$member['classid']];
+						////echo $roster->locale->act['enUS']['id_to_class'][$member['classid']];
 						$player['name'] = $member['name'];
 						$player['Class'] = $roster->locale->act['enUS']['id_to_class'][$member['classid']];//$member['class'];
 						$player['Level'] = $member['level'];
@@ -682,7 +702,7 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
   				$rank = $this->_getMemberRank( $this->memberId );
 
  				// $this->_getSkillInfo($skills);
- 				// echo $char['name'].' '.$armory->region.'<br>';
+ 				// //echo $char['name'].' '.$armory->region.'<br>';
   				$this->data["Name"] = ''.$char['name'].'';//$char['name'];
   				$this->data["Level"] = ''.$char['level'].'';
   				$this->data["Server"] = ''.$char['realm'].'';
@@ -956,9 +976,9 @@ function return_gender($genderid) {
 		
 		if ($slot != 'averageItemLevel' && $slot != 'averageItemLevelEquipped')
 		{
-		//echo '<pre>';
+		////echo '<pre>';
    		//print_r($item);
-		//echo '</pre>';
+		////echo '</pre>';
 			// prepare some data
 			$enchant =  $gem0 =  $gem1 =  $gem2 = $es = $set = $reforge = $suffex = $seed = null;
 			$gam['enchant']=$gam['enchant']=$gam['reforge']=$gam['suffix']=$gam['seed']=$gam['set']=null;
@@ -1063,7 +1083,7 @@ function return_gender($genderid) {
 			// woraroud itemapi makes html tooltips roster dont like them so we remove them
 			$tx =  $roster->api->Item->item($item_api,$item,$this->gemx);
 			$tt = $this->processtooltips($tx);
-			//echo '<br><hr><br>'.$tt.'<br><hr><br>';
+			////echo '<br><hr><br>'.$tt.'<br><hr><br>';
 			$this->data["Equipment"][$slot]['Tooltip'] = $tt;//addslashes($tip);
 			//	$enchant =  $gem0 =  $gem1 =  $gem2 = $es = $set = $reforge = $suffex = $seed = null;
 			$this->data["Equipment"][$slot]['Item'] .= ":". $enchant;
@@ -1106,7 +1126,7 @@ function return_gender($genderid) {
 		
 		foreach($this->gemx as $id => $info)
 		{
-			//echo '<pre>';
+			////echo '<pre>';
 			//print_r($info);
 			$query ="REPLACE INTO `roster_gems` SET 
 			`gem_id` = '".$info['id']."', 
@@ -1117,7 +1137,7 @@ function return_gender($genderid) {
 			`gem_socketid` = '".$info['id']."', 
 			`gem_texture` = '".$info['icon']."', 
 			`locale` = '".$roster->config['locale']."';";
-			//echo '<br>'.$query.'<br><hr><br>';
+			////echo '<br>'.$query.'<br><hr><br>';
 			$result2 = $roster->db->query($query);
 			
 		}	
@@ -1196,13 +1216,14 @@ function return_gender($genderid) {
 	"The League of Arathor" => array ("parent" => "Classic","faction" => "Alliance Forces"),
 	"Timbermaw Hold" => array ("parent" => "Classic"),
 	"Zandalar Tribe" => array ("parent" => "Classic"),
-	"Alliance" => array ("parent" => "Classic"),
+	//"Alliance" => array ("parent" => "Classic"),
 	"Exodar" => array ("parent" => "Classic","faction" => "Alliance"),
 	"Gilneas" => array ("parent" => "Classic","faction" => "Alliance"),
 	"Gnomeregan" => array ("parent" => "Classic","faction" => "Alliance"),
 	"Stormwind" => array ("parent" => "Classic","faction" => "Alliance"),
 	"Ironforge" => array ("parent" => "Classic","faction" => "Alliance"),
 	"Darnassus" => array ("parent" => "Classic","faction" => "Alliance"),
+	"Tushui Pandaren" => array ("parent" => "Classic","faction" => "Alliance"),
 	"Shen'dralar" => array ("parent" => "Classic"),
 	"Brood of Nozdormu" => array ("parent" => "Classic"),
 	"Ravenholdt" => array ("parent" => "Classic"),
@@ -1215,7 +1236,28 @@ function return_gender($genderid) {
 	"Argent Dawn" => array ("parent" => "Classic"),
 	"Wintersaber Trainers" => array ("parent" => "Other"),
 	"Syndicate" => array ("parent" => "Other"),
+	"The August Celestials" 		=> array ("parent" => "Mists of Pandaria"),
+	"Order of the Cloud Serpent" 	=> array ("parent" => "Mists of Pandaria"),
+	"The Klaxxi" 					=> array ("parent" => "Mists of Pandaria"),
+	"Golden Lotus" 					=> array ("parent" => "Mists of Pandaria"),
+	"The Lorewalkers" 				=> array ("parent" => "Mists of Pandaria"),
+	"Shado-Pan" 					=> array ("parent" => "Mists of Pandaria"),
+	"The Black Prince" 				=> array ("parent" => "Mists of Pandaria"),
+	"The Anglers" 					=> array ("parent" => "Mists of Pandaria","faction" => "The Anglers"),
+	"Nat Pagle" 					=> array ("parent" => "Mists of Pandaria","faction" => "The Anglers"),
+	"The Tillers" 					=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
+	"Fish Fellreed" 				=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
+	"Chee Chee" 					=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
+	"Haohan Mudclaw" 				=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
+	"Old Hillpaw" 					=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
+	"Farmer Fung"					=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
+	"Gina Mudclaw" 					=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
+	"Sho" 							=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
+	"Tina Mudclaw"					=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
+	"Jogu the Drunk" 				=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
+	"Ella" 							=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
 	"".$this->guild_name."" => array ("parent" => "Guild"),);
+	//echo '<pre>';print_r($xrep);//echo'</pre>';
 	
 			$this->data["Reputation"]["Count"] = 0;
 			$is = 0;
@@ -1371,10 +1413,10 @@ function return_gender($genderid) {
 			$subobject = $object;
 
 			foreach ( $keys as $key ) {
-				echo 'Key - '.$key.'<br>';
+				//echo 'Key - '.$key.'<br>';
 				if ( $this->hasProp($key) ) {
 					$subobject = $subobject->$key;
-					echo 'Sub - '.$subobject.'<br>';
+					//echo 'Sub - '.$subobject.'<br>';
 				} else {
 					$this->_debug( 3, $object, 'Checked XML content', 'Failed' );
 					return false;
@@ -1902,7 +1944,7 @@ function return_gender($genderid) {
 
 	function arraydisplay($array)
 	{
-		 ////echo '<pre>';
+		 //////echo '<pre>';
 		 ////print_r($array);
 	}
 	
