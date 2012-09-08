@@ -313,7 +313,7 @@ $output = '';
 			$update = new update;
 			$update->fetchAddonData();
 
-			$update->uploadData['wowroster']['cpProfile'][$this->server]['Guild'][$this->data['name']] = $this->data;
+			$update->uploadData['wowrcp']['cpProfile'][$this->server]['Guild'][$this->data['name']] = $this->data;
 			$this->message = $update->processGuildRoster();
 			$tmp = explode( "\n", $this->message);
 			$this->message = implode( '', $tmp);
@@ -339,7 +339,7 @@ function _synchGuildByID( $server, $memberId = 0, $memberName = false, $region =
 			$update = new update;
 			$update->fetchAddonData();
 
-			$update->uploadData['wowroster']['cpProfile'][$this->server]['Guild'][$this->data['GuildName']] = $this->data;
+			$update->uploadData['wowrcp']['cpProfile'][$this->server]['Guild'][$this->data['GuildName']] = $this->data;
 			$this->message = $update->processGuildRoster();
 			$tmp = explode( "\n", $this->message);
 			$this->message = implode( '', $tmp);
@@ -362,7 +362,7 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 			include_once(ROSTER_LIB . 'update.lib.php');
 			$update = new update;
 			$update->fetchAddonData();
-			$update->uploadData['wowroster']['cpProfile'][$server]['Guild'][ $memberName] = $this->data;
+			$update->uploadData['wowrcp']['cpProfile'][$server]['Guild'][ $memberName] = $this->data;
 			$x = $update->processGuildRoster();
 			//$tmp = explode( "\n", $this->message);
 			//$this->message = implode( '', $tmp);
