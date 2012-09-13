@@ -364,8 +364,6 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 			$update->fetchAddonData();
 			$update->uploadData['wowrcp']['cpProfile'][$server]['Guild'][ $memberName] = $this->data;
 			$x = $update->processGuildRoster();
-			//$tmp = explode( "\n", $this->message);
-			//$this->message = implode( '', $tmp);
 			$x .= ''.$this->message.'<br>';
 			$this->_debug( 1, true, 'Synced armory data '. $this->memberName. ' with roster',  'OK' );
 			return $x;//true;
