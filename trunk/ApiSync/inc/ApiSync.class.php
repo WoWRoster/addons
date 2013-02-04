@@ -1,4 +1,4 @@
-ï»¿<?php
+<?php
 /**
  * WoWRoster.net WoWRoster
  *
@@ -148,6 +148,9 @@ class ApiSync extends ApiSyncBase {
 	"Shado-Pan" 					=> array ("parent" => "Mists of Pandaria"),
 	"The Black Prince" 				=> array ("parent" => "Mists of Pandaria"),
 	"The Tillers" 					=> array ("parent" => "Mists of Pandaria"),
+	"Operation: Shieldwall"			=> array ("parent" => "Mists of Pandaria"),
+	"Shang Xi's Academy"			=> array ("parent" => "Mists of Pandaria"),
+	"Bizmo's Brawlpub"				=> array ("parent" => "Mists of Pandaria"),
 	"Fish Fellreed" 				=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
 	"Chee Chee" 					=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
 	"Haohan Mudclaw" 				=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
@@ -308,24 +311,21 @@ $output = '';
 		$roster->data['region'] = $region;
 		$this->memberName = $memberName;
 		$this->_getGuildInfo();
-   	/// if ( $this->status['guildInfo'] ) {
-			include_once(ROSTER_LIB . 'update.lib.php');
-			$update = new update;
-			$update->fetchAddonData();
+		include_once(ROSTER_LIB . 'update.lib.php');
+		$update = new update;
+		$update->fetchAddonData();
 
-			$update->uploadData['wowrcp']['cpProfile'][$this->server]['Guild'][$this->data['name']] = $this->data;
-			$this->message = $update->processGuildRoster();
-			$tmp = explode( "\n", $this->message);
-			$this->message = implode( '', $tmp);
+		$update->uploadData['wowrcp']['cpProfile'][$this->server]['Guild'][$this->data['name']] = $this->data;
+		$this->message = $update->processGuildRoster();
+		$tmp = explode( "\n", $this->message);
+		$this->message = implode( '', $tmp);
 
-			$this->_debug( 1, true, 'Synced armory data '. $this->memberName. ' with roster',  'OK' );
-			return true;
-   	// }
-   	// $this->_debug( 0, false, 'Synced armory data '. $this->memberName. ' with roster',  'Failed' );
-   	// return false;
+		$this->_debug( 1, true, 'Synced armory data '. $this->memberName. ' with roster',  'OK' );
+		return true;
 	}
 
-function _synchGuildByID( $server, $memberId = 0, $memberName = false, $region = false, $guilddata) {
+	function _synchGuildByID( $server, $memberId = 0, $memberName = false, $region = false, $guilddata)
+	{
 		global $addon, $roster, $update;
 
 		$this->server = $server;
@@ -349,7 +349,8 @@ function _synchGuildByID( $server, $memberId = 0, $memberName = false, $region =
 
 	}
 	
-function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = false, $data) {
+	function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = false, $data)
+	{
 		global $addon, $roster, $update;
 
 		$this->server = $server;
@@ -357,48 +358,37 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 		$roster->data['region'] = $region;
 		$this->memberName = $memberName;
 		$this->active_member['starttimeutc'] = gmdate('Y-m-d H:i:s');
-		//$this->_getGuildInfo();
-   	/// if ( $this->status['guildInfo'] ) {
-			include_once(ROSTER_LIB . 'update.lib.php');
-			$update = new update;
-			$update->fetchAddonData();
-			$update->uploadData['wowrcp']['cpProfile'][$server]['Guild'][ $memberName] = $this->data;
-			$x = $update->processGuildRoster();
-			$x .= ''.$this->message.'<br>';
-			$this->_debug( 1, true, 'Synced armory data '. $this->memberName. ' with roster',  'OK' );
-			return $x;//true;
-   	// }
-   	// $this->_debug( 0, false, 'Synced armory data '. $this->memberName. ' with roster',  'Failed' );
-   	// return false;
+
+		include_once(ROSTER_LIB . 'update.lib.php');
+		$update = new update;
+		$update->fetchAddonData();
+		$update->uploadData['wowrcp']['cpProfile'][$server]['Guild'][ $memberName] = $this->data;
+		$x = $update->processGuildRoster();
+		$x .= ''.$this->message.'<br>';
+		$this->_debug( 1, true, 'Synced armory data '. $this->memberName. ' with roster',  'OK' );
+		return $x;//true;
+
 	}
 	/**
  	* fetches seperate parts of the character sheet
  	*
  	*/
-  	function _getRosterData() {
-
-			if (function_exists('curl_init')) 
-  				{
-						$this->_getCharacterInfo();
-						if ( $this->status['characterInfo'] ) 
-  							{
-									$this->_insertGems();
-									$this->_getSkillInfo();
-									$this->_getReputationInfo();
-									$this->_getTalentInfo();
-									$this->_debug( 1, $this->data, 'Parsed all armory data',  'OK' );
-  							}
-						else
-  							{
-									$this->_debug( 1, $this->data, 'Parsed all armory data',  'Failed' );
-  							}
-						$this->_debug( 1, $this->data, 'Armory sync initialization',  'Passed' );
-  				}
-			else
-  				{
-						$this->_debug( 1, $this->data, 'Armory sync initialization',  'Failed' );
-  				}
-
+  	function _getRosterData()
+	{
+		$this->_getCharacterInfo();
+		if ( $this->status['characterInfo'] ) 
+		{
+			$this->_insertGems();
+			$this->_getSkillInfo();
+			$this->_getReputationInfo();
+			$this->_getTalentInfo();
+			$this->_debug( 1, $this->data, 'Parsed all armory data',  'OK' );
+		}
+		else
+		{
+			$this->_debug( 1, $this->data, 'Parsed all armory data',  'Failed' );
+		}
+		$this->_debug( 1, $this->data, 'Armory sync initialization',  'Passed' );
 	}
 
 	/**
@@ -409,57 +399,149 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 		global $roster, $addon;
 
 		$guild_name = (isset($roster->data['guild_name']) ? $roster->data['guild_name'] : $this->guild_name);
-		$content = $this->datas;//$roster->api->Guild->getGuildInfo($this->server, $roster->data['guild_name'], '?fields=members');
-		//print_r($content);
+		$content = $this->datas;
 
-			$this->data['Ranks'] = $this->_getGuildRanks( $this->guildId );
-			$this->data['timestamp']['init']['datakey'] = $roster->data['region'];
-			$this->data['timestamp']['init']['TimeStamp'] = time();
-			$this->data['timestamp']['init']['Date'] = date('Y-m-d H:i:s');
-			$this->data['timestamp']['init']['DateUTC'] = gmdate('Y-m-d H:i:s');
-			$this->data['Locale'] = $roster->data['region'];
-			$this->data['GPprovider'] = "ApiSyncGuild";
-			$this->data['FactionEn'] = $roster->locale->act['id_to_faction'][$content['side']];
-			$this->data['Faction'] = $roster->locale->act['id_to_faction'][$content['side']];
-			$this->data["DBversion"] = '3.1';
-			$this->data["GPversion"] = $roster->config['minGPver'];
-			$this->data['name'] = $guild_name;
-			$this->data['Server'] = $this->datas['realm'];
-			$this->data['GuildName'] = $guild_name;
-			$this->data['GuildLevel'] = $content['level'];
-			$this->data['NumMembers'] = count($content['members']);
-			$this->data['GuildLevel'] = $content['level'];
-			$this->data['Info'] = ''; //$roster->data['guild_info_text'];
-			//$this->data['NumMembers'] = count($content['members']);
-			//$this->data['GuildLevel'] = $content['level'];
+		$this->data['Ranks'] = $this->_getGuildRanks( $this->guildId );
+		$this->data['timestamp']['init']['datakey'] = $roster->data['region'];
+		$this->data['timestamp']['init']['TimeStamp'] = time();
+		$this->data['timestamp']['init']['Date'] = date('Y-m-d H:i:s');
+		$this->data['timestamp']['init']['DateUTC'] = gmdate('Y-m-d H:i:s');
+		$this->data['Locale'] = $roster->data['region'];
+		$this->data['GPprovider'] = "ApiSyncGuild";
+		$this->data['FactionEn'] = $roster->locale->act['id_to_faction'][$content['side']];
+		$this->data['Faction'] = $roster->locale->act['id_to_faction'][$content['side']];
+		$this->data["DBversion"] = '3.1';
+		$this->data["GPversion"] = $roster->config['minGPver'];
+		$this->data['name'] = $guild_name;
+		$this->data['Server'] = $this->datas['realm'];
+		$this->data['GuildName'] = $guild_name;
+		$this->data['GuildLevel'] = $content['level'];
+		$this->data['NumMembers'] = count($content['members']);
+		$this->data['GuildLevel'] = $content['level'];
+		$this->data['Info'] = ''; //$roster->data['guild_info_text'];
+			
+		$min = 60;
+		$hour = 60 * $min;
+		$day = 24 * $hour;
+		$month = 30 * $day;
+		$year = 365 * $day;
+		foreach ( $content['members'] as $id => $member )
+		{
+			$player['AchRank'] = '';
+			$player['Zone'] = "";
+			$player['Class'] = $roster->locale->act['id_to_class'][$member['character']['class']];
+			$player['ClassId'] = $member['character']['class'];
+			$player['Name'] = $member['character']['name'];
+			$player['Level'] = $member['character']['level'];
+			$player['Mobile'] = false;
+			$player['Title'] = $this->data['Ranks'][$member['rank']]['Title'];
+			$player['AchPoints'] = $member['character']['achievementPoints'];
+			$player['RankEn'] = $this->data['Ranks'][$member['rank']]['Title'];
+			$player['LastOnline'] = "0:0:0:0";
+			$player['Rank'] = $member['rank'];
+			$player['Online'] ='0';
+			$this->status['guildInfo'] += 1;
+			$this->data['Members'][$member['character']['name']] = $player;
+		}
 
-			$min = 60;
-			$hour = 60 * $min;
-			$day = 24 * $hour;
-			$month = 30 * $day;
-			$year = 365 * $day;
-			foreach ( $content['members'] as $id => $member ) {
-					////echo $roster->locale->act['enUS']['id_to_class'][$member['classid']];
+		$this->_debug( 1, $this->data, 'Parsed guild info',  'OK' );
+	}
 
-					$player['AchRank'] = '';
-					$player['Zone'] = "";
-					$player['Class'] = $roster->locale->act['id_to_class'][$member['character']['class']];
-					$player['ClassId'] = $member['character']['class'];
-					$player['Name'] = $member['character']['name'];
-					$player['Level'] = $member['character']['level'];
-					$player['Mobile'] = false;
-					$player['Title'] = $this->data['Ranks'][$member['rank']]['Title'];
-					$player['AchPoints'] = $member['character']['achievementPoints'];
-					$player['RankEn'] = $this->data['Ranks'][$member['rank']]['Title'];
-					$player['LastOnline'] = "0:0:0:0";
-					$player['Rank'] = $member['rank'];
-					$player['Online'] ='0';
-					/*$player['XP'] = array(
-							'TotalXP' => '0',
-							'WeeklyXP' => '0',
-							'TotalRank' => '0',
-							'WeeklyRank' => '0');
-					/
+	/*
+ 	* had to get evil and make a new guild data paser for the new adding style...
+ 	*/
+	
+	function build_guild( $content, $gid ) 
+	{
+		global $roster, $addon;
+
+		$guild = $content->guildInfo->guild;
+		$guildh = $content->guildInfo->guildHeader;
+		
+		$this->data['timestamp']['init']['datakey'] = $roster->data['3'];
+		$this->data['Ranks'] = $this->_getGuildRanks( $this->guildId );
+		$this->data['timestamp']['init']['datakey'] = $roster->data['region'];
+		$this->data['timestamp']['init']['TimeStamp'] = time();
+		$this->data['timestamp']['init']['Date'] = date('Y-m-d H:i:s');
+		$this->data['timestamp']['init']['DateUTC'] = gmdate('Y-m-d H:i:s');
+		$this->data['GPprovider'] = "ApiSync";
+		$this->data['FactionEn'] = $roster->locale->act['id_to_faction'][(string)$guildh["faction"]];
+		$this->data["DBversion"] = $roster->config['minGPver'];
+		$this->data["GPversion"] = $roster->config['minGPver'];
+		$this->data["GuildName"] = $roster->data['guild_name'];
+		$this->data['EventLog'] = array();
+		$this->data['name'] = $this->memberName;
+		$this->data['Info'] = '';
+		$members = $this->_getGuildMembers( $gid );
+
+		$min = 60;
+		$hour = 60 * $min;
+		$day = 24 * $hour;
+		$month = 30 * $day;
+		$year = 365 * $day;
+
+		foreach ( $guild->members->character as $ch => $char )
+		{
+			$player = array();
+			$player["name"] = ''.$char['name'].'';
+			$player["ClassId"] = ''.$char['classId'].'';
+			$player['Class'] = $roster->locale->act['id_to_class'][''.$player["ClassId"].''];//$char['class'];
+			$player["ClassEn"] = $roster->locale->act['class_to_en'][''.$player["Class"].''];
+			if ( substr($player["Class"] ,0,1) == 'J' && substr($player["Class"] ,-3) == 'ger' ) {
+					$player["Class"] = utf8_encode('Jäger');
+			}
+			$player['Level'] = ''.$char['level'].'';
+			$player['Rank'] = ''.$char['rank'].'';
+			if ( array_key_exists( ''.$char['name'].'', $members ) )
+			{
+				$player['Note'] = $members[''.$char['name'].'']['note'];
+				$player['Zone'] = $members[''.$char['name'].'']['zone'];
+				$player['Status'] = $members[''.$char['name'].'']['status'];
+				$player['Online'] = "0";
+
+				$curtime = time();
+				$diff = $curtime - strtotime( $members[''.$char['name'].'']['last_online'] );
+				$years = floor( $diff / $year );
+				$diff -= $years * $year;
+				$months = floor( $diff / $month );
+				$diff -= $months * $month;
+				$days = floor ( $diff / $day );
+				$diff -= $days * $day;
+				$hours = floor ( $diff / $hour );
+
+				$player['LastOnline'] = $years. ":". $months. ":". $days. ":". $hours;
+
+				$members[''.$char['name'].'']['done'] = 1;
+			}
+			else
+			{
+				$player['Online'] = "1";
+			}
+			$this->data['Members'][''.$char['name'].''] = $player;
+			$this->status['guildInfo'] += 1;
+		}
+
+		if ( isset($roster->addon_data['guildbank']) && $roster->addon_data['guildbank']['active'] == 1 )
+		{
+			$guildbank = getaddon('guildbank');
+		}
+
+		foreach ( $members as $member )
+		{
+			if ( ! array_key_exists( 'done', $member ) )
+			{
+				if ( is_int( array_search( $member['guild_title'], explode( ',', $addon['config']['ApiSync_protectedtitle'] ) ) ) || ( isset($guildbank) && strstr($member[$guildbank['config']['banker_fieldname']], $guildbank['config']['banker_rankname']) )
+					)
+				{
+					$player['name'] = $member['name'];
+					$player['Class'] = $roster->locale->act['enUS']['id_to_class'][$member['classid']];//$member['class'];
+					$player['Level'] = $member['level'];
+					$player['Rank'] = $member['guild_rank'];
+					$player['Note'] = $member['note'];
+					$player['Zone'] = $member['zone'];
+					$player['Status'] = $member['status'];
+					$player['Online'] = $member['online'];
+
 					$curtime = time();
 					$diff = $curtime - strtotime( $member['last_online'] );
 					$years = floor( $diff / $year );
@@ -469,128 +551,14 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 					$days = floor ( $diff / $day );
 					$diff -= $days * $day;
 					$hours = floor ( $diff / $hour );
-					$player['LastOnline'] = $years. ":". $months. ":". $days. ":". $hours;
-					*/
-					$this->status['guildInfo'] += 1;
-					$this->data['Members'][$member['character']['name']] = $player;
-				}
-				////echo '<pre>';
-				//print_r($this->data);
-				////echo '</pre><br>';
-			$this->_debug( 1, $this->data, 'Parsed guild info',  'OK' );
-	}
-
-	/*
- 	* 
- 	* had to get evil and make a new guild data paser for the new adding style...
- 	* 
- 	*/
-	
-	
-	
-	function build_guild( $content, $gid ) {
-		global $roster, $addon;
-
-			$guild = $content->guildInfo->guild;
-			$guildh = $content->guildInfo->guildHeader;
-			
-			$this->data['timestamp']['init']['datakey'] = $roster->data['3'];
-			$this->data['Ranks'] = $this->_getGuildRanks( $this->guildId );
-			$this->data['timestamp']['init']['datakey'] = $roster->data['region'];
-			$this->data['timestamp']['init']['TimeStamp'] = time();
-			$this->data['timestamp']['init']['Date'] = date('Y-m-d H:i:s');
-			$this->data['timestamp']['init']['DateUTC'] = gmdate('Y-m-d H:i:s');
-			$this->data['GPprovider'] = "ApiSync";
-			$this->data['FactionEn'] = $roster->locale->act['id_to_faction'][(string)$guildh["faction"]];
-			$this->data["DBversion"] = $roster->config['minGPver'];
-			$this->data["GPversion"] = $roster->config['minGPver'];
-			$this->data["GuildName"] = $roster->data['guild_name'];
-			$this->data['EventLog'] = array();
-			$this->data['name'] = $this->memberName;
-			$this->data['Info'] = '';
-			$members = $this->_getGuildMembers( $gid );
-
-			$min = 60;
-			$hour = 60 * $min;
-			$day = 24 * $hour;
-			$month = 30 * $day;
-			$year = 365 * $day;
-
-			foreach ( $guild->members->character as $ch => $char ) {
-				$player = array();
-				$player["name"] = ''.$char['name'].'';
-				$player["ClassId"] = ''.$char['classId'].'';
-				$player['Class'] = $roster->locale->act['id_to_class'][''.$player["ClassId"].''];//$char['class'];
-				$player["ClassEn"] = $roster->locale->act['class_to_en'][''.$player["Class"].''];
-				if ( substr($player["Class"] ,0,1) == 'J' && substr($player["Class"] ,-3) == 'ger' ) {
-						$player["Class"] = utf8_encode('Jäger');
-				}
-				$player['Level'] = ''.$char['level'].'';
-				$player['Rank'] = ''.$char['rank'].'';
-				if ( array_key_exists( ''.$char['name'].'', $members ) ) {
-					$player['Note'] = $members[''.$char['name'].'']['note'];
-					$player['Zone'] = $members[''.$char['name'].'']['zone'];
-					$player['Status'] = $members[''.$char['name'].'']['status'];
-					$player['Online'] = "0";
-
-					$curtime = time();
-					$diff = $curtime - strtotime( $members[''.$char['name'].'']['last_online'] );
-					$years = floor( $diff / $year );
-					$diff -= $years * $year;
-					$months = floor( $diff / $month );
-					$diff -= $months * $month;
-					$days = floor ( $diff / $day );
-					$diff -= $days * $day;
-					$hours = floor ( $diff / $hour );
 
 					$player['LastOnline'] = $years. ":". $months. ":". $days. ":". $hours;
 
-					$members[''.$char['name'].'']['done'] = 1;
-				} else {
-					$player['Online'] = "1";
-				}
-				$this->data['Members'][''.$char['name'].''] = $player;
-				$this->status['guildInfo'] += 1;
-			}
-
-			if ( isset($roster->addon_data['guildbank']) && $roster->addon_data['guildbank']['active'] == 1 ) {
-				$guildbank = getaddon('guildbank');
-			}
-   		// //aprint($members);
-			foreach ( $members as $member ) {
-				if ( ! array_key_exists( 'done', $member ) ) {
-					if ( is_int( array_search( $member['guild_title'], explode( ',', $addon['config']['ApiSync_protectedtitle'] ) ) )
-						||
-						( isset($guildbank) && strstr($member[$guildbank['config']['banker_fieldname']], $guildbank['config']['banker_rankname']) )
-						) {
-						////echo $roster->locale->act['enUS']['id_to_class'][$member['classid']];
-						$player['name'] = $member['name'];
-						$player['Class'] = $roster->locale->act['enUS']['id_to_class'][$member['classid']];//$member['class'];
-						$player['Level'] = $member['level'];
-						$player['Rank'] = $member['guild_rank'];
-						$player['Note'] = $member['note'];
-						$player['Zone'] = $member['zone'];
-						$player['Status'] = $member['status'];
-						$player['Online'] = $member['online'];
-
-						$curtime = time();
-						$diff = $curtime - strtotime( $member['last_online'] );
-						$years = floor( $diff / $year );
-						$diff -= $years * $year;
-						$months = floor( $diff / $month );
-						$diff -= $months * $month;
-						$days = floor ( $diff / $day );
-						$diff -= $days * $day;
-						$hours = floor ( $diff / $hour );
-
-						$player['LastOnline'] = $years. ":". $months. ":". $days. ":". $hours;
-
-						$this->data['Members'][$member['name']] = $player;
-					}
+					$this->data['Members'][$member['name']] = $player;
 				}
 			}
-			//$this->data;
-			$this->_debug( 1, $this->data, 'Parsed guild info',  'OK' );
+		}
+		$this->_debug( 1, $this->data, 'Parsed guild info',  'OK' );
 	}
 	
 	/*
@@ -642,7 +610,6 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 	function _contentcheck($array, $keys = array() )
 	{
 		global $roster, $addon;
-		////aprint($array);
 		if (is_object($array))
 		{
 			if (is_array($keys))
@@ -681,14 +648,9 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
  	* fetches character info
  	*
  	*/
-	function _getCharacterInfo() {
+	function _getCharacterInfo()
+	{
 			global $roster, $addon;
-
-			include_once(ROSTER_LIB . 'armory.class.php');
-			
-			$armory = new Rosterarmory;
-			
-			$this->_setUserAgent($armory);
 
 			$char = (!empty($this->apidata) ? $this->apidata :$roster->api->Char->getCharInfo($this->server,$this->memberName,'1:2:3:4:5:7:11:14'));
 
@@ -696,11 +658,8 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 
 			if ( isset($char['name']) )
 			{
-
   				$rank = $this->_getMemberRank( $this->memberId );
 
- 				// $this->_getSkillInfo($skills);
- 				// //echo $char['name'].' '.$armory->region.'<br>';
   				$this->data["Name"] = ''.$char['name'].'';//$char['name'];
   				$this->data["Level"] = ''.$char['level'].'';
   				$this->data["Server"] = ''.$char['realm'].'';
@@ -834,9 +793,6 @@ function synchGuildbob( $server, $memberId = 0, $memberName = false, $region = f
 			$this->data["Attributes"]["Spell"]["School"]["Shadow"] = '';//''.$tab->spell->bonusDamage->shadow['value'].'';
 			$this->data["Attributes"]["Spell"]["School"]["Nature"] = '';//''.$tab->spell->bonusDamage->nature['value'].'';
 
-
-
-			//$this->data["TalentPoints"] = ($char->level > 0) ? $char->level - $tab->talentGroup->talentSpec->treeOne - $tab->talentGroup->talentSpec->treeTwo - $tab->talentGroup->talentSpec->treeThree - 9 : 0;
 			$this->data["Race"] 				= $roster->locale->act['id_to_race'][$char['race']];
 			$this->data["RaceId"]   			= ''.$char['race'].'';
 			$this->data["RaceEn"]   			= $roster->locale->act['race_to_en'][$this->data["Race"]];
@@ -972,125 +928,122 @@ function return_gender($genderid) {
 		foreach($equip as $slot => $item) 
 		{
 		
-		if ($slot != 'averageItemLevel' && $slot != 'averageItemLevelEquipped')
-		{
-		////echo '<pre>';
-   		//print_r($item);
-		////echo '</pre>';
-			// prepare some data
-			$enchant =  $gem0 =  $gem1 =  $gem2 = $es = $set = $reforge = $suffex = $seed = null;
-			$gam['enchant']=$gam['enchant']=$gam['reforge']=$gam['suffix']=$gam['seed']=$gam['set']=null;
-			$gam['gem0']=$gam['gem1']=$gam['gem2']=$gam['extraSocket']=null;
-			$tip = '';//str_replace($string, '', $x);
-			$gam = null;
-			$this->gemx = array();
-			$gam = array();
-			foreach ($item['tooltipParams'] as $ge => $id)
+			if ($slot != 'averageItemLevel' && $slot != 'averageItemLevelEquipped')
 			{
-				$gam[$ge] = $id;
-			}
-			if (isset($gam['enchant']))
-			{
-				$enchant = $gam['enchant'] ? $gam['enchant'] : null;
-			}
-			if (isset($gam['reforge']))
-			{
-				$reforge = $gam['reforge'] ? $gam['reforge'] : null;
-			}
-			if (isset($gam['suffix']))
-			{
-				$suffix = $gam['suffix'] ? $gam['suffix'] : null;
-			}
-			if (isset($gam['seed']))
-			{
-				$seed = $gam['seed'] ? $gam['seed'] : null;
-			}
-			if (isset($gam['set']))
-			{
-				$e='';
-				foreach ($gam['set'] as $id => $inf)
+
+				$enchant =  $gem0 =  $gem1 =  $gem2 = $es = $set = $reforge = $suffex = $seed = null;
+				$gam['enchant']=$gam['enchant']=$gam['reforge']=$gam['suffix']=$gam['seed']=$gam['set']=null;
+				$gam['gem0']=$gam['gem1']=$gam['gem2']=$gam['extraSocket']=null;
+				$tip = '';//str_replace($string, '', $x);
+				$gam = null;
+				$this->gemx = array();
+				$gam = array();
+				foreach ($item['tooltipParams'] as $ge => $id)
 				{
-					$e .= $inf.',';
+					$gam[$ge] = $id;
 				}
-				$set = preg_replace('/,$/', '', $e);
-			}
-			
-			if (isset($item['tooltipParams']['gem0']))
-			{
-				$gem0 = $item['tooltipParams']['gem0'];
-				$g0 = $roster->api->Data->getItemInfo($item['tooltipParams']['gem0']);
-				$this->gemx['gem0'] = $g0;
-				$this->gemx['gem0']['Tooltip'] = $roster->db->escape($g0['name']."<br>".$g0['gemInfo']['bonus']['name']."<br>".$g0['description']);
-				$this->gemx['gem0']['gem_bonus'] = $roster->db->escape($g0['gemInfo']['bonus']['name']);
-				$this->gemx['gem0']['gem_color'] = strtolower($g0['gemInfo']['type']['type']);
-			}
-			if (isset($item['tooltipParams']['gem1']))
-			{
-				$gem1 = $item['tooltipParams']['gem1'];
-				$g1 = $roster->api->Data->getItemInfo($item['tooltipParams']['gem1']);
-				$this->gemx['gem1'] = $g1;
-				$this->gemx['gem1']['Tooltip'] = $roster->db->escape($g1['name']."<br>".$g1['gemInfo']['bonus']['name']."<br>".$g1['description']);
-				$this->gemx['gem1']['gem_bonus'] = $roster->db->escape($g1['gemInfo']['bonus']['name']);
-				$this->gemx['gem1']['gem_color'] = strtolower($g1['gemInfo']['type']['type']);
-			}
-			if (isset($item['tooltipParams']['gem2']))
-			{
-				$gem2 = $item['tooltipParams']['gem2'];
-				$g2 = $roster->api->Data->getItemInfo($item['tooltipParams']['gem2']);
-				$this->gemx['gem2'] = $g2;
-				$this->gemx['gem2']['Tooltip'] = $roster->db->escape($g2['name']."<br>".$g2['gemInfo']['bonus']['name']."<br>".$g2['description']);
-				$this->gemx['gem2']['gem_bonus'] = $roster->db->escape($g2['gemInfo']['bonus']['name']);
-				$this->gemx['gem2']['gem_color'] = strtolower($g2['gemInfo']['type']['type']);
-			}
-			$this->_insertGems();
-	
-			if (isset($gam['extraSocket']))
-			{
-				$es = $gam['extraSocket'] ? true : false;
-			}
-			
-			$gam = null;
-			$slot = ucfirst($slot);
-			if ($slot == 'Finger1')
-			{
-			$slot = 'Finger0';
-			}
-			if ($slot == 'Finger2')
-			{
-			$slot = 'Finger1';
-			}
-			
-			if ($slot == 'Trinket1')
-			{
-			$slot = 'Trinket0';
-			}
-			if ($slot == 'Trinket2')
-			{
-			$slot = 'Trinket1';
-			}
-			
-			$item_api = $roster->api->Data->getItemInfo($item['id']);
-			$this->data["Equipment"][$slot] = array();
-			$this->data["Equipment"][$slot]['Item'] = $item['id'];
-			$this->data["Equipment"][$slot]['Type'] = $roster->api->Item->itemclass[$item_api['itemClass']];
-			$this->data["Equipment"][$slot]['SubType'] = $roster->api->Item->itemSubClass[$item_api['itemClass']][$item_api['itemSubClass']];
-			$this->data["Equipment"][$slot]['Icon'] = ''.$item['icon'].'';
-			$this->data["Equipment"][$slot]['Name'] = ''.$item['name'].'';
-			$this->data["Equipment"][$slot]['Color'] = $this->_getItemColor($item['quality']);
-			// api gen tooltip some issues may occure
-			// woraroud itemapi makes html tooltips roster dont like them so we remove them
-			$tx =  $roster->api->Item->item($item_api,$item,$this->gemx);
-			$tt = $this->processtooltips($tx);
-			////echo '<br><hr><br>'.$tt.'<br><hr><br>';
-			$this->data["Equipment"][$slot]['Tooltip'] = $tt;//addslashes($tip);
-			//	$enchant =  $gem0 =  $gem1 =  $gem2 = $es = $set = $reforge = $suffex = $seed = null;
-			$this->data["Equipment"][$slot]['Item'] .= ":". $enchant;
-			$this->data["Equipment"][$slot]['Item'] .= ":". $gem0; // GemId0
-			$this->data["Equipment"][$slot]['Item'] .= ":". $gem1; // GemId1
-			$this->data["Equipment"][$slot]['Item'] .= ":". $gem2; // GemId2
-			$this->data["Equipment"][$slot]['Item'] .= ":". "0"; // ???
-			$this->data["Equipment"][$slot]['Item'] .= ":". "0"; // ???
-			$this->data["Equipment"][$slot]['Item'] .= ":". $seed;
+				if (isset($gam['enchant']))
+				{
+					$enchant = $gam['enchant'] ? $gam['enchant'] : null;
+				}
+				if (isset($gam['reforge']))
+				{
+					$reforge = $gam['reforge'] ? $gam['reforge'] : null;
+				}
+				if (isset($gam['suffix']))
+				{
+					$suffix = $gam['suffix'] ? $gam['suffix'] : null;
+				}
+				if (isset($gam['seed']))
+				{
+					$seed = $gam['seed'] ? $gam['seed'] : null;
+				}
+				if (isset($gam['set']))
+				{
+					$e='';
+					foreach ($gam['set'] as $id => $inf)
+					{
+						$e .= $inf.',';
+					}
+					$set = preg_replace('/,$/', '', $e);
+				}
+				
+				if (isset($item['tooltipParams']['gem0']))
+				{
+					$gem0 = $item['tooltipParams']['gem0'];
+					$g0 = $roster->api->Data->getItemInfo($item['tooltipParams']['gem0']);
+					$this->gemx['gem0'] = $g0;
+					$this->gemx['gem0']['Tooltip'] = $roster->db->escape($g0['name']."<br>".$g0['gemInfo']['bonus']['name']."<br>".$g0['description']);
+					$this->gemx['gem0']['gem_bonus'] = $roster->db->escape($g0['gemInfo']['bonus']['name']);
+					$this->gemx['gem0']['gem_color'] = strtolower($g0['gemInfo']['type']['type']);
+				}
+				if (isset($item['tooltipParams']['gem1']))
+				{
+					$gem1 = $item['tooltipParams']['gem1'];
+					$g1 = $roster->api->Data->getItemInfo($item['tooltipParams']['gem1']);
+					$this->gemx['gem1'] = $g1;
+					$this->gemx['gem1']['Tooltip'] = $roster->db->escape($g1['name']."<br>".$g1['gemInfo']['bonus']['name']."<br>".$g1['description']);
+					$this->gemx['gem1']['gem_bonus'] = $roster->db->escape($g1['gemInfo']['bonus']['name']);
+					$this->gemx['gem1']['gem_color'] = strtolower($g1['gemInfo']['type']['type']);
+				}
+				if (isset($item['tooltipParams']['gem2']))
+				{
+					$gem2 = $item['tooltipParams']['gem2'];
+					$g2 = $roster->api->Data->getItemInfo($item['tooltipParams']['gem2']);
+					$this->gemx['gem2'] = $g2;
+					$this->gemx['gem2']['Tooltip'] = $roster->db->escape($g2['name']."<br>".$g2['gemInfo']['bonus']['name']."<br>".$g2['description']);
+					$this->gemx['gem2']['gem_bonus'] = $roster->db->escape($g2['gemInfo']['bonus']['name']);
+					$this->gemx['gem2']['gem_color'] = strtolower($g2['gemInfo']['type']['type']);
+				}
+				$this->_insertGems();
+		
+				if (isset($gam['extraSocket']))
+				{
+					$es = $gam['extraSocket'] ? true : false;
+				}
+				
+				$gam = null;
+				$slot = ucfirst($slot);
+				if ($slot == 'Finger1')
+				{
+				$slot = 'Finger0';
+				}
+				if ($slot == 'Finger2')
+				{
+				$slot = 'Finger1';
+				}
+				
+				if ($slot == 'Trinket1')
+				{
+				$slot = 'Trinket0';
+				}
+				if ($slot == 'Trinket2')
+				{
+				$slot = 'Trinket1';
+				}
+				$enchant = 0;
+				$item_api = $roster->api->Data->getItemInfo($item['id']);
+				$this->data["Equipment"][$slot] = array();
+				$this->data["Equipment"][$slot]['Item'] = $item['id'];
+				$this->data["Equipment"][$slot]['Type'] = $roster->api->Item->itemclass[$item_api['itemClass']];
+				$this->data["Equipment"][$slot]['SubType'] = $roster->api->Item->itemSubClass[$item_api['itemClass']][$item_api['itemSubClass']];
+				$this->data["Equipment"][$slot]['Icon'] = ''.$item['icon'].'';
+				$this->data["Equipment"][$slot]['Name'] = ''.$item['name'].'';
+				$this->data["Equipment"][$slot]['Color'] = $this->_getItemColor($item['quality']);
+				// api gen tooltip some issues may occure
+				// woraroud itemapi makes html tooltips roster dont like them so we remove them
+				$tx =  $roster->api->Item->item($item_api,$item,$this->gemx);
+				$tt = $this->processtooltips($tx);
+				////echo '<br><hr><br>'.$tt.'<br><hr><br>';
+				$this->data["Equipment"][$slot]['Tooltip'] = $tt;//addslashes($tip);
+				//	$enchant =  $gem0 =  $gem1 =  $gem2 = $es = $set = $reforge = $suffex = $seed = null;
+				$this->data["Equipment"][$slot]['Item'] .= ":". $enchant;
+				$this->data["Equipment"][$slot]['Item'] .= ":". $gem0; // GemId0
+				$this->data["Equipment"][$slot]['Item'] .= ":". $gem1; // GemId1
+				$this->data["Equipment"][$slot]['Item'] .= ":". $gem2; // GemId2
+				$this->data["Equipment"][$slot]['Item'] .= ":". "0"; // ???
+				$this->data["Equipment"][$slot]['Item'] .= ":". "0"; // ???
+				$this->data["Equipment"][$slot]['Item'] .= ":". $seed;
 				// gems !!!!
 				$this->data["Equipment"][$slot]["Gem"]= array();
 				foreach($this->gemx as $gid => $gd)
@@ -1106,13 +1059,15 @@ function return_gender($genderid) {
 					$this->data["Equipment"][$slot]["Gem"][] = $gm;
 				}
 			}
-					
 			$this->status['equipmentInfo'] += 1;
    		}
 		
-		if ( $this->status['equipmentInfo'] > 0 ) {
+		if ( $this->status['equipmentInfo'] > 0 )
+		{
 			$this->_debug( 1, true, 'Parsed equipment info', 'OK' );
-		} else {
+		}
+		else
+		{
 			$this->_debug( 1, false, 'Parsed equipment info', 'Failed' );
 		}
 
@@ -1273,19 +1228,19 @@ function return_gender($genderid) {
 						}
 						if (isset($info['name']))
 						{
-							if (isset($xrep[$ft2]['faction']))
+							if (isset($this->rep[$ft2]['faction']))
 							{
-								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$xrep[$ft2]['faction'].''][''.$ft2.''] = array();
-								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$xrep[$ft2]['faction'].''][''.$ft2.'']["Value"] = $info['value'] . ":" . $info['max'];
-								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$xrep[$ft2]['faction'].''][''.$ft2.'']["Standing"] = $this->_getRepStanding($info['standing']);
-								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$xrep[$ft2]['faction'].''][''.$ft2.'']["AtWar"] = $this->_getRepAtWar($info['value']);
+								$this->data["Reputation"][$this->rep[$ft2]['parent']][''.$this->rep[$ft2]['faction'].''][''.$ft2.''] = array();
+								$this->data["Reputation"][$this->rep[$ft2]['parent']][''.$this->rep[$ft2]['faction'].''][''.$ft2.'']["Value"] = $info['value'] . ":" . $info['max'];
+								$this->data["Reputation"][$this->rep[$ft2]['parent']][''.$this->rep[$ft2]['faction'].''][''.$ft2.'']["Standing"] = $this->_getRepStanding($info['standing']);
+								$this->data["Reputation"][$this->rep[$ft2]['parent']][''.$this->rep[$ft2]['faction'].''][''.$ft2.'']["AtWar"] = $this->_getRepAtWar($info['value']);
 							}
 							else
 							{
-								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$ft2.''] = array();
-								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$ft2.'']["Value"] = $info['value'] . ":" . $info['max'];
-								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$ft2.'']["Standing"] = $this->_getRepStanding($info['standing']);
-								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$ft2.'']["AtWar"] = $this->_getRepAtWar($info['value']);
+								$this->data["Reputation"][$this->rep[$ft2]['parent']][''.$ft2.''] = array();
+								$this->data["Reputation"][$this->rep[$ft2]['parent']][''.$ft2.'']["Value"] = $info['value'] . ":" . $info['max'];
+								$this->data["Reputation"][$this->rep[$ft2]['parent']][''.$ft2.'']["Standing"] = $this->_getRepStanding($info['standing']);
+								$this->data["Reputation"][$this->rep[$ft2]['parent']][''.$ft2.'']["AtWar"] = $this->_getRepAtWar($info['value']);
 							}
 						}
 
@@ -1334,6 +1289,29 @@ function return_gender($genderid) {
 				$_talents['Talents'][$spell['spell']['name']]['Selected'] = true;
 				$this->status['talentInfo']+= 1;
 			}
+
+			foreach ($spec['glyphs'] as $a => $gl)
+			{
+				foreach($gl as $xx => $glyph)
+				{
+				//echo '<pre>'; print_r($glyph); echo $glyph['name'].'</pre>';
+				$item_api = $tx = $tt = null;
+					$item_api = $roster->api->Data->getItemInfo($glyph['item']);
+					$tx =  $roster->api->Item->item($item_api);
+					$tt = $this->processtooltips($tx);
+				
+					$_talents["Glyphs"][] = array(
+						'Type'		=> $this->glyphtype($a),
+						'Tooltip'	=> $tt,
+						'Icon'		=> $glyph['icon'],
+						'Name'		=> $glyph['name'],
+					);
+
+
+				}
+				
+			}
+			//echo '<pre>'; print_r($_talents["Glyphs"]); echo '</pre>';
 			
 			$_talents["Background"] = $spec['spec']['backgroundImage'];//"bg-hunter-marksman",
 			$_talents["Icon"] 		= $spec['spec']['icon'];//"Ability_Hunter_FocusedAim",
@@ -1346,7 +1324,7 @@ function return_gender($genderid) {
 
 		$this->data["Talents"] = $talent;
 		
-	return true;
+		return true;
 	}
 	
 	function build_talent_data( $class )
@@ -1376,10 +1354,33 @@ function return_gender($genderid) {
 				$t["Talents"][$row['name']]['Location'] = $row['row'].':'.$row['column'];
 			}
 		}
+
 		return $t;
 	}
 	// Helper functions
-
+function glyphtype($name)
+	{
+		switch( strtolower( $name ) )
+		{
+			case 'prime':
+				$quality_id = '3';
+				$quality = 'uncommon';
+				break;
+			case 'major':
+				$quality_id = '2';
+				$quality = 'common';
+				break;
+			case 'minor':
+				$quality_id = '1';
+				$quality = 'poor';
+				break;
+			default:
+				$quality_id = '0';
+				$quality = 'none';
+				break;
+		}
+		return $quality_id;
+	}
 	/**
  	* helper function to get classes for content
  	*

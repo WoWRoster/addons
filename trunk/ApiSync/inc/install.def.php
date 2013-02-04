@@ -62,14 +62,16 @@ class ApiSyncInstall
 		$installer->add_config("'1','startpage','ApiSync_conf','display','master'");
 		$installer->add_config("'10','ApiSync_conf',NULL,'blockframe','menu'");
 		$installer->add_config("'15','ApiSync_ranks',NULL,'blockframe','menu'");
+		$installer->add_config("'20','ApiSync_scaning',NULL,'blockframe','menu'");
 		$installer->add_config("'30','ApiSync_access',NULL,'blockframe','menu'");
 		$installer->add_config("'90','ApiSync_debug',NULL,'blockframe','menu'");
 
-		$installer->add_config("'302','ApiSync_frm1',NULL,'page{1','ApiSync_images'");
-		$installer->add_config("'303','ApiSync_frm2',NULL,'page{1','ApiSync_images'");
-		$installer->add_config("'304','ApiSync_frm3',NULL,'page{3','ApiSync_images'");
-		$installer->add_config("'320','ApiSync_effects',NULL,'blockframe','ApiSync_frm2'");
-
+		$installer->add_config("'301','ApiSync_MinLvl',NULL,'page{1','ApiSync_images'");
+		$installer->add_config("'302','ApiSync_MaxLvl',NULL,'page{1','ApiSync_images'");
+		$installer->add_config("'303','ApiSync_Rank','','select{None^|GuildMaster^0|Rank 1^1|Rank 2^2|Rank 3^3|Rank 4^4|Rank 5^5|Rank 6^6|Rank 7^7|Rank 8^8|Rank 9^9|Rank 10^10|Rank 11^11|Rank 12^12|', 'ApiSync_images'");
+		$installer->add_config("'301','ApiSync_frm1',NULL,'page{1','ApiSync_images'");
+		$installer->add_config("'301','ApiSync_frm1',NULL,'page{1','ApiSync_images'");
+		$installer->add_config("'301','ApiSync_frm1',NULL,'page{1','ApiSync_images'");
 
 		$installer->add_config("'1100', 'ApiSync_minlevel', '10', 'text{2|2', 'ApiSync_conf'");
 		$installer->add_config("'1200', 'ApiSync_synchcutofftime', '1', 'text{4|4', 'ApiSync_conf'");
