@@ -1482,6 +1482,8 @@
 		function _getMembersToUpdate( $where = false ){
 			global $roster, $addon;
 			
+			
+			$where = '';
 			$query =	"SELECT members.member_id, members.name, " .
 			"guild.guild_id, guild.guild_name, guild.server, guild.region ".
 			"FROM `".$roster->db->table('members')."` members ".
@@ -1490,8 +1492,10 @@
 			"LEFT JOIN `". $roster->db->table('updates',$addon['basename']). "` updates ".
 			"ON members.member_id = updates.member_id ".
 			"WHERE ". $where.
-			//"members.level >= " . $addon['config']['ApiSync_minlevel'] . " " .
-			"members.level >= 80 " .
+			"members.level >= " . $addon['config']['ApiSync_minlevel'] . " " .
+			
+			$where .
+			//"members.level >= 80 " .
 			//"AND ( ".
 			//"   ISNULL(updates.dateupdatedutc) ".
 			//"   OR ".
