@@ -165,7 +165,7 @@ class ApiSync extends ApiSyncBase {
 	"The Klaxxi" 					=> array ("parent" => "Mists of Pandaria"),
 	"The Lorewalkers" 				=> array ("parent" => "Mists of Pandaria"),
 	"The Tillers" 					=> array ("parent" => "Mists of Pandaria"),
-	"".$this->guild_name."" 		=> array ("parent" => "Guild"),);
+	"".$this->guild_name."" 		=> array ("parent" => "Guild"));
 	
 	function getMessages()
 	
@@ -1175,6 +1175,7 @@ function return_gender($genderid) {
 	"Stormpike Guard"				=> array ("parent" => "Classic","faction" => "Alliance Forces"),
 	"Silverwing Sentinels"			=> array ("parent" => "Classic","faction" => "Alliance Forces"),
 	"The League of Arathor"			=> array ("parent" => "Classic","faction" => "Alliance Forces"),
+	"Bizmo\'s Brawlpub"				=> array ("parent" => "Classic","faction" => "Alliance Forces"),
 	"Timbermaw Hold"				=> array ("parent" => "Classic"),
 	"Zandalar Tribe"				=> array ("parent" => "Classic"),
 	//"Alliance"					=> array ("parent" => "Classic"),
@@ -1205,6 +1206,7 @@ function return_gender($genderid) {
 	"The Lorewalkers" 				=> array ("parent" => "Mists of Pandaria"),
 	"Shado-Pan" 					=> array ("parent" => "Mists of Pandaria"),
 	"The Black Prince" 				=> array ("parent" => "Mists of Pandaria"),
+	"Shang Xi\'s Academy"			=> array ("parent" => "Mists of Pandaria"),
 	"The Anglers" 					=> array ("parent" => "Mists of Pandaria","faction" => "The Anglers"),
 	"Nat Pagle" 					=> array ("parent" => "Mists of Pandaria","faction" => "The Anglers"),
 	"The Tillers" 					=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
@@ -1218,7 +1220,7 @@ function return_gender($genderid) {
 	"Tina Mudclaw"					=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
 	"Jogu the Drunk" 				=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
 	"Ella" 							=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
-	"".$this->guild_name."" => array ("parent" => "Guild"),);
+	"".$this->guild_name."" 		=> array ("parent" => "Guild"),);
 	//echo '<pre>';print_r($xrep);//echo'</pre>';
 	
 			$this->data["Reputation"]["Count"] = 0;
@@ -1237,19 +1239,19 @@ function return_gender($genderid) {
 						}
 						if (isset($info['name']))
 						{
-							if (isset($this->rep[$ft2]['faction']))
+							if (isset($xrep[$ft2]['faction']))
 							{
-								$this->data["Reputation"][$this->rep[$ft2]['parent']][''.$this->rep[$ft2]['faction'].''][''.$ft2.''] = array();
-								$this->data["Reputation"][$this->rep[$ft2]['parent']][''.$this->rep[$ft2]['faction'].''][''.$ft2.'']["Value"] = $info['value'] . ":" . $info['max'];
-								$this->data["Reputation"][$this->rep[$ft2]['parent']][''.$this->rep[$ft2]['faction'].''][''.$ft2.'']["Standing"] = $this->_getRepStanding($info['standing']);
-								$this->data["Reputation"][$this->rep[$ft2]['parent']][''.$this->rep[$ft2]['faction'].''][''.$ft2.'']["AtWar"] = $this->_getRepAtWar($info['value']);
+								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$xrep[$ft2]['faction'].''][''.$ft2.''] = array();
+								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$xrep[$ft2]['faction'].''][''.$ft2.'']["Value"] = $info['value'] . ":" . $info['max'];
+								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$xrep[$ft2]['faction'].''][''.$ft2.'']["Standing"] = $this->_getRepStanding($info['standing']);
+								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$xrep[$ft2]['faction'].''][''.$ft2.'']["AtWar"] = $this->_getRepAtWar($info['value']);
 							}
 							else
 							{
-								$this->data["Reputation"][$this->rep[$ft2]['parent']][''.$ft2.''] = array();
-								$this->data["Reputation"][$this->rep[$ft2]['parent']][''.$ft2.'']["Value"] = $info['value'] . ":" . $info['max'];
-								$this->data["Reputation"][$this->rep[$ft2]['parent']][''.$ft2.'']["Standing"] = $this->_getRepStanding($info['standing']);
-								$this->data["Reputation"][$this->rep[$ft2]['parent']][''.$ft2.'']["AtWar"] = $this->_getRepAtWar($info['value']);
+								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$ft2.''] = array();
+								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$ft2.'']["Value"] = $info['value'] . ":" . $info['max'];
+								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$ft2.'']["Standing"] = $this->_getRepStanding($info['standing']);
+								$this->data["Reputation"][$xrep[$ft2]['parent']][''.$ft2.'']["AtWar"] = $this->_getRepAtWar($info['value']);
 							}
 						}
 
