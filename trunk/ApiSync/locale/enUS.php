@@ -82,7 +82,13 @@ $lang['admin']['ApiSync_xdebug_idekey']	= 'XDebug Session IDEKEY|Define IDEKEY f
 $lang['admin']['ApiSync_sqldebug']		= 'SQL Debug|Enable SQL debugging for ApiSync.<br />Not useful in combination with roster SQL debugging / duplicate data.';
 $lang['admin']['ApiSync_updateroster']	= "Update Roster|Enable roster updates.<br />Good for debugging<br />Not implemented yet.";
 
-
+$lang['admin']['ApiSync_scaning']	= 'Scaning Settings';
+$lang['admin']['ApiSync_MinLvl']	= 'Min Level';
+$lang['admin']['ApiSync_MaxLvl']	= 'Max Level';
+$lang['admin']['ApiSync_Rank']		= 'Ranks';
+$lang['admin']['ApiSync_Class']		= 'Classes';
+		
+		
 $lang['bindings']['bind_on_pickup'] = "Binds when picked up";
 $lang['bindings']['bind_on_equip'] = "Binds when equipped";
 $lang['bindings']['bind'] = "Soulbound";

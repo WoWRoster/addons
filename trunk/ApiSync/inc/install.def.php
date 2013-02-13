@@ -39,9 +39,7 @@ class ApiSyncInstall
 			"info"=>	"Author API Dev"),
 			array(	"name"=>	"poetter@WoWRoster.net",
 			"info"=>	"Author of ArmorySync"),
-
 	);
-
 
 	/**
 	 * Install function
@@ -66,12 +64,11 @@ class ApiSyncInstall
 		$installer->add_config("'30','ApiSync_access',NULL,'blockframe','menu'");
 		$installer->add_config("'90','ApiSync_debug',NULL,'blockframe','menu'");
 
-		$installer->add_config("'301','ApiSync_MinLvl',NULL,'page{1','ApiSync_images'");
-		$installer->add_config("'302','ApiSync_MaxLvl',NULL,'page{1','ApiSync_images'");
-		$installer->add_config("'303','ApiSync_Rank','','select{None^|GuildMaster^0|Rank 1^1|Rank 2^2|Rank 3^3|Rank 4^4|Rank 5^5|Rank 6^6|Rank 7^7|Rank 8^8|Rank 9^9|Rank 10^10|Rank 11^11|Rank 12^12|', 'ApiSync_images'");
-		$installer->add_config("'301','ApiSync_frm1',NULL,'page{1','ApiSync_images'");
-		$installer->add_config("'301','ApiSync_frm1',NULL,'page{1','ApiSync_images'");
-		$installer->add_config("'301','ApiSync_frm1',NULL,'page{1','ApiSync_images'");
+		//scanning settings many new options
+		$installer->add_config("'201','ApiSync_MinLvl','10', 'text{2|2', 'ApiSync_scaning'");
+		$installer->add_config("'202','ApiSync_MaxLvl','90', 'text{2|2', 'ApiSync_scaning'");
+		$installer->add_config("'203','ApiSync_Rank','','select{----None----^|GuildMaster^0|Rank 1^1|Rank 2^2|Rank 3^3|Rank 4^4|Rank 5^5|Rank 6^6|Rank 7^7|Rank 8^8|Rank 9^9|Rank 10^10|Rank 11^11|Rank 12^12', 'ApiSync_scaning'");
+		$installer->add_config("'204','ApiSync_Class','','select{----None----^|Warrior^1|Paladin^2|Hunter^3|Rogue^4|Priest^5|Death Knight^6|Shaman^7|Mage^8|Warlock^9|Monk^10|Druid^11', 'ApiSync_scaning'");
 
 		$installer->add_config("'1100', 'ApiSync_minlevel', '10', 'text{2|2', 'ApiSync_conf'");
 		$installer->add_config("'1200', 'ApiSync_synchcutofftime', '1', 'text{4|4', 'ApiSync_conf'");
@@ -100,8 +97,6 @@ class ApiSyncInstall
 		$installer->add_config("'1470', 'ApiSync_realm_update_access', '3', 'access', 'ApiSync_access'");
 		$installer->add_config("'1480', 'ApiSync_guild_add_access', '3', 'access', 'ApiSync_access'");
 
-		$installer->add_config("'2200', 'ApiSync_pic_effects', '1', 'radio{On^1|Off^0', 'ApiSync_effects'");
-
 		$installer->add_config("'9100', 'ApiSync_debuglevel', '1', 'select{All Methods Data Info^3|Armory & Job Data Info^2|Base Info^1|Quiet^0', 'ApiSync_debug'");
 		$installer->add_config("'9110', 'ApiSync_debugdata', '0', 'radio{yes^1|no^0', 'ApiSync_debug'");
 		$installer->add_config("'9120', 'ApiSync_javadebug', '0', 'radio{yes^1|no^0', 'ApiSync_debug'");
@@ -114,12 +109,8 @@ class ApiSyncInstall
 		$installer->add_menu_button('async_button1','char', '', 'as_char.jpg');
 		$installer->add_menu_button('async_button2','guild', '', 'as_char.jpg');
 		$installer->add_menu_button('async_button3','realm', '', 'as_char.jpg');
-        // dont uncoment these they do not work!
 		$installer->add_menu_button('async_button4','guild', 'memberlist', 'as_memberlist.jpg');
 		$installer->add_menu_button('async_button5','util', 'add', 'as_guild_add.jpg');
-		
-		//ROSTER_CACHEDIR
-
 
 		$installer->create_table(
 				$installer->table('jobs'),
@@ -168,22 +159,6 @@ class ApiSyncInstall
 	function upgrade($oldversion)
 	{
 		global $installer;
-		
-		/*
-		if ( version_compare('2.7.2.515', $oldversion,'>') == true ) {
-			$installer->remove_all_menu_button();
-                        $installer->update_config('1250', 'config_value=0');
-                        $installer->add_menu_button('async_button1','char', '', 'as_char.jpg');
-			$installer->add_menu_button('async_button2','guild', '', 'as_char.jpg');
-			$installer->add_menu_button('async_button3','realm', '', 'as_char.jpg');
-                	$installer->add_menu_button('async_button6','guild', 'bob', 'memberlist_update.png');
-                        
-                        
-                }
-		*/
-		if ( version_compare('1.0.1', $oldversion,'>') == true ) {
-			$installer->add_menu_button('async_button5','util', 'add', 'as_guild_add.jpg');
-	    }
 
 		return true;
 	}
