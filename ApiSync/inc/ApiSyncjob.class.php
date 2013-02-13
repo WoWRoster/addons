@@ -682,7 +682,7 @@
 			$roster->tpl->assign_vars(array(
 				'IMAGE_PATH' => $addon['image_path'],
 				
-				'USE_EFFECTS' => $addon['config']['ApiSync_pic_effects'],
+				'USE_EFFECTS' => null,
 				
 				'LINK' => ( $this->link ? $this->link : makelink() ),
 				'DEBUG' => $addon['config']['ApiSync_xdebug_php'] ? "<input type=\"hidden\" name=\"XDEBUG_SESSION_START\" value=\"". $addon['config']['ApiSync_xdebug_idekey']. "\" />" : "",
@@ -1483,7 +1483,33 @@
 			global $roster, $addon;
 			
 			
-			$where = '';
+			//$where = '';
+			//ok add the new where styatements
+			$w = array();
+			if (isset($addon['config']['ApiSync_MinLvl']) && !empty($addon['config']['ApiSync_MinLvl']))
+			{
+				$w[] = "members.level >= '" . $addon['config']['ApiSync_MinLvl'] . "'";
+			}
+			if (isset($addon['config']['ApiSync_MaxLvl']) && !empty($addon['config']['ApiSync_MaxLvl']))
+			{
+				$w[] = "members.level <= '" . $addon['config']['ApiSync_MaxLvl'] . "'";
+			}
+			if (isset($addon['config']['ApiSync_Rank']) && !empty($addon['config']['ApiSync_Rank']))
+			{
+				$w[] = "members.guild_rank = '" . $addon['config']['ApiSync_Rank'] . "'";
+			}
+			if (isset($addon['config']['ApiSync_Class']) && !empty($addon['config']['ApiSync_Class']))
+			{
+				$w[] = "members.classid = '" . $addon['config']['ApiSync_Class'] . "'";
+			}
+			if (count($w) > 1)
+			{
+				$where .= implode($w,' AND ');
+			}
+			if (count($w) == 1)
+			{
+				$where .= implode($w,' ');
+			}
 			$query =	"SELECT members.member_id, members.name, " .
 			"guild.guild_id, guild.guild_name, guild.server, guild.region ".
 			"FROM `".$roster->db->table('members')."` members ".
@@ -1492,21 +1518,8 @@
 			"LEFT JOIN `". $roster->db->table('updates',$addon['basename']). "` updates ".
 			"ON members.member_id = updates.member_id ".
 			"WHERE ". $where.
-			"members.level >= " . $addon['config']['ApiSync_minlevel'] . " " .
-			
-			$where .
-			//"members.level >= 80 " .
-			//"AND ( ".
-			//"   ISNULL(updates.dateupdatedutc) ".
-			//"   OR ".
-			//"   updates.dateupdatedutc <= DATE_SUB(UTC_TIMESTAMP(), INTERVAL " . $addon['config']['ApiSync_synchcutofftime'] . " DAY) ".
-			//" ) ".
-			"ORDER BY members.member_id;";
-			//"ORDER BY members.member_id ".
-			//"LIMIT 5;";
-			
-			
-			
+			"ORDER BY members.member_id;";	
+
 			$result = $roster->db->query($query);
 			if( $roster->db->num_rows($result) > 0 ) {
 				$ret = $roster->db->fetch_all();
