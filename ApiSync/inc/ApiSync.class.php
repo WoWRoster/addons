@@ -1074,7 +1074,7 @@ function return_gender($genderid) {
 	"Stormpike Guard"				=> array ("parent" => "Classic","faction" => "Alliance Forces"),
 	"Silverwing Sentinels"			=> array ("parent" => "Classic","faction" => "Alliance Forces"),
 	"The League of Arathor"			=> array ("parent" => "Classic","faction" => "Alliance Forces"),
-	"Bizmo\'s Brawlpub"				=> array ("parent" => "Classic","faction" => "Alliance Forces"),
+	"Bizmo's Brawlpub"				=> array ("parent" => "Classic","faction" => "Alliance Forces"),
 	"Timbermaw Hold"				=> array ("parent" => "Classic"),
 	"Zandalar Tribe"				=> array ("parent" => "Classic"),
 	//"Alliance"					=> array ("parent" => "Classic"),
@@ -1105,7 +1105,12 @@ function return_gender($genderid) {
 	"The Lorewalkers" 				=> array ("parent" => "Mists of Pandaria"),
 	"Shado-Pan" 					=> array ("parent" => "Mists of Pandaria"),
 	"The Black Prince" 				=> array ("parent" => "Mists of Pandaria"),
-	"Shang Xi\'s Academy"			=> array ("parent" => "Mists of Pandaria"),
+	"Shang Xi's Academy"			=> array ("parent" => "Mists of Pandaria"),
+	"Akama's Trust" 				=> array ("parent" => "Mists of Pandaria"),
+	"Dominance Offensive" 			=> array ("parent" => "Mists of Pandaria"),
+	"Forest Hozen" 					=> array ("parent" => "Mists of Pandaria"),
+	"Operation: Shieldwall" 		=> array ("parent" => "Mists of Pandaria"),
+	"The Brewmasters" 				=> array ("parent" => "Mists of Pandaria"),
 	"The Anglers" 					=> array ("parent" => "Mists of Pandaria","faction" => "The Anglers"),
 	"Nat Pagle" 					=> array ("parent" => "Mists of Pandaria","faction" => "The Anglers"),
 	"The Tillers" 					=> array ("parent" => "Mists of Pandaria","faction" => "The Tillers"),
@@ -1156,6 +1161,7 @@ function return_gender($genderid) {
 
 						$this->data["Reputation"]["Count"]++;
   				}
+				echo '<pre>';print_r($this->data["Reputation"]);echo '</pre>';
 			$this->status['reputationInfo'] = $this->data["Reputation"]["Count"];
 			$this->_debug( 1, true, 'Parsed reputation info', 'OK' );
 
