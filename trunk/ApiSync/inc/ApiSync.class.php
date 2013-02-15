@@ -1161,7 +1161,7 @@ function return_gender($genderid) {
 
 						$this->data["Reputation"]["Count"]++;
   				}
-				echo '<pre>';print_r($this->data["Reputation"]);echo '</pre>';
+				//echo '<pre>';print_r($this->data["Reputation"]);echo '</pre>';
 			$this->status['reputationInfo'] = $this->data["Reputation"]["Count"];
 			$this->_debug( 1, true, 'Parsed reputation info', 'OK' );
 
